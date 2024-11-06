@@ -8,6 +8,7 @@ import { firstValueFrom } from 'rxjs';
 })
 export class LinkLibraryService {
   private _libraryLinks = signal<LibraryLink[]>([]);
+
   readonly linksByCategory = computed(() => this.getLinksByCategory(this._libraryLinks()));
 
   constructor(private tokenService: TokenService) {
@@ -37,16 +38,18 @@ export class LinkLibraryService {
   }
 
   private getLinksByCategory(links: LibraryLink[]) {
-    return links.reduce((acc, link) => {
+    const linksByCategoryObj: { [key: string]: LinksByCategory } = {};
+
+    links.forEach((link) => {
       const { category, ...linkWithoutCategory } = link;
 
-      if (!acc[category]) {
-        acc[category] = [];
+      if (!linksByCategoryObj[category]) {
+        linksByCategoryObj[category] = { category, libraryLinks: [] };
       }
 
-      acc[category].push(linkWithoutCategory);
+      linksByCategoryObj[category].libraryLinks.push(linkWithoutCategory);
+    });
 
-      return acc;
-    }, {} as LinksByCategory);
+    return  Object.values(linksByCategoryObj)
   }
 }

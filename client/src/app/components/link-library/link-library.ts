@@ -9,5 +9,6 @@ export interface LibraryLink {
 }
 
 export interface LinksByCategory {
-  [category: string]: Omit<LibraryLink, 'category'>[];
+  category: string;
+  libraryLinks: Omit<LibraryLink, 'category'>[];
 }
