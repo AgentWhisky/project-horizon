@@ -7,3 +7,7 @@ export interface LibraryLink {
   tags?: string[];
   thumbnail?: string;
 }
+
+export interface LinksByCategory {
+  [category: string]: Omit<LibraryLink, 'category'>[];
+}
