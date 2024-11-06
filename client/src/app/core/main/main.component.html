@@ -1,0 +1,50 @@
+<div>
+  <mat-toolbar color="primary" class="header-toolbar">
+    <button mat-icon-button color="basic" (click)="onToggleLeftNav()">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <a [routerLink]="['/home']" class="header-toolbar-text">
+      Project Horizon
+    </a>
+    
+    <button mat-icon-button color="basic">
+      <mat-icon>info_outline</mat-icon>
+    </button>
+
+    <button mat-icon-button color="basic">
+      <mat-icon>settings</mat-icon>
+    </button>
+
+    <button mat-icon-button color="basic">
+      <mat-icon>apps</mat-icon>
+    </button>
+
+    <button mat-icon-button color="basic">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+
+    <button mat-icon-button color="basic" (click)="onToggleTheme()" [matTooltip]="isDarkmode() ? 'Enable light mode' : 'Enable dark mode'">
+      <mat-icon>{{ isDarkmode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+    </button>
+
+    <button mat-icon-button color="basic">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <mat-drawer-container class="app-content">
+    <mat-drawer
+      [opened]="isLeftNavOpen()"
+      [mode]="isSmallScreen() ? 'over' : 'side'"
+      class="left-nav-container"
+      (closed)="onCloseLeftNav()">
+      <app-left-nav></app-left-nav>
+    </mat-drawer>
+    <mat-drawer-content class="w-full flex flex-grow">
+      <div class="w-full p-3">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>

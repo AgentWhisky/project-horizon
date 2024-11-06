@@ -1,0 +1,17 @@
+.nav-item {
+  cursor: pointer;
+  @apply flex w-full justify-start items-center h-[3.0em] pl-6 text-left rounded-md mb-1;
+}
+
+.nav-item:hover {
+  scale: 1.02;
+}
+
+.nav-item span {
+    @apply flex align-middle
+}
+
+
+.nav-item-active span {
+  @apply font-semibold;
+}

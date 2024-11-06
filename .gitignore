@@ -1,0 +1,11 @@
+# Global Files
+node_modules/
+.vscode
+.env
+
+# Client Files
+client/.angular/
+
+# Server Files
+server/dist/
+server/build/
