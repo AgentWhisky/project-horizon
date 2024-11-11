@@ -1,24 +1,16 @@
-import { computed, effect, Injectable, signal } from '@angular/core';
-import { TokenService } from '../../services/token.service';
-import { LibraryLink, LinksByCategory } from './link-library';
-import { firstValueFrom } from 'rxjs';
+import { computed, Injectable, signal } from "@angular/core";
+import { TokenService } from "../../services/token.service";
+import { LibraryLink, LinksByCategory } from "./link-library";
+import { firstValueFrom } from "rxjs";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class LinkLibraryService {
   private _libraryLinks = signal<LibraryLink[]>([]);
   readonly linksByCategory = computed(() => this.getLinksByCategory(this._libraryLinks()));
 
-  constructor(private tokenService: TokenService) {
-    effect(() => {
-      console.log(this._libraryLinks());
-    });
-
-    effect(() => {
-      console.log(this.linksByCategory());
-    });
-  }
+  constructor(private tokenService: TokenService) {}
 
   async loadLibraryLinks() {
     try {
@@ -30,7 +22,7 @@ export class LinkLibraryService {
   }
 
   private async getLibraryLinks() {
-    const url = '/link-library';
+    const url = "/link-library";
     const links$ = this.tokenService.getWithTokenRefresh<LibraryLink[]>(url);
 
     return firstValueFrom(links$);

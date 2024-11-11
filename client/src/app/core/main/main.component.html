@@ -1,34 +1,37 @@
 <div>
   <mat-toolbar color="primary" class="header-toolbar">
-    <button mat-icon-button color="basic" (click)="onToggleLeftNav()">
+    <button mat-icon-button color="basic" (click)="onToggleLeftNav()" data-cy="main-header-icon-menu">
       <mat-icon>menu</mat-icon>
     </button>
 
-    <a [routerLink]="['/home']" class="header-toolbar-text">
-      Project Horizon
-    </a>
-    
-    <button mat-icon-button color="basic">
+    <a [routerLink]="['/home']" class="header-toolbar-text" data-cy="main-header-title-link"> Project Horizon </a>
+
+    <button mat-icon-button color="basic" data-cy="main-header-icon-info">
       <mat-icon>info_outline</mat-icon>
     </button>
 
-    <button mat-icon-button color="basic">
+    <button mat-icon-button color="basic" data-cy="main-header-icon-settings">
       <mat-icon>settings</mat-icon>
     </button>
 
-    <button mat-icon-button color="basic">
+    <button mat-icon-button color="basic" data-cy="main-header-icon-apps">
       <mat-icon>apps</mat-icon>
     </button>
 
-    <button mat-icon-button color="basic">
+    <button mat-icon-button color="basic" data-cy="main-header-icon-account">
       <mat-icon>account_circle</mat-icon>
     </button>
 
-    <button mat-icon-button color="basic" (click)="onToggleTheme()" [matTooltip]="isDarkmode() ? 'Enable light mode' : 'Enable dark mode'">
-      <mat-icon>{{ isDarkmode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+    <button
+      mat-icon-button
+      color="basic"
+      (click)="onToggleTheme()"
+      [matTooltip]="isDarkmode() ? 'Enable Light Mode' : 'Enable Dark Mode'"
+      data-cy="main-header-icon-theme">
+      <mat-icon>{{ isDarkmode() ? "light_mode" : "dark_mode" }}</mat-icon>
     </button>
 
-    <button mat-icon-button color="basic">
+    <button mat-icon-button color="basic" data-cy="main-header-icon-button">
       <mat-icon>logout</mat-icon>
     </button>
   </mat-toolbar>

@@ -1,17 +1,17 @@
 <div class="flex flex-col p-3">
-  <button [routerLink]="['/home']" class="nav-item" routerLinkActive="nav-item-active">
+  <button [routerLink]="['/home']" class="nav-item" routerLinkActive="nav-item-active" data-cy="left-nav-home">
     <mat-icon>home</mat-icon>
     <span class="w-full pl-3">Home</span>
   </button>
 
   <mat-divider></mat-divider>
 
-  <button [routerLink]="['/link-library']" class="nav-item" routerLinkActive="nav-item-active">
+  <button [routerLink]="['/link-library']" class="nav-item" routerLinkActive="nav-item-active" data-cy="left-nav-link-library">
     <mat-icon>link</mat-icon>
     <span class="w-full pl-3">Link Library</span>
   </button>
 
-  <button [routerLink]="['/book-library']" class="nav-item" routerLinkActive="nav-item-active">
+  <button [routerLink]="['/book-library']" class="nav-item" routerLinkActive="nav-item-active" data-cy="left-nav-book-library">
     <mat-icon>book_5</mat-icon>
     <span class="w-full pl-3">Book Library</span>
   </button>
