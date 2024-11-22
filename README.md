@@ -36,7 +36,9 @@ cd [app name]
   ```bash
   npm install primeng
 
-  > Choose SCSS
+  > Add to styles.css
+    @import "primeng/resources/themes/lara-light-blue/theme.css";
+    @import "primeng/resources/primeng.css";
   ```
 
 4. Install Tailwindcss (Optional)
