@@ -21,13 +21,23 @@ ng new [app name]
 cd [app name]
 ```
 
-3. Install Angular Material (Optional)
+3. Component Library
 
-```bash
-ng add @angular/material
+- Install Angular Material (Optional)
 
-> Choose SCSS
-```
+  ```bash
+  ng add @angular/material
+
+  > Choose SCSS
+  ```
+
+- Install PrimeNG (Optional)
+
+  ```bash
+  npm install primeng
+
+  > Choose SCSS
+  ```
 
 4. Install Tailwindcss (Optional)
 
