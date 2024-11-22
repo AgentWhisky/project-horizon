@@ -1,0 +1,29 @@
+.tile-card {
+  @apply w-full drop-shadow-lg rounded-lg p-3;
+  background-color: var(--mdc-elevated-card-container-color);
+}
+
+.link-container {
+  @apply flex items-center w-full mb-3;
+  transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.link-container:hover {
+  transform: translateY(-2px);
+}
+
+.link {
+  @apply w-full;
+}
+
+.link-icon {
+  @apply w-0 opacity-0 overflow-hidden;
+  visibility: hidden;
+  transition: width 0.5s, opacity 0.5s linear, visibility 0s 0.5s;
+}
+
+.link-container:hover .link-icon {
+  @apply w-auto opacity-100;
+  visibility: visible;
+  transition: width 0.5s, opacity 0.5s linear, visibility 0s;
+}

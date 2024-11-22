@@ -33,7 +33,7 @@
     </button>
   </mat-toolbar>
 
-  <mat-drawer-container class="app-content">
+  <mat-drawer-container class="app-content overflow-auto">
     <mat-drawer
       [opened]="isLeftNavOpen()"
       [mode]="isSmallScreen() ? 'over' : 'side'"
