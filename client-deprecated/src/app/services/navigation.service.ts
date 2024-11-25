@@ -1,7 +1,7 @@
-import { effect, Injectable, signal } from '@angular/core';
+import { Injectable, signal } from "@angular/core";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class NavigationService {
   private _isLeftNavOpen = signal(this.getLeftNavState());
@@ -14,12 +14,9 @@ export class NavigationService {
     window.onresize = () => {
       this.updateScreenSize();
     };
-
-    effect(() => console.log('isOpenLeftNav: ', this._isLeftNavOpen()));
-    effect(() => console.log('isSmallScreen: ', this._isSmallScreen()));
   }
 
-  // *** Left Navigation Menu ***
+  // *** Left Navigation Menu State (Open/Closed) ***
   toggleLeftNav() {
     const isOpen = !this._isLeftNavOpen();
 
@@ -33,11 +30,11 @@ export class NavigationService {
   }
 
   private setLeftNavState(isOpen: boolean) {
-    localStorage.setItem('leftNavState', JSON.stringify(isOpen));
+    localStorage.setItem("leftNavState", JSON.stringify(isOpen));
   }
 
   private getLeftNavState() {
-    return JSON.parse(localStorage.getItem('leftNavState') || 'false');
+    return JSON.parse(localStorage.getItem("leftNavState") || "false");
   }
 
   // *** Navigation for Screen Size ***
@@ -49,10 +46,10 @@ export class NavigationService {
   }
 
   private setScreenSize(smallScreen: boolean) {
-    localStorage.setItem('smallScreen', JSON.stringify(smallScreen));
+    localStorage.setItem("smallScreen", JSON.stringify(smallScreen));
   }
 
   private getScreenSize() {
-    return JSON.parse(localStorage.getItem('smallScreen') || 'false');
+    return JSON.parse(localStorage.getItem("smallScreen") || "false");
   }
 }

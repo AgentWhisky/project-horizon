@@ -8,9 +8,8 @@
 }
 
 .nav-item span {
-    @apply flex align-middle
+  @apply flex align-middle;
 }
-
 
 .nav-item-active span {
   @apply font-semibold;

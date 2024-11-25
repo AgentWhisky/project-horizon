@@ -1,19 +1,20 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { LibraryLinkEntity } from './entities/library-link.entity';
-import { Repository } from 'typeorm';
-import { LibraryLink } from './link-library.model';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { LinkEntity } from "./entities/link.entity";
+import { Repository } from "typeorm";
+import { Link } from "./link-library.model";
 
 @Injectable()
 export class LinkLibraryService {
   constructor(
-    @InjectRepository(LibraryLinkEntity)
-    private readonly libraryLinkRepository: Repository<LibraryLinkEntity>
+    @InjectRepository(LinkEntity)
+    private readonly libraryLinkRepository: Repository<LinkEntity>
   ) {}
 
   async getLibraryLinks() {
-    const libaryLinks: LibraryLink[] = await this.libraryLinkRepository.find({
-      select: ['id', 'url', 'name', 'description', 'category', 'tags', 'thumbnail'],
+    const libaryLinks: Link[] = await this.libraryLinkRepository.find({
+      select: ["id", "url", "name", "description", "category", "thumbnail"],
+      relations: ["tags"],
     });
 
     return libaryLinks;
