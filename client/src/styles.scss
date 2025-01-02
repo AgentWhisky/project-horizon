@@ -1,12 +1,50 @@
+@use '@angular/material' as mat;
+@use './app/styles/whisky-blue.scss';
+
+@include mat.core();
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html {
-    font-size: 14px;
-}
-html,
-body {
-  height: 100%;
-}
-body {
-  margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  @include mat.theme(
+    (
+      color: whisky-blue.$primary-palette,
+      typography: Roboto,
+      density: 0,
+    )
+  );
 }
 
+.dark-theme {
+  @include mat.theme(
+    (
+      color: (
+        primary: whisky-blue.$primary-palette,
+        theme-type: dark,
+      ),
+    )
+  );
+}
+
+body {
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+}
+
+// *** CONTAINER CSS ***
+.panel_container {
+  @apply w-full drop-shadow-lg rounded-md;
+}
+
+.icon-button {
+  display: inline-flex !important;
+  vertical-align: middle !important;
+  align-items: center !important;
+}
+
+// *** SEARCH INPUT ***
+.page-search {
+  @apply flex w-full max-w-96 sm:max-w-lg md:max-w-xl lg:max-w-3xl xl:max-w-4xl mb-3;
+}

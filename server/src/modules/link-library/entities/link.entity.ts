@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, JoinTable, ManyToMany } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, JoinTable, ManyToMany, ManyToOne } from "typeorm";
 import { LinkTagEntity } from "./link-tags.entity";
+import { LinkCategoryEntity } from "./link-categories.entity";
 
 @Entity("links")
 export class LinkEntity {
@@ -15,8 +16,8 @@ export class LinkEntity {
   @Column({ name: "url", type: "varchar", length: 256 })
   url: string;
 
-  @Column({ name: "category", type: "varchar", length: 32 })
-  category: string;
+  @ManyToOne(() => LinkCategoryEntity, (category) => category.links)
+  category: LinkCategoryEntity;
 
   @Column({ name: "status", type: "char", length: 1, default: "A" })
   status: "A" | "I";

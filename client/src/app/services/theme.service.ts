@@ -1,43 +1,28 @@
-import { DOCUMENT } from '@angular/common';
-import { effect, Inject, Injectable, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ThemeService {
-  private _isDarkmode = signal<boolean>(this.loadTheme());
-  readonly isDarkmode = this._isDarkmode.asReadonly();
+  private _isDarkTheme = signal<boolean>(this.getTheme());
+  readonly isDarkTheme = this._isDarkTheme.asReadonly();
 
-  constructor(@Inject(DOCUMENT) private document: Document) {
-    effect(() => {
-      console.log('EFFECT');
-      
-      this.setTheme(this._isDarkmode());
-    });
+  constructor() {
+    document.body.classList.toggle('dark-theme', this._isDarkTheme());
   }
 
   toggleTheme() {
-    console.log(`THEME ${!this._isDarkmode()}`);
+    this._isDarkTheme.set(!this._isDarkTheme());
+    document.body.classList.toggle('dark-theme', this._isDarkTheme());
 
-    this._isDarkmode.set(!this._isDarkmode());
+    this.setTheme();
   }
 
-  private setTheme(isDarkmode: boolean) {
-    const themeLink = this.document.getElementById('app-theme') as HTMLLinkElement;
-
-    if (isDarkmode) {
-      themeLink.href = 'theme-dark.css';
-    } else {
-      themeLink.href = 'theme-light.css';
-    }
-    this.saveTheme();
+  private setTheme() {
+    localStorage.setItem('dark-theme', JSON.stringify(this._isDarkTheme()));
   }
 
-  private saveTheme() {
-    localStorage.setItem('isDarkmode', JSON.stringify(this._isDarkmode()));
-  }
-
-  private loadTheme() {
-    return JSON.parse(localStorage.getItem('isDarkmode') || 'false');
+  private getTheme() {
+    return JSON.parse(localStorage.getItem('dark-theme') || 'false');
   }
 }

@@ -1,51 +1,47 @@
-import { Component, model } from '@angular/core';
+import { Component, signal } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
-import { ToolbarModule } from 'primeng/toolbar';
-import { ButtonModule } from 'primeng/button';
-import { SplitButtonModule } from 'primeng/splitbutton';
-import { InputTextModule } from 'primeng/inputtext';
-import { SidebarModule } from 'primeng/sidebar';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
+
+import { NavigationService } from '../../services/navigation.service';
 import { ThemeService } from '../../services/theme.service';
+import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-main',
-  standalone: true,
-  imports: [ToolbarModule, ButtonModule, SplitButtonModule, InputTextModule, SidebarModule],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
+  imports: [RouterModule, MatToolbarModule, MatIconModule, MatButtonModule, MatSidenavModule, MatTooltipModule, MatMenuModule],
 })
 export class MainComponent {
-  sidebarVisible = model(false);
+  readonly isLeftNavOpen = this.navigationService.isLeftNavOpen;
+  readonly isSmallScreen = this.navigationService.isSmallScreen;
+  readonly isLoggedIn = this.loginService.isLoggedIn;
+  readonly isDarkmode = this.themeService.isDarkTheme;
+  constructor(private navigationService: NavigationService, private loginService: LoginService, private themeService: ThemeService) {}
 
-  items: MenuItem[] | undefined;
-
-  readonly isDarkmode = this.themeService.isDarkmode;
-
-  constructor(private themeService: ThemeService) {}
-
-  ngOnInit() {
-    this.items = [
-      {
-        label: 'Update',
-        icon: 'pi pi-refresh',
-      },
-      {
-        label: 'Delete',
-        icon: 'pi pi-times',
-      },
-    ];
+  onToggleLeftNav() {
+    this.navigationService.toggleLeftNav();
   }
 
-  onOpenSidenav() {
-    this.sidebarVisible.set(true);
+  onCloseLeftNav() {
+    this.navigationService.closeLeftNav();
+  }
+
+  onLogState() {
+    if (this.isLoggedIn()) {
+      this.loginService.logout();
+    } else {
+      this.loginService.login();
+    }
   }
 
   onToggleTheme() {
     this.themeService.toggleTheme();
   }
 }
-
-type MenuItem = {
-  label: string;
-  icon: string;
-};

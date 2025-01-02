@@ -4,7 +4,7 @@ export interface Link {
   name: string;
   description: string;
   category: LinkCategory;
-  tags: LinkTag[];
+  tags?: LinkTag[];
   thumbnail?: string;
 }
 
@@ -14,8 +14,14 @@ export interface LinkCategory {
   description: string;
 }
 
+export interface LinksByCategory {
+  id: number;
+  name: string;
+  description: string;
+  links: Link[];
+}
+
 export interface LinkTag {
   id: number;
   name: string;
 }
-

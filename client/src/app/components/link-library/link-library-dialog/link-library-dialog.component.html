@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>{{ link().name }}</h2>
+<mat-dialog-content class="flex flex-col gap-3">
+  <mat-chip-set>
+    @for(tag of link().tags; track tag.id) {
+    <mat-chip>{{ tag.name }}</mat-chip>
+    }
+  </mat-chip-set>
+  <h3>{{ link().description }}</h3>
+  <p>{{ link().url }}</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close cdkFocusInitial>Close</button>
+</mat-dialog-actions>
