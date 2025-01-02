@@ -3,7 +3,7 @@ import { Injectable, signal } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
-export class LoginService {
+export class AuthenticationService {
   private _isLoggedIn = signal(false);
   readonly isLoggedIn = this._isLoggedIn.asReadonly();
 

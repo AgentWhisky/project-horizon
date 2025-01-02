@@ -13,3 +13,7 @@
   transform: translateY(-2px) scale(0.98);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
 }
+
+.link-card-container {
+  @apply flex flex-wrap gap-3 justify-center;
+}

@@ -1,0 +1,19 @@
+<div class="link-container">
+  <div class="flex flex-row">
+    <a mat-flat-button class="w-full" [href]="link().url" target="_blank">{{ link().name }}</a>
+    <button mat-icon-button class="link-icon" (click)="onToggleView()">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+  </div>
+
+  @if(isOpen()) {
+  <div class="flex flex-col mt-3" @expand>
+    <mat-chip-set>
+      @for(tag of link().tags; track tag.id) {
+      <mat-chip>{{ tag.name }}</mat-chip>
+      }
+    </mat-chip-set>
+    <span>{{ link().description }}</span>
+  </div>
+  }
+</div>

@@ -79,6 +79,6 @@ export class LinkLibraryService {
       linksByCategoryObj[categoryId].links.push(link);
     });
 
-    return Object.values(linksByCategoryObj);
+    return Object.values(linksByCategoryObj).sort((a, b) => a.name.localeCompare(b.name));
   }
 }

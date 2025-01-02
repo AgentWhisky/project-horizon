@@ -1,4 +1,4 @@
-import { Component, effect, model, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LinkLibraryService } from './link-library.service';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -9,11 +9,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { LinkLibraryDialogComponent } from './link-library-dialog/link-library-dialog.component';
+import { LinkTileComponent } from './link-tile/link-tile.component';
 import { Link } from './link-library';
 
 @Component({
   selector: 'app-link-library',
-  imports: [MatButtonModule, MatInputModule, MatIconModule, MatCardModule, ReactiveFormsModule],
+  imports: [MatButtonModule, MatInputModule, MatIconModule, MatCardModule, ReactiveFormsModule, LinkTileComponent],
   templateUrl: './link-library.component.html',
   styleUrl: './link-library.component.scss',
 })

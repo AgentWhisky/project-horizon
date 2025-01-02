@@ -12,4 +12,11 @@
   <h3 class="nav-section-header">Tools</h3>
   <a [routerLink]="['/base-converter']" class="nav-item" routerLinkActive="active"><mat-icon>calculate</mat-icon> Base Converter</a>
 
+  @if(isLoggedIn()) {
+  <mat-divider class="nav-divider"></mat-divider>
+
+  <h3 class="nav-section-header">Administration</h3>
+  <a [routerLink]="['/administration']" class="nav-item" routerLinkActive="active"><mat-icon>admin_panel_settings</mat-icon> Admin Dashboard</a>
+  <a [routerLink]="['/link-library-management']" class="nav-item" routerLinkActive="active"><mat-icon>add_link</mat-icon> Link Library Mgmt</a>
+  }
 </div>

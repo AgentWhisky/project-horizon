@@ -1,0 +1,10 @@
+.link-icon {
+  @apply flex justify-center items-center ml-3;
+}
+
+.link-container {
+  @apply flex flex-col w-full p-3 overflow-hidden;
+
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-medium);
+}

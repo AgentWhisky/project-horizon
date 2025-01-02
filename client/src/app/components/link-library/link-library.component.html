@@ -10,7 +10,7 @@
     </mat-form-field>
   </form>
 
-  <div class="flex flex-wrap gap-3 justify-center">
+  <div class="link-card-container">
     @for(category of linksByCategory(); track category.id) {
 
     <mat-card class="w-full max-w-96" appearance="outlined" routerLink="/link-library">
@@ -21,12 +21,7 @@
       <mat-card-content>
         <div class="flex flex-col justify-center items-center p-3 gap-3">
           @for(link of category.links; track link.id) {
-          <div class="flex w-full">
-            <a mat-flat-button class="link-button" [href]="link.url" target="_blank">{{ link.name }}</a>
-            <button mat-icon-button color="basic" class="icon-button ml-1" (click)="onOpenInfo(link)">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-          </div>
+          <app-link-tile [link]="link" class="w-full"></app-link-tile>
           }
         </div>
       </mat-card-content>
