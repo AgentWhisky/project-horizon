@@ -1,0 +1,29 @@
+// *** NAV ITEM ***
+.nav-item {
+  @apply flex align-middle w-full rounded-md p-2 gap-3;
+
+  color: var(--mat-sys-on-surface);
+}
+
+.nav-item:hover {
+  background-color: var(--mat-sys-surface-container-high);
+}
+
+.nav-item:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+.nav-item.active {
+  @apply font-medium;
+  background-color: var(--mat-sys-surface-container-high);
+}
+
+// *** NAV DIVIDER ***
+.nav-divider {
+  @apply w-full my-1;
+}
+
+// *** NAV SECTION HEADER ***
+.nav-section-header {
+  @apply pl-3 font-bold;
+}

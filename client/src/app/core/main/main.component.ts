@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -8,6 +8,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 
+import { LeftNavComponent } from '../left-nav/left-nav.component';
+
 import { NavigationService } from '../../services/navigation.service';
 import { ThemeService } from '../../services/theme.service';
 import { LoginService } from '../../services/login.service';
@@ -16,7 +18,16 @@ import { LoginService } from '../../services/login.service';
   selector: 'app-main',
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
-  imports: [RouterModule, MatToolbarModule, MatIconModule, MatButtonModule, MatSidenavModule, MatTooltipModule, MatMenuModule],
+  imports: [
+    RouterModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatButtonModule,
+    MatSidenavModule,
+    MatTooltipModule,
+    MatMenuModule,
+    LeftNavComponent,
+  ],
 })
 export class MainComponent {
   readonly isLeftNavOpen = this.navigationService.isLeftNavOpen;

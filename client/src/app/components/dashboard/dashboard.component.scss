@@ -1,5 +1,5 @@
 .dashboard-card {
-  @apply max-w-96 cursor-pointer;
+  @apply w-full max-w-96 cursor-pointer;
   transition: transform 0.3s ease-in-out, box-shadoww 0.3s ease-in-out;
 }
 

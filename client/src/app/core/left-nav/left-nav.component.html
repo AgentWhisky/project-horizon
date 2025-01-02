@@ -1,0 +1,15 @@
+<div class="flex flex-col justify-start gap-1">
+  <a [routerLink]="['/dashboard']" class="nav-item" routerLinkActive="active"><mat-icon>home</mat-icon> Dashboard</a>
+
+  <mat-divider class="nav-divider"></mat-divider>
+
+  <h3 class="nav-section-header">Libraries</h3>
+  <a [routerLink]="['/link-library']" class="nav-item" routerLinkActive="active"><mat-icon>link</mat-icon> Link Library</a>
+  <a [routerLink]="['/book-library']" class="nav-item" routerLinkActive="active"><mat-icon>local_library</mat-icon> Book Library</a>
+
+  <mat-divider class="nav-divider"></mat-divider>
+
+  <h3 class="nav-section-header">Tools</h3>
+  <a [routerLink]="['/base-converter']" class="nav-item" routerLinkActive="active"><mat-icon>calculate</mat-icon> Base Converter</a>
+
+</div>
