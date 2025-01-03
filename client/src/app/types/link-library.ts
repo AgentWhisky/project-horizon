@@ -8,6 +8,15 @@ export interface Link {
   thumbnail?: string;
 }
 
+export interface NewLink {
+  name: string;
+  url: string;
+  description: string;
+  category: number;
+  tags: number[];
+  thumbnail?: string;
+}
+
 export interface LinkCategory {
   id: number;
   name: string;

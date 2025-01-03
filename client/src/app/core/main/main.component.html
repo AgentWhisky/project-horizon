@@ -9,32 +9,31 @@
     <span class="w-full"></span>
 
     @if(!isSmallScreen()) {
-      <button mat-icon-button color="basic" class="header-icon">
+      <button mat-icon-button class="header-icon">
         <mat-icon>info_outline</mat-icon>
       </button>
 
-      <button mat-icon-button color="basic" class="header-icon">
+      <button mat-icon-button class="header-icon">
         <mat-icon>settings</mat-icon>
       </button>
 
-      <button mat-icon-button color="basic" class="header-icon">
+      <button mat-icon-button class="header-icon">
         <mat-icon>apps</mat-icon>
       </button>
 
-      <button mat-icon-button color="basic" class="header-icon">
+      <button mat-icon-button class="header-icon">
         <mat-icon>account_circle</mat-icon>
       </button>
 
       <button
         mat-icon-button
-        color="basic"
         class="header-icon"
         (click)="onToggleTheme()"
         [matTooltip]="isDarkmode() ? 'Enable light mode' : 'Enable dark mode'">
         <mat-icon>{{ isDarkmode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
       </button>
 
-      <button mat-icon-button color="basic" class="header-icon" (click)="onLogState()" [matTooltip]="isLoggedIn() ? 'Logout' : 'Login'">
+      <button mat-icon-button class="header-icon" (click)="onLogState()" [matTooltip]="isLoggedIn() ? 'Logout' : 'Login'">
         <mat-icon>{{ isLoggedIn() ? 'logout' : 'login' }}</mat-icon>
       </button>
     }

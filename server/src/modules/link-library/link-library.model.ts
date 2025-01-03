@@ -8,6 +8,15 @@ export interface Link {
   thumbnail?: string;
 }
 
+export interface LinkData {
+  url: string;
+  name: string;
+  description: string;
+  category: number;
+  tags: number[];
+  thumbnail?: string;
+}
+
 export interface LinkCategory {
   id: number;
   name: string;
@@ -18,4 +27,3 @@ export interface LinkTag {
   id: number;
   name: string;
 }
-

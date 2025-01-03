@@ -19,10 +19,10 @@ export class ThemeService {
   }
 
   private setTheme() {
-    localStorage.setItem('dark-theme', JSON.stringify(this._isDarkTheme()));
+    localStorage.setItem('darkTheme', JSON.stringify(this._isDarkTheme()));
   }
 
   private getTheme() {
-    return JSON.parse(localStorage.getItem('dark-theme') || 'false');
+    return JSON.parse(localStorage.getItem('darkTheme') || 'false');
   }
 }

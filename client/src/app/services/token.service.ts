@@ -14,7 +14,15 @@ export class TokenService {
     return this.http.get<T>(`${this.apiUrl}${url}`, options);
   }
 
+  putWithTokenRefresh<T>(url: string, body: any, options?: {}) {
+    return this.http.put<T>(`${this.apiUrl}${url}`, body, options);
+  }
+
   postWithTokenRefresh<T>(url: string, body: any, options?: {}) {
     return this.http.post<T>(`${this.apiUrl}${url}`, body, options);
+  }
+
+  deleteWithTokenRefresh<T>(url: string, options?: {}) {
+    return this.http.delete<T>(`${this.apiUrl}${url}`, options);
   }
 }

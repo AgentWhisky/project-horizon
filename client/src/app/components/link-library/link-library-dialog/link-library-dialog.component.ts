@@ -10,7 +10,7 @@ import {
 } from '@angular/material/dialog';
 import { MatChipsModule } from '@angular/material/chips';
 
-import { Link } from '../link-library';
+import { Link } from '../../../types/link-library';
 
 interface DialogData {
   link: Link;
