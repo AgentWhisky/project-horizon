@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Res } from '@nestjs/common';
 import { LinkLibraryService } from './link-library.service';
-import { LinkData } from './link-library.model';
+import { LinkCategoryData, LinkData, LinkTagData } from './link-library.model';
 
 @Controller('link-library')
 export class LinkLibraryController {
@@ -10,6 +10,11 @@ export class LinkLibraryController {
   @Get()
   async getLinks() {
     return this.linkLibraryService.getLibraryLinks();
+  }
+
+  @Post()
+  async addLink(@Body() link: LinkData) {
+    return this.linkLibraryService.addLibraryLink(link);
   }
 
   @Put(':id')
@@ -25,12 +30,42 @@ export class LinkLibraryController {
   // *** LINK CATEGORIES ***
   @Get('categories')
   async getCategories() {
-    return this.linkLibraryService.getCategories();
+    return this.linkLibraryService.getLinkCategories();
+  }
+
+  @Post('categories')
+  async addLinkCategory(@Body() category: LinkCategoryData) {
+    return this.linkLibraryService.addLinkCategory(category);
+  }
+
+  @Put('categories/:id')
+  async updateLinkCategory(@Param('id') id: number, @Body() category: LinkCategoryData) {
+    return this.linkLibraryService.updateLinkCategory(Number(id), category);
+  }
+
+  @Delete('categories/:id')
+  async deleteLinkCategory(@Param('id') id: number) {
+    return this.linkLibraryService.deleteLinkCategory(Number(id));
   }
 
   // *** LINK TAGS ***
   @Get('tags')
   async getTags() {
-    return this.linkLibraryService.getTags();
+    return this.linkLibraryService.getLinkTags();
+  }
+
+  @Post('tags')
+  async addLinkTag(@Body() tag: LinkTagData) {
+    return this.linkLibraryService.addLinkTag(tag);
+  }
+
+  @Put('tags/:id')
+  async updateLinkTag(@Param('id') id: number, @Body() tag: LinkTagData) {
+    return this.linkLibraryService.updateLinkTag(Number(id), tag);
+  }
+
+  @Delete('tags/:id')
+  async deleteLinkTag(@Param('id') id: number) {
+    return this.linkLibraryService.deleteLinkTag(Number(id));
   }
 }

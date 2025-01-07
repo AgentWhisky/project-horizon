@@ -18,21 +18,25 @@ export const routes: Routes = [
       // *** TOOLS ***
       {
         path: 'link-library',
-        loadComponent: () => import('./components/link-library/link-library.component').then((c) => c.LinkLibraryComponent),
+        loadComponent: () => import('./components/libraries/link-library/link-library.component').then((c) => c.LinkLibraryComponent),
       },
       {
         path: 'book-library',
-        loadComponent: () => import('./components/book-library/book-library.component').then((c) => c.BookLibraryComponent),
+        loadComponent: () => import('./components/libraries/book-library/book-library.component').then((c) => c.BookLibraryComponent),
       },
       // *** ADMINISTRATION ***
       {
         path: 'administration',
-        loadComponent: () => import('./administration/admin-dashboard/admin-dashboard.component').then((c) => c.AdminDashboardComponent),
+        loadComponent: () =>
+          import('./components/administration/admin-dashboard/admin-dashboard.component').then((c) => c.AdminDashboardComponent),
         canActivate: [authGuard],
       },
       {
         path: 'link-library-management',
-        loadComponent: () => import('./administration/link-library-management/link-library-management.component').then((c) => c.LinkLibraryManagementComponent),
+        loadComponent: () =>
+          import('./components/administration/link-library-management/link-library-management.component').then(
+            (c) => c.LinkLibraryManagementComponent
+          ),
         canActivate: [authGuard],
       },
     ],

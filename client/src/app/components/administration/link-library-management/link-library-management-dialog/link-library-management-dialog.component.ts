@@ -6,8 +6,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
-import { Link, NewLink } from '../../../types/link-library';
-import { LinkLibraryService } from '../../../services/link-library.service';
+import { Link, NewLink } from '../../../../types/link-library';
+import { LinkLibraryService } from '../../../../services/link-library.service';
 
 interface DialogData {
   type: 'create' | 'update';

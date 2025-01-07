@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LinkLibraryService } from '../../services/link-library.service';
+import { LinkLibraryService } from '../../../services/link-library.service';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -10,7 +10,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { LinkLibraryDialogComponent } from './link-library-dialog/link-library-dialog.component';
 import { LinkTileComponent } from './link-tile/link-tile.component';
-import { Link } from '../../types/link-library';
+import { Link } from '../../../types/link-library';
 
 @Component({
   selector: 'app-link-library',

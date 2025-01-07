@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>{{ this.data.type === 'create' ? 'Create Category' : 'Edit Category' }}</h2>
+<mat-dialog-content>
+  <form class="flex flex-col gap-3" [formGroup]="categoryForm">
+    <mat-form-field class="w-full">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" />
+      <mat-error>Invalid name</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="w-full">
+      <mat-label>Description</mat-label>
+      <textarea matInput #categoryDescription formControlName="description" rows="6"></textarea>
+      <mat-hint align="end">{{ categoryDescription.value.length }}/250</mat-hint>
+      <mat-error>Invalid description</mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onClose()">Cancel</button>
+  <button mat-flat-button (click)="onComplete()" [disabled]="!categoryForm.valid || !categoryForm.dirty">{{ this.data.type === 'create' ? 'Create' : 'Update' }}</button>
+</mat-dialog-actions>

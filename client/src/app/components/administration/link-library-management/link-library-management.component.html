@@ -1,0 +1,142 @@
+<div class="flex flex-col">
+  <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+    <mat-tab label="Links" class="flex flex-col">
+      <div class="flex justify-end mt-3">
+        <button mat-button (click)="onCreateLink()" aria-label="Add Link"><mat-icon>add</mat-icon> Add Link</button>
+      </div>
+
+      <table mat-table [dataSource]="linkDataSource" matSort #linkSort="matSort" class="mat-elevation-z8">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by id">ID</th>
+          <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">Name</th>
+          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="category">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by category">Category</th>
+          <td mat-cell *matCellDef="let element">{{ element.category?.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by description">Description</th>
+          <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="url">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by url">Url</th>
+          <td mat-cell *matCellDef="let element">{{ element.url }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="tags">
+          <th mat-header-cell *matHeaderCellDef>Tags</th>
+          <td mat-cell *matCellDef="let element">{{ getTagsFormatted(element.tags) }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef aria-hidden="true"></th>
+          <td mat-cell class="min-w-16" *matCellDef="let element">
+            <div class="flex justify-end items-center">
+              <button mat-icon-button (click)="onEditLink(element)" aria-label="Edit Link">
+                <mat-icon matTooltip="Edit Link">edit</mat-icon>
+              </button>
+              <button mat-icon-button (click)="onDeleteLink(element)" aria-label="Delete Link">
+                <mat-icon matTooltip="Delete Link">delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="linkDisplayedColumns"></tr>
+        <tr mat-row class="link-table-row" *matRowDef="let row; columns: linkDisplayedColumns"></tr>
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[25, 50, 100]" #linkPaginator showFirstLastButtons aria-label="Link Paginator"></mat-paginator>
+    </mat-tab>
+
+    <mat-tab label="Categories" class="flex flex-col">
+      <div class="flex justify-end mt-3">
+        <button mat-button (click)="onCreateCategory()" aria-label="Create Category"><mat-icon>add</mat-icon> Add Category</button>
+      </div>
+      <table mat-table [dataSource]="categoryDataSource" matSort #categorySort="matSort" class="mat-elevation-z8">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by id">ID</th>
+          <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">Name</th>
+          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by description">Description</th>
+          <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef aria-hidden="true"></th>
+          <td mat-cell class="min-w-16" *matCellDef="let element">
+            <div class="flex justify-end items-center">
+              <button mat-icon-button (click)="onEditCategory(element)" aria-label="Edit Category">
+                <mat-icon matTooltip="Edit Category">edit</mat-icon>
+              </button>
+              <button mat-icon-button (click)="onDeleteCategory(element)" aria-label="Delete Category" [disabled]="element.inUse">
+                <mat-icon matTooltip="Delete Category">delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="categoryDisplayedColumns"></tr>
+        <tr mat-row class="link-table-row" *matRowDef="let row; columns: categoryDisplayedColumns"></tr>
+      </table>
+
+      <mat-paginator
+        [pageSizeOptions]="[25, 50, 100]"
+        #categoryPaginator
+        showFirstLastButtons
+        aria-label="Category Paginator"></mat-paginator>
+    </mat-tab>
+
+    <mat-tab label="Tags" class="flex flex-col">
+      <div class="flex justify-end mt-3">
+        <button mat-button (click)="onCreateTag()"><mat-icon>add</mat-icon> Add Tag</button>
+      </div>
+
+      <table mat-table [dataSource]="tagDataSource" matSort #tagSort="matSort" class="mat-elevation-z8">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by id">ID</th>
+          <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">Name</th>
+          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef aria-hidden="true"></th>
+          <td mat-cell class="min-w-16" *matCellDef="let element">
+            <div class="flex justify-end items-center">
+              <button mat-icon-button (click)="onEditTag(element)">
+                <mat-icon matTooltip="Edit Tag">edit</mat-icon>
+              </button>
+              <button mat-icon-button (click)="onDeleteTag(element)" [disabled]="element.inUse">
+                <mat-icon matTooltip="Delete Tag">delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="tagDisplayedColumns"></tr>
+        <tr mat-row class="link-table-row" *matRowDef="let row; columns: tagDisplayedColumns"></tr>
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[25, 50, 100]" #tagPaginator showFirstLastButtons></mat-paginator>
+    </mat-tab>
+  </mat-tab-group>
+</div>

@@ -23,7 +23,24 @@ export interface LinkCategory {
   description: string;
 }
 
+export interface LinkCategoryData {
+  name: string;
+  description: string;
+}
+
+export interface LinkCategoryCode extends LinkCategory {
+  inUse: boolean;
+}
+
 export interface LinkTag {
   id: number;
   name: string;
+}
+
+export interface LinkTagData {
+  name: string;
+}
+
+export interface LinkTagCode extends LinkTag {
+  inUse: boolean;
 }

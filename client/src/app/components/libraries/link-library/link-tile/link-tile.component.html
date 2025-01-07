@@ -1,8 +1,8 @@
 <div class="link-container">
   <div class="flex flex-row">
-    <a mat-flat-button class="w-full" [href]="link().url" target="_blank">{{ link().name }}</a>
-    <button mat-icon-button class="link-icon" (click)="onToggleView()">
-      <mat-icon>more_vert</mat-icon>
+    <a mat-flat-button class="w-full" [href]="link().url" target="_blank" [attr.aria-label]="'Link to ' + link().name">{{ link().name }}</a>
+    <button mat-icon-button class="link-icon" (click)="onToggleView()" aria-label="Open Link Information">
+      <mat-icon>{{ isOpen() ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
     </button>
   </div>
 
