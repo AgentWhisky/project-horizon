@@ -1,3 +1,5 @@
+@use '@angular/material' as mat;
+
 .link-button {
   @apply w-full items-center text-center;
 
@@ -16,4 +18,12 @@
 
 .link-card-container {
   @apply flex flex-wrap gap-3 justify-center;
+}
+
+.link-card {
+  @include mat.card-overrides(
+    (
+      outlined-outline-color: var(--mat-sys-outline),
+    )
+  );
 }

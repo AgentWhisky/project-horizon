@@ -10,7 +10,7 @@
         formControlName="filter"
         aria-label="Link library search" />
       @if(linkLibrarySearch.value && linkLibrarySearch.value !== '') {
-      <button matSuffix mat-icon-button aria-label="Clear" (click)="onResetForm()">
+      <button matSuffix class="mr-3" mat-icon-button aria-label="Clear" (click)="onResetForm()">
         <mat-icon>close</mat-icon>
       </button>
       }
@@ -21,9 +21,7 @@
   <div class="link-card-container">
     @for(category of linksByCategory(); track category.id) {
 
- 
-
-    <mat-card class="w-full max-w-96" appearance="outlined" routerLink="/link-library">
+    <mat-card class="link-card w-full max-w-96" appearance="outlined" routerLink="/link-library">
       <mat-card-header>
         <mat-card-title>{{ category.name }}</mat-card-title>
         <mat-card-subtitle>{{ category.description }}</mat-card-subtitle>

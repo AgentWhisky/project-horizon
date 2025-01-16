@@ -26,7 +26,7 @@ export class LinkLibraryService {
       relations: ['category', 'tags'],
     });
 
-    return libaryLinks;
+    return libaryLinks.sort((a, b) => a.id - b.id);;
   }
 
   async addLibraryLink(link: LinkData) {
@@ -78,7 +78,7 @@ export class LinkLibraryService {
       .groupBy('category.id')
       .getRawMany();
 
-    return linkCategories.sort((a, b) => a.name.localeCompare(b.name));
+      return linkCategories.sort((a, b) => a.id - b.id);
   }
 
   async addLinkCategory(category: LinkCategoryData) {
@@ -142,7 +142,7 @@ export class LinkLibraryService {
       .groupBy('tag.id')
       .getRawMany();
 
-    return linkTags.sort((a, b) => a.name.localeCompare(b.name));
+    return linkTags.sort((a, b) => a.id - b.id);
   }
 
   async addLinkTag(tag: LinkTagData) {
