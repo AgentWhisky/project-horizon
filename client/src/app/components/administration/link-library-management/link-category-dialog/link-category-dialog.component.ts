@@ -6,6 +6,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 import { LinkCategoryCode, NewLinkCategory } from '../../../../types/link-library';
+import { uniqueText } from '../../../../validators/unique-text.validator';
+import { LinkLibraryService } from '../../../../services/link-library.service';
 
 interface DialogData {
   type: 'create' | 'update';
@@ -30,18 +32,24 @@ export class LinkCategoryDialogComponent {
   readonly categoryForm =
     this.data.type === 'update' && this.data.category ? this.getUpdateCategoryForm(this.data.category) : this.getNewCategoryForm();
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private linkLibraryService: LinkLibraryService) {}
 
   getNewCategoryForm() {
     return this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(30)]],
+      name: [
+        '',
+        [Validators.required, Validators.maxLength(30), uniqueText(this.linkLibraryService.linkCategoryList())],
+      ],
       description: ['', [Validators.required, Validators.maxLength(250)]],
     });
   }
 
   getUpdateCategoryForm(category: LinkCategoryCode) {
     return this.fb.group({
-      name: [category.name, [Validators.required, Validators.maxLength(30)]],
+      name: [
+        '',
+        [Validators.required, Validators.maxLength(30), uniqueText(this.linkLibraryService.linkCategoryList())],
+      ],
       description: [category.description, [Validators.required, Validators.maxLength(250)]],
     });
   }

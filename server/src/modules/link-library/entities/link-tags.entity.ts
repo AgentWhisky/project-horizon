@@ -6,7 +6,7 @@ export class LinkTagEntity {
   @PrimaryGeneratedColumn({ name: "id" })
   id: number;
 
-  @Column({ name: "name", type: "varchar", length: 64 })
+  @Column({ name: "name", type: "varchar", length: 64, unique: true })
   name: string;
 
   @ManyToMany(() => LinkEntity, (link) => link.tags)

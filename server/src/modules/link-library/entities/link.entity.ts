@@ -7,13 +7,13 @@ export class LinkEntity {
   @PrimaryGeneratedColumn({ name: 'id' })
   id: number;
 
-  @Column({ name: 'name', type: 'varchar', length: 256 })
+  @Column({ name: 'name', type: 'varchar', length: 256, unique: true })
   name: string;
 
   @Column({ name: 'description', type: 'text' })
   description: string;
 
-  @Column({ name: 'url', type: 'varchar', length: 256 })
+  @Column({ name: 'url', type: 'varchar', length: 256, unique: true })
   url: string;
 
   @ManyToOne(() => LinkCategoryEntity, (category) => category.links)

@@ -4,11 +4,19 @@
     <mat-form-field class="w-full">
       <mat-label>Name</mat-label>
       <input matInput formControlName="name" />
+      @if(tagForm.get('name')?.hasError('unique')) {
+      <mat-error>Name is not unique</mat-error>
+      } @else if(tagForm.get('name')?.hasError('required')) {
+      <mat-error>Name is required</mat-error>
+      } @else {
       <mat-error>Invalid name</mat-error>
+      }
     </mat-form-field>
   </form>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button (click)="onClose()">Cancel</button>
-  <button mat-flat-button (click)="onComplete()" [disabled]="!tagForm.valid || !tagForm.dirty">{{ this.data.type === 'create' ? 'Create' : 'Update' }}</button>
+  <button mat-flat-button (click)="onComplete()" [disabled]="!tagForm.valid || !tagForm.dirty">
+    {{ this.data.type === 'create' ? 'Create' : 'Update' }}
+  </button>
 </mat-dialog-actions>

@@ -4,12 +4,13 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { Link } from '../../../../types/link-library';
 
 @Component({
   selector: 'app-link-tile',
-  imports: [MatButtonModule, MatIconModule, MatChipsModule],
+  imports: [MatButtonModule, MatIconModule, MatChipsModule, MatMenuModule],
   templateUrl: './link-tile.component.html',
   styleUrl: './link-tile.component.scss',
   animations: [
@@ -25,5 +26,13 @@ export class LinkTileComponent {
 
   onToggleView() {
     this.isOpen.set(!this.isOpen());
+  }
+
+  onOpenView() {
+    this.isOpen.set(true);
+  }
+
+  onCloseView() {
+    this.isOpen.set(false);
   }
 }

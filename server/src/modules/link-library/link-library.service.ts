@@ -26,7 +26,7 @@ export class LinkLibraryService {
       relations: ['category', 'tags'],
     });
 
-    return libaryLinks.sort((a, b) => a.id - b.id);;
+    return libaryLinks.sort((a, b) => a.id - b.id);
   }
 
   async addLibraryLink(link: LinkData) {
@@ -51,6 +51,15 @@ export class LinkLibraryService {
     if (!existingLink) {
       throw new HttpException(`Link with ID: ${id} not found`, HttpStatus.NOT_FOUND);
     }
+
+    await this.libraryLinkRepository.save({
+      id,
+      name: link.name,
+      description: link.description,
+      url: link.url,
+      category: { id: link.category },
+      tags: link.tags.map((tagId) => ({ id: tagId })),
+    });
 
     return await this.libraryLinkRepository.findOne({
       select: ['id', 'url', 'name', 'description', 'category', 'thumbnail'],
@@ -78,7 +87,7 @@ export class LinkLibraryService {
       .groupBy('category.id')
       .getRawMany();
 
-      return linkCategories.sort((a, b) => a.id - b.id);
+    return linkCategories.sort((a, b) => a.id - b.id);
   }
 
   async addLinkCategory(category: LinkCategoryData) {

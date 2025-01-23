@@ -24,9 +24,11 @@ export class LinkLibraryService {
 
   private _linkCategories = signal<LinkCategoryCode[]>([]);
   readonly linkCategories = this._linkCategories.asReadonly();
+  readonly linkCategoryList = computed(() => this._linkCategories().map((item) => item.name))
 
   private _linkTags = signal<LinkTagCode[]>([]);
   readonly linkTags = this._linkTags.asReadonly();
+  readonly linkTagList = computed(() => this._linkTags().map((item) => item.name))
 
   private _linkFilter = signal('');
   readonly filterForm = signal(this.getFilterForm());

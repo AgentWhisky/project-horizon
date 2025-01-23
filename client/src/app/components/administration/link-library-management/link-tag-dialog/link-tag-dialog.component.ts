@@ -6,6 +6,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 import { LinkCategoryCode, LinkTagCode, NewLinkCategory, NewLinkTag } from '../../../../types/link-library';
+import { uniqueText } from '../../../../validators/unique-text.validator';
+import { LinkLibraryService } from '../../../../services/link-library.service';
 
 interface DialogData {
   type: 'create' | 'update';
@@ -29,17 +31,17 @@ export class LinkTagDialogComponent {
 
   readonly tagForm = this.data.type === 'update' && this.data.tag ? this.getUpdateTagForm(this.data.tag) : this.getNewTagForm();
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private linkLibraryService: LinkLibraryService) {}
 
   getNewTagForm() {
     return this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(30)]],
+      name: ['', [Validators.required, Validators.maxLength(30), uniqueText(this.linkLibraryService.linkTagList())]],
     });
   }
 
   getUpdateTagForm(tag: LinkTagCode) {
     return this.fb.group({
-      name: [tag.name, [Validators.required, Validators.maxLength(30)]],
+      name: [tag.name, [Validators.required, Validators.maxLength(30), uniqueText(this.linkLibraryService.linkTagList())]],
     });
   }
 
