@@ -1,0 +1,188 @@
+<div class="flex flex-col">
+  <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
+    <mat-tab label="Users" class="flex flex-col">
+      <div class="flex justify-end mt-3">
+        <button mat-button (click)="onCreateUser()" aria-label="Add User"><mat-icon>add</mat-icon> Add User</button>
+      </div>
+
+      @if(userDataSource.data.length > 0) {
+      <table mat-table [dataSource]="userDataSource" matSort #userSort="matSort" class="mat-elevation-z8">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by id">ID</th>
+          <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">Name</th>
+          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by email">Email</th>
+          <td mat-cell *matCellDef="let element">{{ element.email }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="roles">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by roles">Roles</th>
+          <td mat-cell *matCellDef="let element">
+            <div class="flex flex-wrap gap-3">
+              @for(role of element.roles; track role.id) {
+              <mat-chip [matTooltip]="role.description">{{ role.name }}</mat-chip>
+              }
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="active">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by roles">Active</th>
+          <td mat-cell *matCellDef="let element">{{ element.active ? 'Yes' : 'No' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="lastLogin">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by last login date">Last Login</th>
+          <td mat-cell *matCellDef="let element">{{ element.lastLogin | date : 'short' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef aria-hidden="true"></th>
+          <td mat-cell class="min-w-16" *matCellDef="let element">
+            <div class="flex justify-end items-center">
+              <button mat-icon-button (click)="onEditUser(element)" aria-label="Edit User">
+                <mat-icon matTooltip="Edit User">edit</mat-icon>
+              </button>
+              <button mat-icon-button (click)="onDeleteUser(element)" aria-label="Delete User">
+                <mat-icon matTooltip="Delete User">delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="userDisplayedColumns"></tr>
+        <tr mat-row class="table-row" *matRowDef="let row; columns: userDisplayedColumns"></tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="[25, 50, 100]" #userPaginator showFirstLastButtons aria-label="User Paginator"></mat-paginator>
+      } @else {
+      <app-no-data-card message="No users found"></app-no-data-card>
+
+      }
+    </mat-tab>
+
+    <mat-tab label="Roles" class="flex flex-col">
+      <div class="flex justify-end mt-3">
+        <button mat-button (click)="onCreateRole()" aria-label="Add Role"><mat-icon>add</mat-icon> Add Role</button>
+      </div>
+
+      @if(roleDataSource.data.length > 0) {
+      <table mat-table [dataSource]="roleDataSource" matSort #roleSort="matSort" class="mat-elevation-z8">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by id">ID</th>
+          <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">Name</th>
+          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by description">Description</th>
+          <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="active">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">Active</th>
+          <td mat-cell *matCellDef="let element">{{ element.active ? 'Yes' : 'No' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="rights">
+          <th mat-header-cell *matHeaderCellDef>Rights</th>
+          <td mat-cell *matCellDef="let element">
+            <div class="flex flex-wrap gap-3">
+              @for(right of element.rights; track right.id) {
+              <mat-chip [matTooltip]="right.description">{{ right.name }}</mat-chip>
+              }
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef aria-hidden="true"></th>
+          <td mat-cell class="min-w-16" *matCellDef="let element">
+            <div class="flex justify-end items-center">
+              <button mat-icon-button (click)="onEditRole(element)" aria-label="Edit Role">
+                <mat-icon matTooltip="Edit Role">edit</mat-icon>
+              </button>
+              <button mat-icon-button (click)="onDeleteRole(element)" aria-label="Delete Role" [disabled]="element.inUse">
+                <mat-icon matTooltip="Delete Role">delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="roleDisplayedColumns"></tr>
+        <tr mat-row class="table-row" *matRowDef="let row; columns: roleDisplayedColumns"></tr>
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[25, 50, 100]" #rolePaginator showFirstLastButtons aria-label="Role Paginator"></mat-paginator>
+      } @else {
+      <app-no-data-card message="No roles found"></app-no-data-card>
+      }
+    </mat-tab>
+
+    <mat-tab label="Rights" class="flex flex-col">
+      <div class="flex justify-end mt-3">
+        <button mat-button (click)="onCreateRight()" aria-label="Add Right"><mat-icon>add</mat-icon> Add Right</button>
+      </div>
+
+      @if(rightDataSource.data.length > 0) {
+      <table mat-table [dataSource]="rightDataSource" matSort #rightSort="matSort" class="mat-elevation-z8">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by id">ID</th>
+          <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">Name</th>
+          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="internalName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by internal name">Internal Name</th>
+          <td mat-cell *matCellDef="let element">{{ element.internalName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>Description</th>
+          <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="active">
+          <th mat-header-cell *matHeaderCellDef>Active</th>
+          <td mat-cell *matCellDef="let element">{{ element.active ? 'Yes' : 'No' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef aria-hidden="true"></th>
+          <td mat-cell class="min-w-16" *matCellDef="let element">
+            <div class="flex justify-end items-center">
+              <button mat-icon-button (click)="onEditRight(element)" aria-label="Edit Right">
+                <mat-icon matTooltip="Edit Right">edit</mat-icon>
+              </button>
+              <button mat-icon-button (click)="onDeleteRight(element)" [disabled]="element.inUse" aria-label="Delete Right">
+                <mat-icon matTooltip="Delete Right">delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="rightDisplayedColumns"></tr>
+        <tr mat-row class="table-row" *matRowDef="let row; columns: rightDisplayedColumns"></tr>
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[25, 50, 100]" #rightPaginator showFirstLastButtons></mat-paginator>
+      } @else {
+      <app-no-data-card message="No rights found"></app-no-data-card>
+      }
+    </mat-tab>
+  </mat-tab-group>
+</div>

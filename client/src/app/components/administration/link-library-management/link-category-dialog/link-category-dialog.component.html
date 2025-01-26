@@ -27,7 +27,7 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button (click)="onClose()">Cancel</button>
-  <button mat-flat-button (click)="onComplete()" [disabled]="!categoryForm.valid || !categoryForm.dirty">
+  <button mat-flat-button (click)="onSubmit()" [disabled]="!categoryForm.valid || !categoryForm.dirty">
     {{ this.data.type === 'create' ? 'Create' : 'Update' }}
   </button>
 </mat-dialog-actions>

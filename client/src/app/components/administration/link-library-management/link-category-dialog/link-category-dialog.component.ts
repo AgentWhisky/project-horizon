@@ -26,30 +26,25 @@ interface DialogResult {
   styleUrl: './link-category-dialog.component.scss',
 })
 export class LinkCategoryDialogComponent {
+  private fb = inject(FormBuilder);
+  private linkLibraryService = inject(LinkLibraryService);
+
   readonly dialogRef = inject(MatDialogRef<LinkCategoryDialogComponent>);
   readonly data = inject<DialogData>(MAT_DIALOG_DATA);
 
   readonly categoryForm =
     this.data.type === 'update' && this.data.category ? this.getUpdateCategoryForm(this.data.category) : this.getNewCategoryForm();
 
-  constructor(private fb: FormBuilder, private linkLibraryService: LinkLibraryService) {}
-
   getNewCategoryForm() {
     return this.fb.group({
-      name: [
-        '',
-        [Validators.required, Validators.maxLength(30), uniqueText(this.linkLibraryService.linkCategoryList())],
-      ],
+      name: ['', [Validators.required, Validators.maxLength(30), uniqueText(this.linkLibraryService.linkCategoryList())]],
       description: ['', [Validators.required, Validators.maxLength(250)]],
     });
   }
 
   getUpdateCategoryForm(category: LinkCategoryCode) {
     return this.fb.group({
-      name: [
-        '',
-        [Validators.required, Validators.maxLength(30), uniqueText(this.linkLibraryService.linkCategoryList())],
-      ],
+      name: [category.name, [Validators.required, Validators.maxLength(30), uniqueText(this.linkLibraryService.linkCategoryList())]],
       description: [category.description, [Validators.required, Validators.maxLength(250)]],
     });
   }
@@ -60,7 +55,7 @@ export class LinkCategoryDialogComponent {
     });
   }
 
-  onComplete() {
+  onSubmit() {
     const dialogResult: DialogResult = {
       status: true,
       category: {

@@ -26,16 +26,16 @@ interface DialogResult {
   styleUrl: './link-library-management-dialog.component.scss',
 })
 export class LinkLibraryManagementDialogComponent {
-  readonly dialogRef = inject(MatDialogRef<LinkLibraryManagementDialogComponent>);
+  private fb = inject(FormBuilder);
+  private linkLibraryService = inject(LinkLibraryService);
+  private dialogRef = inject(MatDialogRef<LinkLibraryManagementDialogComponent>);
   readonly data = inject<DialogData>(MAT_DIALOG_DATA);
 
   readonly linkCategories = this.linkLibraryService.linkCategories;
   readonly linkTags = this.linkLibraryService.linkTags;
 
   readonly linkForm = this.data.type === 'update' && this.data.link ? this.getUpdateLinkForm(this.data.link) : this.getNewLinkForm();
-
-  constructor(private linkLibraryService: LinkLibraryService, private fb: FormBuilder) {}
-
+  
   getNewLinkForm() {
     return this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(30)]],
@@ -64,7 +64,7 @@ export class LinkLibraryManagementDialogComponent {
     });
   }
 
-  onComplete() {
+  onSubmit() {
     const dialogResult: DialogResult = {
       status: true,
       linkData: {

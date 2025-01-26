@@ -26,12 +26,12 @@ interface DialogResult {
   styleUrl: './link-tag-dialog.component.scss',
 })
 export class LinkTagDialogComponent {
-  readonly dialogRef = inject(MatDialogRef<LinkTagDialogComponent>);
+  private fb = inject(FormBuilder);
+  private linkLibraryService = inject(LinkLibraryService);
+  private dialogRef = inject(MatDialogRef<LinkTagDialogComponent>);
   readonly data = inject<DialogData>(MAT_DIALOG_DATA);
 
   readonly tagForm = this.data.type === 'update' && this.data.tag ? this.getUpdateTagForm(this.data.tag) : this.getNewTagForm();
-
-  constructor(private fb: FormBuilder, private linkLibraryService: LinkLibraryService) {}
 
   getNewTagForm() {
     return this.fb.group({
@@ -51,7 +51,7 @@ export class LinkTagDialogComponent {
     });
   }
 
-  onComplete() {
+  onSubmit() {
     const dialogResult: DialogResult = {
       status: true,
       tag: {

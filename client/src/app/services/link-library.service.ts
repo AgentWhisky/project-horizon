@@ -1,4 +1,4 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { TokenService } from './token.service';
 import {
   Link,
@@ -19,16 +19,19 @@ import { DeleteResponse } from '../types/delete-response';
   providedIn: 'root',
 })
 export class LinkLibraryService {
+  private tokenService = inject(TokenService);
+  private fb = inject(FormBuilder);
+
   private _links = signal<Link[]>([]);
   readonly links = this._links.asReadonly();
 
   private _linkCategories = signal<LinkCategoryCode[]>([]);
   readonly linkCategories = this._linkCategories.asReadonly();
-  readonly linkCategoryList = computed(() => this._linkCategories().map((item) => item.name))
+  readonly linkCategoryList = computed(() => this._linkCategories().map((item) => item.name));
 
   private _linkTags = signal<LinkTagCode[]>([]);
   readonly linkTags = this._linkTags.asReadonly();
-  readonly linkTagList = computed(() => this._linkTags().map((item) => item.name))
+  readonly linkTagList = computed(() => this._linkTags().map((item) => item.name));
 
   private _linkFilter = signal('');
   readonly filterForm = signal(this.getFilterForm());
@@ -42,8 +45,6 @@ export class LinkLibraryService {
   );
 
   readonly linksByCategory = computed(() => this.getLinksByCategory(this._filteredLinks()));
-
-  constructor(private tokenService: TokenService, private fb: FormBuilder) {}
 
   // *** Filter Functions ***
   getFilterForm() {

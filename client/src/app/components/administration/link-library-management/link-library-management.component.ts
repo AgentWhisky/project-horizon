@@ -1,4 +1,4 @@
-import { Component, effect, OnInit, viewChild } from '@angular/core';
+import { Component, effect, inject, OnInit, viewChild } from '@angular/core';
 
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -16,14 +16,29 @@ import { filter, tap } from 'rxjs';
 import { RemoveConfirmComponent } from '../../../dialogs/remove-confirm/remove-confirm.component';
 import { LinkCategoryDialogComponent } from './link-category-dialog/link-category-dialog.component';
 import { LinkTagDialogComponent } from './link-tag-dialog/link-tag-dialog.component';
+import { NoDataCardComponent } from '../../../core/no-data-card/no-data-card.component';
+import { FormatArrayPipe } from '../../../pipes/format-array.pipe';
 
 @Component({
   selector: 'app-link-library-management',
-  imports: [MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatIconModule, MatTooltipModule, MatTabsModule],
+  imports: [
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatTabsModule,
+    NoDataCardComponent,
+    FormatArrayPipe,
+  ],
   templateUrl: './link-library-management.component.html',
   styleUrl: './link-library-management.component.scss',
 })
 export class LinkLibraryManagementComponent implements OnInit {
+  private linkLibraryService = inject(LinkLibraryService);
+  private dialog = inject(MatDialog);
+
   // Link Table
   readonly linkSort = viewChild<MatSort>('linkSort');
   readonly linkPaginator = viewChild<MatPaginator>('linkPaginator');
@@ -42,7 +57,7 @@ export class LinkLibraryManagementComponent implements OnInit {
   readonly tagDisplayedColumns: string[] = ['id', 'name', 'actions'];
   readonly tagDataSource = new MatTableDataSource<LinkTagCode>();
 
-  constructor(private linkLibraryService: LinkLibraryService, private dialog: MatDialog) {
+  constructor() {
     // Link Table
     effect(() => {
       this.linkDataSource.data = this.linkLibraryService.links();
@@ -210,10 +225,5 @@ export class LinkLibraryManagementComponent implements OnInit {
         tap(() => this.linkLibraryService.removeLinkTag(tag.id))
       )
       .subscribe();
-  }
-
-  // *** Formatting Function ***
-  getTagsFormatted(linkTags: LinkTag[]) {
-    return linkTags.map((tag) => tag.name).join(', ');
   }
 }

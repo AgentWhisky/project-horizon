@@ -6,12 +6,14 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
-  app.enableCors({
+  /*app.enableCors({
     origin: ['http://localhost:4200'],
-  });
+  });*/
+
+  app.enableCors(); // FIX FOR PRODUCTION*
 
   await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 
-  console.log(`Server Running on: ${await app.getUrl()}`)
+  console.log(`Server Running on: ${await app.getUrl()}`);
 }
 bootstrap();

@@ -39,6 +39,14 @@ export const routes: Routes = [
           ),
         canActivate: [authGuard],
       },
+      {
+        path: 'account-management',
+        loadComponent: () =>
+          import('./components/administration/account-management/account-management.component').then(
+            (c) => c.AccountManagementComponent
+          ),
+        canActivate: [authGuard],
+      },
     ],
   },
 ];

@@ -16,7 +16,14 @@
   <mat-divider class="nav-divider"></mat-divider>
 
   <h3 class="nav-section-header">Administration</h3>
-  <a [routerLink]="['/administration']" class="nav-item" routerLinkActive="active"><mat-icon>admin_panel_settings</mat-icon> Admin Dashboard</a>
-  <a [routerLink]="['/link-library-management']" class="nav-item" routerLinkActive="active"><mat-icon>add_link</mat-icon> Link Library Mgmt</a>
+  <a [routerLink]="['/administration']" class="nav-item" routerLinkActive="active">
+    <mat-icon>admin_panel_settings</mat-icon> Admin Dashboard
+  </a>
+  <a [routerLink]="['/account-management']" class="nav-item" routerLinkActive="active">
+    <mat-icon>manage_accounts</mat-icon> Account Management
+  </a>
+  <a [routerLink]="['/link-library-management']" class="nav-item" routerLinkActive="active">
+    <mat-icon>add_link</mat-icon> Link Library
+  </a>
   }
 </div>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -30,11 +30,14 @@ import { AuthenticationService } from '../../services/authentication.service';
   ],
 })
 export class MainComponent {
+  private navigationService = inject(NavigationService);
+  private authService = inject(AuthenticationService);
+  private themeService = inject(ThemeService);
+
   readonly isLeftNavOpen = this.navigationService.isLeftNavOpen;
   readonly isSmallScreen = this.navigationService.isSmallScreen;
   readonly isLoggedIn = this.authService.isLoggedIn;
   readonly isDarkmode = this.themeService.isDarkTheme;
-  constructor(private navigationService: NavigationService, private authService: AuthenticationService, private themeService: ThemeService) {}
 
   onToggleLeftNav() {
     this.navigationService.toggleLeftNav();

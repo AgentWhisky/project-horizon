@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>Sign In</h2>
+<mat-dialog-content>
+  <form class="flex flex-col gap-3" [formGroup]="loginForm">
+    <mat-form-field class="w-full">
+      <mat-label>Username</mat-label>
+      <input matInput formControlName="username" />
+      @if(loginForm.get('username')?.hasError('required')) {
+      <mat-error>Username is required</mat-error>
+      } @else {
+      <mat-error>Invalid username</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field class="w-full">
+      <mat-label>Password</mat-label>
+      <input [type]="showPassword() ? 'text' : 'password'" matInput formControlName="password" autocomplete="on" />
+      <button matSuffix mat-icon-button aria-label="Toggle Password Visible" (mouseover)="onShowPassword()" (mouseleave)="onHidePassword()" disableRipple>
+        <mat-icon>{{ showPassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
+      </button>
+      @if(loginForm.get('username')?.hasError('required')) {
+      <mat-error>Password is required</mat-error>
+      } @else {
+      <mat-error>Invalid password</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-flat-button (click)="onLogin()" [disabled]="!loginForm.valid">Login</button>
+</mat-dialog-actions>

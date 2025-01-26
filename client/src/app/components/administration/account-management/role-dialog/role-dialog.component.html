@@ -1,0 +1,44 @@
+<h2 mat-dialog-title>{{ this.data.type === 'create' ? 'Create Right' : 'Edit Right' }}</h2>
+<mat-dialog-content>
+  <form class="flex flex-col gap-3" [formGroup]="roleForm">
+    <mat-form-field class="w-full">
+      <mat-label>Name</mat-label>
+      <input matInput #nameInput formControlName="name" />
+      @if(roleForm.get('name')?.hasError('required')) {
+      <mat-error>Name is required</mat-error>
+      } @else if(roleForm.get('name')?.hasError('maxlength')) {
+      <mat-error>Name is too long [{{ nameInput.value.length }}/30]</mat-error>
+      } @else {
+      <mat-error>Invalid name</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field class="w-full">
+      <mat-label>Description</mat-label>
+      <textarea matInput #descriptionInput formControlName="description" rows="4"></textarea>
+      <mat-hint align="end">{{ descriptionInput.value.length }}/250</mat-hint>
+      @if(roleForm.get('description')?.hasError('required')) {
+      <mat-error>Description is required</mat-error>
+      } @else if(roleForm.get('description')?.hasError('maxlength')) {
+      <mat-error>Description is too long [{{ descriptionInput.value.length }}/250]</mat-error>
+      } @else {
+      <mat-error>Invalid description</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field class="w-full">
+      <mat-label>Rights</mat-label>
+      <mat-select formControlName="rights" multiple>
+        @for(right of rights(); track right.id) {
+        <mat-option [value]="right.id">{{ right.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-flat-button (click)="onSubmit()" [disabled]="!roleForm.valid || !roleForm.dirty">
+    {{ this.data.type === 'create' ? 'Create' : 'Update' }}
+  </button>
+</mat-dialog-actions>

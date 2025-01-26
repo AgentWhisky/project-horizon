@@ -1,16 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { LinkLibraryService } from '../../../services/link-library.service';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { MatDialog } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { LinkLibraryDialogComponent } from './link-library-dialog/link-library-dialog.component';
 import { LinkTileComponent } from './link-tile/link-tile.component';
-import { Link } from '../../../types/link-library';
 
 @Component({
   selector: 'app-link-library',
@@ -19,10 +16,9 @@ import { Link } from '../../../types/link-library';
   styleUrl: './link-library.component.scss',
 })
 export class LinkLibraryComponent implements OnInit {
+  private linkLibraryService = inject(LinkLibraryService);
   readonly linksByCategory = this.linkLibraryService.linksByCategory;
   readonly filterForm = this.linkLibraryService.filterForm;
-
-  constructor(private linkLibraryService: LinkLibraryService, private dialog: MatDialog) {}
 
   ngOnInit() {
     this.linkLibraryService.loadLibraryLinks();
@@ -30,9 +26,5 @@ export class LinkLibraryComponent implements OnInit {
 
   onResetForm() {
     this.linkLibraryService.resetForm();
-  }
-
-  onOpenInfo(link: Link) {
-    const dialogRef = this.dialog.open(LinkLibraryDialogComponent, { data: { link } });
   }
 }

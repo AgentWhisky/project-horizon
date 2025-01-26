@@ -13,7 +13,7 @@ export const DataSourceConfig: DataSourceOptions = {
   synchronize: false,
   entities: [__dirname + '/../**/*.entity.{js,ts}'],
   migrations: ['dist/db/migrations/*.js'],
-  logging: true,
+  logging: false, // Enable for Query Logging
   ssl: false,
 };
 

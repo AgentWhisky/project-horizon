@@ -47,5 +47,5 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button (click)="onClose()">Cancel</button>
-  <button mat-flat-button (click)="onComplete()" [disabled]="!linkForm.valid || !linkForm.dirty">{{ this.data.type === 'create' ? 'Create' : 'Update' }}</button>
+  <button mat-flat-button (click)="onSubmit()" [disabled]="!linkForm.valid || !linkForm.dirty">{{ this.data.type === 'create' ? 'Create' : 'Update' }}</button>
 </mat-dialog-actions>
