@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { RoleEntity } from './role.entity';
 
 @Entity('rights')
 export class RightEntity {
@@ -16,6 +17,9 @@ export class RightEntity {
 
   @Column({ name: 'active', type: 'boolean', default: true })
   active: boolean;
+
+  @ManyToMany(() => RoleEntity, (role) => role.rights)
+  roles: RoleEntity[];
 
   // *** AUDIT FIELDS ***
   @Column({ name: 'createdBy', type: 'int', nullable: true })

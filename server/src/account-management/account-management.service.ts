@@ -5,6 +5,8 @@ import { Repository } from 'typeorm';
 import { UserData, UserResponse } from './account-management.type';
 import { RightEntity } from './entities/right.entity';
 import { RightDto, RightResponseDto } from './dto/right.dto';
+import { RoleDto, RoleResponseDto } from './dto/role.dto';
+import { DeleteResponseDto } from 'src/common/dto/deletion-response.dto';
 
 @Injectable()
 export class AccountManagementService {
@@ -69,16 +71,45 @@ export class AccountManagementService {
     };
   }
 
-  // *** RIGHTS ***
-  async getRights() {
-    const rights: RightResponseDto[] = await this.rightRepository.find({
-      select: ['id', 'name', 'description', 'internalName', 'active'],
-    });
-
-    return rights.sort((a, b) => a.id - b.id);
+  // *** ROLES ***
+  async getRoles(): Promise<RoleResponseDto[]> {
+    return [];
   }
 
-  async addRight(rightDto: RightDto) {
+  async addRole(roleDto: RoleDto): Promise<RoleResponseDto> {
+    return null;
+  }
+
+  async updateRole(id: number, roleDto: RoleDto): Promise<RoleResponseDto> {
+    return null;
+  }
+
+  async deleteRole(id: number): Promise<DeleteResponseDto> {
+    return null;
+  }
+
+  // *** RIGHTS ***
+  async getRights(): Promise<RightResponseDto[]> {
+    const dbRights = await this.rightRepository.find({
+      select: ['id', 'name', 'description', 'internalName', 'active'],
+      relations: ['roles'],
+    });
+
+    const rights: RightResponseDto[] = dbRights
+      .map((right) => ({
+        id: right.id,
+        name: right.name,
+        description: right.description,
+        internalName: right.internalName,
+        active: right.active,
+        inUse: !!right.roles?.length,
+      }))
+      .sort((a, b) => a.id - b.id);
+
+    return rights;
+  }
+
+  async addRight(rightDto: RightDto): Promise<RightResponseDto> {
     const name = rightDto.name;
     const internalName = name.trim().toUpperCase().replace(/\s+/g, '_'); // Generate Internal Name
 
@@ -99,7 +130,7 @@ export class AccountManagementService {
     };
   }
 
-  async updateRight(id: number, rightDto: RightDto) {
+  async updateRight(id: number, rightDto: RightDto): Promise<RightResponseDto> {
     const existingRight = await this.rightRepository.findOne({ where: { id } });
 
     if (!existingRight) {
@@ -112,13 +143,23 @@ export class AccountManagementService {
       description: rightDto.description,
     });
 
-    return await this.rightRepository.findOne({
+    const right = await this.rightRepository.findOne({
       select: ['id', 'name', 'description', 'internalName', 'active'],
       where: { id },
+      relations: ['roles'],
     });
+
+    return {
+      id: right.id,
+      name: right.name,
+      description: right.description,
+      internalName: right.internalName,
+      active: right.active,
+      inUse: !!right.roles?.length,
+    };
   }
 
-  async deleteRight(id: number) {
+  async deleteRight(id: number): Promise<DeleteResponseDto> {
     const deleteResult = await this.rightRepository.delete(id);
 
     return {
