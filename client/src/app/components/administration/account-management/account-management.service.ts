@@ -1,6 +1,8 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { TokenService } from '../../../services/token.service';
-import { NewRole, NewUser, Right, RightCode, Role, RoleCode, User, UserCode } from './account-management';
+import { NewRole, NewUser, Right, RightCode, RightPayload, Role, RoleCode, UpdateRightPayload, User, UserCode } from './account-management';
+import { firstValueFrom } from 'rxjs';
+import { DeleteResponse } from '../../../types/delete-response';
 
 @Injectable({
   providedIn: 'root',
@@ -202,21 +204,91 @@ export class AccountManagementService {
   }
 
   // *** RIGHTS ***
-  loadRights() {
-    console.warn('LOAD-RIGHTS NOT IMPLEMENTED');
+  async loadRights() {
+    try {
+      const rights = await this.getRights();
+      this._rights.set(rights);
+    } catch (error) {
+      console.error(`Error fetching user rights: ${error}`);
+    }
   }
 
-  addRight(newRight: Right) {
-    console.warn('ADD-RIGHT NOT IMPLEMENTED', newRight);
-
-    //nameValue.trim().toUpperCase().replace(/\s+/g, '_');
+  async addRight(newRight: RightPayload) {
+    try {
+      const right = await this.postRight(newRight);
+      this._rights.set([...this._rights(), right]);
+    } catch (error) {
+      console.error(`Error creating user right: ${error}`);
+    }
   }
 
-  updateRight(right: Right) {
-    console.warn('UPDATE-RIGHT NOT IMPLEMENTED', right);
+  async updateRight(updateRight: UpdateRightPayload) {
+    try {
+      const { id, ...rightPayload } = updateRight;
+
+      const right = await this.putRight(id, rightPayload);
+
+      const updatedIndex = this._rights().findIndex((item) => item.id === id);
+      const updatedRights: RightCode[] = [...this._rights().filter((item) => item.id !== id)];
+      updatedRights.splice(updatedIndex, 0, right);
+
+      this._rights.set(updatedRights);
+    } catch (error) {
+      console.error(`Error updating user right: ${error}`);
+    }
   }
 
-  removeRight(id: number) {
-    console.warn('REMOVE-RIGHT NOT IMPLEMENTED', id);
+  async removeRight(id: number) {
+    try {
+      const deleteResponse = await this.deleteRight(id);
+
+      if (deleteResponse.success) {
+        this._rights.set([...this._rights().filter((item) => item.id !== deleteResponse.id)]);
+      }
+    } catch (error) {
+      console.error(`Error removing user right: ${error}`);
+    }
+  }
+
+  // *** PRIVATE USER FUNCTIONS ***
+  private async getUsers() {
+    const users$ = this.tokenService.getWithTokenRefresh<UserCode[]>('/account-management/users');
+    return firstValueFrom(users$);
+  }
+
+  private async putUser(user: User) {
+    const user$ = this.tokenService.putWithTokenRefresh<UserCode[]>(`/account-management//users/${user.id}`, user);
+    return firstValueFrom(user$);
+  }
+
+  private async postUser(newUser: NewUser) {
+    const user$ = this.tokenService.postWithTokenRefresh<UserCode[]>('/account-management/users', newUser);
+    return firstValueFrom(user$);
+  }
+
+  private async deleteUser(id: number) {
+    const deleteResponse$ = this.tokenService.deleteWithTokenRefresh<DeleteResponse>(`/account-management//users/${id}`);
+    return firstValueFrom(deleteResponse$);
+  }
+
+  // *** PRIVATE RIGHT FUNCTIONS ***
+  private async getRights() {
+    const rights$ = this.tokenService.getWithTokenRefresh<RightCode[]>('/account-management/rights');
+    return firstValueFrom(rights$);
+  }
+
+  private async postRight(rightPayload: RightPayload) {
+    const newRight$ = this.tokenService.postWithTokenRefresh<RightCode>('/account-management/rights', rightPayload);
+    return firstValueFrom(newRight$);
+  }
+
+  private async putRight(id: number, rightPayload: RightPayload) {
+    const right$ = this.tokenService.putWithTokenRefresh<RightCode>(`/account-management/rights/${id}`, rightPayload);
+    return firstValueFrom(right$);
+  }
+
+  private async deleteRight(id: number) {
+    const deleteResponse$ = this.tokenService.deleteWithTokenRefresh<DeleteResponse>(`/account-management/rights/${id}`);
+    return firstValueFrom(deleteResponse$);
   }
 }

@@ -93,7 +93,7 @@ export class AccountManagementComponent implements OnInit {
 
   ngOnInit() {
     // LOAD DATA
-    this.accountManagementService.loadMockData();
+    //this.accountManagementService.loadMockData();
 
     this.accountManagementService.loadUsers();
     this.accountManagementService.loadRoles();
@@ -221,7 +221,7 @@ export class AccountManagementComponent implements OnInit {
       .afterClosed()
       .pipe(
         filter((result) => result),
-        tap(() => this.accountManagementService.removeRole(right.id))
+        tap(() => this.accountManagementService.removeRight(right.id))
       )
       .subscribe();
   }

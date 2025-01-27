@@ -52,3 +52,12 @@ export interface RightCode extends Right {
   active: boolean;
   inUse: boolean;
 }
+
+export interface RightPayload {
+  name: string;
+  description: string;
+}
+
+export interface UpdateRightPayload extends RightPayload {
+  id: number;
+}
