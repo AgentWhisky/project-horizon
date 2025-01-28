@@ -92,9 +92,6 @@ export class AccountManagementComponent implements OnInit {
   }
 
   ngOnInit() {
-    // LOAD DATA
-    //this.accountManagementService.loadMockData();
-
     this.accountManagementService.loadUsers();
     this.accountManagementService.loadRoles();
     this.accountManagementService.loadRights();
