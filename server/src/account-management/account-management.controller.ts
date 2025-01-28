@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { AccountManagementService } from './account-management.service';
-import { UserData } from './account-management.type';
 import { RightDto } from './dto/right.dto';
 import { RoleDto } from './dto/role.dto';
+import { UserDto } from './dto/user.dto';
 
 @Controller('account-management')
 export class AccountManagementController {
@@ -14,13 +14,13 @@ export class AccountManagementController {
   }
 
   @Post('users')
-  async addUser(@Body() user: UserData) {
-    return this.accountManagementService.addUser(user);
+  async addUser(@Body() userDto: UserDto) {
+    return this.accountManagementService.addUser(userDto);
   }
 
   @Put('users/:id')
-  async updateUser(@Param('id', ParseIntPipe) id: number, @Body() user: UserData) {
-    return this.accountManagementService.updateUser(id, user);
+  async updateUser(@Param('id', ParseIntPipe) id: number, @Body() userDto: UserDto) {
+    return this.accountManagementService.updateUser(id, userDto);
   }
 
   @Delete('users/:id')

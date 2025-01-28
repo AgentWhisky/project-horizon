@@ -2,11 +2,12 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/users.entity';
 import { Repository } from 'typeorm';
-import { UserData, UserResponse } from './account-management.type';
 import { RightEntity } from './entities/right.entity';
 import { RightDto, RightResponseDto } from './dto/right.dto';
 import { RoleDto, RoleResponseDto } from './dto/role.dto';
 import { DeleteResponseDto } from 'src/common/dto/deletion-response.dto';
+import { RoleEntity } from './entities/role.entity';
+import { UserDto, UserResponseDto } from './dto/user.dto';
 
 @Injectable()
 export class AccountManagementService {
@@ -14,34 +15,65 @@ export class AccountManagementService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
 
+    @InjectRepository(RoleEntity)
+    private readonly roleRepository: Repository<RoleEntity>,
+
     @InjectRepository(RightEntity)
     private readonly rightRepository: Repository<RightEntity>
   ) {}
 
-  async getUsers() {
-    const users: UserResponse[] = await this.userRepository.find({
+  async getUsers(): Promise<UserResponseDto[]> {
+    const dbUsers = await this.userRepository.find({
       select: ['id', 'name', 'email', 'roles', 'active', 'lastLogin'],
       relations: ['roles'],
     });
 
-    return users.sort((a, b) => a.id - b.id);
+    const users: UserResponseDto[] = dbUsers
+      .map((user) => ({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        active: user.active,
+        lastLogin: user.lastLogin,
+        roles: user.roles.map((right) => ({
+          id: right.id,
+          name: right.name,
+          description: right.description,
+        })),
+      }))
+      .sort((a, b) => a.id - b.id);
+
+    return users;
   }
 
-  async addUser(user: UserData) {
-    const newLink = await this.userRepository.save({
+  async addUser(userDto: UserDto): Promise<UserResponseDto> {
+    const newUser = await this.userRepository.save({
+      name: userDto.name,
+      email: userDto.email,
+      roles: userDto.roles.map((id) => ({ id })),
+    });
+
+    const user = await this.userRepository.findOne({
+      select: ['id', 'name', 'email', 'roles', 'active', 'lastLogin'],
+      relations: ['roles'],
+      where: [{ id: newUser.id }],
+    });
+
+    return {
+      id: user.id,
       name: user.name,
       email: user.email,
-      roles: user.roles.map((id) => ({ id })),
-    });
-
-    return await this.userRepository.findOne({
-      select: ['id', 'name', 'email', 'roles', 'active', 'lastLogin'],
-      where: { id: newLink.id },
-      relations: ['roles'],
-    });
+      active: user.active,
+      lastLogin: user.lastLogin,
+      roles: user.roles.map((role) => ({
+        id: role.id,
+        name: role.name,
+        description: role.description,
+      })),
+    };
   }
 
-  async updateUser(id: number, user: UserData) {
+  async updateUser(id: number, userDto: UserDto): Promise<UserResponseDto> {
     const existingUser = await this.userRepository.findOne({ where: { id } });
 
     if (!existingUser) {
@@ -50,19 +82,32 @@ export class AccountManagementService {
 
     await this.userRepository.save({
       id,
+      name: userDto.name,
+      email: userDto.email,
+      roles: userDto.roles.map((id) => ({ id })),
+    });
+
+    const user = await this.userRepository.findOne({
+      select: ['id', 'name', 'email', 'roles', 'active', 'lastLogin'],
+      relations: ['roles'],
+      where: [{ id }],
+    });
+
+    return {
+      id: user.id,
       name: user.name,
       email: user.email,
-      roles: user.roles.map((id) => ({ id })),
-    });
-
-    return await this.userRepository.findOne({
-      select: ['id', 'name', 'email', 'roles', 'active', 'lastLogin'],
-      where: { id },
-      relations: ['roles'],
-    });
+      active: user.active,
+      lastLogin: user.lastLogin,
+      roles: user.roles.map((role) => ({
+        id: role.id,
+        name: role.name,
+        description: role.description,
+      })),
+    };
   }
 
-  async deleteUser(id: number) {
+  async deleteUser(id: number): Promise<DeleteResponseDto> {
     const deleteResult = await this.userRepository.delete(id);
 
     return {
@@ -73,25 +118,97 @@ export class AccountManagementService {
 
   // *** ROLES ***
   async getRoles(): Promise<RoleResponseDto[]> {
-    return [];
+    const dbRoles = await this.roleRepository.find({
+      select: ['id', 'name', 'description', 'rights'],
+      relations: ['rights'],
+    });
+
+    const roles: RoleResponseDto[] = dbRoles
+      .map((role) => ({
+        id: role.id,
+        name: role.name,
+        description: role.description,
+        rights: role.rights.map((right) => ({
+          id: right.id,
+          name: right.name,
+          description: right.description,
+        })),
+      }))
+      .sort((a, b) => a.id - b.id);
+
+    return roles;
   }
 
   async addRole(roleDto: RoleDto): Promise<RoleResponseDto> {
-    return null;
+    const newRole = await this.roleRepository.save({
+      name: roleDto.name,
+      description: roleDto.description,
+      rights: roleDto.rights.map((id) => ({ id })),
+    });
+
+    const role = await this.roleRepository.findOne({
+      select: ['id', 'name', 'description', 'rights'],
+      relations: ['rights'],
+      where: [{ id: newRole.id }],
+    });
+
+    return {
+      id: role.id,
+      name: role.name,
+      description: role.description,
+      rights: role.rights.map((right) => ({
+        id: right.id,
+        name: right.name,
+        description: right.description,
+      })),
+    };
   }
 
   async updateRole(id: number, roleDto: RoleDto): Promise<RoleResponseDto> {
-    return null;
+    const existingRole = await this.roleRepository.findOne({ where: { id } });
+
+    if (!existingRole) {
+      throw new HttpException(`Role with ID: ${id} not found`, HttpStatus.NOT_FOUND);
+    }
+
+    await this.roleRepository.save({
+      id,
+      name: roleDto.name,
+      description: roleDto.description,
+      rights: roleDto.rights.map((id) => ({ id })),
+    });
+
+    const role = await this.roleRepository.findOne({
+      select: ['id', 'name', 'description', 'rights'],
+      relations: ['rights'],
+      where: [{ id }],
+    });
+
+    return {
+      id: role.id,
+      name: role.name,
+      description: role.description,
+      rights: role.rights.map((right) => ({
+        id: right.id,
+        name: right.name,
+        description: right.description,
+      })),
+    };
   }
 
   async deleteRole(id: number): Promise<DeleteResponseDto> {
-    return null;
+    const deleteResult = await this.roleRepository.delete(id);
+
+    return {
+      success: deleteResult.affected === 1,
+      id,
+    };
   }
 
   // *** RIGHTS ***
   async getRights(): Promise<RightResponseDto[]> {
     const dbRights = await this.rightRepository.find({
-      select: ['id', 'name', 'description', 'internalName', 'active'],
+      select: ['id', 'name', 'description', 'internalName'],
       relations: ['roles'],
     });
 
@@ -101,7 +218,6 @@ export class AccountManagementService {
         name: right.name,
         description: right.description,
         internalName: right.internalName,
-        active: right.active,
         inUse: !!right.roles?.length,
       }))
       .sort((a, b) => a.id - b.id);
@@ -120,7 +236,7 @@ export class AccountManagementService {
     });
 
     const right = await this.rightRepository.findOne({
-      select: ['id', 'name', 'description', 'internalName', 'active'],
+      select: ['id', 'name', 'description', 'internalName'],
       where: { id: newRight.id },
     });
 
@@ -139,12 +255,12 @@ export class AccountManagementService {
 
     await this.rightRepository.save({
       id,
-      name: rightDto.description,
+      name: rightDto.name,
       description: rightDto.description,
     });
 
     const right = await this.rightRepository.findOne({
-      select: ['id', 'name', 'description', 'internalName', 'active'],
+      select: ['id', 'name', 'description', 'internalName'],
       where: { id },
       relations: ['roles'],
     });
@@ -154,7 +270,6 @@ export class AccountManagementService {
       name: right.name,
       description: right.description,
       internalName: right.internalName,
-      active: right.active,
       inUse: !!right.roles?.length,
     };
   }

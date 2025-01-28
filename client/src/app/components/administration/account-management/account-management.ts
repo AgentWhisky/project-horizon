@@ -1,53 +1,60 @@
-export interface User {
+// *** USER TYPES ***
+export interface UserCode {
   id: number;
   name: string;
   email: string;
+  roles: UserRole[];
+  active: boolean;
+  lastLogin?: Date;
 }
 
-export interface NewUser {
+export interface UserRole {
+  id: number;
+  name: string;
+  description: string;
+}
+
+export interface UserPayload {
   name: string;
   email: string;
   roles: number[];
 }
 
-export interface UserCode extends User {
-  roles: Role[];
-  active: boolean;
-  lastLogin?: Date;
+export interface UpdateUserPayload extends UserPayload {
+  id: number;
 }
 
-// *** ROLES ***
-export interface Role {
+// *** ROLE TYPES ***
+export interface RoleCode {
+  id: number;
+  name: string;
+  description: string;
+  rights: RoleRight[];
+  active: boolean;
+  inUse: boolean;
+}
+
+export interface RoleRight {
   id: number;
   name: string;
   description: string;
 }
 
-export interface NewRole {
+export interface RolePayload {
   name: string;
   description: string;
   rights: number[];
 }
 
-export interface RoleCode extends Role {
-  rights: Right[];
-  active: boolean;
-  inUse: boolean;
+export interface UpdateRolePayload extends RolePayload {
+  id: number;
 }
 
-// *** RIGHTS ***
-export interface Right {
+// *** RIGHT TYPES ***
+export interface RightCode {
   id: number;
   name: string;
   description: string;
-}
-
-export interface NewRight {
-  name: string;
-  description: string;
-}
-
-export interface RightCode extends Right {
   internalName: string;
   active: boolean;
   inUse: boolean;

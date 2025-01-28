@@ -15,9 +15,6 @@ export class RightEntity {
   @Column({ name: 'description', type: 'text' })
   description: string;
 
-  @Column({ name: 'active', type: 'boolean', default: true })
-  active: boolean;
-
   @ManyToMany(() => RoleEntity, (role) => role.rights)
   roles: RoleEntity[];
 

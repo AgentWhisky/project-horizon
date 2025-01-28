@@ -26,12 +26,6 @@ export class RoleResponseDto {
 
   @IsArray()
   rights: RoleRightDto[];
-
-  @IsBoolean()
-  active: boolean;
-
-  @IsBoolean()
-  inUse: boolean;
 }
 
 // *** DTO for simplified Right used in Role response to the client ***

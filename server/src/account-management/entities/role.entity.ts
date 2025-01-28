@@ -12,10 +12,7 @@ export class RoleEntity {
   @Column({ name: 'description', type: 'text' })
   description: string;
 
-  @Column({ name: 'active', type: 'boolean', default: true })
-  active: boolean;
-
-  @ManyToMany(() => RightEntity)
+  @ManyToMany(() => RightEntity, (right) => right.roles, { cascade: true })
   @JoinTable({ name: 'role_rights' })
   rights: RightEntity[];
 

@@ -8,7 +8,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 import { AccountManagementService } from '../account-management.service';
-import { NewUser, UserCode } from '../account-management';
+import { UserCode, UserPayload } from '../account-management';
 
 interface DialogData {
   type: 'create' | 'update';
@@ -17,7 +17,7 @@ interface DialogData {
 
 interface DialogResult {
   status: boolean;
-  userData: NewUser;
+  userData: UserPayload;
 }
 
 @Component({

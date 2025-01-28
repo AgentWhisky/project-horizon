@@ -25,7 +25,7 @@
         <ng-container matColumnDef="roles">
           <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by roles">Roles</th>
           <td mat-cell *matCellDef="let element">
-            <div class="flex flex-wrap gap-3">
+            <div class="flex flex-wrap gap-x-3 gap-y-1">
               @for(role of element.roles; track role.id) {
               <mat-chip [matTooltip]="role.description">{{ role.name }}</mat-chip>
               }
@@ -40,7 +40,7 @@
 
         <ng-container matColumnDef="lastLogin">
           <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by last login date">Last Login</th>
-          <td mat-cell *matCellDef="let element">{{ element.lastLogin | date : 'short' }}</td>
+          <td mat-cell *matCellDef="let element">{{ element.lastLogin ? (element.lastLogin | date : 'short') : 'NONE' }}</td>
         </ng-container>
 
         <ng-container matColumnDef="actions">

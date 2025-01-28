@@ -24,8 +24,5 @@ export class RightResponseDto {
   internalName: string;
 
   @IsBoolean()
-  active: boolean;
-
-  @IsBoolean()
   inUse: boolean;
 }

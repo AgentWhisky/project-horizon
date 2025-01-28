@@ -9,7 +9,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatChipsModule } from '@angular/material/chips';
 
-import { Right, RightCode, Role, User } from './account-management';
+import { RightCode, RoleCode, UserCode } from './account-management';
 import { NoDataCardComponent } from '../../../core/no-data-card/no-data-card.component';
 import { AccountManagementService } from './account-management.service';
 import { RemoveConfirmComponent } from '../../../dialogs/remove-confirm/remove-confirm.component';
@@ -45,19 +45,19 @@ export class AccountManagementComponent implements OnInit {
   readonly userSort = viewChild<MatSort>('userSort');
   readonly userPaginator = viewChild<MatPaginator>('userPaginator');
   readonly userDisplayedColumns: string[] = ['id', 'name', 'email', 'roles', 'active', 'lastLogin', 'actions'];
-  readonly userDataSource = new MatTableDataSource<User>();
+  readonly userDataSource = new MatTableDataSource<UserCode>();
 
   // Roles Table
   readonly roleSort = viewChild<MatSort>('roleSort');
   readonly rolePaginator = viewChild<MatPaginator>('rolePaginator');
   readonly roleDisplayedColumns: string[] = ['id', 'name', 'description', 'active', 'rights', 'actions'];
-  readonly roleDataSource = new MatTableDataSource<Role>();
+  readonly roleDataSource = new MatTableDataSource<RoleCode>();
 
   // Rights Table
   readonly rightSort = viewChild<MatSort>('rightSort');
   readonly rightPaginator = viewChild<MatPaginator>('rightPaginator');
   readonly rightDisplayedColumns: string[] = ['id', 'name', 'internalName', 'description', 'active', 'actions'];
-  readonly rightDataSource = new MatTableDataSource<Right>();
+  readonly rightDataSource = new MatTableDataSource<RightCode>();
 
   constructor() {
     // Users Table
@@ -115,7 +115,7 @@ export class AccountManagementComponent implements OnInit {
       .subscribe();
   }
 
-  onEditUser(user: User) {
+  onEditUser(user: UserCode) {
     this.dialog
       .open(UserDialogComponent, {
         data: { type: 'update', user },
@@ -124,12 +124,12 @@ export class AccountManagementComponent implements OnInit {
       .afterClosed()
       .pipe(
         filter((result) => result && result.status === true),
-        tap((result) => this.accountManagementService.addUser(result.userData))
+        tap((result) => this.accountManagementService.updateUser({ id: user.id, ...result.userData }))
       )
       .subscribe();
   }
 
-  onDeleteUser(user: User) {
+  onDeleteUser(user: UserCode) {
     const message = 'Are you sure you want to remove this user?';
 
     this.dialog
@@ -157,7 +157,7 @@ export class AccountManagementComponent implements OnInit {
       .subscribe();
   }
 
-  onEditRole(role: Role) {
+  onEditRole(role: RoleCode) {
     this.dialog
       .open(RoleDialogComponent, {
         data: { type: 'update', role },
@@ -166,12 +166,12 @@ export class AccountManagementComponent implements OnInit {
       .afterClosed()
       .pipe(
         filter((result) => result && result.status === true),
-        tap((result) => this.accountManagementService.updateRole(result.roleData))
+        tap((result) => this.accountManagementService.updateRole({ id: role.id, ...result.roleData }))
       )
       .subscribe();
   }
 
-  onDeleteRole(role: Role) {
+  onDeleteRole(role: RoleCode) {
     const message = 'Are you sure you want to remove this role?';
 
     this.dialog

@@ -6,7 +6,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
-import { NewRole, RoleCode } from '../account-management';
+import { RoleCode, RolePayload } from '../account-management';
 import { AccountManagementService } from '../account-management.service';
 
 interface DialogData {
@@ -16,7 +16,7 @@ interface DialogData {
 
 interface DialogResult {
   status: boolean;
-  roleData: NewRole;
+  roleData: RolePayload;
 }
 
 @Component({

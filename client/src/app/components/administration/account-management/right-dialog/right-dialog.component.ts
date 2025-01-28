@@ -5,7 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
-import { NewRight, RightCode } from '../account-management';
+import { RightCode, RightPayload } from '../account-management';
 
 interface DialogData {
   type: 'create' | 'update';
@@ -14,7 +14,7 @@ interface DialogData {
 
 interface DialogResult {
   status: boolean;
-  rightData: NewRight;
+  rightData: RightPayload;
 }
 
 @Component({
