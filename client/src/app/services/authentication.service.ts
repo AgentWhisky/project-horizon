@@ -1,12 +1,15 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { LoginDialogComponent } from '../dialogs/login-dialog/login-dialog.component';
-import { filter, tap } from 'rxjs';
+import { filter, firstValueFrom, tap } from 'rxjs';
+import { TokenService } from './token.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationService {
+  private tokenService = inject(TokenService);
+
   private _isLoggedIn = signal(this.getAuth());
   readonly isLoggedIn = this._isLoggedIn.asReadonly();
 
@@ -32,8 +35,10 @@ export class AuthenticationService {
     this.removeAuth();
   }
 
-  handleLogin(username: string, password: string) {
-    console.log(`Username: ${username}, Password: ${password}`);
+  async handleLogin(username: string, password: string) {
+    const response = await this.authenticate(username, password);
+
+    console.log(response);
 
     this._isLoggedIn.set(true);
     this.setAuth();
@@ -49,5 +54,12 @@ export class AuthenticationService {
 
   private removeAuth() {
     localStorage.removeItem('authToken');
+  }
+
+  private async authenticate(username: string, password: string) {
+    const payload = { username, password };
+
+    const authInfo$ = this.tokenService.postWithTokenRefresh<{ response: string }>('/auth/login', payload);
+    return firstValueFrom(authInfo$);
   }
 }

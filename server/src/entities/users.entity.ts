@@ -22,6 +22,13 @@ export class UserEntity {
   @Column({ name: 'lastLogin', type: 'timestamp', nullable: true })
   lastLogin: Date;
 
+  // *** CREDENTIALS ***
+  @Column({ unique: true })
+  username: string;
+
+  @Column()
+  password: string; // HASHED PASSWORD
+
   // *** AUDIT FIELDS ***
   @Column({ name: 'createdBy', type: 'int', nullable: true })
   createdBy: number;

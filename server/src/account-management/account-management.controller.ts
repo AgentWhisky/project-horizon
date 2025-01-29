@@ -8,6 +8,7 @@ import { UserDto } from './dto/user.dto';
 export class AccountManagementController {
   constructor(private readonly accountManagementService: AccountManagementService) {}
 
+  // *** USERS ***
   @Get('users')
   async getUsers() {
     return this.accountManagementService.getUsers();
@@ -26,6 +27,12 @@ export class AccountManagementController {
   @Delete('users/:id')
   async deleteUser(@Param('id', ParseIntPipe) id: number) {
     return this.accountManagementService.deleteUser(id);
+  }
+
+  @Put('users/:id/active')
+  async updateUserActive(@Param('id', ParseIntPipe) id: number, @Body() body: { active: boolean }) {
+    console.log(id, body.active);
+    return this.accountManagementService.updateUserActive(id, body.active);
   }
 
   // *** ROLES ***

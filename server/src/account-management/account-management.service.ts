@@ -1,12 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from './entities/users.entity';
+import { UserEntity } from '../entities/users.entity';
 import { Repository } from 'typeorm';
-import { RightEntity } from './entities/right.entity';
+import { RightEntity } from '../entities/right.entity';
 import { RightDto, RightResponseDto } from './dto/right.dto';
 import { RoleDto, RoleResponseDto } from './dto/role.dto';
 import { DeleteResponseDto } from 'src/common/dto/deletion-response.dto';
-import { RoleEntity } from './entities/role.entity';
+import { RoleEntity } from '../entities/role.entity';
 import { UserDto, UserResponseDto } from './dto/user.dto';
 
 @Injectable()
@@ -113,6 +113,38 @@ export class AccountManagementService {
     return {
       success: deleteResult.affected === 1,
       id,
+    };
+  }
+
+  async updateUserActive(id: number, active: boolean) {
+    const existingUser = await this.userRepository.findOne({ where: { id } });
+
+    if (!existingUser) {
+      throw new HttpException(`User with ID: ${id} not found`, HttpStatus.NOT_FOUND);
+    }
+
+    await this.userRepository.save({
+      id,
+      active,
+    });
+
+    const user = await this.userRepository.findOne({
+      select: ['id', 'name', 'email', 'roles', 'active', 'lastLogin'],
+      relations: ['roles'],
+      where: [{ id }],
+    });
+
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      active: user.active,
+      lastLogin: user.lastLogin,
+      roles: user.roles.map((role) => ({
+        id: role.id,
+        name: role.name,
+        description: role.description,
+      })),
     };
   }
 

@@ -139,6 +139,10 @@ export class AccountManagementComponent implements OnInit {
       .subscribe();
   }
 
+  onToggleUser(user: UserCode) {
+    this.accountManagementService.updateUserActive(user.id, !user.active);
+  }
+
   // *** Roles ***
   onCreateRole() {
     this.dialog

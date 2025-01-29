@@ -78,6 +78,20 @@ export class AccountManagementService {
     }
   }
 
+  async updateUserActive(id: number, active: boolean) {
+    try {
+      const user = await this.putUserActive(id, active);
+
+      const updatedIndex = this._users().findIndex((item) => item.id === id);
+      const updatedUsers: UserCode[] = [...this._users().filter((item) => item.id !== id)];
+      updatedUsers.splice(updatedIndex, 0, user);
+
+      this._users.set(updatedUsers);
+    } catch (error) {
+      console.error(`Error updating user: ${error}`);
+    }
+  }
+
   // *** ROLES ***
   async loadRoles() {
     try {
@@ -191,6 +205,11 @@ export class AccountManagementService {
   private async deleteUser(id: number) {
     const deleteResponse$ = this.tokenService.deleteWithTokenRefresh<DeleteResponse>(`/account-management/users/${id}`);
     return firstValueFrom(deleteResponse$);
+  }
+
+  private async putUserActive(id: number, active: boolean) {
+    const user$ = this.tokenService.putWithTokenRefresh<UserCode>(`/account-management/users/${id}/active`, { active });
+    return firstValueFrom(user$);
   }
 
   // *** PRIVATE ROLE FUNCTIONS ***
