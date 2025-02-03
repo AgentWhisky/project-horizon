@@ -1,65 +1,112 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 import { LoginDialogComponent } from '../dialogs/login-dialog/login-dialog.component';
-import { filter, firstValueFrom, tap } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { TokenService } from './token.service';
+import { LoginCredentials, NewAccountCredentials } from '../types/login-credentials';
+import { AuthInfo } from '../types/auth';
+import { DialogRef } from '@angular/cdk/dialog';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationService {
   private tokenService = inject(TokenService);
-
-  private _isLoggedIn = signal(this.getAuth());
-  readonly isLoggedIn = this._isLoggedIn.asReadonly();
-
+  private router = inject(Router);
   private dialog = inject(MatDialog);
+  private snackbar = inject(MatSnackBar);
 
-  constructor() {}
+  private _authInfo = signal<AuthInfo | null>(this.getAuth());
+  readonly authInfo = this._authInfo.asReadonly();
 
-  login() {
-    this.dialog
-      .open(LoginDialogComponent, {
-        width: '560px',
-      })
-      .afterClosed()
-      .pipe(
-        filter((result) => result && result.status === true),
-        tap((result) => console.log(result))
-      )
-      .subscribe();
+  readonly isLoggedIn = computed(() => !!this._authInfo());
+
+  constructor() {
+    effect(() => console.log(this.authInfo()));
+  }
+
+  loginDialog() {
+    this.dialog.open(LoginDialogComponent, {
+      width: '560px',
+    });
+  }
+
+  async login(credentials: LoginCredentials) {
+    try {
+      const authInfo = await this.authenticate(credentials);
+      this._authInfo.set(authInfo);
+      this.setAuth(authInfo);
+
+      this.snackbar.open('Login successful', 'Close', { duration: 3000 });
+      return true;
+    } catch (error) {
+      this.snackbar.open('Login failed', 'Close', { duration: 3000 });
+      return false;
+    }
+  }
+
+  async createAccount(newAccountCredentials: NewAccountCredentials) {
+    try {
+      const authInfo = await this.postCreateAccount(newAccountCredentials);
+      this._authInfo.set(authInfo);
+      this.setAuth(authInfo);
+
+      this.snackbar.open('Account registration successful', 'Close', { duration: 3000 });
+      return true;
+    } catch (error) {
+      this.snackbar.open('Account registration failed', 'Close', { duration: 3000 });
+      return false;
+    }
   }
 
   logout() {
-    this._isLoggedIn.set(false);
+    this.router.navigate(['/dashboard']);
+    this._authInfo.set(null);
     this.removeAuth();
   }
 
-  async handleLogin(username: string, password: string) {
-    const response = await this.authenticate(username, password);
-
-    console.log(response);
-
-    this._isLoggedIn.set(true);
-    this.setAuth();
+  private setAuth(authInfo: AuthInfo) {
+    localStorage.setItem('accessToken', JSON.stringify(authInfo.accessToken));
+    localStorage.setItem('refreshToken', JSON.stringify(authInfo.refreshToken));
+    localStorage.setItem('expiresIn', JSON.stringify(authInfo.expiresIn));
+    localStorage.setItem('tokenType', JSON.stringify(authInfo.tokenType));
   }
 
-  private setAuth() {
-    localStorage.setItem('authToken', JSON.stringify(this._isLoggedIn()));
-  }
+  private getAuth(): AuthInfo | null {
+    const accessToken = localStorage.getItem('accessToken');
+    const refreshToken = localStorage.getItem('refreshToken');
+    const expiresIn = localStorage.getItem('expiresIn');
+    const tokenType = localStorage.getItem('tokenType');
 
-  private getAuth() {
-    return JSON.parse(localStorage.getItem('authToken') || 'false');
+    if (!accessToken || !refreshToken || !expiresIn || !tokenType) {
+      return null;
+    }
+
+    return {
+      accessToken: JSON.parse(accessToken),
+      refreshToken: JSON.parse(refreshToken),
+      expiresIn: JSON.parse(expiresIn),
+      tokenType: JSON.parse(tokenType),
+    };
   }
 
   private removeAuth() {
-    localStorage.removeItem('authToken');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('expiresIn');
+    localStorage.removeItem('tokenType');
   }
 
-  private async authenticate(username: string, password: string) {
-    const payload = { username, password };
+  private async authenticate(credentials: LoginCredentials) {
+    const authInfo$ = this.tokenService.postWithTokenRefresh<AuthInfo>('/auth/login', credentials);
+    return firstValueFrom(authInfo$);
+  }
 
-    const authInfo$ = this.tokenService.postWithTokenRefresh<{ response: string }>('/auth/login', payload);
+  private async postCreateAccount(newAccountCredentials: NewAccountCredentials) {
+    const authInfo$ = this.tokenService.postWithTokenRefresh<AuthInfo>('/auth/register', newAccountCredentials);
     return firstValueFrom(authInfo$);
   }
 }

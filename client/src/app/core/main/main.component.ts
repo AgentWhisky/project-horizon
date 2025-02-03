@@ -51,7 +51,7 @@ export class MainComponent {
     if (this.isLoggedIn()) {
       this.authService.logout();
     } else {
-      this.authService.login();
+      this.authService.loginDialog();
     }
   }
 

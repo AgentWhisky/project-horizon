@@ -8,7 +8,12 @@ import { AccountManagementModule } from './account-management/account-management
 import { AuthenticationModule } from './authentication/authentication.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(DataSourceConfig), LinkLibraryModule, AccountManagementModule, AuthenticationModule],
+  imports: [
+    TypeOrmModule.forRoot(DataSourceConfig),
+    LinkLibraryModule,
+    AccountManagementModule,
+    AuthenticationModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

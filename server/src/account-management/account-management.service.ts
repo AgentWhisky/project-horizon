@@ -24,7 +24,7 @@ export class AccountManagementService {
 
   async getUsers(): Promise<UserResponseDto[]> {
     const dbUsers = await this.userRepository.find({
-      select: ['id', 'name', 'email', 'roles', 'active', 'lastLogin'],
+      select: ['id', 'name', 'username', 'roles', 'active', 'lastLogin'],
       relations: ['roles'],
     });
 
@@ -32,7 +32,7 @@ export class AccountManagementService {
       .map((user) => ({
         id: user.id,
         name: user.name,
-        email: user.email,
+        username: user.username,
         active: user.active,
         lastLogin: user.lastLogin,
         roles: user.roles.map((right) => ({
@@ -49,12 +49,11 @@ export class AccountManagementService {
   async addUser(userDto: UserDto): Promise<UserResponseDto> {
     const newUser = await this.userRepository.save({
       name: userDto.name,
-      email: userDto.email,
       roles: userDto.roles.map((id) => ({ id })),
     });
 
     const user = await this.userRepository.findOne({
-      select: ['id', 'name', 'email', 'roles', 'active', 'lastLogin'],
+      select: ['id', 'name', 'username', 'roles', 'active', 'lastLogin'],
       relations: ['roles'],
       where: [{ id: newUser.id }],
     });
@@ -62,7 +61,7 @@ export class AccountManagementService {
     return {
       id: user.id,
       name: user.name,
-      email: user.email,
+      username: user.username,
       active: user.active,
       lastLogin: user.lastLogin,
       roles: user.roles.map((role) => ({
@@ -83,12 +82,11 @@ export class AccountManagementService {
     await this.userRepository.save({
       id,
       name: userDto.name,
-      email: userDto.email,
       roles: userDto.roles.map((id) => ({ id })),
     });
 
     const user = await this.userRepository.findOne({
-      select: ['id', 'name', 'email', 'roles', 'active', 'lastLogin'],
+      select: ['id', 'name', 'username', 'roles', 'active', 'lastLogin'],
       relations: ['roles'],
       where: [{ id }],
     });
@@ -96,7 +94,7 @@ export class AccountManagementService {
     return {
       id: user.id,
       name: user.name,
-      email: user.email,
+      username: user.username,
       active: user.active,
       lastLogin: user.lastLogin,
       roles: user.roles.map((role) => ({
@@ -129,7 +127,7 @@ export class AccountManagementService {
     });
 
     const user = await this.userRepository.findOne({
-      select: ['id', 'name', 'email', 'roles', 'active', 'lastLogin'],
+      select: ['id', 'name', 'username', 'roles', 'active', 'lastLogin'],
       relations: ['roles'],
       where: [{ id }],
     });
@@ -137,7 +135,7 @@ export class AccountManagementService {
     return {
       id: user.id,
       name: user.name,
-      email: user.email,
+      username: user.username,
       active: user.active,
       lastLogin: user.lastLogin,
       roles: user.roles.map((role) => ({

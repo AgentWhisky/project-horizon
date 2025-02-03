@@ -31,7 +31,6 @@ export class AccountManagementController {
 
   @Put('users/:id/active')
   async updateUserActive(@Param('id', ParseIntPipe) id: number, @Body() body: { active: boolean }) {
-    console.log(id, body.active);
     return this.accountManagementService.updateUserActive(id, body.active);
   }
 

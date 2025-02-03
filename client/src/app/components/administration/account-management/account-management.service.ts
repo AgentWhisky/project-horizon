@@ -66,18 +66,6 @@ export class AccountManagementService {
     }
   }
 
-  async removeUser(id: number) {
-    try {
-      const deleteResponse = await this.deleteUser(id);
-
-      if (deleteResponse.success) {
-        this._users.set([...this._users().filter((item) => item.id !== deleteResponse.id)]);
-      }
-    } catch (error) {
-      console.error(`Error removing user: ${error}`);
-    }
-  }
-
   async updateUserActive(id: number, active: boolean) {
     try {
       const user = await this.putUserActive(id, active);

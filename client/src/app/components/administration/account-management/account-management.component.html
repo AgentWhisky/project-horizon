@@ -12,14 +12,14 @@
           <td mat-cell *matCellDef="let element">{{ element.id }}</td>
         </ng-container>
 
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by username">Username</th>
+          <td mat-cell *matCellDef="let element">{{ element.username }}</td>
+        </ng-container>
+
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">Name</th>
           <td mat-cell *matCellDef="let element">{{ element.name }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="email">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by email">Email</th>
-          <td mat-cell *matCellDef="let element">{{ element.email }}</td>
         </ng-container>
 
         <ng-container matColumnDef="roles">
@@ -48,13 +48,12 @@
           <td mat-cell class="min-w-16" *matCellDef="let element">
             <div class="flex justify-end items-center">
               <button mat-icon-button (click)="onToggleUser(element)" [attr.aria-label]="element.active ? 'Disable User' : 'Enable User'">
-                <mat-icon [matTooltip]="element.active ? 'Disable User' : 'Enable User'">{{ element.active ? 'person' : 'person_off' }}</mat-icon>
+                <mat-icon [matTooltip]="element.active ? 'Disable User' : 'Enable User'">{{
+                  element.active ? 'person' : 'person_off'
+                }}</mat-icon>
               </button>
               <button mat-icon-button (click)="onEditUser(element)" aria-label="Edit User">
                 <mat-icon matTooltip="Edit User">edit</mat-icon>
-              </button>
-              <button mat-icon-button (click)="onDeleteUser(element)" aria-label="Delete User">
-                <mat-icon matTooltip="Delete User">delete</mat-icon>
               </button>
             </div>
           </td>

@@ -2,7 +2,7 @@
 export interface UserCode {
   id: number;
   name: string;
-  email: string;
+  username: string;
   roles: UserRole[];
   active: boolean;
   lastLogin?: Date;
@@ -16,7 +16,6 @@ export interface UserRole {
 
 export interface UserPayload {
   name: string;
-  email: string;
   roles: number[];
 }
 

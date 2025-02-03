@@ -6,11 +6,8 @@ export class UserEntity {
   @PrimaryGeneratedColumn({ name: 'id' })
   id: number;
 
-  @Column({ name: 'name', type: 'varchar', length: 30, unique: true })
+  @Column({ name: 'name', type: 'varchar', length: 30, nullable: true })
   name: string;
-
-  @Column({ name: 'email', type: 'varchar', length: 30 })
-  email: string;
 
   @ManyToMany(() => RoleEntity)
   @JoinTable({ name: 'user_roles' })
@@ -28,17 +25,4 @@ export class UserEntity {
 
   @Column()
   password: string; // HASHED PASSWORD
-
-  // *** AUDIT FIELDS ***
-  @Column({ name: 'createdBy', type: 'int', nullable: true })
-  createdBy: number;
-
-  @CreateDateColumn({ name: 'createdDate', type: 'timestamp' })
-  createdDate: Date;
-
-  @Column({ name: 'updatedBy', type: 'int', nullable: true })
-  updatedBy: number;
-
-  @UpdateDateColumn({ name: 'updatedDate', type: 'timestamp' })
-  updatedDate: Date;
 }

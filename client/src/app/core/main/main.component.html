@@ -21,10 +21,6 @@
         <mat-icon>apps</mat-icon>
       </button>
 
-      <button mat-icon-button class="header-icon">
-        <mat-icon>account_circle</mat-icon>
-      </button>
-
       <button
         mat-icon-button
         class="header-icon"
@@ -34,7 +30,7 @@
       </button>
 
       <button mat-icon-button class="header-icon" (click)="onLogState()" [matTooltip]="isLoggedIn() ? 'Logout' : 'Login'">
-        <mat-icon>{{ isLoggedIn() ? 'logout' : 'login' }}</mat-icon>
+        <mat-icon>{{ isLoggedIn() ? 'logout' : 'account_circle' }}</mat-icon>
       </button>
     }
     @else {

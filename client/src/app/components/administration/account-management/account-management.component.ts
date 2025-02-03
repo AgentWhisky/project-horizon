@@ -44,7 +44,7 @@ export class AccountManagementComponent implements OnInit {
   // Users Table
   readonly userSort = viewChild<MatSort>('userSort');
   readonly userPaginator = viewChild<MatPaginator>('userPaginator');
-  readonly userDisplayedColumns: string[] = ['id', 'name', 'email', 'roles', 'active', 'lastLogin', 'actions'];
+  readonly userDisplayedColumns: string[] = ['id', 'name', 'username', 'roles', 'active', 'lastLogin', 'actions'];
   readonly userDataSource = new MatTableDataSource<UserCode>();
 
   // Roles Table
@@ -122,19 +122,6 @@ export class AccountManagementComponent implements OnInit {
       .pipe(
         filter((result) => result && result.status === true),
         tap((result) => this.accountManagementService.updateUser({ id: user.id, ...result.userData }))
-      )
-      .subscribe();
-  }
-
-  onDeleteUser(user: UserCode) {
-    const message = 'Are you sure you want to remove this user?';
-
-    this.dialog
-      .open(RemoveConfirmComponent, { data: { message } })
-      .afterClosed()
-      .pipe(
-        filter((result) => result),
-        tap(() => this.accountManagementService.removeUser(user.id))
       )
       .subscribe();
   }

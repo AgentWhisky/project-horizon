@@ -40,7 +40,6 @@ export class UserDialogComponent {
   getUserForm(isUpdate: boolean, user?: UserCode) {
     return this.fb.group({
       name: [isUpdate && user ? user.name : '', [Validators.required, Validators.maxLength(30)]],
-      email: [isUpdate && user ? user.email : '', [Validators.required, Validators.maxLength(30), Validators.email]],
       roles: [isUpdate && user ? user.roles?.map((role) => role.id) : [], [Validators.required]],
     });
   }
@@ -56,7 +55,6 @@ export class UserDialogComponent {
       status: true,
       userData: {
         name: this.userForm.value.name ?? '',
-        email: this.userForm.value.email ?? '',
         roles: this.userForm.value.roles ?? [],
       },
     };

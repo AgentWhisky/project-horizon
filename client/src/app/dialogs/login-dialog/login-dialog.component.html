@@ -1,31 +1,126 @@
-<h2 mat-dialog-title>Sign In</h2>
-<mat-dialog-content>
-  <form class="flex flex-col gap-3" [formGroup]="loginForm">
-    <mat-form-field class="w-full">
-      <mat-label>Username</mat-label>
-      <input matInput formControlName="username" />
-      @if(loginForm.get('username')?.hasError('required')) {
-      <mat-error>Username is required</mat-error>
-      } @else {
-      <mat-error>Invalid username</mat-error>
-      }
-    </mat-form-field>
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
+  <mat-tab label="Sign In">
+    <mat-dialog-content>
+      <form class="flex flex-col gap-3" [formGroup]="loginForm">
+        <mat-form-field class="w-full" hideRequiredMarker>
+          <mat-label>Username</mat-label>
+          <input matInput formControlName="username" />
+          @if(loginForm.get('username')?.hasError('required')) {
+          <mat-error>Username is required</mat-error>
+          } @else {
+          <mat-error>Invalid username</mat-error>
+          }
+        </mat-form-field>
 
-    <mat-form-field class="w-full">
-      <mat-label>Password</mat-label>
-      <input [type]="showPassword() ? 'text' : 'password'" matInput formControlName="password" autocomplete="on" />
-      <button matSuffix mat-icon-button aria-label="Toggle Password Visible" (mouseover)="onShowPassword()" (mouseleave)="onHidePassword()" disableRipple>
-        <mat-icon>{{ showPassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
-      </button>
-      @if(loginForm.get('username')?.hasError('required')) {
-      <mat-error>Password is required</mat-error>
-      } @else {
-      <mat-error>Invalid password</mat-error>
-      }
-    </mat-form-field>
-  </form>
-</mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-button (click)="onCancel()">Cancel</button>
-  <button mat-flat-button (click)="onLogin()" [disabled]="!loginForm.valid">Login</button>
-</mat-dialog-actions>
+        <mat-form-field class="w-full" hideRequiredMarker>
+          <mat-label>Password</mat-label>
+          <input
+            [type]="showPassword() ? 'text' : 'password'"
+            matInput
+            formControlName="password"
+            autocomplete="on"
+            (keydown.enter)="onLogin()" />
+          <button
+            matSuffix
+            mat-icon-button
+            aria-label="Toggle Password Visible"
+            tabindex="-1"
+            (mouseover)="onShowPassword()"
+            (mouseleave)="onHidePassword()"
+            disableRipple>
+            <mat-icon>{{ showPassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
+          </button>
+          @if(loginForm.get('password')?.hasError('required')) {
+          <mat-error>Password is required</mat-error>
+          } @else {
+          <mat-error>Invalid password</mat-error>
+          }
+        </mat-form-field>
+      </form>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <button mat-button (click)="onCancel()">Cancel</button>
+      <button mat-flat-button (click)="onLogin()" [disabled]="!loginForm.valid">Sign In</button>
+    </mat-dialog-actions>
+  </mat-tab>
+
+  <mat-tab label="Sign Up">
+    <mat-dialog-content>
+      <form class="flex flex-col gap-3" [formGroup]="newAccountForm">
+        <mat-form-field class="w-full" hideRequiredMarker>
+          <mat-label>Username</mat-label>
+          <input matInput formControlName="username" />
+          @if(newAccountForm.get('username')?.hasError('required')) {
+          <mat-error>Username is required</mat-error>
+          } @else {
+          <mat-error>Invalid username</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field class="w-full" hideRequiredMarker>
+          <mat-label>Password</mat-label>
+          <input [type]="showPassword() ? 'text' : 'password'" matInput formControlName="password" autocomplete="on" />
+          <button
+            matSuffix
+            mat-icon-button
+            aria-label="Toggle Password Visible"
+            tabindex="-1"
+            (mouseover)="onShowPassword()"
+            (mouseleave)="onHidePassword()"
+            disableRipple>
+            <mat-icon>{{ showPassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
+          </button>
+          @if(newAccountForm.get('password')?.hasError('required')) {
+          <mat-error>Password is required</mat-error>
+          } @else {
+          <mat-error>Invalid password</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field class="w-full" hideRequiredMarker>
+          <mat-label>Confirm Password</mat-label>
+          <input [type]="showConfirmPassword() ? 'text' : 'password'" matInput formControlName="confirmPassword" autocomplete="on" />
+          <button
+            matSuffix
+            mat-icon-button
+            aria-label="Toggle Confirm Password Visible"
+            tabindex="-1"
+            (mouseover)="onShowConfirmPassword()"
+            (mouseleave)="onHideConfirmPassword()"
+            disableRipple>
+            <mat-icon>{{ showConfirmPassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
+          </button>
+          @if(newAccountForm.get('confirmPassword')?.hasError('required')) {
+          <mat-error>Password is required</mat-error>
+          } @else if (newAccountForm.get('confirmPassword')?.hasError('passwordMatch')) {
+          <mat-error>Passwords do not match</mat-error>
+          } @else {
+          <mat-error>Invalid password</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field class="w-full" hideRequiredMarker>
+          <mat-label>Creation Code</mat-label>
+          <input matInput formControlName="creationCode" uppercase (keydown.enter)="onCreateAccount()" />
+          <button
+            matSuffix
+            mat-icon-button
+            aria-label="Creation Code Info"
+            matTooltip="Code required to create an account, provided by an Admin"
+            disableRipple>
+            <mat-icon>info</mat-icon>
+          </button>
+          @if(newAccountForm.get('creationCode')?.hasError('required')) {
+          <mat-error>Creation Code is required</mat-error>
+          } @else {
+          <mat-error>Invalid Creation Code</mat-error>
+          }
+        </mat-form-field>
+      </form>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <button mat-button (click)="onCancel()">Cancel</button>
+      <button mat-flat-button (click)="onCreateAccount()" [disabled]="!newAccountForm.valid">Create Account</button>
+    </mat-dialog-actions>
+  </mat-tab>
+</mat-tab-group>

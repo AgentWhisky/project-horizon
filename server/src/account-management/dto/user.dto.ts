@@ -5,9 +5,6 @@ export class UserDto {
   @IsString()
   name: string;
 
-  @IsEmail()
-  email: string;
-
   @IsArray()
   @IsInt({ each: true })
   roles: number[];
@@ -21,8 +18,8 @@ export class UserResponseDto {
   @IsString()
   name: string;
 
-  @IsEmail()
-  email: string;
+  @IsString()
+  username: string;
 
   @IsArray()
   roles: UserRoleDto[];
