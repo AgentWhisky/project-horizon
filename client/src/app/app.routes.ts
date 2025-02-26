@@ -24,6 +24,12 @@ export const routes: Routes = [
         path: 'book-library',
         loadComponent: () => import('./components/libraries/book-library/book-library.component').then((c) => c.BookLibraryComponent),
       },
+
+      // *** DEV ***
+      {
+        path: 'dev-buttons',
+        loadComponent: () => import('./components/dev/button-triggers/button-triggers.component').then((c) => c.ButtonTriggersComponent),
+      },
       // *** ADMINISTRATION ***
       {
         path: 'administration',

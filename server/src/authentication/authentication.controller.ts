@@ -1,19 +1,50 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Param, Post, Req, UnauthorizedException } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
-import { LoginDto, RegisterDto } from './dto/auth.dto';
+import { RefreshTokenDto, RegistrationDto } from './dto/auth.dto';
+import { INVALID_CREDENTIALS } from 'src/constants';
+import { AuthResponse, RegistrationInfo } from './authentication.model';
 
-@Controller('auth')
+@Controller()
 export class AuthenticationController {
   constructor(private readonly authenticationService: AuthenticationService) {}
 
-  @HttpCode(HttpStatus.OK)
   @Post('login')
-  async signIn(@Body() loginDto: LoginDto) {
-    return this.authenticationService.login(loginDto);
+  @HttpCode(200)
+  async userLogin(@Req() req): Promise<AuthResponse> {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Basic ')) {
+      throw new UnauthorizedException(INVALID_CREDENTIALS);
+    }
+
+    try {
+      const base64Credentials = authHeader.split(' ')[1];
+      const decodedCredentials = Buffer.from(base64Credentials, 'base64').toString('utf-8');
+      const [username, password] = decodedCredentials.split(':');
+
+      return this.authenticationService.login({ username, password });
+    } catch (error) {
+      throw new UnauthorizedException(INVALID_CREDENTIALS);
+    }
+  }
+
+  @Post('logout/:userId')
+  async userLogout(@Param('userId') userId: number, @Body('refreshToken') refreshToken?: string) {
+    return this.authenticationService.logout(userId, refreshToken);
   }
 
   @Post('register')
-  async register(@Body() registerDto: RegisterDto) {
-    return this.authenticationService.createAccount(registerDto);
+  async register(@Body() registrationDto: RegistrationDto): Promise<AuthResponse> {
+    const registrationInfo: RegistrationInfo = {
+      username: registrationDto.username,
+      password: registrationDto.password,
+      creationCode: registrationDto.creationCode,
+    };
+
+    return this.authenticationService.register(registrationInfo);
+  }
+
+  @Post('refresh')
+  async refresh(@Body('refreshToken') oldRefreshTokenDto: RefreshTokenDto): Promise<AuthResponse> {
+    return this.authenticationService.refresh(oldRefreshTokenDto.refreshToken);
   }
 }

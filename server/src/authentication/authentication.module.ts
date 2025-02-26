@@ -6,18 +6,25 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CacheModule } from '@nestjs/cache-manager';
 import { SettingEntity } from 'src/entities/settings.entity';
 import { JwtModule } from '@nestjs/jwt';
+import { ScheduleModule } from '@nestjs/schedule';
+import { RefreshTokenEntity } from 'src/entities/refresh-token.entity';
+import { RefreshTokenCleanupService } from './refresh-token-cleanup.service';
+import { UserLogModule } from 'src/common/services/user-log/user-log.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity, SettingEntity]),
+    TypeOrmModule.forFeature([UserEntity, SettingEntity, RefreshTokenEntity]),
     CacheModule.register(),
     JwtModule.register({
       global: true,
       secret: process.env.AUTH_SECRET,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '60s', algorithm: 'HS256' },
     }),
+    ScheduleModule.forRoot(),
+    UserLogModule,
   ],
   controllers: [AuthenticationController],
-  providers: [AuthenticationService],
+  providers: [AuthenticationService, RefreshTokenCleanupService],
+  exports: [RefreshTokenCleanupService],
 })
 export class AuthenticationModule {}

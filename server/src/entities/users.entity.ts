@@ -1,5 +1,18 @@
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { RoleEntity } from './role.entity';
+import { RefreshTokenEntity } from './refresh-token.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -20,9 +33,28 @@ export class UserEntity {
   lastLogin: Date;
 
   // *** CREDENTIALS ***
-  @Column({ unique: true })
+  @Index({ unique: true })
+  @Column()
   username: string;
 
   @Column()
   password: string; // HASHED PASSWORD
+
+  @OneToMany(() => RefreshTokenEntity, (token) => token.user)
+  refreshTokens: RefreshTokenEntity[];
+
+  // *** AUDIT FIELDS ***
+  @CreateDateColumn({ name: 'createdDate', type: 'timestamp' })
+  createdDate: Date;
+
+  @UpdateDateColumn({ name: 'updatedDate', type: 'timestamp' })
+  updatedDate: Date;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  transformUsernameToLowercase() {
+    if (this.username) {
+      this.username = this.username.toLowerCase();
+    }
+  }
 }
