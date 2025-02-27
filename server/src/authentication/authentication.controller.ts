@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Param, Post, Req, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Req, UnauthorizedException } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { RefreshTokenDto, RegistrationDto } from './dto/auth.dto';
 import { INVALID_CREDENTIALS } from 'src/constants';
@@ -28,8 +28,8 @@ export class AuthenticationController {
   }
 
   @Post('logout/:userId')
-  async userLogout(@Param('userId') userId: number, @Body('refreshToken') refreshToken?: string) {
-    return this.authenticationService.logout(userId, refreshToken);
+  async userLogout(@Param('userId', ParseIntPipe) userId: number, @Body('jti') jti?: string) {
+    return this.authenticationService.logout(userId, jti);
   }
 
   @Post('register')

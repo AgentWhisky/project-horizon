@@ -5,6 +5,17 @@ export interface AuthInfo {
   tokenType: 'Bearer';
 }
 
+export interface AuthInfoPayload {
+  sub: number;
+  name: string;
+  username: string;
+  roles: UserRole[];
+  rights: UserRights[];
+  iat: number;
+  exp: number;
+  jti: string;
+}
+
 export interface UserInfo {
   userId: number;
   name: string;

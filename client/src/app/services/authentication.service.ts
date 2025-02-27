@@ -6,9 +6,11 @@ import { LoginDialogComponent } from '../dialogs/login-dialog/login-dialog.compo
 import { firstValueFrom, tap } from 'rxjs';
 import { TokenService } from './token.service';
 import { LoginCredentials, NewAccountCredentials } from '../types/login-credentials';
-import { AuthInfo, UserInfo } from '../types/auth';
+import { AuthInfo, AuthInfoPayload, UserInfo } from '../types/auth';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -37,21 +39,14 @@ export class AuthenticationService {
     const accessToken = localStorage.getItem('accessToken');
     const refreshToken = localStorage.getItem('refreshToken');
 
-    this._accessToken.set(accessToken ?? '');
-    this._refreshToken.set(refreshToken ?? '');
-
-    console.log('init', accessToken);
-
     try {
       if (accessToken) {
-        const decodedToken: UserInfo = jwtDecode(accessToken);
+        const decodedToken: AuthInfoPayload = jwtDecode(accessToken);
 
-        console.log('decoded', decodedToken);
+        const isTokenExpired = Date.now() >= decodedToken.exp * 1000;
 
-        const isExpired = Date.now() >= decodedToken.exp * 1000;
-
-        if (decodedToken && !isExpired) {
-          this._userInfo.set(decodedToken);
+        if (decodedToken && !isTokenExpired) {
+          this.updateUserInfo(accessToken);
         } else if (refreshToken) {
           const authInfo = await this.postAuthRefresh(accessToken, refreshToken);
 
@@ -74,12 +69,22 @@ export class AuthenticationService {
     });
   }
 
-  async login(credentials: LoginCredentials) {
+  async login(credentials: LoginCredentials): Promise<boolean> {
+    if (!credentials || !credentials.username || !credentials.password) {
+      return false;
+    }
+
     try {
-      this.tokenService
-        .postWithTokenRefresh<AuthInfo>('/login', credentials)
-        .pipe(tap((res) => console.log('LOGIN RES:', res)))
-        .subscribe();
+      const encodedCredentials = btoa(`${credentials.username}:${credentials.password}`);
+
+      const authInfo = await this.tokenService.postLogin(encodedCredentials);
+
+      if (!authInfo || !authInfo.accessToken || !authInfo.refreshToken) {
+        this.snackbar.open('Login failed', 'Close', { duration: 3000 });
+        return false;
+      }
+
+      this.updateAuth(authInfo);
 
       return true;
     } catch {
@@ -108,6 +113,9 @@ export class AuthenticationService {
   }*/
 
   async createAccount(newAccountCredentials: NewAccountCredentials) {
+    return false;
+  }
+  /* async createAccount(newAccountCredentials: NewAccountCredentials) {
     try {
       const authInfo = await this.postCreateAccount(newAccountCredentials);
 
@@ -122,9 +130,10 @@ export class AuthenticationService {
       this.snackbar.open('Account registration failed', 'Close', { duration: 3000 });
       return false;
     }
-  }
+  }*/
 
-  async logout() {
+  async logout() {}
+  /*async logout() {
     try {
       const userId = this.userInfo()?.userId;
       if (userId) {
@@ -144,13 +153,9 @@ export class AuthenticationService {
 
       this.removeAuth();
     }
-  }
+  }*/
 
   // *** Local Storage Functions ***
-  private setAuth(authInfo: AuthInfo) {
-    localStorage.setItem('accessToken', authInfo.accessToken);
-    localStorage.setItem('refreshToken', authInfo.refreshToken);
-  }
 
   private getAuth(): AuthInfo | null {
     const accessToken = localStorage.getItem('accessToken');
@@ -175,23 +180,28 @@ export class AuthenticationService {
     localStorage.removeItem('refreshToken');
   }
 
+  // *** Private Functions ***
+  private updateAuth(authInfo: AuthInfo) {
+    if (!authInfo || !authInfo.accessToken || !authInfo.refreshToken) {
+      return;
+    }
+
+    localStorage.setItem('accessToken', authInfo.accessToken);
+    localStorage.setItem('refreshToken', authInfo.refreshToken);
+
+    this.updateUserInfo(authInfo.accessToken);
+  }
+
+  private updateUserInfo(accessToken: string) {
+    if (!accessToken) {
+      return;
+    }
+
+    const decodedToken: AuthInfoPayload = jwtDecode(accessToken);
+
+    const { sub: userId, ...userPayload } = decodedToken;
+    this._userInfo.set({ userId, ...userPayload });
+  }
+
   // *** Endpoint Functions ***
-  private async postLogin(credentials: LoginCredentials) {
-    const authInfo$ = this.tokenService.postWithTokenRefresh<AuthInfo>('/auth/login', credentials);
-    return firstValueFrom(authInfo$);
-  }
-
-  private async postLogout(userId: number) {
-    this.tokenService.postWithTokenRefresh<AuthInfo>('/auth/logout', userId);
-  }
-
-  private async postCreateAccount(newAccountCredentials: NewAccountCredentials) {
-    const authInfo$ = this.tokenService.postWithTokenRefresh<AuthInfo>('/auth/register', newAccountCredentials);
-    return firstValueFrom(authInfo$);
-  }
-
-  private async postAuthRefresh(accessToken: string, refreshToken: string) {
-    const authInfo$ = this.tokenService.postWithTokenRefresh<AuthInfo>('/auth/refresh', { accessToken, refreshToken });
-    return firstValueFrom(authInfo$);
-  }
 }

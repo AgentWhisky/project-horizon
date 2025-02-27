@@ -42,7 +42,7 @@ export class AuthenticationService implements OnModuleInit {
     await this.settingRepository.save({
       key: CREATION_CODE_FIELD,
       value: creationCode,
-    }); 
+    });
   }
 
   /**
@@ -82,12 +82,15 @@ export class AuthenticationService implements OnModuleInit {
    * Function to logout user
    * @param userId is the ID for the given user
    */
-  async logout(userId: number, refreshToken?: string) {
+  async logout(userId: number, jti?: string) {
     // Delete refresh token
-    if (refreshToken) {
-      const jti = this.getTokenJti(refreshToken);
+    if (jti) {
+      const refreshToken = await this.refreshTokenRepository.findOne({
+        where: { jti },
+        relations: ['user'],
+      });
 
-      if (jti) {
+      if (refreshToken && refreshToken.user.id === userId) {
         await this.refreshTokenRepository.delete({ jti });
       }
     }
