@@ -12,6 +12,7 @@ export class AuthenticationController {
   @HttpCode(200)
   async userLogin(@Req() req): Promise<AuthResponse> {
     const authHeader = req.headers.authorization;
+
     if (!authHeader || !authHeader.startsWith('Basic ')) {
       throw new UnauthorizedException(INVALID_CREDENTIALS);
     }
@@ -44,7 +45,7 @@ export class AuthenticationController {
   }
 
   @Post('refresh')
-  async refresh(@Body('refreshToken') oldRefreshTokenDto: RefreshTokenDto): Promise<AuthResponse> {
-    return this.authenticationService.refresh(oldRefreshTokenDto.refreshToken);
+  async refresh(@Body() refreshTokenDto: RefreshTokenDto): Promise<AuthResponse> {
+    return this.authenticationService.refresh(refreshTokenDto.refreshToken);
   }
 }

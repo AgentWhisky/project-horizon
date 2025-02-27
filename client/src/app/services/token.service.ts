@@ -1,31 +1,42 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, OnInit, signal } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { AuthInfo } from '../types/auth';
+import { AuthInfo, AuthInfoPayload, UserInfo } from '../types/auth';
 import { firstValueFrom } from 'rxjs';
+import { UserService } from './user.service';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TokenService {
   private http = inject(HttpClient);
+  private userService = inject(UserService);
+
   private apiUrl = environment.apiUrl;
 
-  async postLogin(encodedCredentials: string) {
-    const headers = new HttpHeaders({
-      Authorization: `Basic ${encodedCredentials}`,
-    });
+  constructor() {
+    this.onInit();
+  }
 
-    const authInfo = await firstValueFrom(this.http.post<AuthInfo>(`${this.apiUrl}/login`, {}, { headers }))
+  onInit() {
+    const accessToken = localStorage.getItem('accessToken');
+    const refreshToken = localStorage.getItem('refreshToken');
 
-    if (!authInfo || !authInfo.accessToken || !authInfo.refreshToken) {
-      return null;
-    }
+    try {
+      if (accessToken && refreshToken) {
+        const decodedToken: AuthInfoPayload = jwtDecode(accessToken);
+        const isExpired = Date.now() >= decodedToken.exp * 1000;
 
-    localStorage.setItem('accessToken', authInfo.accessToken);
-    localStorage.setItem('refreshToken', authInfo.refreshToken);
-
-    return authInfo;
+        if (decodedToken && !isExpired) {
+          this.userService.updateUserInfo(accessToken);
+        } else if (refreshToken) {
+          this.refresh();
+        } else {
+          this.userService.logout();
+        }
+      }
+    } catch {}
   }
 
   // General HTTP Actions
@@ -43,5 +54,23 @@ export class TokenService {
 
   deleteWithTokenRefresh<T>(url: string, options?: {}) {
     return this.http.delete<T>(`${this.apiUrl}${url}`, options);
+  }
+
+  async refresh() {
+    const refreshToken = localStorage.getItem('refreshToken');
+
+    const authInfo = await firstValueFrom(this.http.post<AuthInfo>(`${this.apiUrl}/refresh`, { refreshToken }));
+
+    // RETRY?
+    if (!authInfo || !authInfo.accessToken || !authInfo.refreshToken) {
+      console.log('REFRESH FAILURE - NO RETRY');
+      this.userService.clearUserInfo();
+      return;
+    }
+
+    localStorage.setItem('accessToken', authInfo.accessToken);
+    localStorage.setItem('refreshToken', authInfo.refreshToken);
+
+    this.userService.updateUserInfo(authInfo.accessToken);
   }
 }

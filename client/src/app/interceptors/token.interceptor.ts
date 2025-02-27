@@ -2,6 +2,12 @@ import { HttpInterceptorFn } from '@angular/common/http';
 import { ACCESS_TOKEN } from '../constants';
 
 export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
+  const excludedUrls = ['/api/login', '/api/refresh'];
+
+  if (excludedUrls.some((url) => req.url.includes(url))) {
+    return next(req);
+  }
+
   const accessToken = localStorage.getItem(ACCESS_TOKEN);
 
   if (accessToken) {

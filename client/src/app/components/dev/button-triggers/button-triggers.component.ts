@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { AuthenticationService } from '../../../services/authentication.service';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-button-triggers',
@@ -12,9 +12,9 @@ import { AuthenticationService } from '../../../services/authentication.service'
   styleUrl: './button-triggers.component.scss',
 })
 export class ButtonTriggersComponent {
-  private authService = inject(AuthenticationService);
+  private userService = inject(UserService);
 
   onTestLogin() {
-    this.authService.login({ username: 'TestUser', password: '0818' });
+    this.userService.login({ username: 'TestUser', password: '0818' });
   }
 }

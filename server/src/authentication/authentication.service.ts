@@ -204,7 +204,7 @@ export class AuthenticationService implements OnModuleInit {
       jti,
     };
 
-    const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' }); // Set to 1h
+    const accessToken = this.jwtService.sign(payload, { expiresIn: '1s' }); // Set to 1h
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
     const hashedToken = await bcrypt.hash(refreshToken, 10);
 
@@ -216,10 +216,10 @@ export class AuthenticationService implements OnModuleInit {
     });
 
     return {
-      access_token: accessToken,
-      refresh_token: refreshToken,
-      expires_in: 3600,
-      token_type: 'Bearer',
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+      expiresIn: 3600,
+      tokenType: 'Bearer',
     };
   }
 

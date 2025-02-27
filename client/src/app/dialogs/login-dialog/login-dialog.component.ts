@@ -8,10 +8,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { AuthenticationService } from '../../services/authentication.service';
 import { passwordMatch } from '../../validators/password-match.validator';
 import { UppercaseDirective } from '../../directives/uppercase.directive';
 import { NewAccountCredentials } from '../../types/login-credentials';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-login-dialog',
@@ -31,7 +31,7 @@ import { NewAccountCredentials } from '../../types/login-credentials';
 export class LoginDialogComponent {
   readonly dialogRef = inject(MatDialogRef<LoginDialogComponent>);
   readonly fb = inject(FormBuilder);
-  private authService = inject(AuthenticationService);
+  private userService = inject(UserService);
 
   readonly showPassword = signal(false);
   readonly showConfirmPassword = signal(false);
@@ -53,7 +53,7 @@ export class LoginDialogComponent {
     const password = this.loginForm.value.password;
 
     if (username && password) {
-      const result = await this.authService.login({ username, password });
+      const result = await this.userService.login({ username, password });
 
       if (result) {
         this.dialogRef.close();
@@ -73,7 +73,7 @@ export class LoginDialogComponent {
         creationCode,
       };
 
-      const result = await this.authService.createAccount(newAccountCredentials);
+      const result = await this.userService.register(newAccountCredentials);
       
       if (result) {
         this.dialogRef.close();

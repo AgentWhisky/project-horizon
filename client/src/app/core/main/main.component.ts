@@ -12,7 +12,7 @@ import { LeftNavComponent } from '../left-nav/left-nav.component';
 
 import { NavigationService } from '../../services/navigation.service';
 import { ThemeService } from '../../services/theme.service';
-import { AuthenticationService } from '../../services/authentication.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-main',
@@ -31,12 +31,12 @@ import { AuthenticationService } from '../../services/authentication.service';
 })
 export class MainComponent {
   private navigationService = inject(NavigationService);
-  private authService = inject(AuthenticationService);
+  private userService = inject(UserService);
   private themeService = inject(ThemeService);
 
   readonly isLeftNavOpen = this.navigationService.isLeftNavOpen;
   readonly isSmallScreen = this.navigationService.isSmallScreen;
-  readonly isLoggedIn = this.authService.isLoggedIn;
+  readonly isLoggedIn = this.userService.isLoggedIn;
   readonly isDarkmode = this.themeService.isDarkTheme;
 
   onToggleLeftNav() {
@@ -49,9 +49,9 @@ export class MainComponent {
 
   onLogState() {
     if (this.isLoggedIn()) {
-      this.authService.logout();
+      this.userService.logout();
     } else {
-      this.authService.loginDialog();
+      this.userService.loginDialog();
     }
   }
 

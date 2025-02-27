@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { AuthenticationService } from './services/authentication.service';
+import { TokenService } from './services/token.service';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +9,7 @@ import { AuthenticationService } from './services/authentication.service';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  private authService = inject(AuthenticationService);
+  private tokenService = inject(TokenService);
 
   title = 'horizon';
 }

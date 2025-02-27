@@ -4,7 +4,7 @@
       <form class="flex flex-col gap-3" [formGroup]="loginForm">
         <mat-form-field class="w-full" hideRequiredMarker>
           <mat-label>Username</mat-label>
-          <input matInput formControlName="username" />
+          <input matInput formControlName="username" cdkFocusInitial/>
           @if(loginForm.get('username')?.hasError('required')) {
           <mat-error>Username is required</mat-error>
           } @else {
@@ -49,7 +49,7 @@
       <form class="flex flex-col gap-3" [formGroup]="newAccountForm">
         <mat-form-field class="w-full" hideRequiredMarker>
           <mat-label>Username</mat-label>
-          <input matInput formControlName="username" />
+          <input matInput formControlName="username" cdkFocusInitial/>
           @if(newAccountForm.get('username')?.hasError('required')) {
           <mat-error>Username is required</mat-error>
           } @else {
