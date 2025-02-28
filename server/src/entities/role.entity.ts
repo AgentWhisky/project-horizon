@@ -17,14 +17,8 @@ export class RoleEntity {
   rights: RightEntity[];
 
   // *** AUDIT FIELDS ***
-  @Column({ name: 'createdBy', type: 'int', nullable: true })
-  createdBy: number;
-
   @CreateDateColumn({ name: 'createdDate', type: 'timestamp' })
   createdDate: Date;
-
-  @Column({ name: 'updatedBy', type: 'int', nullable: true })
-  updatedBy: number;
 
   @UpdateDateColumn({ name: 'updatedDate', type: 'timestamp' })
   updatedDate: Date;

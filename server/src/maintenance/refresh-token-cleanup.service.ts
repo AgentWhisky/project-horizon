@@ -13,6 +13,7 @@ export class RefreshTokenCleanupService implements OnModuleInit {
 
   // Function cleans up tokens on init
   async onModuleInit() {
+    console.log('Cleaning expired refresh tokens...');
     this.cleanupTokens();
   }
 

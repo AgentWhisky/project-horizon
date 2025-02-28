@@ -8,12 +8,12 @@ import { SettingEntity } from 'src/entities/settings.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { ScheduleModule } from '@nestjs/schedule';
 import { RefreshTokenEntity } from 'src/entities/refresh-token.entity';
-import { RefreshTokenCleanupService } from './refresh-token-cleanup.service';
 import { UserLogModule } from 'src/common/services/user-log/user-log.module';
+import { RightEntity } from 'src/entities/right.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity, SettingEntity, RefreshTokenEntity]),
+    TypeOrmModule.forFeature([UserEntity, SettingEntity, RefreshTokenEntity, RightEntity]),
     CacheModule.register(),
     JwtModule.register({
       global: true,
@@ -24,7 +24,6 @@ import { UserLogModule } from 'src/common/services/user-log/user-log.module';
     UserLogModule,
   ],
   controllers: [AuthenticationController],
-  providers: [AuthenticationService, RefreshTokenCleanupService],
-  exports: [RefreshTokenCleanupService],
+  providers: [AuthenticationService],
 })
 export class AuthenticationModule {}
