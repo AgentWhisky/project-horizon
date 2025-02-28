@@ -15,30 +15,6 @@ export class TokenService {
 
   private apiUrl = environment.apiUrl;
 
-  constructor() {
-    this.onInit();
-  }
-
-  onInit() {
-    const accessToken = localStorage.getItem('accessToken');
-    const refreshToken = localStorage.getItem('refreshToken');
-
-    try {
-      if (accessToken && refreshToken) {
-        const decodedToken: AuthInfoPayload = jwtDecode(accessToken);
-        const isExpired = Date.now() >= decodedToken.exp * 1000;
-
-        if (decodedToken && !isExpired) {
-          this.userService.updateUserInfo(accessToken);
-        } else if (refreshToken) {
-          this.refresh();
-        } else {
-          this.userService.logout();
-        }
-      }
-    } catch {}
-  }
-
   // General HTTP Actions
   getWithTokenRefresh<T>(url: string, options?: {}) {
     return this.http.get<T>(`${this.apiUrl}${url}`, options);

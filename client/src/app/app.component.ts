@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TokenService } from './services/token.service';
+import { UserService } from './services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -8,8 +9,12 @@ import { TokenService } from './services/token.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
-  private tokenService = inject(TokenService);
+export class AppComponent implements OnInit {
+  private userService = inject(UserService);
+
+  ngOnInit() {
+    this.userService.onInitUser();
+  }
 
   title = 'horizon';
 }

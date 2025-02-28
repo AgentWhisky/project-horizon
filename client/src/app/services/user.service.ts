@@ -1,6 +1,5 @@
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { AuthInfo, AuthInfoPayload, UserInfo } from '../types/auth';
-import { TokenService } from './token.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -25,12 +24,31 @@ export class UserService {
   private _userInfo = signal<UserInfo | null>(null);
   readonly userInfo = this._userInfo.asReadonly();
 
+  private _userRights = computed(() => new Set(this._userInfo()?.rights?.map((item) => item.internalName) || []));
+
   readonly isLoggedIn = computed(() => !!this._userInfo());
 
   constructor() {
-    this.initUser();
-
     effect(() => console.log(this._userInfo()));
+    effect(() => console.log(this._userRights()));
+  }
+
+  onInitUser() {
+    const accessToken = localStorage.getItem('accessToken');
+    const refreshToken = localStorage.getItem('refreshToken');
+
+    try {
+      if (accessToken && refreshToken) {
+        const decodedToken: AuthInfoPayload = jwtDecode(accessToken);
+        const isExpired = Date.now() >= decodedToken.exp * 1000;
+
+        if (decodedToken && !isExpired) {
+          this.updateUserInfo(accessToken);
+        } else {
+          this.clearUserInfo();
+        }
+      }
+    } catch {}
   }
 
   loginDialog() {
@@ -52,9 +70,6 @@ export class UserService {
       });
 
       const authInfo = await firstValueFrom(this.http.post<AuthInfo>(`${this.apiUrl}/login`, {}, { headers }));
-
-      console.log(authInfo);
-      
 
       if (!authInfo || !authInfo.accessToken || !authInfo.refreshToken) {
         this.snackbar.open('Login failed', 'Close', { duration: 3000 });
@@ -111,11 +126,6 @@ export class UserService {
     }
   }
 
-  private async initUser() {
-    const accessToken = localStorage.getItem('accessToken');
-    const refreshToken = localStorage.getItem('refreshToken');
-  }
-
   /**
    * Function to update userInfo with the given access token payload
    * @param accessToken The given access token
@@ -135,5 +145,14 @@ export class UserService {
     this._userInfo.set(null);
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+  }
+
+  hasRight(rights: string[]) {
+    const userRights = this._userRights();
+    if (!userRights) {
+      return false;
+    }
+
+    return rights.some((right) => userRights.has(right));
   }
 }

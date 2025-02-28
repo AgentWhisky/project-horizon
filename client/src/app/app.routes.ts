@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './guards/auth.guard';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -35,7 +35,7 @@ export const routes: Routes = [
         path: 'administration',
         loadComponent: () =>
           import('./components/administration/admin-dashboard/admin-dashboard.component').then((c) => c.AdminDashboardComponent),
-        canActivate: [authGuard],
+        canActivate: [AuthGuard],
       },
       {
         path: 'link-library-management',
@@ -43,7 +43,7 @@ export const routes: Routes = [
           import('./components/administration/link-library-management/link-library-management.component').then(
             (c) => c.LinkLibraryManagementComponent
           ),
-        canActivate: [authGuard],
+        canActivate: [AuthGuard],
       },
       {
         path: 'account-management',
@@ -51,7 +51,7 @@ export const routes: Routes = [
           import('./components/administration/account-management/account-management.component').then(
             (c) => c.AccountManagementComponent
           ),
-        canActivate: [authGuard],
+        canActivate: [AuthGuard],
       },
     ],
   },

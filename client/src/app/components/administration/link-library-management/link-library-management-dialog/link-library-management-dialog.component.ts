@@ -53,7 +53,7 @@ export class LinkLibraryManagementDialogComponent {
       description: [link.description, [Validators.required, Validators.maxLength(250)]],
       url: [link.url, [Validators.required, Validators.maxLength(250)]],
       thumbnail: [link.thumbnail],
-      category: [link.category.id, [Validators.required]],
+      category: [link.category.id ?? '', [Validators.required]],
       tags: [link.tags?.map((tag) => tag.id) ?? [], [Validators.required]],
     });
   }
