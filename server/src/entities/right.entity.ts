@@ -9,7 +9,7 @@ export class RightEntity {
   @Column({ name: 'name', type: 'varchar', length: 30, unique: true })
   name: string;
 
-  @Column({ name: 'internalName', type: 'varchar', length: 30, unique: true })
+  @Column({ name: 'internalName', type: 'varchar', length: 30, unique: true, update: false })
   internalName: string;
 
   @Column({ name: 'description', type: 'text' })

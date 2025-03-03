@@ -1,8 +1,8 @@
 import { Body, Controller, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Req, UnauthorizedException } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { RefreshTokenDto, RegistrationDto } from './dto/auth.dto';
-import { INVALID_CREDENTIALS } from 'src/constants';
 import { AuthResponse, RegistrationInfo } from './authentication.model';
+import { LOGIN_ERROR } from 'src/constants';
 
 @Controller()
 export class AuthenticationController {
@@ -14,7 +14,7 @@ export class AuthenticationController {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Basic ')) {
-      throw new UnauthorizedException(INVALID_CREDENTIALS);
+      throw new UnauthorizedException(LOGIN_ERROR.INVALID_CREDENTIALS);
     }
 
     try {
@@ -24,7 +24,7 @@ export class AuthenticationController {
 
       return this.authenticationService.login({ username, password });
     } catch (error) {
-      throw new UnauthorizedException(INVALID_CREDENTIALS);
+      throw new UnauthorizedException(LOGIN_ERROR.INVALID_CREDENTIALS);
     }
   }
 

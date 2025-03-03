@@ -12,8 +12,8 @@ import {
   CREATION_CODE_FIELD,
   CREATION_CODE_LENGTH,
   INVALID_CREATION_CODE,
-  INVALID_CREDENTIALS,
   INVALID_REFRESH_TOKEN,
+  LOGIN_ERROR,
   REFRESH_TOKEN_EXPIRED,
   USERNAME_TAKEN,
 } from 'src/constants';
@@ -53,7 +53,7 @@ export class AuthenticationService implements OnModuleInit {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     // Check Valid Credentials
     if (!credentials || !credentials.username || !credentials.password) {
-      throw new UnauthorizedException(INVALID_CREDENTIALS);
+      throw new UnauthorizedException(LOGIN_ERROR.INVALID_CREDENTIALS);
     }
 
     const username = credentials.username.toLowerCase();
@@ -65,13 +65,17 @@ export class AuthenticationService implements OnModuleInit {
     });
 
     if (!user) {
-      throw new UnauthorizedException(INVALID_CREDENTIALS);
+      throw new UnauthorizedException(LOGIN_ERROR.INVALID_CREDENTIALS);
+    }
+
+    if (!user.active) {
+      throw new ForbiddenException(LOGIN_ERROR.ACCOUNT_DISABLED);
     }
 
     // Check Password Match
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      throw new UnauthorizedException(INVALID_CREDENTIALS);
+      throw new UnauthorizedException(LOGIN_ERROR.INVALID_CREDENTIALS);
     }
 
     this.userLogService.logUserLogin(user.id);

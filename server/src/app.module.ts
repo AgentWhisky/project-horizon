@@ -10,10 +10,13 @@ import { InitializationModule } from './initialization/initilaization.module';
 import { MaintenanceModule } from './maintenance/maintenance.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './guards/auth.guard';
+import { UserEntity } from './entities/users.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(DataSourceConfig),
+    TypeOrmModule.forFeature([UserEntity]),
     ThrottlerModule.forRoot({
       throttlers: [
         {
@@ -34,6 +37,10 @@ import { APP_GUARD } from '@nestjs/core';
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
     },
   ],
 })

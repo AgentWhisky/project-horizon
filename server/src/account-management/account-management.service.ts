@@ -46,32 +46,6 @@ export class AccountManagementService {
     return users;
   }
 
-  async addUser(userDto: UserDto): Promise<UserResponseDto> {
-    const newUser = await this.userRepository.save({
-      name: userDto.name,
-      roles: userDto.roles.map((id) => ({ id })),
-    });
-
-    const user = await this.userRepository.findOne({
-      select: ['id', 'name', 'username', 'roles', 'active', 'lastLogin'],
-      relations: ['roles'],
-      where: [{ id: newUser.id }],
-    });
-
-    return {
-      id: user.id,
-      name: user.name,
-      username: user.username,
-      active: user.active,
-      lastLogin: user.lastLogin,
-      roles: user.roles.map((role) => ({
-        id: role.id,
-        name: role.name,
-        description: role.description,
-      })),
-    };
-  }
-
   async updateUser(id: number, userDto: UserDto): Promise<UserResponseDto> {
     const existingUser = await this.userRepository.findOne({ where: { id } });
 
@@ -102,15 +76,6 @@ export class AccountManagementService {
         name: role.name,
         description: role.description,
       })),
-    };
-  }
-
-  async deleteUser(id: number): Promise<DeleteResponseDto> {
-    const deleteResult = await this.userRepository.delete(id);
-
-    return {
-      success: deleteResult.affected === 1,
-      id,
     };
   }
 
@@ -253,63 +218,5 @@ export class AccountManagementService {
       .sort((a, b) => a.id - b.id);
 
     return rights;
-  }
-
-  async addRight(rightDto: RightDto): Promise<RightResponseDto> {
-    const name = rightDto.name;
-    const internalName = name.trim().toUpperCase().replace(/\s+/g, '_'); // Generate Internal Name
-
-    const newRight = await this.rightRepository.save({
-      name,
-      internalName,
-      description: rightDto.description,
-    });
-
-    const right = await this.rightRepository.findOne({
-      select: ['id', 'name', 'description', 'internalName'],
-      where: { id: newRight.id },
-    });
-
-    return {
-      ...right,
-      inUse: false,
-    };
-  }
-
-  async updateRight(id: number, rightDto: RightDto): Promise<RightResponseDto> {
-    const existingRight = await this.rightRepository.findOne({ where: { id } });
-
-    if (!existingRight) {
-      throw new HttpException(`Right with ID: ${id} not found`, HttpStatus.NOT_FOUND);
-    }
-
-    await this.rightRepository.save({
-      id,
-      name: rightDto.name,
-      description: rightDto.description,
-    });
-
-    const right = await this.rightRepository.findOne({
-      select: ['id', 'name', 'description', 'internalName'],
-      where: { id },
-      relations: ['roles'],
-    });
-
-    return {
-      id: right.id,
-      name: right.name,
-      description: right.description,
-      internalName: right.internalName,
-      inUse: !!right.roles?.length,
-    };
-  }
-
-  async deleteRight(id: number): Promise<DeleteResponseDto> {
-    const deleteResult = await this.rightRepository.delete(id);
-
-    return {
-      success: deleteResult.affected === 1,
-      id,
-    };
   }
 }

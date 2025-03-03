@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { LoginDialogComponent } from '../dialogs/login-dialog/login-dialog.component';
 import { LoginCredentials, NewAccountCredentials } from '../types/login-credentials';
 import { jwtDecode } from 'jwt-decode';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -29,8 +29,8 @@ export class UserService {
   readonly isLoggedIn = computed(() => !!this._userInfo());
 
   constructor() {
-    effect(() => console.log(this._userInfo()));
-    effect(() => console.log(this._userRights()));
+    effect(() => console.log('USER INFO', this._userInfo()));
+    effect(() => console.log('USER RIGHTS', this._userRights()));
   }
 
   onInitUser() {
@@ -82,8 +82,14 @@ export class UserService {
       this.updateUserInfo(authInfo.accessToken);
       this.snackbar.open('Login successful', 'Close', { duration: 3000 });
       return true;
-    } catch {
-      this.snackbar.open('Login failed', 'Close', { duration: 3000 });
+    } catch (error: any) {
+      if (error?.status === 401) {
+        this.snackbar.open('Invalid username or password', 'Close', { duration: 3000 });
+      } else if (error?.status === 403) {
+        this.snackbar.open('Account disabled', 'Close', { duration: 3000 });
+      } else {
+        this.snackbar.open('Login failed', 'Close', { duration: 3000 });
+      }
       return false;
     }
   }

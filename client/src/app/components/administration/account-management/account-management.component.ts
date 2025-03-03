@@ -17,7 +17,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { filter, tap } from 'rxjs';
 import { UserDialogComponent } from './user-dialog/user-dialog.component';
 import { DatePipe } from '@angular/common';
-import { RightDialogComponent } from './right-dialog/right-dialog.component';
 import { RoleDialogComponent } from './role-dialog/role-dialog.component';
 
 @Component({
@@ -56,7 +55,7 @@ export class AccountManagementComponent implements OnInit {
   // Rights Table
   readonly rightSort = viewChild<MatSort>('rightSort');
   readonly rightPaginator = viewChild<MatPaginator>('rightPaginator');
-  readonly rightDisplayedColumns: string[] = ['id', 'name', 'internalName', 'description', 'active', 'actions'];
+  readonly rightDisplayedColumns: string[] = ['id', 'name', 'internalName', 'description'];
   readonly rightDataSource = new MatTableDataSource<RightCode>();
 
   constructor() {
@@ -98,20 +97,6 @@ export class AccountManagementComponent implements OnInit {
   }
 
   // *** Users ***
-  onCreateUser() {
-    this.dialog
-      .open(UserDialogComponent, {
-        data: { type: 'create' },
-        width: '560px',
-      })
-      .afterClosed()
-      .pipe(
-        filter((result) => result && result.status === true),
-        tap((result) => this.accountManagementService.addUser(result.userData))
-      )
-      .subscribe();
-  }
-
   onEditUser(user: UserCode) {
     this.dialog
       .open(UserDialogComponent, {
@@ -168,48 +153,6 @@ export class AccountManagementComponent implements OnInit {
       .pipe(
         filter((result) => result),
         tap(() => this.accountManagementService.removeRole(role.id))
-      )
-      .subscribe();
-  }
-
-  // *** Rights ***
-  onCreateRight() {
-    this.dialog
-      .open(RightDialogComponent, {
-        data: { type: 'create' },
-        width: '560px',
-      })
-      .afterClosed()
-      .pipe(
-        filter((result) => result && result.status === true),
-        tap((result) => this.accountManagementService.addRight(result.rightData))
-      )
-      .subscribe();
-  }
-
-  onEditRight(right: RightCode) {
-    this.dialog
-      .open(RightDialogComponent, {
-        data: { type: 'update', right },
-        width: '560px',
-      })
-      .afterClosed()
-      .pipe(
-        filter((result) => result && result.status === true),
-        tap((result) => this.accountManagementService.updateRight({ id: right.id, ...result.rightData }))
-      )
-      .subscribe();
-  }
-
-  onDeleteRight(right: RightCode) {
-    const message = 'Are you sure you want to remove this right?';
-
-    this.dialog
-      .open(RemoveConfirmComponent, { data: { message } })
-      .afterClosed()
-      .pipe(
-        filter((result) => result),
-        tap(() => this.accountManagementService.removeRight(right.id))
       )
       .subscribe();
   }
