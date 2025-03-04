@@ -20,7 +20,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm": "npm run build && npx typeorm -d dist/db/data-source.js",
     "migration:generate": "npm run typeorm -- migration:generate db/migrations/HorizonMigration",
-    "migration:run": "npm run typeorm -- migration:run"
+    "migration:run": "npm run typeorm -- migration:run",
+    "migration:create": "typeorm migration:create db/migrations/HorizonDataMigration"
   },
   "dependencies": {
     "@nestjs/cache-manager": "^3.0.0",

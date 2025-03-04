@@ -16,6 +16,6 @@ export class InitRightService implements OnModuleInit {
 
     //await this.rightRepository.upsert(USER_RIGHTS, ['internalName']);
 
-    await this.rightRepository.createQueryBuilder().insert().into(RightEntity).values(USER_RIGHTS_DEFAULT).orIgnore().execute();
+    //await this.rightRepository.createQueryBuilder().insert().into(RightEntity).values(USER_RIGHTS_DEFAULT).orIgnore().execute();
   }
 }
