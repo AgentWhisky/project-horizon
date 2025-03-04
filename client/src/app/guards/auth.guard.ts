@@ -4,16 +4,18 @@ import { UserService } from '../services/user.service';
 import { TokenService } from '../services/token.service';
 
 export const AuthGuard: CanActivateFn = async (route, state) => {
-  const tokenService = inject(TokenService);
   const userService = inject(UserService);
   const router = inject(Router);
 
-  if (userService.isLoggedIn()) {
-    return true;
+  if (!userService.isLoggedIn()) {
+    router.navigate(['/dashboard']);
+    return false;
   }
 
-  console.log('NOT LOGGED IN - AUTH GUARD');
+  const requiredRights: string[] = route?.data['requiredRights'];
+  if (requiredRights) {
+    return userService.hasRights(requiredRights);
+  }
 
-  router.navigate(['/dashboard']);
-  return false;
+  return true;
 };

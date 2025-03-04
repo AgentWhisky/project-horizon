@@ -1,2 +1,9 @@
 export const ACCESS_TOKEN = 'accessToken';
 export const REFRESH_TOKEN = 'refreshToken';
+
+export const USER_RIGHTS = {
+  VIEW_DASHBOARD: 'VIEW_DASHBOARD',
+  MANAGE_USERS: 'MANAGE_USERS',
+  MANAGE_ROLES: 'MANAGE_ROLES',
+  MANAGE_LINKS: 'MANAGE_LINKS',
+};

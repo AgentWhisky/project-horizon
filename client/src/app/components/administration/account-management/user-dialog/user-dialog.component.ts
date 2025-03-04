@@ -40,7 +40,7 @@ export class UserDialogComponent {
   getUserForm(isUpdate: boolean, user?: UserCode) {
     return this.fb.group({
       name: [isUpdate && user ? user.name : '', [Validators.required, Validators.maxLength(30)]],
-      roles: [isUpdate && user ? user.roles?.map((role) => role.id) : [], [Validators.required]],
+      roles: [isUpdate && user ? user.roles?.map((role) => role.id) : []],
     });
   }
 

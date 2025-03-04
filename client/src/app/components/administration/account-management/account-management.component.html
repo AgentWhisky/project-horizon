@@ -66,11 +66,11 @@
     </mat-tab>
 
     <mat-tab label="Roles" class="flex flex-col">
+      @if(hasRight([USER_RIGHTS.MANAGE_ROLES])) {
       <div class="flex justify-end mt-3">
         <button mat-button (click)="onCreateRole()" aria-label="Add Role"><mat-icon>add</mat-icon> Add Role</button>
       </div>
-
-      @if(roleDataSource.data.length > 0) {
+      } @if(roleDataSource.data.length > 0) {
       <table mat-table [dataSource]="roleDataSource" matSort #roleSort="matSort" class="mat-elevation-z8">
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by id">ID</th>

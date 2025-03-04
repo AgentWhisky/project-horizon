@@ -36,6 +36,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./components/administration/admin-dashboard/admin-dashboard.component').then((c) => c.AdminDashboardComponent),
         canActivate: [AuthGuard],
+        data: { requiredRights: ['VIEW_DASHBOARD']}
       },
       {
         path: 'link-library-management',
@@ -52,6 +53,7 @@ export const routes: Routes = [
             (c) => c.AccountManagementComponent
           ),
         canActivate: [AuthGuard],
+        data: { requiredRights: ['MANAGE_USERS', 'MANAGE_ROLES']}
       },
     ],
   },

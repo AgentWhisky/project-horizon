@@ -3,6 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthPayload } from 'src/authentication/authentication.model';
+import { REQUIRE_RIGHTS_KEY } from 'src/decorators/require-right.decorator';
 import { UserEntity } from 'src/entities/users.entity';
 import { Repository } from 'typeorm';
 
@@ -17,8 +18,9 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const requredRight = this.reflector.get<string>('right', context.getHandler());
-    if (!requredRight) {
+    const requiredRights = this.reflector.get<string[]>(REQUIRE_RIGHTS_KEY, context.getHandler());
+
+    if (!requiredRights) {
       return true;
     }
 
@@ -40,10 +42,12 @@ export class AuthGuard implements CanActivate {
       if (!user || !user.active || !user.roles) {
         throw new ForbiddenException();
       }
-      
+
       const userRights = user.roles.flatMap((role) => role.rights.map((right) => right.internalName));
 
-      if (!userRights.includes(requredRight)) {
+      const hasRequiredRight = requiredRights.some((right) => userRights.includes(right));
+
+      if (!hasRequiredRight) {
         throw new ForbiddenException();
       }
 

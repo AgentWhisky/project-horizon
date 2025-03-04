@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { AccountManagementService } from './account-management.service';
 import { AccountManagementController } from './account-management.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from '../entities/users.entity';
-import { RoleEntity } from '../entities/role.entity';
-import { RightEntity } from '../entities/right.entity';
+import { UserEntity } from 'src/entities/users.entity';
+import { RoleEntity } from 'src/entities/role.entity';
+import { RightEntity } from 'src/entities/right.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity, RoleEntity, RightEntity])],

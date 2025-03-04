@@ -1,13 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from '../entities/users.entity';
+
 import { Repository } from 'typeorm';
-import { RightEntity } from '../entities/right.entity';
-import { RightDto, RightResponseDto } from './dto/right.dto';
+import { RightResponseDto } from './dto/right.dto';
 import { RoleDto, RoleResponseDto } from './dto/role.dto';
 import { DeleteResponseDto } from 'src/common/dto/deletion-response.dto';
-import { RoleEntity } from '../entities/role.entity';
 import { UserDto, UserResponseDto } from './dto/user.dto';
+import { UserEntity } from 'src/entities/users.entity';
+import { RoleEntity } from 'src/entities/role.entity';
+import { RightEntity } from 'src/entities/right.entity';
 
 @Injectable()
 export class AccountManagementService {

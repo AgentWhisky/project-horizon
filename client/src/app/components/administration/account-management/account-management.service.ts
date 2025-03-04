@@ -37,6 +37,7 @@ export class AccountManagementService {
       const users = await this.getUsers();
       this._users.set(users);
     } catch (error) {
+      this._users.set([]);
       console.error(`Error fetching user: ${error}`);
     }
   }
@@ -86,6 +87,7 @@ export class AccountManagementService {
       const roles = await this.getRoles();
       this._roles.set(roles);
     } catch (error) {
+      this._roles.set([]);
       console.error(`Error fetching user roles: ${error}`);
     }
   }
@@ -127,12 +129,13 @@ export class AccountManagementService {
     }
   }
 
-  // *** RIGHTS ***
+  // *** RIGHTS ***F
   async loadRights() {
     try {
       const rights = await this.getRights();
       this._rights.set(rights);
     } catch (error) {
+      this._rights.set([]);
       console.error(`Error fetching user rights: ${error}`);
     }
   }

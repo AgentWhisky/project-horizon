@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSourceConfig } from 'db/data-source';
 import { LinkLibraryModule } from './modules/link-library/link-library.module';
-import { AccountManagementModule } from './account-management/account-management.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { InitializationModule } from './initialization/initilaization.module';
 import { MaintenanceModule } from './maintenance/maintenance.module';
@@ -12,6 +11,8 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards/auth.guard';
 import { UserEntity } from './entities/users.entity';
+import { AccountManagementModule } from './administration/account-management/account-management.module';
+import { AdminDashboardModule } from './administration/admin-dashboard/admin-dashboard.module';
 
 @Module({
   imports: [
@@ -27,9 +28,10 @@ import { UserEntity } from './entities/users.entity';
     }),
     InitializationModule,
     MaintenanceModule,
-    LinkLibraryModule,
-    AccountManagementModule,
     AuthenticationModule,
+    AdminDashboardModule,
+    AccountManagementModule,
+    LinkLibraryModule,
   ],
   controllers: [AppController],
   providers: [

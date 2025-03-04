@@ -1,32 +1,19 @@
 <div class="flex flex-col justify-start gap-1">
-  <a [routerLink]="['/dashboard']" class="nav-item" routerLinkActive="active"><mat-icon>home</mat-icon> Dashboard</a>
+  @for(navSection of navSections; track navSection.title) { 
+  
+  @if(showSection(navSection)) {
+    @if(navSection.title) {
+      <mat-divider class="nav-divider"></mat-divider>
+      <h3 class="nav-section-header">{{ navSection.title }}</h3>
+    }
 
-  <mat-divider class="nav-divider"></mat-divider>
-
-  <h3 class="nav-section-header">Libraries</h3>
-  <a [routerLink]="['/link-library']" class="nav-item" routerLinkActive="active"><mat-icon>link</mat-icon> Link Library</a>
-  <a [routerLink]="['/book-library']" class="nav-item" routerLinkActive="active"><mat-icon>local_library</mat-icon> Book Library</a>
-
-  <mat-divider class="nav-divider"></mat-divider>
-
-  <h3 class="nav-section-header">Tools</h3>
-  <a [routerLink]="['/base-converter']" class="nav-item" routerLinkActive="active"><mat-icon>calculate</mat-icon> Base Converter</a>
-
-  <h3 class="nav-section-header">Dev</h3>
-  <a [routerLink]="['/dev-buttons']" class="nav-item" routerLinkActive="active"><mat-icon>code</mat-icon> Dev Buttons</a>
-
-  @if(isLoggedIn()) {
-  <mat-divider class="nav-divider"></mat-divider>
-
-  <h3 class="nav-section-header">Administration</h3>
-  <a [routerLink]="['/administration']" class="nav-item" routerLinkActive="active">
-    <mat-icon>admin_panel_settings</mat-icon> Admin Dashboard
-  </a>
-  <a [routerLink]="['/account-management']" class="nav-item" routerLinkActive="active">
-    <mat-icon>manage_accounts</mat-icon> Account Management
-  </a>
-  <a [routerLink]="['/link-library-management']" class="nav-item" routerLinkActive="active">
-    <mat-icon>add_link</mat-icon> Link Library
-  </a>
+    @for(navItem of navSection.navItems; track navItem.name) {
+      @if(!navItem.requiredRights|| (navItem.requiredRights && hasRights(navItem.requiredRights))) {
+      <a [routerLink]="navItem.routerLink" class="nav-item" routerLinkActive="active">
+        <mat-icon>{{ navItem.icon }}</mat-icon> {{ navItem.name }}
+      </a>
+      }
+    }
   }
+}
 </div>

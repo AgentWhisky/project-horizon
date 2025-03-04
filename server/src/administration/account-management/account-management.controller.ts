@@ -30,7 +30,7 @@ export class AccountManagementController {
 
   // *** ROLES ***
   @Get('roles')
-  @RequireRight(USER_RIGHTS.MANAGE_ROLES)
+  @RequireRight(USER_RIGHTS.MANAGE_USERS, USER_RIGHTS.MANAGE_ROLES)
   async getRoles() {
     return this.accountManagementService.getRoles();
   }
@@ -55,7 +55,7 @@ export class AccountManagementController {
 
   // *** RIGHTS ***
   @Get('rights')
-  @RequireRight(USER_RIGHTS.MANAGE_ROLES)
+  @RequireRight(USER_RIGHTS.MANAGE_USERS, USER_RIGHTS.MANAGE_ROLES)
   async getRights() {
     return this.accountManagementService.getRights();
   }

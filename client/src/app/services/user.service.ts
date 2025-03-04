@@ -153,7 +153,7 @@ export class UserService {
     localStorage.removeItem('refreshToken');
   }
 
-  hasRight(rights: string[]) {
+  hasRights(rights: string[]) {
     const userRights = this._userRights();
     if (!userRights) {
       return false;

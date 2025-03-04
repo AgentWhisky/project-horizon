@@ -18,6 +18,8 @@ import { filter, tap } from 'rxjs';
 import { UserDialogComponent } from './user-dialog/user-dialog.component';
 import { DatePipe } from '@angular/common';
 import { RoleDialogComponent } from './role-dialog/role-dialog.component';
+import { UserService } from '../../../services/user.service';
+import { USER_RIGHTS } from '../../../constants';
 
 @Component({
   selector: 'app-account-management',
@@ -38,18 +40,35 @@ import { RoleDialogComponent } from './role-dialog/role-dialog.component';
 })
 export class AccountManagementComponent implements OnInit {
   private accountManagementService = inject(AccountManagementService);
+  private userService = inject(UserService);
+
   private dialog = inject(MatDialog);
 
   // Users Table
   readonly userSort = viewChild<MatSort>('userSort');
   readonly userPaginator = viewChild<MatPaginator>('userPaginator');
-  readonly userDisplayedColumns: string[] = ['id', 'name', 'username', 'roles', 'active', 'lastLogin', 'actions'];
+  readonly userDisplayedColumns: string[] = [
+    'id',
+    'name',
+    'username',
+    'roles',
+    'active',
+    'lastLogin',
+    ...(this.hasRight([USER_RIGHTS.MANAGE_USERS]) ? ['actions'] : []),
+  ];
   readonly userDataSource = new MatTableDataSource<UserCode>();
 
   // Roles Table
   readonly roleSort = viewChild<MatSort>('roleSort');
   readonly rolePaginator = viewChild<MatPaginator>('rolePaginator');
-  readonly roleDisplayedColumns: string[] = ['id', 'name', 'description', 'active', 'rights', 'actions'];
+  readonly roleDisplayedColumns: string[] = [
+    'id',
+    'name',
+    'description',
+    'active',
+    'rights',
+    ...(this.hasRight([USER_RIGHTS.MANAGE_ROLES]) ? ['actions'] : []),
+  ];
   readonly roleDataSource = new MatTableDataSource<RoleCode>();
 
   // Rights Table
@@ -57,6 +76,8 @@ export class AccountManagementComponent implements OnInit {
   readonly rightPaginator = viewChild<MatPaginator>('rightPaginator');
   readonly rightDisplayedColumns: string[] = ['id', 'name', 'internalName', 'description'];
   readonly rightDataSource = new MatTableDataSource<RightCode>();
+
+  readonly USER_RIGHTS = USER_RIGHTS;
 
   constructor() {
     // Users Table
@@ -155,5 +176,9 @@ export class AccountManagementComponent implements OnInit {
         tap(() => this.accountManagementService.removeRole(role.id))
       )
       .subscribe();
+  }
+
+  hasRight(rights: string[]) {
+    return this.userService.hasRights(rights);
   }
 }

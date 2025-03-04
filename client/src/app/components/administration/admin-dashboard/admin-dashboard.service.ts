@@ -1,0 +1,49 @@
+import { effect, inject, Injectable, signal } from '@angular/core';
+import { TokenService } from '../../../services/token.service';
+import { firstValueFrom } from 'rxjs';
+import { AdminDashboardInfo } from './admin-dashboard';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AdminDashboardService {
+  private tokenService = inject(TokenService);
+  private snackbar = inject(MatSnackBar);
+
+  private _dashboardInfo = signal<AdminDashboardInfo>({ creationCode: '' });
+  readonly dashboardInfo = this._dashboardInfo.asReadonly();
+
+  constructor() {
+    effect(() => console.log('DASHBOARD INFO', this._dashboardInfo()));
+  }
+
+  async loadDashboard() {
+    try {
+      const dashboard = await this.getDashboard();
+      this._dashboardInfo.set(dashboard);
+    } catch (error) {
+      console.error(`Error Fetching Dashboard: ${error}`);
+    }
+  }
+
+  async refreshCreationCode() {
+    try {
+      const dashboardInfo = await this.postCreationCodeRefresh();
+      this._dashboardInfo.set(dashboardInfo);
+      this.snackbar.open('Successfully refreshed account creation code', 'Close', { duration: 3000 });
+    } catch (error) {
+      this.snackbar.open('Failed to refresh account creation code', 'Close', { duration: 3000 });
+    }
+  }
+
+  private async getDashboard() {
+    const dashboardInfo$ = this.tokenService.getWithTokenRefresh<AdminDashboardInfo>('/admin-dashboard');
+    return firstValueFrom(dashboardInfo$);
+  }
+
+  private async postCreationCodeRefresh() {
+    const dashboardInfo$ = this.tokenService.postWithTokenRefresh<AdminDashboardInfo>('/admin-dashboard/refresh-creation-code', {});
+    return firstValueFrom(dashboardInfo$);
+  }
+}

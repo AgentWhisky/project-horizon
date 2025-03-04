@@ -18,6 +18,7 @@ import {
   USERNAME_TAKEN,
 } from 'src/constants';
 import { UserLogService } from 'src/common/services/user-log/user-log.service';
+import { generateCode } from 'src/utils/generate-codes';
 
 @Injectable()
 export class AuthenticationService implements OnModuleInit {
@@ -36,13 +37,7 @@ export class AuthenticationService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    // Create or Refresh Creation Code on startup
-    const creationCode = this.generateCreationCode();
-
-    await this.settingRepository.save({
-      key: CREATION_CODE_FIELD,
-      value: creationCode,
-    });
+    this.refreshCreationCode();
   }
 
   /**
@@ -133,6 +128,7 @@ export class AuthenticationService implements OnModuleInit {
       lastLogin: Date(),
     });
 
+    this.refreshCreationCode();
     const authInfo = await this.generateAuthInfo(user.id);
 
     return authInfo;
@@ -240,15 +236,12 @@ export class AuthenticationService implements OnModuleInit {
     }
   }
 
-  private generateCreationCode() {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  private async refreshCreationCode() {
+    const creationCode = generateCode(CREATION_CODE_LENGTH);
 
-    let result = '';
-    for (let i = 0; i < CREATION_CODE_LENGTH; i++) {
-      const randomIndex = Math.floor(Math.random() * characters.length);
-      result += characters[randomIndex];
-    }
-
-    return result;
+    await this.settingRepository.save({
+      key: CREATION_CODE_FIELD,
+      value: creationCode,
+    });
   }
 }
