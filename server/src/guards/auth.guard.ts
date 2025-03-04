@@ -2,9 +2,9 @@ import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AuthPayload } from 'src/authentication/authentication.model';
 import { REQUIRE_RIGHTS_KEY } from 'src/decorators/require-right.decorator';
 import { UserEntity } from 'src/entities/users.entity';
+import { AuthPayload } from 'src/modules/authentication/authentication.model';
 import { Repository } from 'typeorm';
 
 @Injectable()
