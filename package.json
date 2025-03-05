@@ -1,0 +1,11 @@
+{
+  "name": "project-horizon",
+  "version": "1.0.0",
+  "description": "Web project",
+  "scripts": {
+    "heroku-prebuild": "(cd ./server && npm install && npm run build && cd ../client && npm install && npm run build)",
+    "start": "(cd ./server && npm run start)"
+  },
+  "author": "",
+  "license": "ISC"
+}

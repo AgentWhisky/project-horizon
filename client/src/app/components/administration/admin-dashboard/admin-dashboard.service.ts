@@ -1,7 +1,7 @@
 import { effect, inject, Injectable, signal } from '@angular/core';
 import { TokenService } from '../../../services/token.service';
 import { firstValueFrom } from 'rxjs';
-import { AdminDashboardInfo } from './admin-dashboard';
+import { AdminDashboardInfo, CreationCodeRefresh } from './admin-dashboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
@@ -29,10 +29,10 @@ export class AdminDashboardService {
 
   async refreshCreationCode() {
     try {
-      const creationCode = await this.postCreationCodeRefresh();
+      const creationCodeRefresh = await this.postCreationCodeRefresh();
       this._dashboardInfo.set({
         ...this._dashboardInfo(),
-        creationCode,
+        creationCode: creationCodeRefresh.creationCode,
       });
       this.snackbar.open('Successfully refreshed account creation code', 'Close', { duration: 3000 });
     } catch (error) {
@@ -47,7 +47,7 @@ export class AdminDashboardService {
   }
 
   private async postCreationCodeRefresh() {
-    const creationCode$ = this.tokenService.postWithTokenRefresh<string>('/admin-dashboard/refresh-creation-code', {});
+    const creationCode$ = this.tokenService.postWithTokenRefresh<CreationCodeRefresh>('/admin-dashboard/refresh-creation-code', {});
     return firstValueFrom(creationCode$);
   }
 }

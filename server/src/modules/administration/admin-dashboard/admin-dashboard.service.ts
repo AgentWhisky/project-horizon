@@ -4,7 +4,7 @@ import { SettingEntity } from 'src/entities/settings.entity';
 import { Repository } from 'typeorm';
 import { CREATION_CODE_FIELD, CREATION_CODE_LENGTH } from 'src/constants';
 import { generateCode } from 'src/utils/generate-codes';
-import { AdminDashboardInfo } from './admin-dashboard.model';
+import { AdminDashboardInfo, CreationCodeRefresh } from './admin-dashboard.model';
 
 @Injectable()
 export class AdminDashboardService {
@@ -26,7 +26,7 @@ export class AdminDashboardService {
     };
   }
 
-  async refreshCreationCode(): Promise<string> {
+  async refreshCreationCode(): Promise<CreationCodeRefresh> {
     const creationCode = generateCode(CREATION_CODE_LENGTH);
 
     await this.settingRepository.save({
@@ -34,6 +34,6 @@ export class AdminDashboardService {
       value: creationCode,
     });
 
-    return creationCode;
+    return { creationCode };
   }
 }
