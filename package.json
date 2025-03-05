@@ -3,9 +3,14 @@
   "version": "1.0.0",
   "description": "Web project",
   "scripts": {
-    "heroku-prebuild": "cd server && npm install && npm run build && cd ../client && npm install && npm run build",
-    "start": "cd ./server && npm run start"
+    "client": "cd client && npm install && npm run build",
+    "server": "cd server && npm install && npm run build",
+    "heroku-prebuild": "npm run client && npm run server",
+    "start": "cd server && npm run start:prod"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "engines": {
+    "node": "18.x"
+  }
 }
