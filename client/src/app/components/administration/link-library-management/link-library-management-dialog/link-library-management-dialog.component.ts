@@ -1,13 +1,12 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-
-import { Link, NewLink } from '../../../../types/link-library';
-import { LinkLibraryService } from '../../../../services/link-library.service';
+import { Link, LinkPayload } from '../link-library-management';
+import { LinkLibraryManagementService } from '../link-library-management.service';
 
 interface DialogData {
   type: 'create' | 'update';
@@ -16,7 +15,7 @@ interface DialogData {
 
 interface DialogResult {
   status: boolean;
-  linkData: NewLink | null;
+  linkData: LinkPayload;
 }
 
 @Component({
@@ -27,15 +26,15 @@ interface DialogResult {
 })
 export class LinkLibraryManagementDialogComponent {
   private fb = inject(FormBuilder);
-  private linkLibraryService = inject(LinkLibraryService);
+  private linkLibraryManagementService = inject(LinkLibraryManagementService);
   private dialogRef = inject(MatDialogRef<LinkLibraryManagementDialogComponent>);
   readonly data = inject<DialogData>(MAT_DIALOG_DATA);
 
-  readonly linkCategories = this.linkLibraryService.linkCategories;
-  readonly linkTags = this.linkLibraryService.linkTags;
+  readonly linkCategories = this.linkLibraryManagementService.linkCategories;
+  readonly linkTags = this.linkLibraryManagementService.linkTags;
 
   readonly linkForm = this.data.type === 'update' && this.data.link ? this.getUpdateLinkForm(this.data.link) : this.getNewLinkForm();
-  
+
   getNewLinkForm() {
     return this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(30)]],

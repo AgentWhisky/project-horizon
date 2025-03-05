@@ -5,18 +5,18 @@ import { MatInputModule } from '@angular/material/input';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
-import { LinkCategoryCode, NewLinkCategory } from '../../../../types/link-library';
+import { Category, CategoryPayload } from '../link-library-management';
+import { LinkLibraryManagementService } from '../link-library-management.service';
 import { uniqueText } from '../../../../validators/unique-text.validator';
-import { LinkLibraryService } from '../../../../services/link-library.service';
 
 interface DialogData {
   type: 'create' | 'update';
-  category?: LinkCategoryCode;
+  category?: Category;
 }
 
 interface DialogResult {
   status: boolean;
-  category: NewLinkCategory;
+  category: CategoryPayload;
 }
 
 @Component({
@@ -27,7 +27,7 @@ interface DialogResult {
 })
 export class LinkCategoryDialogComponent {
   private fb = inject(FormBuilder);
-  private linkLibraryService = inject(LinkLibraryService);
+  private linkLibraryManagementService = inject(LinkLibraryManagementService);
 
   readonly dialogRef = inject(MatDialogRef<LinkCategoryDialogComponent>);
   readonly data = inject<DialogData>(MAT_DIALOG_DATA);
@@ -37,14 +37,17 @@ export class LinkCategoryDialogComponent {
 
   getNewCategoryForm() {
     return this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(30), uniqueText(this.linkLibraryService.linkCategoryList())]],
+      name: ['', [Validators.required, Validators.maxLength(30), uniqueText(this.linkLibraryManagementService.linkCategoryList())]],
       description: ['', [Validators.required, Validators.maxLength(250)]],
     });
   }
 
-  getUpdateCategoryForm(category: LinkCategoryCode) {
+  getUpdateCategoryForm(category: Category) {
     return this.fb.group({
-      name: [category.name, [Validators.required, Validators.maxLength(30), uniqueText(this.linkLibraryService.linkCategoryList())]],
+      name: [
+        category.name,
+        [Validators.required, Validators.maxLength(30), uniqueText(this.linkLibraryManagementService.linkCategoryList())],
+      ],
       description: [category.description, [Validators.required, Validators.maxLength(250)]],
     });
   }

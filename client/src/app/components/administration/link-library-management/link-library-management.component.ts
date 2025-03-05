@@ -8,8 +8,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTabsModule } from '@angular/material/tabs';
 
-import { LinkLibraryService } from '../../../services/link-library.service';
-import { Link, LinkCategoryCode, LinkTag, LinkTagCode } from '../../../types/link-library';
 import { MatDialog } from '@angular/material/dialog';
 import { LinkLibraryManagementDialogComponent } from './link-library-management-dialog/link-library-management-dialog.component';
 import { filter, tap } from 'rxjs';
@@ -18,6 +16,8 @@ import { LinkCategoryDialogComponent } from './link-category-dialog/link-categor
 import { LinkTagDialogComponent } from './link-tag-dialog/link-tag-dialog.component';
 import { NoDataCardComponent } from '../../../core/no-data-card/no-data-card.component';
 import { FormatArrayPipe } from '../../../pipes/format-array.pipe';
+import { LinkLibraryManagementService } from './link-library-management.service';
+import { Category, Link, Tag } from './link-library-management';
 
 @Component({
   selector: 'app-link-library-management',
@@ -36,7 +36,7 @@ import { FormatArrayPipe } from '../../../pipes/format-array.pipe';
   styleUrl: './link-library-management.component.scss',
 })
 export class LinkLibraryManagementComponent implements OnInit {
-  private linkLibraryService = inject(LinkLibraryService);
+  private linkLibraryManagementService = inject(LinkLibraryManagementService);
   private dialog = inject(MatDialog);
 
   // Link Table
@@ -49,18 +49,18 @@ export class LinkLibraryManagementComponent implements OnInit {
   readonly categorySort = viewChild<MatSort>('categorySort');
   readonly categoryPaginator = viewChild<MatPaginator>('categoryPaginator');
   readonly categoryDisplayedColumns: string[] = ['id', 'name', 'description', 'actions'];
-  readonly categoryDataSource = new MatTableDataSource<LinkCategoryCode>();
+  readonly categoryDataSource = new MatTableDataSource<Category>();
 
   // Tags Table
   readonly tagSort = viewChild<MatSort>('tagSort');
   readonly tagPaginator = viewChild<MatPaginator>('tagPaginator');
   readonly tagDisplayedColumns: string[] = ['id', 'name', 'actions'];
-  readonly tagDataSource = new MatTableDataSource<LinkTagCode>();
+  readonly tagDataSource = new MatTableDataSource<Tag>();
 
   constructor() {
     // Link Table
     effect(() => {
-      this.linkDataSource.data = this.linkLibraryService.links();
+      this.linkDataSource.data = this.linkLibraryManagementService.links();
     });
 
     effect(() => {
@@ -70,7 +70,7 @@ export class LinkLibraryManagementComponent implements OnInit {
 
     // Category Table
     effect(() => {
-      this.categoryDataSource.data = this.linkLibraryService.linkCategories();
+      this.categoryDataSource.data = this.linkLibraryManagementService.linkCategories();
     });
 
     effect(() => {
@@ -80,7 +80,7 @@ export class LinkLibraryManagementComponent implements OnInit {
 
     // Tags Table
     effect(() => {
-      this.tagDataSource.data = this.linkLibraryService.linkTags();
+      this.tagDataSource.data = this.linkLibraryManagementService.linkTags();
     });
 
     effect(() => {
@@ -90,9 +90,9 @@ export class LinkLibraryManagementComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.linkLibraryService.loadLibraryLinks();
-    this.linkLibraryService.loadLinkCategories();
-    this.linkLibraryService.loadLinkTags();
+    this.linkLibraryManagementService.loadLinks();
+    this.linkLibraryManagementService.loadCategories();
+    this.linkLibraryManagementService.loadTags();
   }
 
   // *** Links ***
@@ -106,7 +106,7 @@ export class LinkLibraryManagementComponent implements OnInit {
       .afterClosed()
       .pipe(
         filter((result) => result && result.status === true),
-        tap((result) => this.linkLibraryService.addLink(result.linkData))
+        tap((result) => this.linkLibraryManagementService.addLink(result.linkData))
       )
       .subscribe();
   }
@@ -121,7 +121,7 @@ export class LinkLibraryManagementComponent implements OnInit {
       .afterClosed()
       .pipe(
         filter((result) => result && result.status === true),
-        tap((result) => this.linkLibraryService.updateLink({ id: link.id, ...result.linkData }))
+        tap((result) => this.linkLibraryManagementService.updateLink(link.id, result.linkData))
       )
       .subscribe();
   }
@@ -134,7 +134,7 @@ export class LinkLibraryManagementComponent implements OnInit {
       .afterClosed()
       .pipe(
         filter((result) => result),
-        tap(() => this.linkLibraryService.removeLink(link.id))
+        tap(() => this.linkLibraryManagementService.removeLink(link.id))
       )
       .subscribe();
   }
@@ -150,12 +150,12 @@ export class LinkLibraryManagementComponent implements OnInit {
       .afterClosed()
       .pipe(
         filter((result) => result && result.status === true),
-        tap((result) => this.linkLibraryService.addLinkCategory(result.category))
+        tap((result) => this.linkLibraryManagementService.addCategory(result.category))
       )
       .subscribe();
   }
 
-  onEditCategory(category: LinkCategoryCode) {
+  onEditCategory(category: Category) {
     this.dialog
       .open(LinkCategoryDialogComponent, {
         data: { type: 'update', category },
@@ -165,12 +165,17 @@ export class LinkLibraryManagementComponent implements OnInit {
       .afterClosed()
       .pipe(
         filter((result) => result && result.status === true),
-        tap((result) => this.linkLibraryService.updateLinkCategory({ id: category.id, ...result.category }))
+        tap((result) =>
+          this.linkLibraryManagementService.updateCategory(category.id, {
+            name: result.category.name,
+            description: result.category.description,
+          })
+        )
       )
       .subscribe();
   }
 
-  onDeleteCategory(category: LinkCategoryCode) {
+  onDeleteCategory(category: Category) {
     const message = 'Are you sure you want to remove this category?';
 
     this.dialog
@@ -178,7 +183,7 @@ export class LinkLibraryManagementComponent implements OnInit {
       .afterClosed()
       .pipe(
         filter((result) => result),
-        tap(() => this.linkLibraryService.removeLinkCategory(category.id))
+        tap(() => this.linkLibraryManagementService.removeCategory(category.id))
       )
       .subscribe();
   }
@@ -194,12 +199,12 @@ export class LinkLibraryManagementComponent implements OnInit {
       .afterClosed()
       .pipe(
         filter((result) => result && result.status === true),
-        tap((result) => this.linkLibraryService.addLinkTag(result.tag))
+        tap((result) => this.linkLibraryManagementService.addTag(result.tag))
       )
       .subscribe();
   }
 
-  onEditTag(tag: LinkTagCode) {
+  onEditTag(tag: Tag) {
     this.dialog
       .open(LinkTagDialogComponent, {
         data: { type: 'update', tag },
@@ -209,12 +214,12 @@ export class LinkLibraryManagementComponent implements OnInit {
       .afterClosed()
       .pipe(
         filter((result) => result && result.status === true),
-        tap((result) => this.linkLibraryService.updateLinkTag({ id: tag.id, ...result.tag }))
+        tap((result) => this.linkLibraryManagementService.updateTag(tag.id, result.tag))
       )
       .subscribe();
   }
 
-  onDeleteTag(tag: LinkTagCode) {
+  onDeleteTag(tag: Tag) {
     const message = 'Are you sure you want to remove this tag?';
 
     this.dialog
@@ -222,7 +227,7 @@ export class LinkLibraryManagementComponent implements OnInit {
       .afterClosed()
       .pipe(
         filter((result) => result),
-        tap(() => this.linkLibraryService.removeLinkTag(tag.id))
+        tap(() => this.linkLibraryManagementService.removeTag(tag.id))
       )
       .subscribe();
   }

@@ -5,18 +5,18 @@ import { MatInputModule } from '@angular/material/input';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
-import { LinkCategoryCode, LinkTagCode, NewLinkCategory, NewLinkTag } from '../../../../types/link-library';
 import { uniqueText } from '../../../../validators/unique-text.validator';
-import { LinkLibraryService } from '../../../../services/link-library.service';
+import { Tag, TagPayload } from '../link-library-management';
+import { LinkLibraryManagementService } from '../link-library-management.service';
 
 interface DialogData {
   type: 'create' | 'update';
-  tag?: LinkTagCode;
+  tag?: Tag;
 }
 
 interface DialogResult {
   status: boolean;
-  tag: NewLinkTag;
+  tag: TagPayload;
 }
 
 @Component({
@@ -27,7 +27,7 @@ interface DialogResult {
 })
 export class LinkTagDialogComponent {
   private fb = inject(FormBuilder);
-  private linkLibraryService = inject(LinkLibraryService);
+  private linkLibraryManagementService = inject(LinkLibraryManagementService);
   private dialogRef = inject(MatDialogRef<LinkTagDialogComponent>);
   readonly data = inject<DialogData>(MAT_DIALOG_DATA);
 
@@ -35,13 +35,13 @@ export class LinkTagDialogComponent {
 
   getNewTagForm() {
     return this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(30), uniqueText(this.linkLibraryService.linkTagList())]],
+      name: ['', [Validators.required, Validators.maxLength(30), uniqueText(this.linkLibraryManagementService.linkTagList())]],
     });
   }
 
-  getUpdateTagForm(tag: LinkTagCode) {
+  getUpdateTagForm(tag: Tag) {
     return this.fb.group({
-      name: [tag.name, [Validators.required, Validators.maxLength(30), uniqueText(this.linkLibraryService.linkTagList())]],
+      name: [tag.name, [Validators.required, Validators.maxLength(30), uniqueText(this.linkLibraryManagementService.linkTagList())]],
     });
   }
 

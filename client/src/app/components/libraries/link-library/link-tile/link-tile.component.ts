@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 
-import { Link } from '../../../../types/link-library';
+import { Link } from '../link-library';
 
 @Component({
   selector: 'app-link-tile',

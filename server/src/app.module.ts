@@ -13,6 +13,7 @@ import { AuthenticationModule } from './modules/authentication/authentication.mo
 import { AdminDashboardModule } from './modules/administration/admin-dashboard/admin-dashboard.module';
 import { AccountManagementModule } from './modules/administration/account-management/account-management.module';
 import { LinkLibraryModule } from './modules/libraries/link-library/link-library.module';
+import { LinkLibraryManagementModule } from './modules/administration/link-library-management/link-library-management.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { LinkLibraryModule } from './modules/libraries/link-library/link-library
     AuthenticationModule,
     AdminDashboardModule,
     AccountManagementModule,
+    LinkLibraryManagementModule,
     LinkLibraryModule,
   ],
   controllers: [AppController],

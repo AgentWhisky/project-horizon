@@ -2,13 +2,11 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
-import { RightResponseDto } from './dto/right.dto';
-import { RoleDto, RoleResponseDto } from './dto/role.dto';
-import { DeleteResponseDto } from 'src/common/dto/deletion-response.dto';
-import { UserDto, UserResponseDto } from './dto/user.dto';
 import { UserEntity } from 'src/entities/users.entity';
 import { RoleEntity } from 'src/entities/role.entity';
 import { RightEntity } from 'src/entities/right.entity';
+import { UserPayload, User, Role, RolePayload, Right } from './account-management.model';
+import { DeleteResponse } from 'src/common/model/delete-response.model';
 
 @Injectable()
 export class AccountManagementService {
@@ -23,31 +21,31 @@ export class AccountManagementService {
     private readonly rightRepository: Repository<RightEntity>
   ) {}
 
-  async getUsers(): Promise<UserResponseDto[]> {
+  // *** USERS ***
+  async getUsers(): Promise<User[]> {
     const dbUsers = await this.userRepository.find({
       select: ['id', 'name', 'username', 'roles', 'active', 'lastLogin'],
       relations: ['roles'],
+      order: { id: 'ASC' },
     });
 
-    const users: UserResponseDto[] = dbUsers
-      .map((user) => ({
-        id: user.id,
-        name: user.name,
-        username: user.username,
-        active: user.active,
-        lastLogin: user.lastLogin,
-        roles: user.roles.map((right) => ({
-          id: right.id,
-          name: right.name,
-          description: right.description,
-        })),
-      }))
-      .sort((a, b) => a.id - b.id);
+    const users: User[] = dbUsers.map((user) => ({
+      id: user.id,
+      name: user.name,
+      username: user.username,
+      active: user.active,
+      lastLogin: user.lastLogin,
+      roles: user.roles.map((right) => ({
+        id: right.id,
+        name: right.name,
+        description: right.description,
+      })),
+    }));
 
     return users;
   }
 
-  async updateUser(id: number, userDto: UserDto): Promise<UserResponseDto> {
+  async updateUser(id: number, userPayload: UserPayload): Promise<User> {
     const existingUser = await this.userRepository.findOne({ where: { id } });
 
     if (!existingUser) {
@@ -56,8 +54,8 @@ export class AccountManagementService {
 
     await this.userRepository.save({
       id,
-      name: userDto.name,
-      roles: userDto.roles.map((id) => ({ id })),
+      name: userPayload.name,
+      roles: userPayload.roles.map((id) => ({ id })),
     });
 
     const user = await this.userRepository.findOne({
@@ -113,33 +111,32 @@ export class AccountManagementService {
   }
 
   // *** ROLES ***
-  async getRoles(): Promise<RoleResponseDto[]> {
+  async getRoles(): Promise<Role[]> {
     const dbRoles = await this.roleRepository.find({
       select: ['id', 'name', 'description', 'rights'],
       relations: ['rights'],
+      order: { id: 'ASC' },
     });
 
-    const roles: RoleResponseDto[] = dbRoles
-      .map((role) => ({
-        id: role.id,
-        name: role.name,
-        description: role.description,
-        rights: role.rights.map((right) => ({
-          id: right.id,
-          name: right.name,
-          description: right.description,
-        })),
-      }))
-      .sort((a, b) => a.id - b.id);
+    const roles: Role[] = dbRoles.map((role) => ({
+      id: role.id,
+      name: role.name,
+      description: role.description,
+      rights: role.rights.map((right) => ({
+        id: right.id,
+        name: right.name,
+        description: right.description,
+      })),
+    }));
 
     return roles;
   }
 
-  async addRole(roleDto: RoleDto): Promise<RoleResponseDto> {
+  async addRole(rolePayload: RolePayload): Promise<Role> {
     const newRole = await this.roleRepository.save({
-      name: roleDto.name,
-      description: roleDto.description,
-      rights: roleDto.rights.map((id) => ({ id })),
+      name: rolePayload.name,
+      description: rolePayload.description,
+      rights: rolePayload.rights.map((id) => ({ id })),
     });
 
     const role = await this.roleRepository.findOne({
@@ -160,7 +157,7 @@ export class AccountManagementService {
     };
   }
 
-  async updateRole(id: number, roleDto: RoleDto): Promise<RoleResponseDto> {
+  async updateRole(id: number, rolePayload: RolePayload): Promise<Role> {
     const existingRole = await this.roleRepository.findOne({ where: { id } });
 
     if (!existingRole) {
@@ -169,9 +166,9 @@ export class AccountManagementService {
 
     await this.roleRepository.save({
       id,
-      name: roleDto.name,
-      description: roleDto.description,
-      rights: roleDto.rights.map((id) => ({ id })),
+      name: rolePayload.name,
+      description: rolePayload.description,
+      rights: rolePayload.rights.map((id) => ({ id })),
     });
 
     const role = await this.roleRepository.findOne({
@@ -192,7 +189,7 @@ export class AccountManagementService {
     };
   }
 
-  async deleteRole(id: number): Promise<DeleteResponseDto> {
+  async deleteRole(id: number): Promise<DeleteResponse> {
     const deleteResult = await this.roleRepository.delete(id);
 
     return {
@@ -202,21 +199,20 @@ export class AccountManagementService {
   }
 
   // *** RIGHTS ***
-  async getRights(): Promise<RightResponseDto[]> {
+  async getRights(): Promise<Right[]> {
     const dbRights = await this.rightRepository.find({
       select: ['id', 'name', 'description', 'internalName'],
       relations: ['roles'],
+      order: { id: 'ASC' },
     });
 
-    const rights: RightResponseDto[] = dbRights
-      .map((right) => ({
-        id: right.id,
-        name: right.name,
-        description: right.description,
-        internalName: right.internalName,
-        inUse: !!right.roles?.length,
-      }))
-      .sort((a, b) => a.id - b.id);
+    const rights: Right[] = dbRights.map((right) => ({
+      id: right.id,
+      name: right.name,
+      description: right.description,
+      internalName: right.internalName,
+      inUse: !!right.roles?.length,
+    }));
 
     return rights;
   }

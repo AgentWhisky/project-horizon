@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { DashboardResponseDto } from './dto/dashboard.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SettingEntity } from 'src/entities/settings.entity';
 import { Repository } from 'typeorm';
 import { CREATION_CODE_FIELD, CREATION_CODE_LENGTH } from 'src/constants';
 import { generateCode } from 'src/utils/generate-codes';
+import { AdminDashboardInfo } from './admin-dashboard.model';
 
 @Injectable()
 export class AdminDashboardService {
@@ -13,7 +13,7 @@ export class AdminDashboardService {
     private readonly settingRepository: Repository<SettingEntity>
   ) {}
 
-  async getDashboard(): Promise<DashboardResponseDto> {
+  async getDashboard(): Promise<AdminDashboardInfo> {
     const settings = await this.settingRepository.find({
       select: ['key', 'value'],
       where: { key: CREATION_CODE_FIELD },
@@ -26,7 +26,7 @@ export class AdminDashboardService {
     };
   }
 
-  async refreshCreationCode(): Promise<DashboardResponseDto> {
+  async refreshCreationCode(): Promise<string> {
     const creationCode = generateCode(CREATION_CODE_LENGTH);
 
     await this.settingRepository.save({
@@ -34,6 +34,6 @@ export class AdminDashboardService {
       value: creationCode,
     });
 
-    return { creationCode };
+    return creationCode;
   }
 }

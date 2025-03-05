@@ -29,11 +29,15 @@ export class AdminDashboardService {
 
   async refreshCreationCode() {
     try {
-      const dashboardInfo = await this.postCreationCodeRefresh();
-      this._dashboardInfo.set(dashboardInfo);
+      const creationCode = await this.postCreationCodeRefresh();
+      this._dashboardInfo.set({
+        ...this._dashboardInfo(),
+        creationCode,
+      });
       this.snackbar.open('Successfully refreshed account creation code', 'Close', { duration: 3000 });
     } catch (error) {
       this.snackbar.open('Failed to refresh account creation code', 'Close', { duration: 3000 });
+      console.error(`Error refreshing creation code: ${error}`);
     }
   }
 
@@ -43,7 +47,7 @@ export class AdminDashboardService {
   }
 
   private async postCreationCodeRefresh() {
-    const dashboardInfo$ = this.tokenService.postWithTokenRefresh<AdminDashboardInfo>('/admin-dashboard/refresh-creation-code', {});
-    return firstValueFrom(dashboardInfo$);
+    const creationCode$ = this.tokenService.postWithTokenRefresh<string>('/admin-dashboard/refresh-creation-code', {});
+    return firstValueFrom(creationCode$);
   }
 }

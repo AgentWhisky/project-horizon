@@ -3,7 +3,7 @@
   <form class="flex flex-col gap-3" [formGroup]="tagForm">
     <mat-form-field class="w-full">
       <mat-label>Name</mat-label>
-      <input matInput formControlName="name" />
+      <input matInput formControlName="name" (keydown.enter)="onSubmit()" />
       @if(tagForm.get('name')?.hasError('unique')) {
       <mat-error>Name is not unique</mat-error>
       } @else if(tagForm.get('name')?.hasError('required')) {

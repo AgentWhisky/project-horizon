@@ -18,3 +18,10 @@ export interface LinkTag {
   id: number;
   name: string;
 }
+
+export interface LinksByCategory {
+  id: number;
+  name: string;
+  description: string;
+  links: Link[];
+}

@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { LinkLibraryService } from '../../../services/link-library.service';
+import { LinkLibraryService } from './link-library.service';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
