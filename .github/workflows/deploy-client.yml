@@ -1,0 +1,29 @@
+name: Deploy Angular to Heroku (Docker)
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'client/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Login to Heroku Container Registry
+        run: heroku container:login
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+
+      - name: Build & Push Docker Image
+        run: |
+          cd client
+          heroku container:push web --app ${{ secrets.HEROKU_APP_NAME_CLIENT }}
+          heroku container:release web --app ${{ secrets.HEROKU_APP_NAME_CLIENT }}
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
