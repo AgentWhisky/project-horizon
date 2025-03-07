@@ -1,4 +1,4 @@
-name: Deploy Angular to Heroku (Docker)
+name: Deploy Horizon Client
 
 on:
   push:
@@ -8,22 +8,16 @@ on:
       - 'client/**'
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Login to Heroku Container Registry
-        run: heroku container:login
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-
-      - name: Build & Push Docker Image
+      - uses: actions/checkout@v2
+      - name: Install Heroku CLI # <- IMPORTANT!!! Make sure the cli is installed before using the action
         run: |
-          cd client
-          heroku container:push web --app ${{ secrets.HEROKU_APP_NAME_CLIENT }}
-          heroku container:release web --app ${{ secrets.HEROKU_APP_NAME_CLIENT }}
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          curl https://cli-assets.heroku.com/install.sh | sh
+      - uses: akhileshns/heroku-deploy@v3.14.15 # This is the action
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME_CLIENT }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          usedocker: true
