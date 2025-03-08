@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: '/api' // CHANGE TO HEROKU API ENDPOINT
+    apiUrl: 'https://stage-api.aw-horizon.com/api'
 }
