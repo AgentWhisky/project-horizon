@@ -1,4 +1,4 @@
-name: Deploy NestJS to Heroku (Docker)
+name: Deploy horizon server
 
 on:
   push:
@@ -8,22 +8,17 @@ on:
       - 'server/**'
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Login to Heroku Container Registry
-        run: heroku container:login
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-
-      - name: Build & Push Docker Image
+      - uses: actions/checkout@v2
+      - name: Install Heroku CLI
         run: |
-          cd server
-          heroku container:push web --app ${{ secrets.HEROKU_APP_NAME_SERVER }}
-          heroku container:release web --app ${{ secrets.HEROKU_APP_NAME_SERVER }}
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          curl https://cli-assets.heroku.com/install.sh | sh
+      - uses: akhileshns/heroku-deploy@v3.14.15
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{secrets.HEROKU_APP_NAME_SERVER}}
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
+          usedocker: true
+          appdir: "server"  # server subfolder

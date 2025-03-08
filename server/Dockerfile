@@ -1,14 +1,11 @@
-# Use Node.js as base image
-FROM node:18
-
+# Build
+FROM node:alpine
 WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci
+COPY package*.json ./
+RUN npm install
 COPY . .
 RUN npm run build
 
-# Expose port for Heroku
-ENV PORT=3000
+# Run
 EXPOSE 3000
-
 CMD ["node", "dist/main"]
