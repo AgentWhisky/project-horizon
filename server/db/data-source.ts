@@ -14,7 +14,8 @@ export const DataSourceConfig: DataSourceOptions = {
   entities: [__dirname + '/../**/*.entity.{js,ts}'],
   migrations: ['dist/db/migrations/*.js'],
   logging: false, // Enable for Query Logging
-  ssl: false,
+  ssl: process.env.POSTGRES_SSL === 'true',
+  migrationsRun: true,
 };
 
 const dataSource = new DataSource(DataSourceConfig);
