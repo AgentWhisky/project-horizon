@@ -1,9 +1,11 @@
-name: Deploy horizon client 
+name: Deploy horizon client
 
 on:
   push:
     branches:
       - master
+    paths:
+      - 'client/**'
 
 jobs:
   build:
@@ -19,4 +21,4 @@ jobs:
           heroku_app_name: ${{secrets.HEROKU_APP_NAME_CLIENT}}
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           usedocker: true
-          appdir: "client"  # <-- Specify the client folder
+          appdir: "client"  # client subfolder
