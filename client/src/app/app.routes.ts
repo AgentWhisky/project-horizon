@@ -24,19 +24,13 @@ export const routes: Routes = [
         path: 'book-library',
         loadComponent: () => import('./components/libraries/book-library/book-library.component').then((c) => c.BookLibraryComponent),
       },
-
-      // *** DEV ***
-      {
-        path: 'dev-buttons',
-        loadComponent: () => import('./components/dev/button-triggers/button-triggers.component').then((c) => c.ButtonTriggersComponent),
-      },
       // *** ADMINISTRATION ***
       {
         path: 'administration',
         loadComponent: () =>
           import('./components/administration/admin-dashboard/admin-dashboard.component').then((c) => c.AdminDashboardComponent),
         canActivate: [AuthGuard],
-        data: { requiredRights: ['VIEW_DASHBOARD']}
+        data: { requiredRights: ['VIEW_DASHBOARD'] },
       },
       {
         path: 'link-library-management',
@@ -49,11 +43,9 @@ export const routes: Routes = [
       {
         path: 'account-management',
         loadComponent: () =>
-          import('./components/administration/account-management/account-management.component').then(
-            (c) => c.AccountManagementComponent
-          ),
+          import('./components/administration/account-management/account-management.component').then((c) => c.AccountManagementComponent),
         canActivate: [AuthGuard],
-        data: { requiredRights: ['MANAGE_USERS', 'MANAGE_ROLES']}
+        data: { requiredRights: ['MANAGE_USERS', 'MANAGE_ROLES'] },
       },
     ],
   },

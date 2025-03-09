@@ -29,10 +29,6 @@ export const navSections: NavSection[] = [
     navItems: [{ routerLink: '/base-converter', name: 'Base Converter', icon: 'calculate' }],
   },
   {
-    title: 'Dev',
-    navItems: [{ routerLink: '/dev-buttons', name: 'Dev Buttons', icon: 'code' }],
-  },
-  {
     title: 'Administration',
     navItems: [
       {
