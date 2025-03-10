@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { LoginDialogComponent } from '../dialogs/login-dialog/login-dialog.component';
 import { LoginCredentials, NewAccountCredentials } from '../types/login-credentials';
 import { jwtDecode } from 'jwt-decode';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 

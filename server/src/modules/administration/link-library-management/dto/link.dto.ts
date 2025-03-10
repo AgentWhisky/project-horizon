@@ -1,4 +1,4 @@
-import { IsString, IsInt, IsArray, IsOptional, IsUrl, ArrayNotEmpty, IsNotEmpty, Length } from 'class-validator';
+import { IsString, IsInt, IsArray, IsOptional, IsUrl, IsNotEmpty, Length, MaxLength } from 'class-validator';
 import { USERNAME_LENGTH } from 'src/common/constants/validation.constants';
 
 export class LinkDto {
@@ -8,6 +8,7 @@ export class LinkDto {
   name: string;
 
   @IsUrl()
+  @MaxLength(2048)
   url: string;
 
   @IsString()
