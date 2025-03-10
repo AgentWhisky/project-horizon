@@ -43,7 +43,11 @@
           <th mat-header-cell *matHeaderCellDef aria-hidden="true"></th>
           <td mat-cell class="min-w-16" *matCellDef="let element">
             <div class="flex justify-end items-center">
-              <button mat-icon-button (click)="onToggleUser(element)" [attr.aria-label]="element.active ? 'Disable User' : 'Enable User'">
+              <button
+                mat-icon-button
+                (click)="onToggleUser(element)"
+                [attr.aria-label]="element.active ? 'Disable User' : 'Enable User'"
+                [disabled]="element.id === currentUser?.userId">
                 <mat-icon [matTooltip]="element.active ? 'Disable User' : 'Enable User'">{{
                   element.active ? 'person' : 'person_off'
                 }}</mat-icon>

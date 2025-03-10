@@ -14,11 +14,17 @@ import { AdminDashboardModule } from './modules/administration/admin-dashboard/a
 import { AccountManagementModule } from './modules/administration/account-management/account-management.module';
 import { LinkLibraryModule } from './modules/libraries/link-library/link-library.module';
 import { LinkLibraryManagementModule } from './modules/administration/link-library-management/link-library-management.module';
+import { CacheModule } from '@nestjs/cache-manager';
+import { CacheUtils } from './common/utils/cache.utils';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(DataSourceConfig),
     TypeOrmModule.forFeature([UserEntity]),
+    CacheModule.register({
+      ttl: 60000 * 15,
+      isGlobal: true,
+    }),
     ThrottlerModule.forRoot({
       throttlers: [
         {

@@ -8,7 +8,8 @@
         placeholder="Ex. Discord"
         maxlength="1024"
         formControlName="filter"
-        aria-label="Link library search" />
+        aria-label="Link library search"
+        (keydown.enter)="linkLibrarySearch.blur()" />
       @if(linkLibrarySearch.value && linkLibrarySearch.value !== '') {
       <button matSuffix class="mr-3" mat-icon-button aria-label="Clear" (click)="onResetForm()">
         <mat-icon>close</mat-icon>

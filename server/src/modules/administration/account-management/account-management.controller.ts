@@ -1,17 +1,24 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseInterceptors } from '@nestjs/common';
 import { AccountManagementService } from './account-management.service';
 import { RoleDto } from './dto/role.dto';
 import { UserDto } from './dto/user.dto';
 import { RequireRight } from 'src/decorators/require-right.decorator';
-import { USER_RIGHTS } from 'src/constants';
+import { CACHE_KEY, USER_RIGHTS } from 'src/common/constants';
+import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
+import { CacheUtils } from 'src/common/utils/cache.utils';
 
 @Controller('account-management')
+@UseInterceptors(CacheInterceptor)
 export class AccountManagementController {
-  constructor(private readonly accountManagementService: AccountManagementService) {}
+  constructor(
+    private readonly accountManagementService: AccountManagementService,
+    private readonly cacheUtils: CacheUtils
+  ) {}
 
   // *** USERS ***
   @Get('users')
   @RequireRight(USER_RIGHTS.MANAGE_USERS)
+  @CacheKey(CACHE_KEY.ACCOUNT_MANAGEMENT_USERS)
   async getUsers() {
     return this.accountManagementService.getUsers();
   }
@@ -31,6 +38,7 @@ export class AccountManagementController {
   // *** ROLES ***
   @Get('roles')
   @RequireRight(USER_RIGHTS.MANAGE_USERS, USER_RIGHTS.MANAGE_ROLES)
+  @CacheKey(CACHE_KEY.ACCOUNT_MANAGEMENT_ROLES)
   async getRoles() {
     return this.accountManagementService.getRoles();
   }
@@ -56,6 +64,7 @@ export class AccountManagementController {
   // *** RIGHTS ***
   @Get('rights')
   @RequireRight(USER_RIGHTS.MANAGE_USERS, USER_RIGHTS.MANAGE_ROLES)
+  @CacheKey(CACHE_KEY.ACCOUNT_MANAGEMENT_RIGHTS)
   async getRights() {
     return this.accountManagementService.getRights();
   }

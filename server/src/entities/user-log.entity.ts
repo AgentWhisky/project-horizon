@@ -8,7 +8,7 @@ export class UserLogEntity {
   @Column({ name: 'userId' })
   userId: number;
 
-  @Column({ name: 'active' })
+  @Column({ name: 'action' })
   action: string;
 
   // *** AUDIT FIELDS ***

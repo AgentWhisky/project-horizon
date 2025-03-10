@@ -42,6 +42,8 @@ export class AccountManagementComponent implements OnInit {
   private accountManagementService = inject(AccountManagementService);
   private userService = inject(UserService);
 
+  readonly currentUser = this.userService.userInfo();
+
   private dialog = inject(MatDialog);
 
   // Users Table

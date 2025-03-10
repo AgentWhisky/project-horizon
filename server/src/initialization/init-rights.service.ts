@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { USER_RIGHTS_DEFAULT } from 'src/constants';
+import { USER_RIGHTS_DEFAULT } from 'src/common/constants';
 import { RightEntity } from 'src/entities/right.entity';
 import { Repository } from 'typeorm';
 

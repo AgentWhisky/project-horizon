@@ -16,9 +16,9 @@ import {
   LOGIN_ERROR,
   REFRESH_TOKEN_EXPIRED,
   USERNAME_TAKEN,
-} from 'src/constants';
+} from 'src/common/constants';
 import { UserLogService } from 'src/common/services/user-log/user-log.service';
-import { generateCode } from 'src/utils/generate-codes';
+import { generateCode } from 'src/common/utils/generate-codes.utils';
 
 @Injectable()
 export class AuthenticationService implements OnModuleInit {
@@ -128,6 +128,7 @@ export class AuthenticationService implements OnModuleInit {
       lastLogin: Date(),
     });
 
+    this.userLogService.logUserCreateAccount(user.id);
     this.refreshCreationCode();
     const authInfo = await this.generateAuthInfo(user.id);
 

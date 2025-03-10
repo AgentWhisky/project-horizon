@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SettingEntity } from 'src/entities/settings.entity';
 import { Repository } from 'typeorm';
-import { CREATION_CODE_FIELD, CREATION_CODE_LENGTH } from 'src/constants';
-import { generateCode } from 'src/utils/generate-codes';
+import { CREATION_CODE_FIELD, CREATION_CODE_LENGTH } from 'src/common/constants';
+import { generateCode } from 'src/common/utils/generate-codes.utils';
 import { AdminDashboardInfo, CreationCodeRefresh } from './admin-dashboard.model';
 
 @Injectable()
