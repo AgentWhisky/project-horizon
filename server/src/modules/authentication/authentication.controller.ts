@@ -2,7 +2,7 @@ import { Body, Controller, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Req,
 import { AuthenticationService } from './authentication.service';
 import { RefreshTokenDto, RegistrationDto } from './dto/auth.dto';
 import { AuthResponse, RegistrationInfo } from './authentication.model';
-import { LOGIN_ERROR } from 'src/common/constants';
+import { LOGIN_ERROR } from 'src/common/constants/error-response.constants';
 
 @Controller()
 export class AuthenticationController {

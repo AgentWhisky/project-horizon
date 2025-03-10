@@ -1,11 +1,14 @@
-import { IsString, IsInt, IsArray, IsOptional, IsUrl, ArrayNotEmpty } from 'class-validator';
+import { IsString, IsInt, IsArray, IsOptional, IsUrl, ArrayNotEmpty, IsNotEmpty, Length } from 'class-validator';
+import { USERNAME_LENGTH } from 'src/common/constants/validation.constants';
 
 export class LinkDto {
+  @IsString()
+  @IsNotEmpty()
+  @Length(USERNAME_LENGTH.MIN, USERNAME_LENGTH.MAX)
+  name: string;
+
   @IsUrl()
   url: string;
-
-  @IsString()
-  name: string;
 
   @IsString()
   description: string;
@@ -14,7 +17,6 @@ export class LinkDto {
   category: number;
 
   @IsArray()
-  @ArrayNotEmpty()
   @IsInt({ each: true })
   tags: number[];
 

@@ -1,19 +1,21 @@
 import { IsNotEmpty, IsString, Length } from 'class-validator';
+import { CREATION_CODE_LENGTH } from 'src/common/constants/creation-code.constants';
+import { PASSWORD_LENGTH, USERNAME_LENGTH } from 'src/common/constants/validation.constants';
 
 export class RegistrationDto {
-  @IsString({ message: 'Username must be a string' })
-  @IsNotEmpty({ message: 'Username is required' })
-  @Length(4, 20, { message: 'Username must be between 4 and 20 characters' })
+  @IsString()
+  @IsNotEmpty()
+  @Length(USERNAME_LENGTH.MIN, USERNAME_LENGTH.MAX)
   username: string;
 
-  @IsString({ message: 'Password must be a string' })
-  @IsNotEmpty({ message: 'Password is required' })
-  @Length(6, 100, { message: 'Password must be between 6 and 100 characters' })
+  @IsString()
+  @IsNotEmpty()
+  @Length(PASSWORD_LENGTH.MIN, PASSWORD_LENGTH.MAX)
   password: string;
 
-  @IsString({ message: 'Creation code must be a string' })
-  @IsNotEmpty({ message: 'Creation code is required' })
-  @Length(6, 30, { message: 'Creation code must be between 6 and 30 characters' }) // Adjust length as needed
+  @IsString()
+  @IsNotEmpty()
+  @Length(CREATION_CODE_LENGTH, CREATION_CODE_LENGTH)
   creationCode: string;
 }
 

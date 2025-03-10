@@ -3,9 +3,10 @@ import { AccountManagementService } from './account-management.service';
 import { RoleDto } from './dto/role.dto';
 import { UserDto } from './dto/user.dto';
 import { RequireRight } from 'src/decorators/require-right.decorator';
-import { CACHE_KEY, USER_RIGHTS } from 'src/common/constants';
 import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
 import { CacheUtils } from 'src/common/utils/cache.utils';
+import { CACHE_KEY } from 'src/common/constants/cache-keys.constants';
+import { USER_RIGHTS } from 'src/common/constants/user-rights.constants';
 
 @Controller('account-management')
 @UseInterceptors(CacheInterceptor)
@@ -26,13 +27,17 @@ export class AccountManagementController {
   @Put('users/:id')
   @RequireRight(USER_RIGHTS.MANAGE_USERS)
   async updateUser(@Param('id', ParseIntPipe) id: number, @Body() userDto: UserDto) {
-    return this.accountManagementService.updateUser(id, userDto);
+    const user = await this.accountManagementService.updateUser(id, userDto);
+    await this.cacheUtils.clearUserCache();
+    return user;
   }
 
   @Put('users/:id/active')
   @RequireRight(USER_RIGHTS.MANAGE_USERS)
   async updateUserActive(@Param('id', ParseIntPipe) id: number, @Body() body: { active: boolean }) {
-    return this.accountManagementService.updateUserActive(id, body.active);
+    const user = await this.accountManagementService.updateUserActive(id, body.active);
+    await this.cacheUtils.clearUserCache();
+    return user;
   }
 
   // *** ROLES ***
@@ -46,19 +51,25 @@ export class AccountManagementController {
   @Post('roles')
   @RequireRight(USER_RIGHTS.MANAGE_ROLES)
   async addRoles(@Body() roleDto: RoleDto) {
-    return this.accountManagementService.addRole(roleDto);
+    const role = await this.accountManagementService.addRole(roleDto);
+    await this.cacheUtils.clearRoleCache();
+    return role;
   }
 
   @Put('roles/:id')
   @RequireRight(USER_RIGHTS.MANAGE_ROLES)
   async updateRoles(@Param('id', ParseIntPipe) id: number, @Body() roleDto: RoleDto) {
-    return this.accountManagementService.updateRole(id, roleDto);
+    const role = await this.accountManagementService.updateRole(id, roleDto);
+    await this.cacheUtils.clearRoleCache();
+    return role;
   }
 
   @Delete('roles/:id')
   @RequireRight(USER_RIGHTS.MANAGE_ROLES)
   async deleteRoles(@Param('id', ParseIntPipe) id: number) {
-    return this.accountManagementService.deleteRole(id);
+    const deleteResponse = await this.accountManagementService.deleteRole(id);
+    await this.cacheUtils.clearRoleCache();
+    return deleteResponse;
   }
 
   // *** RIGHTS ***

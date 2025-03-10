@@ -8,17 +8,10 @@ import { JwtService } from '@nestjs/jwt';
 import { RefreshTokenEntity } from 'src/entities/refresh-token.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { AuthPayload, AuthResponse, RegistrationInfo, LoginCredentials } from './authentication.model';
-import {
-  CREATION_CODE_FIELD,
-  CREATION_CODE_LENGTH,
-  INVALID_CREATION_CODE,
-  INVALID_REFRESH_TOKEN,
-  LOGIN_ERROR,
-  REFRESH_TOKEN_EXPIRED,
-  USERNAME_TAKEN,
-} from 'src/common/constants';
 import { UserLogService } from 'src/common/services/user-log/user-log.service';
 import { generateCode } from 'src/common/utils/generate-codes.utils';
+import { INVALID_CREATION_CODE, INVALID_REFRESH_TOKEN, LOGIN_ERROR, REFRESH_TOKEN_EXPIRED, USERNAME_TAKEN } from 'src/common/constants/error-response.constants';
+import { CREATION_CODE_FIELD, CREATION_CODE_LENGTH } from 'src/common/constants/creation-code.constants';
 
 @Injectable()
 export class AuthenticationService implements OnModuleInit {

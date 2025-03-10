@@ -1,9 +1,10 @@
 import { Controller, Get, Post, UseInterceptors } from '@nestjs/common';
 import { AdminDashboardService } from './admin-dashboard.service';
 import { RequireRight } from 'src/decorators/require-right.decorator';
-import { CACHE_KEY, USER_RIGHTS } from 'src/common/constants';
 import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
 import { CacheUtils } from 'src/common/utils/cache.utils';
+import { CACHE_KEY } from 'src/common/constants/cache-keys.constants';
+import { USER_RIGHTS } from 'src/common/constants/user-rights.constants';
 
 @Controller('admin-dashboard')
 @UseInterceptors(CacheInterceptor)
@@ -17,14 +18,14 @@ export class AdminDashboardController {
   @RequireRight(USER_RIGHTS.VIEW_DASHBOARD)
   @CacheKey(CACHE_KEY.ADMIN_DASHBOARD)
   async getDashboard() {
-    console.log('ADMIN-DASHBOARD: NOT-CACHED');
     return this.adminDashboardService.getDashboard();
   }
 
   @Post('refresh-creation-code')
   @RequireRight(USER_RIGHTS.VIEW_DASHBOARD)
   async refreshRecord() {
+    const creationCodeRefresh = await this.adminDashboardService.refreshCreationCode();
     await this.cacheUtils.clearAdminDashboard();
-    return this.adminDashboardService.refreshCreationCode();
+    return creationCodeRefresh;
   }
 }

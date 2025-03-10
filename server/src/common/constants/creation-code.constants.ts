@@ -1,0 +1,2 @@
+export const CREATION_CODE_LENGTH = 12;
+export const CREATION_CODE_FIELD = 'CREATION-CODE';

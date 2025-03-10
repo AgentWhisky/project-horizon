@@ -1,12 +1,13 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseInterceptors } from '@nestjs/common';
 import { LinkLibraryManagementService } from './link-library-management.service';
 import { RequireRight } from 'src/decorators/require-right.decorator';
-import { CACHE_KEY, USER_RIGHTS } from 'src/common/constants';
 import { LinkDto } from './dto/link.dto';
 import { CategoryDto } from './dto/category.dto';
 import { TagDto } from './dto/tag.dto';
 import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
 import { CacheUtils } from 'src/common/utils/cache.utils';
+import { CACHE_KEY } from 'src/common/constants/cache-keys.constants';
+import { USER_RIGHTS } from 'src/common/constants/user-rights.constants';
 
 @Controller('link-library-management')
 @UseInterceptors(CacheInterceptor)
@@ -26,23 +27,26 @@ export class LinkLibraryManagementController {
 
   @Post('links')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
-  async addLink(@Body() link: LinkDto) {
+  async addLink(@Body() linkDto: LinkDto) {
+    const link = await this.linkLibraryManagementService.addLink(linkDto);
     await this.cacheUtils.clearLinkCache();
-    return this.linkLibraryManagementService.addLink(link);
+    return link;
   }
 
   @Put('links/:id')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
-  async updateLink(@Param('id', ParseIntPipe) id: number, @Body() link: LinkDto) {
+  async updateLink(@Param('id', ParseIntPipe) id: number, @Body() linkDto: LinkDto) {
+    const link = await this.linkLibraryManagementService.updateLink(id, linkDto);
     await this.cacheUtils.clearLinkCache();
-    return this.linkLibraryManagementService.updateLink(id, link);
+    return link;
   }
 
   @Delete('links/:id')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
   async deleteLink(@Param('id', ParseIntPipe) id: number) {
+    const deleteResponse = this.linkLibraryManagementService.deleteLink(id);
     await this.cacheUtils.clearLinkCache();
-    return this.linkLibraryManagementService.deleteLink(id);
+    return deleteResponse;
   }
 
   // *** CATEGORY ENDPOINTS ***
@@ -55,23 +59,26 @@ export class LinkLibraryManagementController {
 
   @Post('categories')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
-  async addLinkCategory(@Body() category: CategoryDto) {
+  async addLinkCategory(@Body() categoryDto: CategoryDto) {
+    const category = await this.linkLibraryManagementService.addCategory(categoryDto);
     await this.cacheUtils.clearLinkCategoryCache();
-    return this.linkLibraryManagementService.addCategory(category);
+    return category;
   }
 
   @Put('categories/:id')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
-  async updateLinkCategory(@Param('id', ParseIntPipe) id: number, @Body() category: CategoryDto) {
+  async updateLinkCategory(@Param('id', ParseIntPipe) id: number, @Body() categoryDto: CategoryDto) {
+    const category = await this.linkLibraryManagementService.updateCategory(id, categoryDto);
     await this.cacheUtils.clearLinkCategoryCache();
-    return this.linkLibraryManagementService.updateCategory(id, category);
+    return category;
   }
 
   @Delete('categories/:id')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
   async deleteLinkCategory(@Param('id', ParseIntPipe) id: number) {
+    const deleteResponse = await this.linkLibraryManagementService.deleteCategory(id);
     await this.cacheUtils.clearLinkCategoryCache();
-    return this.linkLibraryManagementService.deleteCategory(id);
+    return deleteResponse;
   }
 
   // *** TAGS ENDPOINTS ***
@@ -84,22 +91,25 @@ export class LinkLibraryManagementController {
 
   @Post('tags')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
-  async addLinkTag(@Body() tag: TagDto) {
+  async addLinkTag(@Body() tagDto: TagDto) {
+    const tag = await this.linkLibraryManagementService.addTag(tagDto);
     await this.cacheUtils.clearLinkTagCache();
-    return this.linkLibraryManagementService.addTag(tag);
+    return tag;
   }
 
   @Put('tags/:id')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
-  async updateLinkTag(@Param('id', ParseIntPipe) id: number, @Body() tag: TagDto) {
+  async updateLinkTag(@Param('id', ParseIntPipe) id: number, @Body() tagDto: TagDto) {
+    const tag = await this.linkLibraryManagementService.updateTag(id, tagDto);
     await this.cacheUtils.clearLinkTagCache();
-    return this.linkLibraryManagementService.updateTag(id, tag);
+    return tag;
   }
 
   @Delete('tags/:id')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
   async deleteLinkTag(@Param('id', ParseIntPipe) id: number) {
+    const deleteResponse = await this.linkLibraryManagementService.deleteTag(id);
     await this.cacheUtils.clearLinkTagCache();
-    return this.linkLibraryManagementService.deleteTag(id);
+    return deleteResponse;
   }
 }

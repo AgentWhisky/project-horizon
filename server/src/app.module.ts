@@ -3,7 +3,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSourceConfig } from 'db/data-source';
-import { InitializationModule } from './initialization/initilaization.module';
 import { MaintenanceModule } from './maintenance/maintenance.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
@@ -15,7 +14,6 @@ import { AccountManagementModule } from './modules/administration/account-manage
 import { LinkLibraryModule } from './modules/libraries/link-library/link-library.module';
 import { LinkLibraryManagementModule } from './modules/administration/link-library-management/link-library-management.module';
 import { CacheModule } from '@nestjs/cache-manager';
-import { CacheUtils } from './common/utils/cache.utils';
 
 @Module({
   imports: [
@@ -33,7 +31,6 @@ import { CacheUtils } from './common/utils/cache.utils';
         },
       ],
     }),
-    InitializationModule,
     MaintenanceModule,
     AuthenticationModule,
     AdminDashboardModule,
