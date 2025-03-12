@@ -11,7 +11,13 @@ async function bootstrap() {
   app.enableCors();
 
   if (process.env.NODE_ENV !== 'production') {
-    const config = new DocumentBuilder().setTitle('My API').setDescription('API Documentation').setVersion('1.0').build();
+    const config = new DocumentBuilder()
+      .setTitle('Horizon API')
+      .setDescription('API Documentation')
+      .setVersion('1.0')
+      .addBasicAuth()
+      .addBearerAuth()
+      .build();
 
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api/docs', app, document);

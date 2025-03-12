@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export class LinkCategoryDto {
+export class LinkCategoryResponseDto {
   @ApiProperty({ example: 1, description: 'Unique identifier for the category' })
   id: number;
 
@@ -11,7 +11,7 @@ export class LinkCategoryDto {
   description: string;
 }
 
-export class LinkTagDto {
+export class LinkTagResponseDto {
   @ApiProperty({ example: 1, description: 'Unique identifier for the tag' })
   id: number;
 
@@ -19,7 +19,7 @@ export class LinkTagDto {
   name: string;
 }
 
-export class LinkDto {
+export class LinkResponseDto {
   @ApiProperty({ example: 1, description: 'Unique identifier for the link' })
   id: number;
 
@@ -32,11 +32,11 @@ export class LinkDto {
   @ApiProperty({ example: 'This is a useful link.', description: 'A short description of the link' })
   description: string;
 
-  @ApiProperty({ type: LinkCategoryDto, description: 'The category this link belongs to' })
-  category: LinkCategoryDto;
+  @ApiProperty({ type: LinkCategoryResponseDto, description: 'The category this link belongs to' })
+  category: LinkCategoryResponseDto;
 
-  @ApiProperty({ type: [LinkTagDto], description: 'Tags associated with this link' })
-  tags: LinkTagDto[];
+  @ApiProperty({ type: [LinkTagResponseDto], description: 'Tags associated with this link' })
+  tags: LinkTagResponseDto[];
 
   @ApiPropertyOptional({ example: 'https://example.com/thumbnail.jpg', description: 'Thumbnail image URL (optional)' })
   thumbnail?: string;
