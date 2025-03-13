@@ -10,7 +10,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { AuthPayload, AuthResponse, RegistrationInfo, LoginCredentials } from './authentication.model';
 import { UserLogService } from 'src/common/services/user-log/user-log.service';
 import { generateCode } from 'src/common/utils/generate-codes.utils';
-import { INVALID_CREATION_CODE, INVALID_REFRESH_TOKEN, LOGIN_ERROR, REFRESH_TOKEN_EXPIRED, USERNAME_TAKEN } from 'src/common/constants/error-response.constants';
+import {
+  INVALID_CREATION_CODE,
+  INVALID_REFRESH_TOKEN,
+  LOGIN_ERROR,
+  REFRESH_TOKEN_EXPIRED,
+  USERNAME_TAKEN,
+} from 'src/common/constants/error-response.constants';
 import { CREATION_CODE_FIELD, CREATION_CODE_LENGTH } from 'src/common/constants/creation-code.constants';
 
 @Injectable()
@@ -66,6 +72,12 @@ export class AuthenticationService implements OnModuleInit {
       throw new UnauthorizedException(LOGIN_ERROR.INVALID_CREDENTIALS);
     }
 
+    // Update last login time
+    await this.userRepository.save({
+      id: user.id,
+      lastLogin: Date(),
+    });
+
     this.userLogService.logUserLogin(user.id);
     return this.generateAuthInfo(user.id);
   }
@@ -116,6 +128,7 @@ export class AuthenticationService implements OnModuleInit {
     const hashedPassword = await bcrypt.hash(registrationInfo.password, 10);
 
     const user = await this.userRepository.save({
+      name: registrationInfo.name,
       username,
       password: hashedPassword,
       lastLogin: Date(),

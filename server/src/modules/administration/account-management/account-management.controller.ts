@@ -7,7 +7,12 @@ import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
 import { CacheUtils } from 'src/common/utils/cache.utils';
 import { CACHE_KEY } from 'src/common/constants/cache-keys.constants';
 import { USER_RIGHTS } from 'src/common/constants/user-rights.constants';
+import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { UserResponseDto } from './dto/user-response.dto';
+import { RightResponseDto } from './dto/right-response.dto';
+import { RoleResponseDto } from './dto/role-response.dto';
 
+@ApiTags('Account Management')
 @Controller('account-management')
 @UseInterceptors(CacheInterceptor)
 export class AccountManagementController {
@@ -20,13 +25,21 @@ export class AccountManagementController {
   @Get('users')
   @RequireRight(USER_RIGHTS.MANAGE_USERS)
   @CacheKey(CACHE_KEY.ACCOUNT_MANAGEMENT_USERS)
-  async getUsers() {
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Retrieve all users' })
+  @ApiOkResponse({ description: 'List of all users', type: [UserResponseDto] })
+  async getUsers(): Promise<UserResponseDto[]> {
     return this.accountManagementService.getUsers();
   }
 
   @Put('users/:id')
   @RequireRight(USER_RIGHTS.MANAGE_USERS)
-  async updateUser(@Param('id', ParseIntPipe) id: number, @Body() userDto: UserDto) {
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update user details' })
+  @ApiParam({ name: 'id', type: Number, description: 'User ID' })
+  @ApiBody({ type: UserDto })
+  @ApiCreatedResponse({ description: 'Updated user information', type: UserResponseDto })
+  async updateUser(@Param('id', ParseIntPipe) id: number, @Body() userDto: UserDto): Promise<UserResponseDto> {
     const user = await this.accountManagementService.updateUser(id, userDto);
     await this.cacheUtils.clearUserCache();
     return user;
@@ -34,7 +47,20 @@ export class AccountManagementController {
 
   @Put('users/:id/active')
   @RequireRight(USER_RIGHTS.MANAGE_USERS)
-  async updateUserActive(@Param('id', ParseIntPipe) id: number, @Body() body: { active: boolean }) {
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update user active status' })
+  @ApiParam({ name: 'id', type: Number, description: 'User ID' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        active: { type: 'boolean', description: 'Whether the user is active' },
+      },
+      required: ['active'],
+    },
+  })
+  @ApiCreatedResponse({ description: 'Updated user active status', type: UserDto })
+  async updateUserActive(@Param('id', ParseIntPipe) id: number, @Body() body: { active: boolean }): Promise<UserResponseDto> {
     const user = await this.accountManagementService.updateUserActive(id, body.active);
     await this.cacheUtils.clearUserCache();
     return user;
@@ -44,13 +70,19 @@ export class AccountManagementController {
   @Get('roles')
   @RequireRight(USER_RIGHTS.MANAGE_USERS, USER_RIGHTS.MANAGE_ROLES)
   @CacheKey(CACHE_KEY.ACCOUNT_MANAGEMENT_ROLES)
-  async getRoles() {
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get all user roles' })
+  @ApiOkResponse({ description: 'List of user roles', type: [RoleResponseDto] })
+  async getRoles(): Promise<RoleResponseDto[]> {
     return this.accountManagementService.getRoles();
   }
 
   @Post('roles')
   @RequireRight(USER_RIGHTS.MANAGE_ROLES)
-  async addRoles(@Body() roleDto: RoleDto) {
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create a new role' })
+  @ApiCreatedResponse({ description: 'Role successfully created', type: RoleResponseDto })
+  async addRoles(@Body() roleDto: RoleDto): Promise<RoleResponseDto> {
     const role = await this.accountManagementService.addRole(roleDto);
     await this.cacheUtils.clearRoleCache();
     return role;
@@ -58,6 +90,9 @@ export class AccountManagementController {
 
   @Put('roles/:id')
   @RequireRight(USER_RIGHTS.MANAGE_ROLES)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update an existing role' })
+  @ApiCreatedResponse({ description: 'Role updated successfully', type: RoleDto })
   async updateRoles(@Param('id', ParseIntPipe) id: number, @Body() roleDto: RoleDto) {
     const role = await this.accountManagementService.updateRole(id, roleDto);
     await this.cacheUtils.clearRoleCache();
@@ -66,6 +101,9 @@ export class AccountManagementController {
 
   @Delete('roles/:id')
   @RequireRight(USER_RIGHTS.MANAGE_ROLES)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete a role' })
+  @ApiOkResponse({ description: 'Role deleted successfully' })
   async deleteRoles(@Param('id', ParseIntPipe) id: number) {
     const deleteResponse = await this.accountManagementService.deleteRole(id);
     await this.cacheUtils.clearRoleCache();
@@ -76,6 +114,9 @@ export class AccountManagementController {
   @Get('rights')
   @RequireRight(USER_RIGHTS.MANAGE_USERS, USER_RIGHTS.MANAGE_ROLES)
   @CacheKey(CACHE_KEY.ACCOUNT_MANAGEMENT_RIGHTS)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get all user rights' })
+  @ApiOkResponse({ description: 'List of user rights', type: [RightResponseDto] })
   async getRights() {
     return this.accountManagementService.getRights();
   }

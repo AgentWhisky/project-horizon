@@ -12,14 +12,8 @@ export class LinkLibraryController {
   constructor(private readonly linkLibraryService: LinkLibraryService) {}
 
   @Get()
-  @ApiOperation({
-    summary: 'Retrieve all library links',
-    description: 'Returns a list of library links from the database.',
-  })
-  @ApiOkResponse({
-    description: 'Successfully retrieved list of links.',
-    type: [LinkResponseDto],
-  })
+  @ApiOperation({ summary: 'Retrieve all library links', description: 'Returns a list of library links from the database.' })
+  @ApiOkResponse({ description: 'Successfully retrieved list of links.', type: [LinkResponseDto] })
   @CacheKey(CACHE_KEY.LINK_LIBRARY)
   async getLinks(): Promise<LinkResponseDto[]> {
     return this.linkLibraryService.getLibraryLinks();

@@ -1,40 +1,38 @@
 import { Body, Controller, HttpCode, Param, ParseIntPipe, Post, Req, UnauthorizedException } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
-import { AuthResponseDto, RefreshTokenDto, RegistrationDto } from './dto/auth.dto';
 import { LOGIN_ERROR } from 'src/common/constants/error-response.constants';
 import {
   ApiBadRequestResponse,
+  ApiBasicAuth,
+  ApiBody,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiSecurity,
+  ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { AuthResponseDto } from './dto/auth-response.dto';
+import { RegistrationDto } from './dto/registration.dto';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { LogoutDto } from './dto/logout-dto';
 
+@ApiTags('Authentication')
 @Controller()
 export class AuthenticationController {
   constructor(private readonly authenticationService: AuthenticationService) {}
 
   @Post('login')
   @HttpCode(200)
-  @ApiSecurity('basic')
-  @ApiOperation({
-    summary: 'Authenticate user',
-    description: 'Logs in the user using Basic Authentication and returns authentication details.',
-  })
-  @ApiOkResponse({
-    description: 'Successfully authenticated user.',
-    type: AuthResponseDto,
-  })
-  @ApiUnauthorizedResponse({
-    description: 'Invalid login credentials.',
-  })
-  @ApiForbiddenResponse({
-    description: 'Account is disabled.',
-  })
+  @ApiBasicAuth()
+  @ApiOperation({ summary: 'Authenticate user', description: 'Logs in the user using Basic Auth and returns authentication details.' })
+  @ApiOkResponse({ description: 'Successfully authenticated user.', type: AuthResponseDto })
+  @ApiUnauthorizedResponse({ description: 'Invalid login credentials.' })
+  @ApiForbiddenResponse({ description: 'Account is disabled.' })
   async userLogin(@Req() req): Promise<AuthResponseDto> {
     const authHeader = req.headers.authorization;
 
@@ -56,20 +54,17 @@ export class AuthenticationController {
   @Post('logout/:userId')
   @HttpCode(204)
   @ApiOperation({ summary: 'Logout user', description: 'Invalidates the refresh token and logs the user out.' })
+  @ApiParam({ name: 'userId', type: Number, description: 'ID of the user to logout' })
+  @ApiBody({ type: LogoutDto })
   @ApiNoContentResponse({ description: 'Successfully logged out.' })
-  async userLogout(@Param('userId', ParseIntPipe) userId: number, @Body('jti') jti?: string) {
-    return this.authenticationService.logout(userId, jti);
+  async userLogout(@Param('userId', ParseIntPipe) userId: number, @Body() body: LogoutDto): Promise<void> {
+    return this.authenticationService.logout(userId, body.jti);
   }
 
   @Post('register')
-  @ApiOperation({
-    summary: 'Register a new user',
-    description: 'Creates a new user account and returns authentication details.',
-  })
-  @ApiCreatedResponse({
-    description: 'User registered successfully.',
-    type: AuthResponseDto,
-  })
+  @ApiOperation({ summary: 'Register a new user', description: 'Creates a new user account and returns authentication details.' })
+  @ApiBody({ type: RegistrationDto })
+  @ApiCreatedResponse({ description: 'User registered successfully.', type: AuthResponseDto })
   @ApiBadRequestResponse({ description: 'Invalid registration data.' })
   @ApiForbiddenResponse({ description: 'Invalid creation code.' })
   @ApiConflictResponse({ description: 'Username already in use.' })
@@ -78,20 +73,11 @@ export class AuthenticationController {
   }
 
   @Post('refresh')
-  @ApiOperation({
-    summary: 'Refresh access token',
-    description: 'Exchanges a valid refresh token for a new access token.',
-  })
-  @ApiCreatedResponse({
-    description: 'New access token issued.',
-    type: AuthResponseDto,
-  })
-  @ApiBadRequestResponse({
-    description: 'Invalid refresh token format.',
-  })
-  @ApiUnauthorizedResponse({
-    description: 'Expired or invalid refresh token.',
-  })
+  @ApiOperation({ summary: 'Refresh access token', description: 'Exchanges a valid refresh token for a new access token.' })
+  @ApiBody({ type: RefreshTokenDto })
+  @ApiCreatedResponse({ description: 'New access token issued.', type: AuthResponseDto })
+  @ApiBadRequestResponse({ description: 'Invalid refresh token format.' })
+  @ApiUnauthorizedResponse({ description: 'Expired or invalid refresh token.' })
   async refresh(@Body() refreshTokenDto: RefreshTokenDto): Promise<AuthResponseDto> {
     return this.authenticationService.refresh(refreshTokenDto.refreshToken);
   }

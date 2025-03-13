@@ -4,6 +4,7 @@ export interface LoginCredentials {
 }
 
 export interface RegistrationInfo {
+  name: string;
   username: string;
   password: string;
   creationCode: string;

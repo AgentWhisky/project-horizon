@@ -1,9 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, Length } from 'class-validator';
 import { CREATION_CODE_LENGTH } from 'src/common/constants/creation-code.constants';
-import { PASSWORD_LENGTH, USERNAME_LENGTH } from 'src/common/constants/validation.constants';
+import { ACCOUNT_NAME_LENGTH, PASSWORD_LENGTH, USERNAME_LENGTH } from 'src/common/constants/validation.constants';
 
 export class RegistrationDto {
+  @ApiProperty({
+    description: 'Name for the new account',
+    example: 'John Doe',
+    minLength: ACCOUNT_NAME_LENGTH.MIN,
+    maxLength: ACCOUNT_NAME_LENGTH.MAX,
+  })
+  @IsString()
+  @IsNotEmpty()
+  @Length(USERNAME_LENGTH.MIN, USERNAME_LENGTH.MAX)
+  name: string;
+
   @ApiProperty({
     description: 'Username for the new account',
     example: 'john_doe',
@@ -36,40 +47,4 @@ export class RegistrationDto {
   @IsNotEmpty()
   @Length(CREATION_CODE_LENGTH, CREATION_CODE_LENGTH)
   creationCode: string;
-}
-
-export class RefreshTokenDto {
-  @ApiProperty({
-    description: 'Refresh token to obtain a new access token',
-    example: 'dGhpcyBpcyBhIHJlZnJlc2ggdG9rZW4...',
-  })
-  @IsString()
-  @IsNotEmpty()
-  refreshToken: string;
-}
-
-export class AuthResponseDto {
-  @ApiProperty({
-    description: 'Access token for authentication',
-    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
-  })
-  accessToken: string;
-
-  @ApiProperty({
-    description: 'Refresh token for renewing access',
-    example: 'dGhpcyBpcyBhIHJlZnJlc2ggdG9rZW4...',
-  })
-  refreshToken: string;
-
-  @ApiProperty({
-    description: 'Type of the token',
-    example: 'Bearer',
-  })
-  tokenType: string;
-
-  @ApiProperty({
-    description: 'Expiration time in seconds',
-    example: 3600,
-  })
-  expiresIn: number;
 }

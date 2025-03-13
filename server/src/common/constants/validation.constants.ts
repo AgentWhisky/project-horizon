@@ -24,3 +24,10 @@ export const ROLE_DESC_LENGTH = {
   MIN: 4,
   MAX: 250,
 };
+
+// Link Library
+export const LINK_NAME_MAX_LENGTH = 30;
+export const LINK_DESC_MAX_LENGTH = 250;
+export const CATEGORY_NAME_MAX_LENGTH = 30;
+export const CATEGORY_DESC_MAX_LENGTH = 250;
+export const TAG_MAX_LENGTH = 30;

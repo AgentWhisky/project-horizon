@@ -8,7 +8,20 @@ import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
 import { CacheUtils } from 'src/common/utils/cache.utils';
 import { CACHE_KEY } from 'src/common/constants/cache-keys.constants';
 import { USER_RIGHTS } from 'src/common/constants/user-rights.constants';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+import { LinkResponseDto } from 'src/modules/libraries/link-library/dto/link.dto';
+import { DeleteResponse } from 'src/common/model/delete-response.model';
 
+@ApiTags('Link Library Management')
 @Controller('link-library-management')
 @UseInterceptors(CacheInterceptor)
 export class LinkLibraryManagementController {
@@ -18,32 +31,47 @@ export class LinkLibraryManagementController {
   ) {}
 
   // *** LINK ENDPOINTS ***
-  @Get('links')
+  @Get()
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
   @CacheKey(CACHE_KEY.LINK_LIBRARY_MANAGEMENT)
-  async getLinks() {
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Retrieve all links for management' })
+  @ApiOkResponse({ description: 'List of links for management', type: [LinkResponseDto] })
+  async getLinks(): Promise<LinkResponseDto[]> {
     return this.linkLibraryManagementService.getLinks();
   }
 
-  @Post('links')
+  @Post()
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
-  async addLink(@Body() linkDto: LinkDto) {
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create a new link' })
+  @ApiBody({ type: LinkDto })
+  @ApiCreatedResponse({ description: 'Link created successfully', type: LinkResponseDto })
+  async addLink(@Body() linkDto: LinkDto): Promise<LinkResponseDto> {
     const link = await this.linkLibraryManagementService.addLink(linkDto);
     await this.cacheUtils.clearLinkCache();
     return link;
   }
 
-  @Put('links/:id')
+  @Put(':id')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
-  async updateLink(@Param('id', ParseIntPipe) id: number, @Body() linkDto: LinkDto) {
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update an existing link' })
+  @ApiParam({ name: 'id', type: Number, description: 'ID of the link to update' })
+  @ApiBody({ type: LinkDto })
+  @ApiCreatedResponse({ description: 'Link updated successfully', type: LinkResponseDto })
+  async updateLink(@Param('id', ParseIntPipe) id: number, @Body() linkDto: LinkDto): Promise<LinkResponseDto> {
     const link = await this.linkLibraryManagementService.updateLink(id, linkDto);
     await this.cacheUtils.clearLinkCache();
     return link;
   }
 
-  @Delete('links/:id')
+  @Delete(':id')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
-  async deleteLink(@Param('id', ParseIntPipe) id: number) {
+  @ApiOperation({ summary: 'Delete a link' })
+  @ApiParam({ name: 'id', type: Number, description: 'ID of the link to delete' })
+  @ApiNoContentResponse({ description: 'Link deleted successfully' })
+  async deleteLink(@Param('id', ParseIntPipe) id: number): Promise<DeleteResponse> {
     const deleteResponse = this.linkLibraryManagementService.deleteLink(id);
     await this.cacheUtils.clearLinkCache();
     return deleteResponse;
