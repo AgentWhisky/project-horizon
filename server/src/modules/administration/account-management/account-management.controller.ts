@@ -7,10 +7,20 @@ import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
 import { CacheUtils } from 'src/common/utils/cache.utils';
 import { CACHE_KEY } from 'src/common/constants/cache-keys.constants';
 import { USER_RIGHTS } from 'src/common/constants/user-rights.constants';
-import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UserResponseDto } from './dto/user-response.dto';
 import { RightResponseDto } from './dto/right-response.dto';
 import { RoleResponseDto } from './dto/role-response.dto';
+import { UserActiveDto } from './dto/toggle-user.dto';
 
 @ApiTags('Account Management')
 @Controller('account-management')
@@ -39,6 +49,7 @@ export class AccountManagementController {
   @ApiParam({ name: 'id', type: Number, description: 'User ID' })
   @ApiBody({ type: UserDto })
   @ApiCreatedResponse({ description: 'Updated user information', type: UserResponseDto })
+  @ApiNotFoundResponse({ description: 'User not found' })
   async updateUser(@Param('id', ParseIntPipe) id: number, @Body() userDto: UserDto): Promise<UserResponseDto> {
     const user = await this.accountManagementService.updateUser(id, userDto);
     await this.cacheUtils.clearUserCache();
@@ -50,17 +61,10 @@ export class AccountManagementController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update user active status' })
   @ApiParam({ name: 'id', type: Number, description: 'User ID' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        active: { type: 'boolean', description: 'Whether the user is active' },
-      },
-      required: ['active'],
-    },
-  })
+  @ApiBody({ type: UserActiveDto })
   @ApiCreatedResponse({ description: 'Updated user active status', type: UserDto })
-  async updateUserActive(@Param('id', ParseIntPipe) id: number, @Body() body: { active: boolean }): Promise<UserResponseDto> {
+  @ApiNotFoundResponse({ description: 'User not found' })
+  async updateUserActive(@Param('id', ParseIntPipe) id: number, @Body() body: UserActiveDto): Promise<UserResponseDto> {
     const user = await this.accountManagementService.updateUserActive(id, body.active);
     await this.cacheUtils.clearUserCache();
     return user;
@@ -93,6 +97,7 @@ export class AccountManagementController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update an existing role' })
   @ApiCreatedResponse({ description: 'Role updated successfully', type: RoleDto })
+  @ApiNotFoundResponse({ description: 'Role not found' })
   async updateRoles(@Param('id', ParseIntPipe) id: number, @Body() roleDto: RoleDto) {
     const role = await this.accountManagementService.updateRole(id, roleDto);
     await this.cacheUtils.clearRoleCache();

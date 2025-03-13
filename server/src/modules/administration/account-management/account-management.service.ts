@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
@@ -49,7 +49,7 @@ export class AccountManagementService {
     const existingUser = await this.userRepository.findOne({ where: { id } });
 
     if (!existingUser) {
-      throw new HttpException(`User with ID: ${id} not found`, HttpStatus.NOT_FOUND);
+      throw new NotFoundException(`User with ID: ${id} not found`);
     }
 
     await this.userRepository.save({
@@ -82,7 +82,7 @@ export class AccountManagementService {
     const existingUser = await this.userRepository.findOne({ where: { id } });
 
     if (!existingUser) {
-      throw new HttpException(`User with ID: ${id} not found`, HttpStatus.NOT_FOUND);
+      throw new NotFoundException(`User with ID: ${id} not found`);
     }
 
     await this.userRepository.save({
@@ -161,7 +161,7 @@ export class AccountManagementService {
     const existingRole = await this.roleRepository.findOne({ where: { id } });
 
     if (!existingRole) {
-      throw new HttpException(`Role with ID: ${id} not found`, HttpStatus.NOT_FOUND);
+      throw new NotFoundException(`Role with ID: ${id} not found`)
     }
 
     await this.roleRepository.save({
