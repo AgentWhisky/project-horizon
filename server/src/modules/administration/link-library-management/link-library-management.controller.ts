@@ -20,6 +20,9 @@ import {
 } from '@nestjs/swagger';
 import { LinkResponseDto } from 'src/modules/libraries/link-library/dto/link.dto';
 import { DeleteResponse } from 'src/common/model/delete-response.model';
+import { DeleteResponseDto } from 'src/common/dto/delete-response.dto';
+import { CategoryResponseDto } from './dto/category-response.dto';
+import { TagResponseDto } from './dto/tag-response.dto';
 
 @ApiTags('Link Library Management')
 @Controller('link-library-management')
@@ -57,7 +60,7 @@ export class LinkLibraryManagementController {
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update an existing link' })
-  @ApiParam({ name: 'id', type: Number, description: 'ID of the link to update' })
+  @ApiParam({ name: 'id', description: 'ID of the link', type: Number })
   @ApiBody({ type: LinkDto })
   @ApiCreatedResponse({ description: 'Link updated successfully', type: LinkResponseDto })
   async updateLink(@Param('id', ParseIntPipe) id: number, @Body() linkDto: LinkDto): Promise<LinkResponseDto> {
@@ -68,9 +71,10 @@ export class LinkLibraryManagementController {
 
   @Delete(':id')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete a link' })
-  @ApiParam({ name: 'id', type: Number, description: 'ID of the link to delete' })
-  @ApiNoContentResponse({ description: 'Link deleted successfully' })
+  @ApiParam({ name: 'id', description: 'ID of the link', type: Number })
+  @ApiOkResponse({ description: 'Link deleted successfully', type: DeleteResponseDto })
   async deleteLink(@Param('id', ParseIntPipe) id: number): Promise<DeleteResponse> {
     const deleteResponse = this.linkLibraryManagementService.deleteLink(id);
     await this.cacheUtils.clearLinkCache();
@@ -81,12 +85,19 @@ export class LinkLibraryManagementController {
   @Get('categories')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
   @CacheKey(CACHE_KEY.LINK_CATEGORY_MANAGEMENT)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Retrieve all categories for management' })
+  @ApiOkResponse({ description: 'List of categories for management', type: [CategoryResponseDto] })
   async getCategories() {
     return this.linkLibraryManagementService.getCategories();
   }
 
   @Post('categories')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Add a new category' })
+  @ApiBody({ type: CategoryDto })
+  @ApiCreatedResponse({ description: 'Category successfully created', type: CategoryResponseDto })
   async addLinkCategory(@Body() categoryDto: CategoryDto) {
     const category = await this.linkLibraryManagementService.addCategory(categoryDto);
     await this.cacheUtils.clearLinkCategoryCache();
@@ -95,6 +106,11 @@ export class LinkLibraryManagementController {
 
   @Put('categories/:id')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update an existing category' })
+  @ApiParam({ name: 'id', description: 'ID of the category', type: Number })
+  @ApiBody({ type: CategoryDto })
+  @ApiCreatedResponse({ description: 'Category successfully updated', type: CategoryResponseDto })
   async updateLinkCategory(@Param('id', ParseIntPipe) id: number, @Body() categoryDto: CategoryDto) {
     const category = await this.linkLibraryManagementService.updateCategory(id, categoryDto);
     await this.cacheUtils.clearLinkCategoryCache();
@@ -103,6 +119,10 @@ export class LinkLibraryManagementController {
 
   @Delete('categories/:id')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete a category' })
+  @ApiParam({ name: 'id', description: 'ID of the category', type: Number })
+  @ApiOkResponse({ description: 'Category successfully deleted', type: DeleteResponseDto })
   async deleteLinkCategory(@Param('id', ParseIntPipe) id: number) {
     const deleteResponse = await this.linkLibraryManagementService.deleteCategory(id);
     await this.cacheUtils.clearLinkCategoryCache();
@@ -113,12 +133,19 @@ export class LinkLibraryManagementController {
   @Get('tags')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
   @CacheKey(CACHE_KEY.LINK_TAG_MANAGEMENT)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Retrieve all tags for management' })
+  @ApiOkResponse({ description: 'List of tags for management', type: [TagResponseDto] })
   async getTags() {
     return this.linkLibraryManagementService.getTags();
   }
 
   @Post('tags')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create a new tag' })
+  @ApiBody({ type: TagDto })
+  @ApiCreatedResponse({ description: 'Tag created successfully', type: TagResponseDto })
   async addLinkTag(@Body() tagDto: TagDto) {
     const tag = await this.linkLibraryManagementService.addTag(tagDto);
     await this.cacheUtils.clearLinkTagCache();
@@ -127,6 +154,11 @@ export class LinkLibraryManagementController {
 
   @Put('tags/:id')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update an existing tag' })
+  @ApiParam({ name: 'id', description: 'ID of the tag', type: Number })
+  @ApiBody({ type: TagDto })
+  @ApiCreatedResponse({ description: 'Link updated successfully', type: TagResponseDto })
   async updateLinkTag(@Param('id', ParseIntPipe) id: number, @Body() tagDto: TagDto) {
     const tag = await this.linkLibraryManagementService.updateTag(id, tagDto);
     await this.cacheUtils.clearLinkTagCache();
@@ -135,6 +167,10 @@ export class LinkLibraryManagementController {
 
   @Delete('tags/:id')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete a tag' })
+  @ApiParam({ name: 'id', description: 'ID of the tag', type: Number })
+  @ApiOkResponse({ description: 'Tag deleted successfully', type: DeleteResponseDto })
   async deleteLinkTag(@Param('id', ParseIntPipe) id: number) {
     const deleteResponse = await this.linkLibraryManagementService.deleteTag(id);
     await this.cacheUtils.clearLinkTagCache();
