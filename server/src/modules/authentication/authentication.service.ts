@@ -86,7 +86,9 @@ export class AuthenticationService implements OnModuleInit {
    * Function to logout user
    * @param userId is the ID for the given user
    */
-  async logout(userId: number, jti?: string) {
+  async logout(authToken: string) {
+    const { sub: userId, jti } = this.jwtService.verify<AuthPayload>(authToken);
+
     // Delete refresh token
     if (jti) {
       const refreshToken = await this.refreshTokenRepository.findOne({

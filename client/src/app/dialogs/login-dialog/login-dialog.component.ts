@@ -12,6 +12,7 @@ import { passwordMatch } from '../../validators/password-match.validator';
 import { UppercaseDirective } from '../../directives/uppercase.directive';
 import { NewAccountCredentials } from '../../types/login-credentials';
 import { UserService } from '../../services/user.service';
+import { ValidatorMessagePipe } from '../../pipes/validator-message.pipe';
 
 @Component({
   selector: 'app-login-dialog',
@@ -24,6 +25,7 @@ import { UserService } from '../../services/user.service';
     MatTooltipModule,
     ReactiveFormsModule,
     UppercaseDirective,
+    ValidatorMessagePipe,
   ],
   templateUrl: './login-dialog.component.html',
   styleUrl: './login-dialog.component.scss',
@@ -42,6 +44,7 @@ export class LoginDialogComponent {
   });
 
   readonly newAccountForm = this.fb.group({
+    name: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(30)]],
     username: ['', [Validators.required]],
     password: ['', [Validators.required]],
     confirmPassword: ['', [Validators.required, passwordMatch('password')]],
@@ -74,7 +77,7 @@ export class LoginDialogComponent {
       };
 
       const result = await this.userService.register(newAccountCredentials);
-      
+
       if (result) {
         this.dialogRef.close();
       }

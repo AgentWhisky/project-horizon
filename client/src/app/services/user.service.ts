@@ -102,7 +102,7 @@ export class UserService {
         return;
       }
 
-      await firstValueFrom(this.http.post<void>(`${this.apiUrl}/logout/${userInfo.userId}`, userInfo.jti));
+      await firstValueFrom(this.http.post<void>(`${this.apiUrl}/logout`, {}));
 
       this.snackbar.open('Successfully logged out', 'Close', { duration: 3000 });
     } finally {

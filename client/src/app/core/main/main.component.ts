@@ -47,12 +47,12 @@ export class MainComponent {
     this.navigationService.closeLeftNav();
   }
 
-  onLogState() {
-    if (this.isLoggedIn()) {
-      this.userService.logout();
-    } else {
-      this.userService.loginDialog();
-    }
+  onLogin() {
+    this.userService.loginDialog();
+  }
+
+  onLogout() {
+    this.userService.logout();
   }
 
   onToggleTheme() {

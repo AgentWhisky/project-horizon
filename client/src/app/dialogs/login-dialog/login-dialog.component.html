@@ -4,7 +4,7 @@
       <form class="flex flex-col gap-3" [formGroup]="loginForm">
         <mat-form-field class="w-full" hideRequiredMarker>
           <mat-label>Username</mat-label>
-          <input matInput formControlName="username" cdkFocusInitial/>
+          <input matInput formControlName="username" cdkFocusInitial />
           @if(loginForm.get('username')?.hasError('required')) {
           <mat-error>Username is required</mat-error>
           } @else {
@@ -47,9 +47,15 @@
   <mat-tab label="Sign Up">
     <mat-dialog-content>
       <form class="flex flex-col gap-3" [formGroup]="newAccountForm">
-        <mat-form-field class="w-full" hideRequiredMarker>
+        <mat-form-field class="w-full">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" cdkFocusInitial />
+          <mat-error>{{ newAccountForm.get('name')?.errors | validatorMessage }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
           <mat-label>Username</mat-label>
-          <input matInput formControlName="username" cdkFocusInitial/>
+          <input matInput formControlName="username" />
           @if(newAccountForm.get('username')?.hasError('required')) {
           <mat-error>Username is required</mat-error>
           } @else {
@@ -57,7 +63,7 @@
           }
         </mat-form-field>
 
-        <mat-form-field class="w-full" hideRequiredMarker>
+        <mat-form-field class="w-full">
           <mat-label>Password</mat-label>
           <input [type]="showPassword() ? 'text' : 'password'" matInput formControlName="password" autocomplete="on" />
           <button
@@ -77,7 +83,7 @@
           }
         </mat-form-field>
 
-        <mat-form-field class="w-full" hideRequiredMarker>
+        <mat-form-field class="w-full">
           <mat-label>Confirm Password</mat-label>
           <input [type]="showConfirmPassword() ? 'text' : 'password'" matInput formControlName="confirmPassword" autocomplete="on" />
           <button
@@ -99,7 +105,7 @@
           }
         </mat-form-field>
 
-        <mat-form-field class="w-full" hideRequiredMarker>
+        <mat-form-field class="w-full">
           <mat-label>Creation Code</mat-label>
           <input matInput formControlName="creationCode" uppercase (keydown.enter)="onCreateAccount()" />
           <button

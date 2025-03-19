@@ -20,6 +20,8 @@ import { AuthResponseDto } from './dto/auth-response.dto';
 import { RegistrationDto } from './dto/registration.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { LogoutDto } from './dto/logout-dto';
+import { RequireRight } from 'src/decorators/require-right.decorator';
+import { USER_RIGHTS } from 'src/common/constants/user-rights.constants';
 
 @ApiTags('Authentication')
 @Controller()
@@ -51,14 +53,17 @@ export class AuthenticationController {
     }
   }
 
-  @Post('logout/:userId')
+  @Post('logout')
   @HttpCode(204)
+  @RequireRight(USER_RIGHTS.DEFAULT)
+  @ApiBasicAuth()
   @ApiOperation({ summary: 'Logout user', description: 'Invalidates the refresh token and logs the user out.' })
-  @ApiParam({ name: 'userId', type: Number, description: 'ID of the user to logout' })
-  @ApiBody({ type: LogoutDto })
   @ApiNoContentResponse({ description: 'Successfully logged out.' })
-  async userLogout(@Param('userId', ParseIntPipe) userId: number, @Body() body: LogoutDto): Promise<void> {
-    return this.authenticationService.logout(userId, body.jti);
+  async userLogout(@Req() req): Promise<void> {
+    const authHeader: string = req.headers.authorization;
+    const authToken = authHeader.replace('Bearer ', '');
+
+    return this.authenticationService.logout(authToken);
   }
 
   @Post('register')
