@@ -15,7 +15,7 @@ export const routes: Routes = [
         path: 'dashboard',
         loadComponent: () => import('./components/dashboard/dashboard.component').then((c) => c.DashboardComponent),
       },
-      // *** TOOLS ***
+      // *** LIBRARIES ***
       {
         path: 'link-library',
         loadComponent: () => import('./components/libraries/link-library/link-library.component').then((c) => c.LinkLibraryComponent),
@@ -23,6 +23,11 @@ export const routes: Routes = [
       {
         path: 'book-library',
         loadComponent: () => import('./components/libraries/book-library/book-library.component').then((c) => c.BookLibraryComponent),
+      },
+      // *** TOOLS ***
+      {
+        path: 'base-converter',
+        loadComponent: () => import('./components/tools/base-converter/base-converter.component').then((c) => c.BaseConverterComponent),
       },
       // *** ADMINISTRATION ***
       {
