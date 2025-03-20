@@ -8,16 +8,7 @@ import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
 import { CacheUtils } from 'src/common/utils/cache.utils';
 import { CACHE_KEY } from 'src/common/constants/cache-keys.constants';
 import { USER_RIGHTS } from 'src/common/constants/user-rights.constants';
-import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiCreatedResponse,
-  ApiNoContentResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiParam,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { LinkResponseDto } from 'src/modules/libraries/link-library/dto/link.dto';
 import { DeleteResponse } from 'src/common/model/delete-response.model';
 import { DeleteResponseDto } from 'src/common/dto/delete-response.dto';
@@ -34,7 +25,7 @@ export class LinkLibraryManagementController {
   ) {}
 
   // *** LINK ENDPOINTS ***
-  @Get()
+  @Get('links')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
   @CacheKey(CACHE_KEY.LINK_LIBRARY_MANAGEMENT)
   @ApiBearerAuth()
@@ -44,7 +35,7 @@ export class LinkLibraryManagementController {
     return this.linkLibraryManagementService.getLinks();
   }
 
-  @Post()
+  @Post('links')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new link' })
@@ -56,7 +47,7 @@ export class LinkLibraryManagementController {
     return link;
   }
 
-  @Put(':id')
+  @Put('links/:id')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update an existing link' })
@@ -69,7 +60,7 @@ export class LinkLibraryManagementController {
     return link;
   }
 
-  @Delete(':id')
+  @Delete('links/:id')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete a link' })

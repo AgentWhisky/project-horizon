@@ -161,7 +161,7 @@ export class AccountManagementService {
     const existingRole = await this.roleRepository.findOne({ where: { id } });
 
     if (!existingRole) {
-      throw new NotFoundException(`Role with ID: ${id} not found`)
+      throw new NotFoundException(`Role with ID: ${id} not found`);
     }
 
     await this.roleRepository.save({

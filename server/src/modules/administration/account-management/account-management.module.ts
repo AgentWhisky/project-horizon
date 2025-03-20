@@ -5,11 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from 'src/entities/users.entity';
 import { RoleEntity } from 'src/entities/role.entity';
 import { RightEntity } from 'src/entities/right.entity';
-import { CacheUtils } from 'src/common/utils/cache.utils';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity, RoleEntity, RightEntity])],
   controllers: [AccountManagementController],
-  providers: [AccountManagementService, CacheUtils],
+  providers: [AccountManagementService],
 })
 export class AccountManagementModule {}

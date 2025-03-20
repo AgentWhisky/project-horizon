@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Param, ParseIntPipe, Post, Req, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, Req, UnauthorizedException } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { LOGIN_ERROR } from 'src/common/constants/error-response.constants';
 import {
@@ -11,22 +11,23 @@ import {
   ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiParam,
-  ApiSecurity,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { RegistrationDto } from './dto/registration.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
-import { LogoutDto } from './dto/logout-dto';
 import { RequireRight } from 'src/decorators/require-right.decorator';
 import { USER_RIGHTS } from 'src/common/constants/user-rights.constants';
+import { CacheUtils } from 'src/common/utils/cache.utils';
 
 @ApiTags('Authentication')
 @Controller()
 export class AuthenticationController {
-  constructor(private readonly authenticationService: AuthenticationService) {}
+  constructor(
+    private readonly authenticationService: AuthenticationService,
+    private readonly cacheUtils: CacheUtils
+  ) {}
 
   @Post('login')
   @HttpCode(200)

@@ -65,12 +65,14 @@ export class LoginDialogComponent {
   }
 
   async onCreateAccount() {
+    const name = this.newAccountForm.value.name;
     const username = this.newAccountForm.value.username;
     const password = this.newAccountForm.value.password;
     const creationCode = this.newAccountForm.value.creationCode;
 
-    if (username && password && creationCode) {
+    if (name && username && password && creationCode) {
       const newAccountCredentials: NewAccountCredentials = {
+        name,
         username,
         password,
         creationCode,

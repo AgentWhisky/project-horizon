@@ -12,16 +12,6 @@ export class CacheUtils {
     await this.cacheManager.del(CACHE_KEY.ADMIN_DASHBOARD);
   }
 
-  // Account
-  async clearUserCache() {
-    await this.cacheManager.del(CACHE_KEY.ACCOUNT_MANAGEMENT_USERS);
-  }
-
-  async clearRoleCache() {
-    await this.cacheManager.del(CACHE_KEY.ACCOUNT_MANAGEMENT_USERS);
-    await this.cacheManager.del(CACHE_KEY.ACCOUNT_MANAGEMENT_ROLES);
-  }
-
   // Links
   async clearLinkCache() {
     await this.cacheManager.del(CACHE_KEY.LINK_LIBRARY);

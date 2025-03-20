@@ -10,6 +10,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { RefreshTokenEntity } from 'src/entities/refresh-token.entity';
 import { UserLogModule } from 'src/common/services/user-log/user-log.module';
 import { RightEntity } from 'src/entities/right.entity';
+import { CacheUtils } from 'src/common/utils/cache.utils';
 
 @Module({
   imports: [
@@ -24,6 +25,6 @@ import { RightEntity } from 'src/entities/right.entity';
     UserLogModule,
   ],
   controllers: [AuthenticationController],
-  providers: [AuthenticationService],
+  providers: [AuthenticationService, CacheUtils],
 })
 export class AuthenticationModule {}

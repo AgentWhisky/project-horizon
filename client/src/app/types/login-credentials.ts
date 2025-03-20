@@ -4,5 +4,6 @@ export interface LoginCredentials {
 }
 
 export interface NewAccountCredentials extends LoginCredentials {
+  name: string;
   creationCode: string;
 }

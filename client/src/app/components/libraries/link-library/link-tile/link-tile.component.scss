@@ -3,8 +3,7 @@
 }
 
 .link-container {
-  @apply flex flex-col w-full p-3 overflow-hidden;
+  @apply flex flex-col w-full overflow-hidden;
 
-  border: 1px solid var(--mat-sys-outline-variant);
-  border-radius: var(--mat-sys-corner-medium);
+  background-color: var(--mat-sys-surface-bright);
 }
