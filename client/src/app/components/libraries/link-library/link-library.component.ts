@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, viewChildren } from '@angular/core';
 import { LinkLibraryService } from './link-library.service';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -20,11 +20,21 @@ export class LinkLibraryComponent implements OnInit {
   readonly linksByCategory = this.linkLibraryService.linksByCategory;
   readonly filterForm = this.linkLibraryService.filterForm;
 
+  private linkTiles = viewChildren(LinkTileComponent);
+
   ngOnInit() {
     this.linkLibraryService.loadLibraryLinks();
   }
 
   onResetForm() {
     this.linkLibraryService.resetForm();
+  }
+
+  onExapndAll() {
+    this.linkTiles().forEach((tile) => tile.onOpenView());
+  }
+
+  onCollapseAll() {
+    this.linkTiles().forEach((tile) => tile.onCloseView());
   }
 }

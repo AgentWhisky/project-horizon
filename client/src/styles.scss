@@ -39,7 +39,7 @@ body {
 }
 
 // *** CONTAINER CSS ***
-.panel_container {
+.panel-container {
   @apply w-full drop-shadow-lg rounded-md;
 }
 
@@ -51,7 +51,7 @@ body {
 
 // *** SEARCH INPUT ***
 .page-search {
-  @apply flex w-full max-w-96 sm:max-w-lg md:max-w-xl lg:max-w-3xl xl:max-w-4xl mb-3;
+  @apply flex w-full max-w-96 sm:max-w-lg md:max-w-xl lg:max-w-3xl xl:max-w-4xl;
 }
 
 // *** TABLE ***

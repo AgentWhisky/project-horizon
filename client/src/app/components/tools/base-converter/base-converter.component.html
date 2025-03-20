@@ -1,5 +1,8 @@
 <div class="w-full flex flex-wrap gap-3 justify-center">
-  @for(base of bases; track base) {
-  <app-base-convert-tile [base]="base"></app-base-convert-tile>
+  @for(convertBase of convertBases(); track convertBase.base) {
+  <app-base-convert-tile
+    [convertBase]="convertBase"
+    (onAddTile)="onAddBaseConversion($event)"
+    (onRemoveTile)="onRemoveBase($event)"></app-base-convert-tile>
   }
 </div>

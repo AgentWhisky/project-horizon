@@ -1,19 +1,26 @@
 <div class="link-container">
   <div class="flex flex-row">
-    <a mat-button class="w-full" [href]="link().url" target="_blank" [attr.aria-label]="'Open ' + link().name + ' in a new tab'">{{ link().name }}</a>
+    <a
+      mat-stroked-button
+      class="w-full"
+      [href]="link().url"
+      target="_blank"
+      [attr.aria-label]="'Open ' + link().name + ' in a new tab'"
+      [matTooltip]="link().description"
+      >{{ link().name }}</a
+    >
     <button mat-icon-button class="link-icon" (click)="onToggleView()" aria-label="Toggle link information">
       <mat-icon>{{ isOpen() ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
     </button>
   </div>
 
   @if(isOpen()) {
-  <div class="flex flex-col mt-3" @expand>
+  <div class="flex flex-col mt-1" @expand>
     <mat-chip-set>
       @for(tag of link().tags; track tag.id) {
       <mat-chip>{{ tag.name }}</mat-chip>
       }
     </mat-chip-set>
-    <span>{{ link().description }}</span>
   </div>
   }
 </div>

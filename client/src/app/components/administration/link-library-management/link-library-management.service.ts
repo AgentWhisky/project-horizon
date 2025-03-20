@@ -1,6 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { TokenService } from '../../../services/token.service';
-import { FormBuilder } from '@angular/forms';
 import { Category, CategoryPayload, Link, LinkPayload, Tag, TagPayload } from './link-library-management';
 import { firstValueFrom } from 'rxjs';
 import { DeleteResponse } from '../../../types/delete-response';

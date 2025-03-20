@@ -4,12 +4,12 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
-
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Link } from '../link-library';
 
 @Component({
   selector: 'app-link-tile',
-  imports: [MatButtonModule, MatIconModule, MatChipsModule],
+  imports: [MatButtonModule, MatIconModule, MatChipsModule, MatTooltipModule],
   templateUrl: './link-tile.component.html',
   styleUrl: './link-tile.component.scss',
   animations: [
