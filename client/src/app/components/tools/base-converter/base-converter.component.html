@@ -1,8 +1,15 @@
-<div class="w-full flex flex-wrap gap-3 justify-center">
-  @for(convertBase of convertBases(); track convertBase.base) {
-  <app-base-convert-tile
-    [convertBase]="convertBase"
-    (onAddTile)="onAddBaseConversion($event)"
-    (onRemoveTile)="onRemoveBase($event)"></app-base-convert-tile>
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
+  @for(preset of basePresets(); track preset.name) {
+  <mat-tab [label]="preset.name">
+    <div class="base-container">
+      @for(convertBase of preset.baseConversions; track convertBase.base) {
+      <app-base-convert-tile
+        [convertBase]="convertBase"
+        (onAddTile)="onAddBaseConversion($event)"
+        (onRemoveTile)="onRemoveBase($event)"></app-base-convert-tile>
+      }
+    </div>
+  </mat-tab>
+
   }
-</div>
+</mat-tab-group>

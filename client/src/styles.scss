@@ -49,6 +49,11 @@ body {
   align-items: center !important;
 }
 
+.card-border {
+  border: 1px solid var(--mat-sys-outline-variant) !important;
+  border-radius: var(--mat-sys-corner-extra-small) !important;
+}
+
 .dev-banner {
   @apply w-full flex justify-center items-center p-3;
 

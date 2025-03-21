@@ -6,10 +6,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { AdminDashboardService } from './admin-dashboard.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-admin-dashboard',
-  imports: [MatCardModule, MatButtonModule, MatInputModule, MatIconModule],
+  imports: [MatCardModule, MatButtonModule, MatInputModule, MatIconModule, MatTooltipModule],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss',
 })

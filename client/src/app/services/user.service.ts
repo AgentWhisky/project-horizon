@@ -28,11 +28,6 @@ export class UserService {
 
   readonly isLoggedIn = computed(() => !!this._userInfo());
 
-  constructor() {
-    effect(() => console.log('USER INFO', this._userInfo()));
-    effect(() => console.log('USER RIGHTS', this._userRights()));
-  }
-
   onInitUser() {
     const accessToken = localStorage.getItem('accessToken');
     const refreshToken = localStorage.getItem('refreshToken');

@@ -8,10 +8,20 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { FormsModule } from '@angular/forms';
 import { ConvertBase } from '../base-converter';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-base-convert-tile',
-  imports: [MatInputModule, MatButtonModule, MatCardModule, MatIconModule, MatDividerModule, MatExpansionModule, FormsModule],
+  imports: [
+    MatInputModule,
+    MatButtonModule,
+    MatCardModule,
+    MatIconModule,
+    MatDividerModule,
+    MatExpansionModule,
+    MatTooltipModule,
+    FormsModule,
+  ],
   templateUrl: './base-convert-tile.component.html',
   styleUrl: './base-convert-tile.component.scss',
 })
