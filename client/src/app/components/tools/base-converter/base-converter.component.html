@@ -4,6 +4,7 @@
     <div class="base-container">
       @for(convertBase of preset.baseConversions; track convertBase.base) {
       <app-base-convert-tile
+        class="w-full max-w-96 min-w-80"
         [convertBase]="convertBase"
         (onAddTile)="onAddBaseConversion($event)"
         (onRemoveTile)="onRemoveBase($event)"></app-base-convert-tile>

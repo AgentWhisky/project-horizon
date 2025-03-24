@@ -1,7 +1,7 @@
 .base-tile {
-  @apply w-96;
+  @apply w-full;
 
-  background-color: var(--mat-sys-surface-container-low);
-  border: 1px solid var(--mat-sys-outline-variant);
-  border-radius: var(--mat-sys-corner-extra-small);
+  background-color: var(--mat-sys-surface-container-low) !important;
+  border: 1px solid var(--mat-sys-outline-variant) !important;
+  border-radius: var(--mat-sys-corner-extra-small) !important;
 }
