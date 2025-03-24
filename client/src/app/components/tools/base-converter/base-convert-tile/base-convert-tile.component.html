@@ -20,7 +20,7 @@
 
       @for(base of convertBase().conversions; track base) {
       <div class="flex flex-row items-center gap-1">
-        <mat-form-field appearance="outline" class="flex-grow">
+        <mat-form-field appearance="outline" class="flex-grow" floatLabel="always">
           <mat-label>Base {{ base }}{{ baseNames[base] ? ' (' + baseNames[base] + ')' : '' }}</mat-label>
           <textarea matInput #conversionOutput [value]="conversionMap().get(base) || ''" readonly></textarea>
           <mat-hint>Character Count: {{ conversionOutput.textLength }}</mat-hint>
