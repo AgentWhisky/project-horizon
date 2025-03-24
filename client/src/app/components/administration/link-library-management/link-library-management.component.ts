@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatChipsModule } from '@angular/material/chips';
 
 import { MatDialog } from '@angular/material/dialog';
 import { LinkLibraryManagementDialogComponent } from './link-library-management-dialog/link-library-management-dialog.component';
@@ -15,7 +16,6 @@ import { RemoveConfirmComponent } from '../../../dialogs/remove-confirm/remove-c
 import { LinkCategoryDialogComponent } from './link-category-dialog/link-category-dialog.component';
 import { LinkTagDialogComponent } from './link-tag-dialog/link-tag-dialog.component';
 import { NoDataCardComponent } from '../../../core/no-data-card/no-data-card.component';
-import { FormatArrayPipe } from '../../../pipes/format-array.pipe';
 import { LinkLibraryManagementService } from './link-library-management.service';
 import { Category, Link, Tag } from './link-library-management';
 
@@ -29,8 +29,8 @@ import { Category, Link, Tag } from './link-library-management';
     MatIconModule,
     MatTooltipModule,
     MatTabsModule,
+    MatChipsModule,
     NoDataCardComponent,
-    FormatArrayPipe,
   ],
   templateUrl: './link-library-management.component.html',
   styleUrl: './link-library-management.component.scss',

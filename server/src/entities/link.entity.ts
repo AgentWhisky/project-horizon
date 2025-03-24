@@ -1,37 +1,39 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, JoinTable, ManyToMany, ManyToOne, UpdateDateColumn } from 'typeorm';
 import { LinkTagEntity } from './link-tags.entity';
 import { LinkCategoryEntity } from './link-categories.entity';
+import { LINK_DESC_MAX_LENGTH, LINK_NAME_MAX_LENGTH } from 'src/common/constants/validation.constants';
 
 @Entity('links')
 export class LinkEntity {
   @PrimaryGeneratedColumn({ name: 'id' })
   id: number;
 
-  @Column({ name: 'name', type: 'varchar', length: 256, unique: true })
+  @Column({ name: 'name', type: 'varchar', length: 255, unique: true })
   name: string;
 
-  @Column({ name: 'description', type: 'text' })
+  @Column({ name: 'description', type: 'varchar', length: 255, })
   description: string;
 
-  @Column({ name: 'url', type: 'varchar', length: 256, unique: true })
+  @Column({ name: 'url', type: 'varchar', length: 2048, unique: true })
   url: string;
 
   @ManyToOne(() => LinkCategoryEntity, (category) => category.links)
   category: LinkCategoryEntity;
 
-  @Column({ name: 'status', type: 'char', length: 1, default: 'A' })
+  @Column({ name: 'status', type: 'enum', enum: ['A', 'I'], default: 'A' })
   status: 'A' | 'I';
 
   @ManyToMany(() => LinkTagEntity, (tag) => tag.links, { cascade: true })
   @JoinTable({ name: 'link_library_tags' })
   tags: LinkTagEntity[];
 
-  @Column({ name: 'thumbnail', type: 'varchar', length: 512, nullable: true })
+  @Column({ name: 'thumbnail', type: 'varchar', length: 2048, nullable: true })
   thumbnail?: string;
 
-  @Column({ name: 'click_count', type: 'int', default: 0 })
-  clickCount: number;
+  // *** AUDIT FIELDS ***
+  @CreateDateColumn({ name: 'createdDate', type: 'timestamp' })
+  createdDate: Date;
 
-  @CreateDateColumn({ name: 'last_updated', type: 'timestamp' })
-  lastUpdated: Date;
+  @UpdateDateColumn({ name: 'updatedDate', type: 'timestamp' })
+  updatedDate: Date;
 }
