@@ -21,6 +21,5 @@ jobs:
           heroku_app_name: ${{secrets.HEROKU_APP_NAME_CLIENT_STAGE}}
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           usedocker: true
-          docker_build_args:
-            - ENV_CONFIG=stage
+          docker_build_args: ENV_CONFIG=stage
           appdir: "client"  # client subfolder
