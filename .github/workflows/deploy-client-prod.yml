@@ -22,3 +22,6 @@ jobs:
           appdir: "client"
         env:
           ENV_CONFIG: production
+
+
+
