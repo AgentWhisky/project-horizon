@@ -92,4 +92,8 @@ export class BaseConverterComponent {
       )
       .subscribe();
   }
+
+  onReorderConversions(base: number, prevIndex: number, currentIndex: number) {
+    this.baseConverterServce.reorderConversions(base, prevIndex, currentIndex);
+  }
 }

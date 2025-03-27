@@ -1,5 +1,5 @@
-import { Component, computed, effect, input, model, output } from '@angular/core';
-import { CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Component, computed, input, model, output } from '@angular/core';
+import { CdkDragDrop, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -10,6 +10,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
 import { ConvertBase } from '../base-converter';
 import { baseNames, convertToBase } from '../../../../utilities/base-conversion.util';
+import { MoveInContainer } from '../reorder-conversion';
 
 @Component({
   selector: 'app-base-convert-tile',
@@ -34,6 +35,7 @@ export class BaseConvertTileComponent {
   readonly addTile = output<number>();
   readonly removeTile = output<number>();
   readonly removeConversion = output<{ base: number; conversion: number }>();
+  readonly reorderConversions = output<MoveInContainer>();
   readonly conversionMap = computed(() => this.convert());
 
   readonly baseNames = baseNames;
@@ -51,7 +53,7 @@ export class BaseConvertTileComponent {
   }
 
   onDrop(event: CdkDragDrop<number[]>) {
-    console.log(event);
+    this.reorderConversions.emit({ base: this.convertBase().base, prevIndex: event.previousIndex, currentIndex: event.currentIndex });
   }
 
   convert() {

@@ -10,7 +10,8 @@
       [convertBase]="convertBase"
       (addTile)="onAddBaseConversion($event)"
       (removeTile)="onRemoveBase($event)"
-      (removeConversion)="onRemoveBaseConversion($event.base, $event.conversion)"></app-base-convert-tile>
+      (removeConversion)="onRemoveBaseConversion($event.base, $event.conversion)"
+      (reorderConversions)="onReorderConversions($event.base, $event.prevIndex, $event.currentIndex)"></app-base-convert-tile>
     }
   </div>
 </div>

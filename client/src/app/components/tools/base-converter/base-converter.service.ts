@@ -1,6 +1,7 @@
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { BasePreset, ConvertBase } from './base-converter';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Injectable({
   providedIn: 'root',
@@ -81,5 +82,25 @@ export class BaseConverterService {
     } catch {
       this.snackbar.open('Failed to remove base conversion', 'Close', { duration: 3000 });
     }
+  }
+
+  reorderConversions(reorderBase: number, prevIndex: number, currentIndex: number) {
+    try {
+      const convertBaseCopy = this._baseConversions().map((item) => {
+        const base = item.base;
+        const conversions = item.base === base ? [...item.conversions] : [...item.conversions];
+
+        if (reorderBase === base) {
+          moveItemInArray(conversions, prevIndex, currentIndex);
+        }
+
+        return {
+          base,
+          conversions,
+        };
+      });
+
+      this._baseConversions.set(convertBaseCopy);
+    } catch {}
   }
 }
