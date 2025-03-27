@@ -1,10 +1,13 @@
 # Build
 FROM node:alpine as builder
 WORKDIR /app
+
+ARG ENV_CONFIG=production
+
 COPY package*.json ./
 RUN npm install
 COPY . .
-RUN npm run build
+RUN npm run build --configuration=${ENV_CONFIG}
 
 # Deploy
 FROM nginx:latest

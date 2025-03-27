@@ -1,4 +1,4 @@
-name: Deploy horizon client
+name: Deploy Horizon Client - STAGE
 
 on:
   push:
@@ -18,7 +18,9 @@ jobs:
       - uses: akhileshns/heroku-deploy@v3.14.15
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: ${{secrets.HEROKU_APP_NAME_CLIENT}}
+          heroku_app_name: ${{secrets.HEROKU_APP_NAME_CLIENT_STAGE}}
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           usedocker: true
+          docker_build_args:
+            - ENV_CONFIG=stage
           appdir: "client"  # client subfolder
