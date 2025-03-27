@@ -17,4 +17,8 @@ jobs:
           heroku_app_name: ${{secrets.HEROKU_APP_NAME_CLIENT_PROD}}
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           usedocker: true
-          appdir: "client"  # client subfolder
+          docker_build_args: |
+            ENV_CONFIG
+          appdir: "client"
+        env:
+          ENV_CONFIG: production

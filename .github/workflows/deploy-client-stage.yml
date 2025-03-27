@@ -23,7 +23,7 @@ jobs:
           usedocker: true
           docker_build_args: |
             ENV_CONFIG
-          appdir: "client"  # client subfolder
+          appdir: "client"
         env:
           ENV_CONFIG: stage
 
