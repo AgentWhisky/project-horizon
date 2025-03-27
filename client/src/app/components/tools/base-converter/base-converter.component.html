@@ -1,16 +1,16 @@
-<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
-  @for(preset of basePresets(); track preset.name) {
-  <mat-tab [label]="preset.name">
-    <div class="base-container">
-      @for(convertBase of preset.baseConversions; track convertBase.base) {
-      <app-base-convert-tile
-        class="w-full max-w-96 min-w-80"
-        [convertBase]="convertBase"
-        (onAddTile)="onAddBaseConversion($event)"
-        (onRemoveTile)="onRemoveBase($event)"></app-base-convert-tile>
-      }
-    </div>
-  </mat-tab>
-
-  }
-</mat-tab-group>
+<div class="flex flex-col">
+  <div class="flex flex-row justify-end gap-3">
+    <button mat-flat-button (click)="onAddBase()">Add Base Tile</button>
+    <button mat-flat-button (click)="onRemoveAllBases()">Remove All Tiles</button>
+  </div>
+  <div class="base-container">
+    @for(convertBase of baseConversions(); track convertBase.base) {
+    <app-base-convert-tile
+      class="w-full max-w-96 min-w-80"
+      [convertBase]="convertBase"
+      (addTile)="onAddBaseConversion($event)"
+      (removeTile)="onRemoveBase($event)"
+      (removeConversion)="onRemoveBaseConversion($event.base, $event.conversion)"></app-base-convert-tile>
+    }
+  </div>
+</div>

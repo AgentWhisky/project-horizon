@@ -1,50 +1,85 @@
-import { Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { BasePreset, ConvertBase } from './base-converter';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BaseConverterService {
-  private _basePresets = signal<BasePreset[]>(presets);
-  readonly basePresets = this._basePresets.asReadonly();
+  private snackbar = inject(MatSnackBar);
 
-  constructor() {}
+  private _baseConversions = signal<ConvertBase[]>(this.loadBaseConversions());
+  readonly baseConversions = this._baseConversions.asReadonly();
 
-  addBase(base: number) {}
+  readonly bases = computed(() => this.baseConversions().map((item) => item.base));
+  readonly usedBases = computed(() => new Set());
 
-  removeBase(base: number) {}
+  constructor() {
+    effect(() => this.saveBaseConversions());
+  }
 
-  addConversion(base: number, conversion: number) {}
+  saveBaseConversions() {
+    localStorage.setItem('baseConversions', JSON.stringify(this._baseConversions()));
+  }
 
-  removeConversion(base: number, conversion: number) {}
+  loadBaseConversions() {
+    const baseConversions = localStorage.getItem('baseConversions');
+    return baseConversions ? JSON.parse(baseConversions) : [];
+  }
+
+  addBase(base: number) {
+    try {
+      const newBase: ConvertBase = { base, conversions: [] };
+      this._baseConversions.set([...this.baseConversions(), newBase]);
+      this.snackbar.open(`Successfully added Base ${base} tile`, 'Close', { duration: 3000 });
+    } catch {
+      this.snackbar.open(`Failed to add Base ${base} tile`, 'Close', { duration: 3000 });
+    }
+  }
+
+  removeBase(base: number) {
+    try {
+      this._baseConversions.set([...this.baseConversions().filter((baseConversion) => baseConversion.base !== base)]);
+      this.snackbar.open(`Successfully removed Base ${base} tile`, 'Close', { duration: 3000 });
+    } catch {
+      this.snackbar.open(`Failed to remove Base ${base} tile`, 'Close', { duration: 3000 });
+    }
+  }
+
+  removeAllBases() {
+    try {
+      this._baseConversions.set([]);
+      this.snackbar.open('Successfully removed all base tiles', 'Close', { duration: 3000 });
+    } catch {
+      this.snackbar.open('Failed to remove all base tiles', 'Close', { duration: 3000 });
+    }
+  }
+
+  addConversion(base: number, conversion: number) {
+    try {
+      const convertBaseCopy = this._baseConversions().map((item) => ({
+        base: item.base,
+        conversions: item.base === base ? [...item.conversions, conversion] : [...item.conversions],
+      }));
+
+      this._baseConversions.set(convertBaseCopy);
+      this.snackbar.open('Successfully added base conversion', 'Close', { duration: 3000 });
+    } catch {
+      this.snackbar.open('Failed to add base conversion', 'Close', { duration: 3000 });
+    }
+  }
+
+  removeConversion(base: number, conversion: number) {
+    try {
+      const convertBaseCopy = this._baseConversions().map((item) => ({
+        base: item.base,
+        conversions: item.base === base ? [...item.conversions.filter((item) => item !== conversion)] : [...item.conversions],
+      }));
+
+      this._baseConversions.set(convertBaseCopy);
+      this.snackbar.open('Successfully removed base conversion', 'Close', { duration: 3000 });
+    } catch {
+      this.snackbar.open('Failed to remove base conversion', 'Close', { duration: 3000 });
+    }
+  }
 }
-
-// TEMP DATA
-const preset1: BasePreset = {
-  name: 'Preset 1',
-  baseConversions: [
-    { base: 10, conversions: [16, 8, 2] },
-    { base: 16, conversions: [10, 8, 2] },
-    { base: 8, conversions: [10, 16, 2] },
-    { base: 2, conversions: [10, 16, 8] },
-  ],
-};
-
-const preset2: BasePreset = {
-  name: 'Preset 2',
-  baseConversions: [
-    { base: 10, conversions: [16, 8] },
-    { base: 16, conversions: [10, 8, 2] },
-    { base: 2, conversions: [10] },
-  ],
-};
-
-const preset3: BasePreset = {
-  name: 'Preset 3',
-  baseConversions: [
-    { base: 10, conversions: [16, 8] },
-    { base: 16, conversions: [10, 8, 2] },
-  ],
-};
-
-const presets = [preset1, preset2, preset3];

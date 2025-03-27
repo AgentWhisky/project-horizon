@@ -11,29 +11,29 @@
         <textarea matInput #conversionInput [(ngModel)]="convertInput"></textarea>
         <mat-hint>Character Count: {{ conversionInput.textLength }}</mat-hint>
       </mat-form-field>
-      <div class="flex flex-row">
-        <button mat-button>Save</button>
-        <button mat-button>Clear</button>
-      </div>
 
       <mat-divider></mat-divider>
 
-      @for(base of convertBase().conversions; track base) {
-      <div class="flex flex-row items-center gap-1">
-        <mat-form-field appearance="outline" class="flex-grow" floatLabel="always">
-          <mat-label>Base {{ base }}{{ baseNames[base] ? ' (' + baseNames[base] + ')' : '' }}</mat-label>
-          <textarea matInput #conversionOutput [value]="conversionMap().get(base) || ''" readonly></textarea>
-          <mat-hint>Character Count: {{ conversionOutput.textLength }}</mat-hint>
-        </mat-form-field>
-        <button mat-icon-button class="icon-button" matTooltip="Remove">
-          <mat-icon>close</mat-icon>
-        </button>
+      <div class="base-conversion-container" cdkDropList cdkDropListLockAxis="y" (cdkDropListDropped)="onDrop($event)">
+        @for(base of convertBase().conversions; track base) {
+        <div cdkDrag class="base-conversion flex flex-row items-center gap-1 p-1 rounded-md overflow-hidden">
+          <mat-form-field appearance="outline" class="flex-grow" floatLabel="always">
+            <mat-label>Base {{ base }}{{ baseNames[base] ? ' (' + baseNames[base] + ')' : '' }}</mat-label>
+            <textarea matInput #conversionOutput [value]="conversionMap().get(base) || ''" cdkTextareaAutosize readonly></textarea>
+            <mat-hint>Character Count: {{ conversionOutput.textLength }}</mat-hint>
+          </mat-form-field>
+          <div class="conversion-remove-icon-container">
+            <button mat-icon-button class="icon-button" matTooltip="Remove" (click)="onRemoveConversion(base)">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+        }
       </div>
-      }
     </div>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-button>Add Conversion</button>
-    <button mat-button>Remove</button>
+    <button mat-button (click)="onAddConversion()">Add Conversion</button>
+    <button mat-button (click)="onRemoveBase()">Remove Tile</button>
   </mat-card-actions>
 </mat-card>

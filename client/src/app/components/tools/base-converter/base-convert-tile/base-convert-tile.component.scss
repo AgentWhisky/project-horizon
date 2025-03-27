@@ -5,3 +5,21 @@
   border: 1px solid var(--mat-sys-outline-variant) !important;
   border-radius: var(--mat-sys-corner-extra-small) !important;
 }
+
+.base-conversion-container {
+  @apply w-full flex flex-col gap-3;
+}
+
+.conversion-remove-icon-container {
+  width: 0;
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+
+.base-conversion:hover {
+  background-color: var(--mat-sys-surface-container) !important;
+}
+
+.base-conversion:hover .conversion-remove-icon-container {
+  width: 48px;
+}
