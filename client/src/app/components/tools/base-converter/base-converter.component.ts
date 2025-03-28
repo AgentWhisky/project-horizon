@@ -10,6 +10,7 @@ import { RemoveConfirmComponent } from '../../../dialogs/remove-confirm/remove-c
 import { BaseConverterService } from './base-converter.service';
 import { filter, tap } from 'rxjs';
 import { AddBaseDialogComponent } from './add-base-dialog/add-base-dialog.component';
+import { BaseConvertTileDialogComponent } from './base-convert-tile-dialog/base-convert-tile-dialog.component';
 
 @Component({
   selector: 'app-base-converter',
@@ -26,11 +27,11 @@ export class BaseConverterComponent {
 
   onAddBase() {
     this.dialog
-      .open(AddBaseDialogComponent, { data: { existingBases: this.bases() }, height: '220px', width: '560px' })
+      .open(BaseConvertTileDialogComponent, { data: { existingBases: this.bases() }, width: '560px' })
       .afterClosed()
       .pipe(
         filter((result) => result && result.status),
-        tap((result) => this.baseConverterServce.addBase(result.base))
+        tap((result) => this.baseConverterServce.addBase(result.base, result.conversions))
       )
       .subscribe();
   }

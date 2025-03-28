@@ -7,7 +7,6 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { ValidatorMessagePipe } from '../../../../pipes/validator-message.pipe';
 import { MatSelectModule } from '@angular/material/select';
 import { baseNames } from '../../../../utilities/base-conversion.util';
-import { range } from '../../../../utilities/range.util';
 
 interface DialogData {
   existingBases: number[];
@@ -32,7 +31,7 @@ export class AddBaseDialogComponent {
 
   readonly baseForm = this.getBaseForm();
   readonly baseNames = baseNames;
-  readonly usableBases = defaultNumericBases;
+  readonly usableBases = defaultNumericBases.filter((base) => !this.data.existingBases.includes(base));
 
   getBaseForm() {
     return this.fb.group({

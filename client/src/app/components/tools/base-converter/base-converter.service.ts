@@ -28,9 +28,9 @@ export class BaseConverterService {
     return baseConversions ? JSON.parse(baseConversions) : [];
   }
 
-  addBase(base: number) {
+  addBase(base: number, conversions: number[]) {
     try {
-      const newBase: ConvertBase = { base, conversions: [] };
+      const newBase: ConvertBase = { base, conversions };
       this._baseConversions.set([...this.baseConversions(), newBase]);
       this.snackbar.open(`Successfully added Base ${base} tile`, 'Close', { duration: 3000 });
     } catch {

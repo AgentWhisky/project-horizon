@@ -16,7 +16,12 @@
   transition: width 0.3s ease;
 }
 
+.base-conversion {
+  background-color: var(--mat-sys-surface-container) !important;
+}
+
 .base-conversion:hover {
+  cursor: move;
   background-color: var(--mat-sys-surface-container) !important;
 }
 
