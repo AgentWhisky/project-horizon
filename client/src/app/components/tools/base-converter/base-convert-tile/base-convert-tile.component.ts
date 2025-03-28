@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { ConvertBase } from '../base-converter';
 import { baseNames, convertToBase } from '../../../../utilities/base-conversion.util';
 import { MoveInContainer } from '../reorder-conversion';
+import { BaseInputRestrictDirective } from '../../../../directives/base-input-restrict.directive';
 
 @Component({
   selector: 'app-base-convert-tile',
@@ -24,6 +25,7 @@ import { MoveInContainer } from '../reorder-conversion';
     FormsModule,
     CdkDropList,
     CdkDrag,
+    BaseInputRestrictDirective,
   ],
   templateUrl: './base-convert-tile.component.html',
   styleUrl: './base-convert-tile.component.scss',

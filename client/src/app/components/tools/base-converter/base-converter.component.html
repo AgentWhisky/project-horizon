@@ -1,8 +1,14 @@
 <div class="flex flex-col">
-  <div class="flex flex-row justify-end gap-3">
+  <div class="flex flex-row justify-end gap-3 py-3">
     <button mat-flat-button (click)="onAddBase()">Add Base Tile</button>
     <button mat-flat-button (click)="onRemoveAllBases()">Remove All Tiles</button>
   </div>
+  @if(!baseConversions().length) {
+  <div class="card-banner">
+    <span>No Tiles Found. Please add a tile.</span>
+  </div>
+
+  } @else {
   <div class="base-container">
     @for(convertBase of baseConversions(); track convertBase.base) {
     <app-base-convert-tile
@@ -14,4 +20,5 @@
       (reorderConversions)="onReorderConversions($event.base, $event.prevIndex, $event.currentIndex)"></app-base-convert-tile>
     }
   </div>
+  }
 </div>

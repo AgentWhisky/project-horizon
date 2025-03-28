@@ -32,7 +32,7 @@ export class AddBaseDialogComponent {
 
   readonly baseForm = this.getBaseForm();
   readonly baseNames = baseNames;
-  readonly usableBases = range(2, 36+1).filter((base) => !this.data.existingBases.includes(base));
+  readonly usableBases = defaultNumericBases;
 
   getBaseForm() {
     return this.fb.group({
@@ -55,3 +55,5 @@ export class AddBaseDialogComponent {
     this.dialogRef.close(dialogResult);
   }
 }
+
+const defaultNumericBases: number[] = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 16, 20, 26, 32, 36];

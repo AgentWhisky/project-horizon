@@ -20,7 +20,19 @@ export function convertToBase(fromBase: number, toBase: number, value: string): 
 
 export const baseNames: Record<number, string> = {
   2: 'Binary',
+  3: 'Ternary',
+  4: 'Quaternary',
+  5: 'Quinary',
+  6: 'Senary',
+  7: 'Septenary',
   8: 'Octal',
+  9: 'Nonary',
   10: 'Decimal',
-  16: 'Hexidecimal',
+  11: 'Undecimal',
+  12: 'Duodecimal',
+  16: 'Hexadecimal',
+  20: 'Vigesimal',
+  26: 'Hexavigesimal',
+  32: 'Duotrigesimal',
+  36: 'Hexatrigesimal',
 };
