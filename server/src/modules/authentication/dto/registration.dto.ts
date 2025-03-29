@@ -7,12 +7,11 @@ export class RegistrationDto {
   @ApiProperty({
     description: 'Name for the new account',
     example: 'John Doe',
-    minLength: ACCOUNT_NAME_LENGTH.MIN,
     maxLength: ACCOUNT_NAME_LENGTH.MAX,
   })
   @IsString()
   @IsNotEmpty()
-  @Length(USERNAME_LENGTH.MIN, USERNAME_LENGTH.MAX)
+  @Length(USERNAME_LENGTH.MAX)
   name: string;
 
   @ApiProperty({

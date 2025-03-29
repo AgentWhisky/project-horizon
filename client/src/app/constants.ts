@@ -7,3 +7,6 @@ export const USER_RIGHTS = {
   MANAGE_ROLES: 'MANAGE_ROLES',
   MANAGE_LINKS: 'MANAGE_LINKS',
 };
+
+// Regular Expressions
+export const URL_REGEX = /^[A-Za-z][A-Za-z\d.+-]*:\/*(?:\w+(?::\w+)?@)?[^\s/]+(?::\d+)?(?:\/[\w#!:.?+=&%@\-/]*)?$/;

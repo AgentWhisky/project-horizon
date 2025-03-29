@@ -4,24 +4,14 @@
     <mat-form-field class="w-full">
       <mat-label>Name</mat-label>
       <input matInput formControlName="name" />
-      @if(categoryForm.get('name')?.hasError('unique')) {
-      <mat-error>Name is not unique</mat-error>
-      } @else if(categoryForm.get('name')?.hasError('required')) {
-      <mat-error>Name is required</mat-error>
-      } @else {
-      <mat-error>Invalid name</mat-error>
-      }
+      <mat-error>{{ categoryForm.get('name')?.errors | validatorMessage }}</mat-error>
     </mat-form-field>
 
     <mat-form-field class="w-full">
       <mat-label>Description</mat-label>
       <textarea matInput #categoryDescription formControlName="description" rows="6"></textarea>
       <mat-hint align="end">{{ categoryDescription.value.length }}/250</mat-hint>
-      @if(categoryForm.get('description')?.hasError('required')) {
-      <mat-error>Description is required</mat-error>
-      } @else {
-      <mat-error>Invalid description</mat-error>
-      }
+      <mat-error>{{ categoryForm.get('description')?.errors | validatorMessage }}</mat-error>
     </mat-form-field>
   </form>
 </mat-dialog-content>

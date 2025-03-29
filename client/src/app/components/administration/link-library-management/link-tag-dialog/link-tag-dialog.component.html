@@ -4,13 +4,7 @@
     <mat-form-field class="w-full">
       <mat-label>Name</mat-label>
       <input matInput formControlName="name" (keydown.enter)="onSubmit()" />
-      @if(tagForm.get('name')?.hasError('unique')) {
-      <mat-error>Name is not unique</mat-error>
-      } @else if(tagForm.get('name')?.hasError('required')) {
-      <mat-error>Name is required</mat-error>
-      } @else {
-      <mat-error>Invalid name</mat-error>
-      }
+      <mat-error>{{ tagForm.get('name')?.errors | validatorMessage }}</mat-error>
     </mat-form-field>
   </form>
 </mat-dialog-content>

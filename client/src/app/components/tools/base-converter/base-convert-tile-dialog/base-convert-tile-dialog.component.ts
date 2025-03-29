@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -7,7 +7,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { ValidatorMessagePipe } from '../../../../pipes/validator-message.pipe';
 import { MatSelectModule } from '@angular/material/select';
 import { baseNames } from '../../../../utilities/base-conversion.util';
-import { filter, tap } from 'rxjs';
+import { tap } from 'rxjs';
 
 interface DialogData {
   existingBases: number[];
@@ -34,10 +34,10 @@ export class BaseConvertTileDialogComponent {
   readonly baseForm = this.getBaseForm();
   readonly baseNames = baseNames;
 
-  readonly initBases = defaultNumericBases.filter((base) => !this.data.existingBases.includes(base));
+  readonly defaultPrimaryBases = defaultNumericBases.filter((base) => !this.data.existingBases.includes(base));
 
-  readonly primaryBases = signal<number[]>([...this.initBases]);
-  readonly conversionBases = signal<number[]>([...this.initBases]);
+  readonly primaryBases = signal<number[]>([...this.defaultPrimaryBases]);
+  readonly conversionBases = signal<number[]>([...defaultNumericBases]);
 
   constructor() {
     // Filter Conversion Bases on Primary Base Selection
@@ -46,10 +46,10 @@ export class BaseConvertTileDialogComponent {
       ?.valueChanges.pipe(
         tap((base) => {
           if (base) {
-            const bases = this.initBases.filter((item) => item !== base);
+            const bases = defaultNumericBases.filter((item) => item !== base);
             this.conversionBases.set([...bases]);
           } else {
-            this.conversionBases.set([...this.initBases]);
+            this.conversionBases.set([...defaultNumericBases]);
           }
         })
       )
@@ -63,10 +63,10 @@ export class BaseConvertTileDialogComponent {
           const validConversions: number[] = Array.isArray(conversions) ? conversions : [];
 
           if (validConversions) {
-            const bases = this.initBases.filter((item) => !validConversions.includes(item));
+            const bases = this.defaultPrimaryBases.filter((item) => !validConversions.includes(item));
             this.primaryBases.set([...bases]);
           } else {
-            this.primaryBases.set([...this.initBases]);
+            this.primaryBases.set([...this.defaultPrimaryBases]);
           }
         })
       )

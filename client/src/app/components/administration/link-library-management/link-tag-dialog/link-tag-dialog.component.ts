@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -8,6 +8,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { uniqueText } from '../../../../validators/unique-text.validator';
 import { Tag, TagPayload } from '../link-library-management';
 import { LinkLibraryManagementService } from '../link-library-management.service';
+import { ValidatorMessagePipe } from '../../../../pipes/validator-message.pipe';
 
 interface DialogData {
   type: 'create' | 'update';
@@ -21,27 +22,38 @@ interface DialogResult {
 
 @Component({
   selector: 'app-link-tag-dialog',
-  imports: [MatButtonModule, MatInputModule, MatDialogModule, ReactiveFormsModule],
+  imports: [MatButtonModule, MatInputModule, MatDialogModule, ReactiveFormsModule, ValidatorMessagePipe],
   templateUrl: './link-tag-dialog.component.html',
   styleUrl: './link-tag-dialog.component.scss',
 })
-export class LinkTagDialogComponent {
+export class LinkTagDialogComponent implements OnInit {
   private fb = inject(FormBuilder);
   private linkLibraryManagementService = inject(LinkLibraryManagementService);
   private dialogRef = inject(MatDialogRef<LinkTagDialogComponent>);
   readonly data = inject<DialogData>(MAT_DIALOG_DATA);
 
-  readonly tagForm = this.data.type === 'update' && this.data.tag ? this.getUpdateTagForm(this.data.tag) : this.getNewTagForm();
+  readonly tagForm = this.getNewTagForm();
+
+  ngOnInit() {
+    const existingTags = this.linkLibraryManagementService.linkTagList();
+
+    if (this.data.type === 'update' && this.data.tag) {
+      const tag = this.data.tag;
+      const existingTagsIgnoreCurrent = existingTags.filter((item) => item !== tag.name);
+
+      this.tagForm.patchValue({
+        name: tag.name,
+      });
+
+      this.tagForm.get('name')?.addValidators([uniqueText(existingTagsIgnoreCurrent)]);
+    } else {
+      this.tagForm.get('name')?.addValidators([uniqueText(existingTags)]);
+    }
+  }
 
   getNewTagForm() {
     return this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(30), uniqueText(this.linkLibraryManagementService.linkTagList())]],
-    });
-  }
-
-  getUpdateTagForm(tag: Tag) {
-    return this.fb.group({
-      name: [tag.name, [Validators.required, Validators.maxLength(30), uniqueText(this.linkLibraryManagementService.linkTagList())]],
+      name: ['', [Validators.required, Validators.maxLength(30)]],
     });
   }
 

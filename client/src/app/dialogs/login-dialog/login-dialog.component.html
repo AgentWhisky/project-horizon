@@ -5,11 +5,7 @@
         <mat-form-field class="w-full" hideRequiredMarker>
           <mat-label>Username</mat-label>
           <input matInput formControlName="username" cdkFocusInitial />
-          @if(loginForm.get('username')?.hasError('required')) {
-          <mat-error>Username is required</mat-error>
-          } @else {
-          <mat-error>Invalid username</mat-error>
-          }
+          <mat-error>{{ loginForm.get('username')?.errors | validatorMessage }}</mat-error>
         </mat-form-field>
 
         <mat-form-field class="w-full" hideRequiredMarker>
@@ -30,11 +26,7 @@
             disableRipple>
             <mat-icon>{{ showPassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
           </button>
-          @if(loginForm.get('password')?.hasError('required')) {
-          <mat-error>Password is required</mat-error>
-          } @else {
-          <mat-error>Invalid password</mat-error>
-          }
+          <mat-error>{{ loginForm.get('password')?.errors | validatorMessage }}</mat-error>
         </mat-form-field>
       </form>
     </mat-dialog-content>
@@ -56,16 +48,17 @@
         <mat-form-field class="w-full">
           <mat-label>Username</mat-label>
           <input matInput formControlName="username" />
-          @if(newAccountForm.get('username')?.hasError('required')) {
-          <mat-error>Username is required</mat-error>
-          } @else {
-          <mat-error>Invalid username</mat-error>
-          }
+          <mat-error>{{ newAccountForm.get('username')?.errors | validatorMessage }}</mat-error>
         </mat-form-field>
 
         <mat-form-field class="w-full">
           <mat-label>Password</mat-label>
-          <input [type]="showPassword() ? 'text' : 'password'" matInput formControlName="password" autocomplete="on" />
+          <input
+            [type]="showPassword() ? 'text' : 'password'"
+            matInput
+            formControlName="password"
+            autocomplete="on"
+            [errorStateMatcher]="passwordMatcher" />
           <button
             matSuffix
             mat-icon-button
@@ -76,16 +69,19 @@
             disableRipple>
             <mat-icon>{{ showPassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
           </button>
-          @if(newAccountForm.get('password')?.hasError('required')) {
-          <mat-error>Password is required</mat-error>
-          } @else {
-          <mat-error>Invalid password</mat-error>
-          }
+          <mat-error>
+            {{ newAccountForm.get('password')?.errors | validatorMessage : { default: 'Passwords do not match' } }}
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field class="w-full">
           <mat-label>Confirm Password</mat-label>
-          <input [type]="showConfirmPassword() ? 'text' : 'password'" matInput formControlName="confirmPassword" autocomplete="on" />
+          <input
+            [type]="showConfirmPassword() ? 'text' : 'password'"
+            matInput
+            formControlName="confirmPassword"
+            autocomplete="on"
+            [errorStateMatcher]="passwordMatcher" />
           <button
             matSuffix
             mat-icon-button
@@ -96,13 +92,9 @@
             disableRipple>
             <mat-icon>{{ showConfirmPassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
           </button>
-          @if(newAccountForm.get('confirmPassword')?.hasError('required')) {
-          <mat-error>Password is required</mat-error>
-          } @else if (newAccountForm.get('confirmPassword')?.hasError('passwordMatch')) {
-          <mat-error>Passwords do not match</mat-error>
-          } @else {
-          <mat-error>Invalid password</mat-error>
-          }
+          <mat-error>
+            {{ newAccountForm.get('confirmPassword')?.errors | validatorMessage : { default: 'Passwords do not match' } }}
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field class="w-full">
@@ -116,11 +108,9 @@
             disableRipple>
             <mat-icon>info</mat-icon>
           </button>
-          @if(newAccountForm.get('creationCode')?.hasError('required')) {
-          <mat-error>Creation Code is required</mat-error>
-          } @else {
-          <mat-error>Invalid Creation Code</mat-error>
-          }
+          <mat-error>
+            {{ newAccountForm.get('creationCode')?.errors | validatorMessage : { pattern: 'Your creation code must be 12 characters' } }}
+          </mat-error>
         </mat-form-field>
       </form>
     </mat-dialog-content>

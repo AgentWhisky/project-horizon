@@ -8,11 +8,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { passwordMatch } from '../../validators/password-match.validator';
 import { UppercaseDirective } from '../../directives/uppercase.directive';
 import { NewAccountCredentials } from '../../types/login-credentials';
 import { UserService } from '../../services/user.service';
 import { ValidatorMessagePipe } from '../../pipes/validator-message.pipe';
+import { confirmPasswordValidator } from '../../validators/confirm-password.validator';
+import { PasswordMatchErrorStateMatcher } from './password-matcher';
 
 @Component({
   selector: 'app-login-dialog',
@@ -43,13 +44,18 @@ export class LoginDialogComponent {
     password: ['', [Validators.required]],
   });
 
-  readonly newAccountForm = this.fb.group({
-    name: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(30)]],
-    username: ['', [Validators.required]],
-    password: ['', [Validators.required]],
-    confirmPassword: ['', [Validators.required, passwordMatch('password')]],
-    creationCode: ['', [Validators.required]],
-  });
+  readonly newAccountForm = this.fb.group(
+    {
+      name: ['', [Validators.required, Validators.maxLength(30)]],
+      username: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(30)]],
+      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(30)]],
+      confirmPassword: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(30)]],
+      creationCode: ['', [Validators.required, Validators.pattern(/^[A-Z0-9]{12}$/)]],
+    },
+    { validators: confirmPasswordValidator }
+  );
+
+  readonly passwordMatcher = new PasswordMatchErrorStateMatcher();
 
   async onLogin() {
     const username = this.loginForm.value.username;

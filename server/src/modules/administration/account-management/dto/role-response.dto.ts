@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsString, IsNotEmpty, IsArray, ValidateNested } from 'class-validator';
+import { IsInt, IsString, IsNotEmpty, IsArray, ValidateNested, IsBoolean } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class RoleRightDto {

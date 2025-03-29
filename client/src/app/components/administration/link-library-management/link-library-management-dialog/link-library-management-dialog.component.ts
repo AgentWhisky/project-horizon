@@ -1,12 +1,14 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { Link, LinkPayload } from '../link-library-management';
 import { LinkLibraryManagementService } from '../link-library-management.service';
+import { ValidatorMessagePipe } from '../../../../pipes/validator-message.pipe';
+import { URL_REGEX } from '../../../../constants';
 
 interface DialogData {
   type: 'create' | 'update';
@@ -20,11 +22,11 @@ interface DialogResult {
 
 @Component({
   selector: 'app-link-library-management-dialog',
-  imports: [MatButtonModule, MatInputModule, MatSelectModule, MatDialogModule, ReactiveFormsModule],
+  imports: [MatButtonModule, MatInputModule, MatSelectModule, MatDialogModule, ReactiveFormsModule, ValidatorMessagePipe],
   templateUrl: './link-library-management-dialog.component.html',
   styleUrl: './link-library-management-dialog.component.scss',
 })
-export class LinkLibraryManagementDialogComponent {
+export class LinkLibraryManagementDialogComponent implements OnInit {
   private fb = inject(FormBuilder);
   private linkLibraryManagementService = inject(LinkLibraryManagementService);
   private dialogRef = inject(MatDialogRef<LinkLibraryManagementDialogComponent>);
@@ -33,27 +35,31 @@ export class LinkLibraryManagementDialogComponent {
   readonly linkCategories = this.linkLibraryManagementService.linkCategories;
   readonly linkTags = this.linkLibraryManagementService.linkTags;
 
-  readonly linkForm = this.data.type === 'update' && this.data.link ? this.getUpdateLinkForm(this.data.link) : this.getNewLinkForm();
+  readonly linkForm = this.getNewLinkForm();
+
+  ngOnInit() {
+    if (this.data.type === 'update' && this.data.link) {
+      const link = this.data.link;
+
+      this.linkForm.patchValue({
+        name: link.name,
+        description: link.description,
+        url: link.url,
+        thumbnail: link.thumbnail,
+        category: link.category.id,
+        tags: link.tags?.map((tag) => tag.id) ?? [],
+      });
+    }
+  }
 
   getNewLinkForm() {
     return this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(30)]],
       description: ['', [Validators.required, Validators.maxLength(250)]],
-      url: ['', [Validators.required, Validators.maxLength(250)]],
-      thumbnail: [''],
-      category: [null, [Validators.required]],
-      tags: [[], [Validators.required]],
-    });
-  }
-
-  getUpdateLinkForm(link: Link) {
-    return this.fb.group({
-      name: [link.name, [Validators.required, Validators.maxLength(30)]],
-      description: [link.description, [Validators.required, Validators.maxLength(250)]],
-      url: [link.url, [Validators.required, Validators.maxLength(250)]],
-      thumbnail: [link.thumbnail],
-      category: [link.category.id ?? '', [Validators.required]],
-      tags: [link.tags?.map((tag) => tag.id) ?? [], [Validators.required]],
+      url: ['', [Validators.required, Validators.maxLength(2048), Validators.pattern(URL_REGEX)]],
+      thumbnail: ['', [Validators.maxLength(2048), Validators.pattern(URL_REGEX)]],
+      category: [null as unknown as number, [Validators.required]],
+      tags: [[] as number[]],
     });
   }
 
