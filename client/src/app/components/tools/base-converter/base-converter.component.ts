@@ -11,10 +11,11 @@ import { BaseConverterService } from './base-converter.service';
 import { filter, tap } from 'rxjs';
 import { BaseConvertTileDialogComponent } from './base-convert-tile-dialog/base-convert-tile-dialog.component';
 import { BaseConvertConversionDialogComponent } from './base-convert-conversion-dialog/base-convert-conversion-dialog.component';
+import { MessageCardComponent } from '../../../core/message-card/message-card.component';
 
 @Component({
   selector: 'app-base-converter',
-  imports: [MatButtonModule, MatIconModule, MatTabsModule, BaseConvertTileComponent],
+  imports: [MatButtonModule, MatIconModule, MatTabsModule, BaseConvertTileComponent, MessageCardComponent],
   templateUrl: './base-converter.component.html',
   styleUrl: './base-converter.component.scss',
 })

@@ -10,7 +10,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatChipsModule } from '@angular/material/chips';
 
 import { RightCode, RoleCode, UserCode } from './account-management';
-import { NoDataCardComponent } from '../../../core/no-data-card/no-data-card.component';
 import { AccountManagementService } from './account-management.service';
 import { RemoveConfirmComponent } from '../../../dialogs/remove-confirm/remove-confirm.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -20,6 +19,7 @@ import { DatePipe } from '@angular/common';
 import { RoleDialogComponent } from './role-dialog/role-dialog.component';
 import { UserService } from '../../../services/user.service';
 import { USER_RIGHTS } from '../../../constants';
+import { MessageCardComponent } from '../../../core/message-card/message-card.component';
 
 @Component({
   selector: 'app-account-management',
@@ -32,7 +32,7 @@ import { USER_RIGHTS } from '../../../constants';
     MatTooltipModule,
     MatTabsModule,
     MatChipsModule,
-    NoDataCardComponent,
+    MessageCardComponent,
     DatePipe,
   ],
   templateUrl: './account-management.component.html',

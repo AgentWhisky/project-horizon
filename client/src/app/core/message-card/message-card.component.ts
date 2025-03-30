@@ -3,11 +3,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 
 @Component({
-  selector: 'app-no-data-card',
+  selector: 'app-message-card',
   imports: [MatButtonModule, MatCardModule],
-  templateUrl: './no-data-card.component.html',
-  styleUrl: './no-data-card.component.scss',
+  templateUrl: './message-card.component.html',
+  styleUrl: './message-card.component.scss',
 })
-export class NoDataCardComponent {
+export class MessageCardComponent {
   readonly message = input.required<string>();
 }

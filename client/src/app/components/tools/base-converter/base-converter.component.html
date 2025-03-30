@@ -10,9 +10,7 @@
     </button>
   </div>
   @if(!baseConversions().length) {
-  <div class="card-banner">
-    <span>No Tiles Found. Please add a tile.</span>
-  </div>
+  <app-message-card message="No base tiles found"></app-message-card>
 
   } @else {
   <div class="base-container">

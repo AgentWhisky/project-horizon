@@ -2,7 +2,10 @@
   <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
     <mat-tab label="Links" class="flex flex-col">
       <div class="flex justify-end mt-3">
-        <button mat-button (click)="onCreateLink()" aria-label="Add Link"><mat-icon>add</mat-icon> Add Link</button>
+        <button mat-button (click)="onCreateLink()" aria-label="Add Link">
+          <mat-icon>add</mat-icon>
+          Add Link
+        </button>
       </div>
 
       @if(linkDataSource.data.length > 0) {
@@ -63,13 +66,16 @@
 
       <mat-paginator [pageSizeOptions]="[25, 50, 100]" #linkPaginator showFirstLastButtons aria-label="Link Paginator"></mat-paginator>
       } @else {
-      <app-no-data-card message="No links found"></app-no-data-card>
+      <app-message-card message="No links found"></app-message-card>
       }
     </mat-tab>
 
     <mat-tab label="Categories" class="flex flex-col">
       <div class="flex justify-end mt-3">
-        <button mat-button (click)="onCreateCategory()" aria-label="Add Category"><mat-icon>add</mat-icon> Add Category</button>
+        <button mat-button (click)="onCreateCategory()" aria-label="Add Category">
+          <mat-icon>add</mat-icon>
+          Add Category
+        </button>
       </div>
 
       @if(categoryDataSource.data.length > 0) {
@@ -114,13 +120,16 @@
         aria-label="Category Paginator"></mat-paginator>
 
       } @else {
-      <app-no-data-card message="No categories found"></app-no-data-card>
+      <app-message-card message="No categories found"></app-message-card>
       }
     </mat-tab>
 
     <mat-tab label="Tags" class="flex flex-col">
       <div class="flex justify-end mt-3">
-        <button mat-button (click)="onCreateTag()" aria-label="Add Tag"><mat-icon>add</mat-icon> Add Tag</button>
+        <button mat-button (click)="onCreateTag()" aria-label="Add Tag">
+          <mat-icon>add</mat-icon>
+          Add Tag
+        </button>
       </div>
 
       @if(tagDataSource.data.length > 0) {
@@ -155,7 +164,7 @@
 
       <mat-paginator [pageSizeOptions]="[25, 50, 100]" #tagPaginator showFirstLastButtons></mat-paginator>
       } @else {
-      <app-no-data-card message="No tags found"></app-no-data-card>
+      <app-message-card message="No tags found"></app-message-card>
       }
     </mat-tab>
   </mat-tab-group>

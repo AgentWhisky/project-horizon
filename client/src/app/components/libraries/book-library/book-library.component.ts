@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
+import { MessageCardComponent } from '../../../core/message-card/message-card.component';
 
 @Component({
   selector: 'app-book-library',
-  imports: [],
+  imports: [MessageCardComponent],
   templateUrl: './book-library.component.html',
-  styleUrl: './book-library.component.scss'
+  styleUrl: './book-library.component.scss',
 })
-export class BookLibraryComponent {
-
-}
+export class BookLibraryComponent {}

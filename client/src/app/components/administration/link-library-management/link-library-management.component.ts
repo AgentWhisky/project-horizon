@@ -15,9 +15,9 @@ import { filter, tap } from 'rxjs';
 import { RemoveConfirmComponent } from '../../../dialogs/remove-confirm/remove-confirm.component';
 import { LinkCategoryDialogComponent } from './link-category-dialog/link-category-dialog.component';
 import { LinkTagDialogComponent } from './link-tag-dialog/link-tag-dialog.component';
-import { NoDataCardComponent } from '../../../core/no-data-card/no-data-card.component';
 import { LinkLibraryManagementService } from './link-library-management.service';
 import { Category, Link, Tag } from './link-library-management';
+import { MessageCardComponent } from '../../../core/message-card/message-card.component';
 
 @Component({
   selector: 'app-link-library-management',
@@ -30,7 +30,7 @@ import { Category, Link, Tag } from './link-library-management';
     MatTooltipModule,
     MatTabsModule,
     MatChipsModule,
-    NoDataCardComponent,
+    MessageCardComponent,
   ],
   templateUrl: './link-library-management.component.html',
   styleUrl: './link-library-management.component.scss',

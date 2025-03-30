@@ -1,6 +1,4 @@
 @use '@angular/material' as mat;
-@use './app/styles/whisky-red.scss';
-@use './app/styles/whisky-red-dark.scss';
 
 @include mat.core();
 
@@ -12,6 +10,7 @@ html {
   @include mat.theme(
     (
       color: mat.$violet-palette,
+      //color: horizon-theme-3.$primary-palette,
       typography: Roboto,
       density: 0,
     )
@@ -23,6 +22,7 @@ html {
     (
       color: (
         primary: mat.$violet-palette,
+        //primary: horizon-theme-3.$primary-palette,
         theme-type: dark,
       ),
     )

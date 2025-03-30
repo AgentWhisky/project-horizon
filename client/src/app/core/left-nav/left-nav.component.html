@@ -9,7 +9,7 @@
 
     @for(navItem of navSection.navItems; track navItem.name) {
       @if(!navItem.requiredRights|| (navItem.requiredRights && hasRights(navItem.requiredRights))) {
-      <a [routerLink]="navItem.routerLink" class="nav-item" routerLinkActive="active">
+      <a matRipple [routerLink]="navItem.routerLink" class="nav-item" routerLinkActive="active">
         <mat-icon>{{ navItem.icon }}</mat-icon> {{ navItem.name }}
       </a>
       }
