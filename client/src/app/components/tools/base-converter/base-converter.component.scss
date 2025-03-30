@@ -1,3 +1,11 @@
 .base-container {
   @apply w-full flex flex-wrap gap-3 justify-center;
 }
+
+.no-tiles-banner {
+  @apply w-96 flex justify-center items-center p-3;
+
+  background-color: var(--mat-sys-surface-container-low);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-extra-small);
+}

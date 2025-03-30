@@ -14,12 +14,6 @@
     </mat-form-field>
 
     <mat-form-field class="w-full">
-      <mat-label>Thumbnail</mat-label>
-      <input matInput formControlName="thumbnail" />
-      <mat-error>{{ linkForm.get('thumbnail')?.errors | validatorMessage : { pattern: 'Invalid URL format' } }}</mat-error>
-    </mat-form-field>
-
-    <mat-form-field class="w-full">
       <mat-label>Category</mat-label>
       <mat-select formControlName="category">
         @for(category of linkCategories(); track category.id) {

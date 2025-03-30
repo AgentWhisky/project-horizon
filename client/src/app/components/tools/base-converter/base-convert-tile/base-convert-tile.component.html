@@ -22,18 +22,13 @@
             <textarea matInput #conversionOutput [value]="conversionMap().get(base) || ''" cdkTextareaAutosize readonly></textarea>
             <mat-hint>Character Count: {{ conversionOutput.textLength }}</mat-hint>
           </mat-form-field>
-          <div class="conversion-remove-icon-container">
-            <button mat-icon-button class="icon-button" matTooltip="Remove" (click)="onRemoveConversion(base)">
-              <mat-icon>close</mat-icon>
-            </button>
-          </div>
         </div>
         }
       </div>
     </div>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-button (click)="onAddConversion()">Add Conversion</button>
+    <button mat-button (click)="onUpdateConversions()">Update Conversions</button>
     <button mat-button (click)="onRemoveBase()">Remove Tile</button>
   </mat-card-actions>
 </mat-card>

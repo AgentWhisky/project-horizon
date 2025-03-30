@@ -63,6 +63,14 @@ body {
   border-radius: var(--mat-sys-corner-extra-small);
 }
 
+.card-banner-small {
+  @apply w-96 flex justify-center items-center p-3;
+
+  background-color: var(--mat-sys-surface-container-low);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-extra-small);
+}
+
 // *** SEARCH INPUT ***
 .page-search {
   @apply flex w-full max-w-96 sm:max-w-lg md:max-w-xl lg:max-w-3xl xl:max-w-4xl;

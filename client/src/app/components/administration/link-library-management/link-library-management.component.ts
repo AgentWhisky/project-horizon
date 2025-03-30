@@ -100,7 +100,6 @@ export class LinkLibraryManagementComponent implements OnInit {
     this.dialog
       .open(LinkLibraryManagementDialogComponent, {
         data: { type: 'create' },
-        height: '800px',
         width: '560px',
       })
       .afterClosed()
@@ -115,7 +114,6 @@ export class LinkLibraryManagementComponent implements OnInit {
     this.dialog
       .open(LinkLibraryManagementDialogComponent, {
         data: { type: 'update', link },
-        height: '800px',
         width: '560px',
       })
       .afterClosed()

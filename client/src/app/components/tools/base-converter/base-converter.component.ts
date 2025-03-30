@@ -9,8 +9,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { RemoveConfirmComponent } from '../../../dialogs/remove-confirm/remove-confirm.component';
 import { BaseConverterService } from './base-converter.service';
 import { filter, tap } from 'rxjs';
-import { AddBaseDialogComponent } from './add-base-dialog/add-base-dialog.component';
 import { BaseConvertTileDialogComponent } from './base-convert-tile-dialog/base-convert-tile-dialog.component';
+import { BaseConvertConversionDialogComponent } from './base-convert-conversion-dialog/base-convert-conversion-dialog.component';
 
 @Component({
   selector: 'app-base-converter',
@@ -62,34 +62,22 @@ export class BaseConverterComponent {
       .subscribe();
   }
 
-  onAddBaseConversion(base: number) {
+  onUpdateBaseConversions(base: number) {
     const convertBase = this.baseConversions().find((item) => item.base === base);
     if (!convertBase) {
       return;
     }
-    const existingBases = [base, ...convertBase.conversions];
 
     this.dialog
-      .open(AddBaseDialogComponent, { data: { existingBases }, height: '220px', width: '560px' })
+      .open(BaseConvertConversionDialogComponent, {
+        data: { base, existingConversions: convertBase.conversions },
+        height: '220px',
+        width: '560px',
+      })
       .afterClosed()
       .pipe(
         filter((result) => result && result.status),
-        tap((result) => this.baseConverterServce.addConversion(base, result.base))
-      )
-      .subscribe();
-  }
-
-  onRemoveBaseConversion(base: number, conversion: number) {
-    console.log(base, conversion);
-
-    const message = `Are you sure you want to remove the Base ${conversion} conversion for Base ${base}?`;
-
-    this.dialog
-      .open(RemoveConfirmComponent, { data: { message } })
-      .afterClosed()
-      .pipe(
-        filter((result) => result),
-        tap(() => this.baseConverterServce.removeConversion(base, conversion))
+        tap((result) => this.baseConverterServce.updateConversions(base, result.conversions))
       )
       .subscribe();
   }

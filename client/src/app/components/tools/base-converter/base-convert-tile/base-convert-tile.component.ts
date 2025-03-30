@@ -8,9 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
-import { ConvertBase } from '../base-converter';
+import { ConvertBase, ReorderConversion } from '../base-converter';
 import { baseNames, convertToBase } from '../../../../utilities/base-conversion.util';
-import { MoveInContainer } from '../reorder-conversion';
 import { BaseInputRestrictDirective } from '../../../../directives/base-input-restrict.directive';
 
 @Component({
@@ -34,24 +33,19 @@ export class BaseConvertTileComponent {
   readonly convertBase = input.required<ConvertBase>();
   readonly convertInput = model<string>('');
 
-  readonly addTile = output<number>();
+  readonly updateConversions = output<number>();
   readonly removeTile = output<number>();
-  readonly removeConversion = output<{ base: number; conversion: number }>();
-  readonly reorderConversions = output<MoveInContainer>();
+  readonly reorderConversions = output<ReorderConversion>();
   readonly conversionMap = computed(() => this.convert());
 
   readonly baseNames = baseNames;
 
-  onAddConversion() {
-    this.addTile.emit(this.convertBase().base);
+  onUpdateConversions() {
+    this.updateConversions.emit(this.convertBase().base);
   }
 
   onRemoveBase() {
     this.removeTile.emit(this.convertBase().base);
-  }
-
-  onRemoveConversion(conversion: number) {
-    this.removeConversion.emit({ base: this.convertBase().base, conversion });
   }
 
   onDrop(event: CdkDragDrop<number[]>) {

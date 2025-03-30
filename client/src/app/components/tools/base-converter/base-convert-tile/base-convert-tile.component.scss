@@ -10,21 +10,11 @@
   @apply w-full flex flex-col gap-3;
 }
 
-.conversion-remove-icon-container {
-  width: 0;
-  overflow: hidden;
-  transition: width 0.3s ease;
-}
-
 .base-conversion {
-  background-color: var(--mat-sys-surface-container) !important;
+  background-color: var(--mat-sys-surface-container-low);
 }
 
 .base-conversion:hover {
   cursor: move;
-  background-color: var(--mat-sys-surface-container) !important;
-}
-
-.base-conversion:hover .conversion-remove-icon-container {
-  width: 48px;
+  background-color: var(--mat-sys-surface-container);
 }

@@ -5,7 +5,6 @@ export interface LinkPayload {
   description: string;
   category: number;
   tags: number[];
-  thumbnail?: string;
 }
 
 export interface Link {
@@ -15,7 +14,6 @@ export interface Link {
   description: string;
   category: LinkCategory;
   tags: LinkTag[];
-  thumbnail?: string;
 }
 
 export interface LinkCategory {

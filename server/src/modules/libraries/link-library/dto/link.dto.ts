@@ -37,7 +37,4 @@ export class LinkResponseDto {
 
   @ApiProperty({ type: [LinkTagResponseDto], description: 'Tags associated with this link' })
   tags: LinkTagResponseDto[];
-
-  @ApiPropertyOptional({ example: 'https://example.com/thumbnail.jpg', description: 'Thumbnail image URL (optional)' })
-  thumbnail?: string;
 }

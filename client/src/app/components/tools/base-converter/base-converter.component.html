@@ -1,7 +1,13 @@
 <div class="flex flex-col">
   <div class="flex flex-row justify-end gap-3 py-3">
-    <button mat-flat-button (click)="onAddBase()">Add Base Tile</button>
-    <button mat-flat-button (click)="onRemoveAllBases()">Remove All Tiles</button>
+    <button mat-flat-button (click)="onAddBase()">
+      <mat-icon>add</mat-icon>
+      Add Base Tile
+    </button>
+    <button mat-flat-button (click)="onRemoveAllBases()">
+      <mat-icon>delete</mat-icon>
+      Remove All Tiles
+    </button>
   </div>
   @if(!baseConversions().length) {
   <div class="card-banner">
@@ -14,9 +20,8 @@
     <app-base-convert-tile
       class="w-full max-w-96 min-w-80"
       [convertBase]="convertBase"
-      (addTile)="onAddBaseConversion($event)"
+      (updateConversions)="onUpdateBaseConversions($event)"
       (removeTile)="onRemoveBase($event)"
-      (removeConversion)="onRemoveBaseConversion($event.base, $event.conversion)"
       (reorderConversions)="onReorderConversions($event.base, $event.prevIndex, $event.currentIndex)"></app-base-convert-tile>
     }
   </div>

@@ -56,31 +56,17 @@ export class BaseConverterService {
     }
   }
 
-  addConversion(base: number, conversion: number) {
+  updateConversions(base: number, conversions: number[]) {
     try {
       const convertBaseCopy = this._baseConversions().map((item) => ({
         base: item.base,
-        conversions: item.base === base ? [...item.conversions, conversion] : [...item.conversions],
+        conversions: item.base === base ? [...conversions] : [...item.conversions],
       }));
 
       this._baseConversions.set(convertBaseCopy);
-      this.snackbar.open('Successfully added base conversion', 'Close', { duration: 3000 });
+      this.snackbar.open('Successfully updated base conversions', 'Close', { duration: 3000 });
     } catch {
-      this.snackbar.open('Failed to add base conversion', 'Close', { duration: 3000 });
-    }
-  }
-
-  removeConversion(base: number, conversion: number) {
-    try {
-      const convertBaseCopy = this._baseConversions().map((item) => ({
-        base: item.base,
-        conversions: item.base === base ? [...item.conversions.filter((item) => item !== conversion)] : [...item.conversions],
-      }));
-
-      this._baseConversions.set(convertBaseCopy);
-      this.snackbar.open('Successfully removed base conversion', 'Close', { duration: 3000 });
-    } catch {
-      this.snackbar.open('Failed to remove base conversion', 'Close', { duration: 3000 });
+      this.snackbar.open('Failed to update base conversions', 'Close', { duration: 3000 });
     }
   }
 

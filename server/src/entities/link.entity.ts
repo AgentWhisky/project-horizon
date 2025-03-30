@@ -11,7 +11,7 @@ export class LinkEntity {
   @Column({ name: 'name', type: 'varchar', length: 255, unique: true })
   name: string;
 
-  @Column({ name: 'description', type: 'varchar', length: 255, })
+  @Column({ name: 'description', type: 'varchar', length: 255 })
   description: string;
 
   @Column({ name: 'url', type: 'varchar', length: 2048, unique: true })
@@ -26,9 +26,6 @@ export class LinkEntity {
   @ManyToMany(() => LinkTagEntity, (tag) => tag.links, { cascade: true })
   @JoinTable({ name: 'link_library_tags' })
   tags: LinkTagEntity[];
-
-  @Column({ name: 'thumbnail', type: 'varchar', length: 2048, nullable: true })
-  thumbnail?: string;
 
   // *** AUDIT FIELDS ***
   @CreateDateColumn({ name: 'createdDate', type: 'timestamp' })

@@ -5,7 +5,6 @@ export interface Link {
   description: string;
   category: LinkCategory;
   tags: LinkTag[];
-  thumbnail?: string;
 }
 
 export interface LinkCategory {

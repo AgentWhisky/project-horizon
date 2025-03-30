@@ -48,9 +48,4 @@ export class LinkDto {
   @ApiProperty({ description: 'The tags associated with the link', type: [LinkTagDto] })
   @IsArray()
   tags: LinkTagDto[];
-
-  @ApiProperty({ description: 'The thumbnail URL for the link (optional)', required: false })
-  @IsOptional()
-  @IsString()
-  thumbnail?: string;
 }

@@ -10,3 +10,6 @@ export const USER_RIGHTS = {
 
 // Regular Expressions
 export const URL_REGEX = /^[A-Za-z][A-Za-z\d.+-]*:\/*(?:\w+(?::\w+)?@)?[^\s/]+(?::\d+)?(?:\/[\w#!:.?+=&%@\-/]*)?$/;
+
+// Default Conversion Bases
+export const defaultNumericBases: number[] = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 16, 20, 26, 32, 36];

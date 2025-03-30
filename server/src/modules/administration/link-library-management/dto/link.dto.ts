@@ -47,14 +47,4 @@ export class LinkDto {
   @IsArray()
   @IsInt({ each: true })
   tags: number[];
-
-  @ApiPropertyOptional({
-    description: 'Optional thumbnail URL for the link',
-    maxLength: 2048,
-    example: 'https://example.com/thumbnail.jpg',
-  })
-  @IsOptional()
-  @IsUrl()
-  @MaxLength(2048)
-  thumbnail?: string;
 }

@@ -8,6 +8,7 @@ import { ValidatorMessagePipe } from '../../../../pipes/validator-message.pipe';
 import { MatSelectModule } from '@angular/material/select';
 import { baseNames } from '../../../../utilities/base-conversion.util';
 import { tap } from 'rxjs';
+import { defaultNumericBases } from '../../../../constants';
 
 interface DialogData {
   existingBases: number[];
@@ -96,5 +97,3 @@ export class BaseConvertTileDialogComponent {
     this.dialogRef.close(dialogResult);
   }
 }
-
-const defaultNumericBases: number[] = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 16, 20, 26, 32, 36];

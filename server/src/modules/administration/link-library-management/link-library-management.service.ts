@@ -23,7 +23,7 @@ export class LinkLibraryManagementService {
   // *** LINK FUNCTIONS ***
   async getLinks(): Promise<Link[]> {
     const libaryLinks: Link[] = await this.libraryLinkRepository.find({
-      select: ['id', 'url', 'name', 'description', 'category', 'thumbnail'],
+      select: ['id', 'url', 'name', 'description', 'category'],
       relations: ['category', 'tags'],
       order: { id: 'ASC' },
     });
@@ -41,7 +41,7 @@ export class LinkLibraryManagementService {
     });
 
     return await this.libraryLinkRepository.findOne({
-      select: ['id', 'url', 'name', 'description', 'category', 'thumbnail'],
+      select: ['id', 'url', 'name', 'description', 'category'],
       where: { id: newLink.id },
       relations: ['category', 'tags'],
     });
@@ -64,7 +64,7 @@ export class LinkLibraryManagementService {
     });
 
     return await this.libraryLinkRepository.findOne({
-      select: ['id', 'url', 'name', 'description', 'category', 'thumbnail'],
+      select: ['id', 'url', 'name', 'description', 'category'],
       where: { id },
       relations: ['category', 'tags'],
     });

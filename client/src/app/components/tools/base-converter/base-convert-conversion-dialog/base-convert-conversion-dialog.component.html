@@ -1,1 +1,17 @@
-<p>base-convert-conversion-dialog works!</p>
+<h2 mat-dialog-title>Update Conversions</h2>
+<mat-dialog-content>
+  <form class="flex flex-col gap-3" [formGroup]="conversionForm">
+    <mat-form-field>
+      <mat-label>Conversions</mat-label>
+      <mat-select multiple formControlName="conversions">
+        @for (base of defaultBases; track base) {
+        <mat-option [value]="base">Base {{ base }}{{ baseNames[base] ? ' (' + baseNames[base] + ')' : '' }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onClose()">Cancel</button>
+  <button mat-flat-button (click)="onSubmit()" [disabled]="!conversionForm.valid || !conversionForm.dirty">Update Conversions</button>
+</mat-dialog-actions>

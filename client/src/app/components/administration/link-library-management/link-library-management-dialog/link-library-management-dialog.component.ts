@@ -45,7 +45,6 @@ export class LinkLibraryManagementDialogComponent implements OnInit {
         name: link.name,
         description: link.description,
         url: link.url,
-        thumbnail: link.thumbnail,
         category: link.category.id,
         tags: link.tags?.map((tag) => tag.id) ?? [],
       });
@@ -57,7 +56,6 @@ export class LinkLibraryManagementDialogComponent implements OnInit {
       name: ['', [Validators.required, Validators.maxLength(30)]],
       description: ['', [Validators.required, Validators.maxLength(250)]],
       url: ['', [Validators.required, Validators.maxLength(2048), Validators.pattern(URL_REGEX)]],
-      thumbnail: ['', [Validators.maxLength(2048), Validators.pattern(URL_REGEX)]],
       category: [null as unknown as number, [Validators.required]],
       tags: [[] as number[]],
     });
