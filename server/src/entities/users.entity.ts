@@ -34,7 +34,12 @@ export class UserEntity {
 
   // *** CREDENTIALS ***
   @Index({ unique: true })
-  @Column()
+  @Column({
+    transformer: {
+      to: (value: string) => value?.toLowerCase() ?? '',
+      from: (value: string) => value,
+    },
+  })
   username: string;
 
   @Column()
@@ -49,12 +54,4 @@ export class UserEntity {
 
   @UpdateDateColumn({ name: 'updatedDate', type: 'timestamp' })
   updatedDate: Date;
-
-  @BeforeInsert()
-  @BeforeUpdate()
-  transformUsernameToLowercase() {
-    if (this.username) {
-      this.username = this.username.toLowerCase();
-    }
-  }
 }

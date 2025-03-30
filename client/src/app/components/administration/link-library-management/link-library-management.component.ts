@@ -42,7 +42,7 @@ export class LinkLibraryManagementComponent implements OnInit {
   // Link Table
   readonly linkSort = viewChild<MatSort>('linkSort');
   readonly linkPaginator = viewChild<MatPaginator>('linkPaginator');
-  readonly linkDisplayedColumns: string[] = ['id', 'name', 'category', 'description', 'url', 'tags', 'actions'];
+  readonly linkDisplayedColumns: string[] = ['id', 'name', 'category', 'description', 'url', 'sortKey', 'tags', 'actions'];
   readonly linkDataSource = new MatTableDataSource<Link>();
 
   // Category Table

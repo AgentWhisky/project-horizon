@@ -23,7 +23,7 @@ export class LinkLibraryManagementService {
   // *** LINK FUNCTIONS ***
   async getLinks(): Promise<Link[]> {
     const libaryLinks: Link[] = await this.libraryLinkRepository.find({
-      select: ['id', 'url', 'name', 'description', 'category'],
+      select: ['id', 'url', 'name', 'description', 'category', 'sortKey'],
       relations: ['category', 'tags'],
       order: { id: 'ASC' },
     });
@@ -38,10 +38,11 @@ export class LinkLibraryManagementService {
       url: linkPayload.url,
       category: { id: linkPayload.category },
       tags: linkPayload.tags.map((tagId) => ({ id: tagId })),
+      sortKey: linkPayload.sortKey || 'zzz',
     });
 
     return await this.libraryLinkRepository.findOne({
-      select: ['id', 'url', 'name', 'description', 'category'],
+      select: ['id', 'url', 'name', 'description', 'category', 'sortKey'],
       where: { id: newLink.id },
       relations: ['category', 'tags'],
     });
@@ -61,10 +62,11 @@ export class LinkLibraryManagementService {
       url: linkPayload.url,
       category: { id: linkPayload.category },
       tags: linkPayload.tags.map((tagId) => ({ id: tagId })),
+      sortKey: linkPayload.sortKey || 'zzz',
     });
 
     return await this.libraryLinkRepository.findOne({
-      select: ['id', 'url', 'name', 'description', 'category'],
+      select: ['id', 'url', 'name', 'description', 'category', 'sortKey'],
       where: { id },
       relations: ['category', 'tags'],
     });

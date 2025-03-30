@@ -80,6 +80,15 @@ export class LinkLibraryService {
       linksByCategoryObj[categoryId].links.push(link);
     });
 
+    // Sort links within category by sort key
+    Object.values(linksByCategoryObj).forEach((category) => {
+      category.links.sort((a, b) => {
+        const sortKeyA = a.sortKey || '';
+        const sortKeyB = b.sortKey || '';
+        return sortKeyA.localeCompare(sortKeyB);
+      });
+    });
+
     return Object.values(linksByCategoryObj).sort((a, b) => a.name.localeCompare(b.name));
   }
 }

@@ -13,7 +13,8 @@ export class LinkLibraryService {
 
   async getLibraryLinks() {
     const libaryLinks: Link[] = await this.libraryLinkRepository.find({
-      select: ['id', 'url', 'name', 'description', 'category'],
+      select: ['id', 'url', 'name', 'description', 'category', 'sortKey'],
+      where: { status: 'A' },
       relations: ['category', 'tags'],
       order: { id: 'ASC' },
     });

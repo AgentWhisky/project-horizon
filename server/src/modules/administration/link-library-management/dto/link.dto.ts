@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsString, IsInt, IsArray, IsOptional, IsUrl, IsNotEmpty, MaxLength } from 'class-validator';
-import { LINK_DESC_MAX_LENGTH, LINK_NAME_MAX_LENGTH } from 'src/common/constants/validation.constants';
+import { LINK_DESC_MAX_LENGTH, LINK_NAME_MAX_LENGTH, MAX_SORT_STR_LENGTH } from 'src/common/constants/validation.constants';
 
 export class LinkDto {
   @ApiProperty({
@@ -47,4 +47,13 @@ export class LinkDto {
   @IsArray()
   @IsInt({ each: true })
   tags: number[];
+
+  @ApiPropertyOptional({
+    description: 'Sorting key used to determine the order of links',
+    maxLength: MAX_SORT_STR_LENGTH,
+    example: 'ABC',
+  })
+  @IsString()
+  @MaxLength(MAX_SORT_STR_LENGTH)
+  sortKey?: string;
 }

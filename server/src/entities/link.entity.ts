@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, JoinTable, ManyToMany, ManyToOne, UpdateDateColumn } from 'typeorm';
 import { LinkTagEntity } from './link-tags.entity';
 import { LinkCategoryEntity } from './link-categories.entity';
-import { LINK_DESC_MAX_LENGTH, LINK_NAME_MAX_LENGTH } from 'src/common/constants/validation.constants';
+import { MAX_SORT_STR_LENGTH } from 'src/common/constants/validation.constants';
 
 @Entity('links')
 export class LinkEntity {
@@ -26,6 +26,18 @@ export class LinkEntity {
   @ManyToMany(() => LinkTagEntity, (tag) => tag.links, { cascade: true })
   @JoinTable({ name: 'link_library_tags' })
   tags: LinkTagEntity[];
+
+  @Column({
+    name: 'sortKey',
+    type: 'varchar',
+    length: MAX_SORT_STR_LENGTH,
+    default: 'zzz',
+    transformer: {
+      to: (value: string) => value?.toLowerCase() ?? '',
+      from: (value: string) => value,
+    },
+  })
+  sortKey: string;
 
   // *** AUDIT FIELDS ***
   @CreateDateColumn({ name: 'createdDate', type: 'timestamp' })

@@ -9,6 +9,7 @@ import { Link, LinkPayload } from '../link-library-management';
 import { LinkLibraryManagementService } from '../link-library-management.service';
 import { ValidatorMessagePipe } from '../../../../pipes/validator-message.pipe';
 import { URL_REGEX } from '../../../../constants';
+import { LowercaseDirective } from '../../../../directives/lowercase.directive';
 
 interface DialogData {
   type: 'create' | 'update';
@@ -22,7 +23,15 @@ interface DialogResult {
 
 @Component({
   selector: 'app-link-library-management-dialog',
-  imports: [MatButtonModule, MatInputModule, MatSelectModule, MatDialogModule, ReactiveFormsModule, ValidatorMessagePipe],
+  imports: [
+    MatButtonModule,
+    MatInputModule,
+    MatSelectModule,
+    MatDialogModule,
+    ReactiveFormsModule,
+    ValidatorMessagePipe,
+    LowercaseDirective,
+  ],
   templateUrl: './link-library-management-dialog.component.html',
   styleUrl: './link-library-management-dialog.component.scss',
 })
@@ -58,6 +67,7 @@ export class LinkLibraryManagementDialogComponent implements OnInit {
       url: ['', [Validators.required, Validators.maxLength(2048), Validators.pattern(URL_REGEX)]],
       category: [null as unknown as number, [Validators.required]],
       tags: [[] as number[]],
+      sortKey: ['', [Validators.maxLength(12)]],
     });
   }
 
@@ -76,6 +86,7 @@ export class LinkLibraryManagementDialogComponent implements OnInit {
         description: this.linkForm.value.description ?? '',
         category: this.linkForm.value.category ?? 0,
         tags: this.linkForm.value.tags ?? [],
+        sortKey: this.linkForm.value.sortKey ?? '',
       },
     };
 

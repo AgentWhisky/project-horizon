@@ -31,3 +31,6 @@ export const LINK_DESC_MAX_LENGTH = 250;
 export const CATEGORY_NAME_MAX_LENGTH = 30;
 export const CATEGORY_DESC_MAX_LENGTH = 250;
 export const TAG_MAX_LENGTH = 30;
+
+
+export const MAX_SORT_STR_LENGTH = 12;

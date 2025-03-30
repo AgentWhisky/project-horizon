@@ -25,7 +25,7 @@ export class LinkTagDto {
   name: string;
 }
 
-export class LinkDto {
+export class LinkResponseDto {
   @ApiProperty({ description: 'The unique identifier of the link' })
   @IsInt()
   id: number;
@@ -48,4 +48,8 @@ export class LinkDto {
   @ApiProperty({ description: 'The tags associated with the link', type: [LinkTagDto] })
   @IsArray()
   tags: LinkTagDto[];
+
+  @ApiProperty({ description: 'Sort Order Key of the link' })
+  @IsString()
+  sortKey: string;
 }

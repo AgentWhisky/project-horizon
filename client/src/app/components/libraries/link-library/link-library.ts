@@ -5,6 +5,7 @@ export interface Link {
   description: string;
   category: LinkCategory;
   tags: LinkTag[];
+  sortKey: string;
 }
 
 export interface LinkCategory {

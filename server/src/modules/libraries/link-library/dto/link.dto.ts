@@ -37,4 +37,7 @@ export class LinkResponseDto {
 
   @ApiProperty({ type: [LinkTagResponseDto], description: 'Tags associated with this link' })
   tags: LinkTagResponseDto[];
+
+  @ApiProperty({ example: 'azz', description: 'The sort order key of this link' })
+  sortKey: string;
 }

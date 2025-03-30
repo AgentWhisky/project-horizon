@@ -5,6 +5,7 @@ export interface LinkPayload {
   description: string;
   category: number;
   tags: number[];
+  sortKey?: string;
 }
 
 export interface Link {
@@ -14,6 +15,7 @@ export interface Link {
   description: string;
   category: LinkCategory;
   tags: LinkTag[];
+  sortKey: string;
 }
 
 export interface LinkCategory {

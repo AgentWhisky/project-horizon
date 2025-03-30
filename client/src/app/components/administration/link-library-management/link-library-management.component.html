@@ -30,6 +30,11 @@
           <td mat-cell *matCellDef="let element">{{ element.description }}</td>
         </ng-container>
 
+        <ng-container matColumnDef="sortKey">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by sort key">Sort Key</th>
+          <td mat-cell *matCellDef="let element">{{ element.sortKey }}</td>
+        </ng-container>
+
         <ng-container matColumnDef="url">
           <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by url">Url</th>
           <td mat-cell *matCellDef="let element">{{ element.url }}</td>

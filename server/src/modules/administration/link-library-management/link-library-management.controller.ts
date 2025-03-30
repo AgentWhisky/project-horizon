@@ -9,11 +9,11 @@ import { CacheUtils } from 'src/common/utils/cache.utils';
 import { CACHE_KEY } from 'src/common/constants/cache-keys.constants';
 import { USER_RIGHTS } from 'src/common/constants/user-rights.constants';
 import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { LinkResponseDto } from 'src/modules/libraries/link-library/dto/link.dto';
 import { DeleteResponse } from 'src/common/model/delete-response.model';
 import { DeleteResponseDto } from 'src/common/dto/delete-response.dto';
 import { CategoryResponseDto } from './dto/category-response.dto';
 import { TagResponseDto } from './dto/tag-response.dto';
+import { LinkResponseDto } from './dto/link-response.dto';
 
 @ApiTags('Link Library Management')
 @Controller('link-library-management')
