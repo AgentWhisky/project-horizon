@@ -15,7 +15,7 @@ export class AdminDashboardService {
 
   async getDashboard(): Promise<AdminDashboardInfo> {
     const settings = await this.settingRepository.find({
-      select: ['key', 'value'],
+      select: { key: true, value: true },
       where: { key: CREATION_CODE_FIELD },
     });
 

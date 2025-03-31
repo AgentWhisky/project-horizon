@@ -23,8 +23,16 @@ export class LinkLibraryManagementService {
   // *** LINK FUNCTIONS ***
   async getLinks(): Promise<Link[]> {
     const libaryLinks: Link[] = await this.libraryLinkRepository.find({
-      select: ['id', 'url', 'name', 'description', 'category', 'sortKey'],
-      relations: ['category', 'tags'],
+      select: {
+        id: true,
+        url: true,
+        name: true,
+        description: true,
+        category: { id: true, name: true, description: true },
+        tags: { id: true, name: true },
+        sortKey: true,
+      },
+      relations: { category: true, tags: true },
       order: { id: 'ASC' },
     });
 
@@ -42,9 +50,17 @@ export class LinkLibraryManagementService {
     });
 
     return await this.libraryLinkRepository.findOne({
-      select: ['id', 'url', 'name', 'description', 'category', 'sortKey'],
+      select: {
+        id: true,
+        url: true,
+        name: true,
+        description: true,
+        category: { id: true, name: true, description: true },
+        tags: { id: true, name: true },
+        sortKey: true,
+      },
       where: { id: newLink.id },
-      relations: ['category', 'tags'],
+      relations: { category: true, tags: true },
     });
   }
 
@@ -66,9 +82,17 @@ export class LinkLibraryManagementService {
     });
 
     return await this.libraryLinkRepository.findOne({
-      select: ['id', 'url', 'name', 'description', 'category', 'sortKey'],
+      select: {
+        id: true,
+        url: true,
+        name: true,
+        description: true,
+        category: { id: true, name: true, description: true },
+        tags: { id: true, name: true },
+        sortKey: true,
+      },
       where: { id },
-      relations: ['category', 'tags'],
+      relations: { category: true, tags: true },
     });
   }
 
@@ -102,7 +126,7 @@ export class LinkLibraryManagementService {
     });
 
     const categoryRecord = await this.linkCategoryRepository.findOne({
-      select: ['id', 'name', 'description'],
+      select: { id: true, name: true, description: true },
       where: { id: newCategory.id },
     });
 
@@ -164,7 +188,7 @@ export class LinkLibraryManagementService {
     });
 
     const tagRecord = await this.linkTagRepository.findOne({
-      select: ['id', 'name'],
+      select: { id: true, name: true },
       where: { id: newTag.id },
     });
 

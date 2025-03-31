@@ -35,14 +35,14 @@ export class AuthGuard implements CanActivate {
       }
 
       // Check if the only right is DEFAULT (Require Auth Token Only)
-      if(requiredRights.every(item => item === USER_RIGHTS.DEFAULT)) {
+      if (requiredRights.every((item) => item === USER_RIGHTS.DEFAULT)) {
         return true;
       }
 
       const user = await this.userRepository.findOne({
-        select: ['id', 'roles', 'active'],
+        select: { id: true, roles: { id: true, rights: true }, active: true },
         where: { id: payload.sub },
-        relations: ['roles', 'roles.rights'],
+        relations: { roles: { rights: true } },
       });
 
       if (!user || !user.active || !user.roles) {

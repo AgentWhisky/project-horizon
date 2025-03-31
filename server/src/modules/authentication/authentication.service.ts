@@ -107,7 +107,7 @@ export class AuthenticationService implements OnModuleInit {
   async register(registrationInfo: RegistrationInfo): Promise<AuthResponse> {
     // Check creation code
     const creationCode = await this.settingRepository.findOne({
-      select: ['value'],
+      select: { value: true },
       where: { key: CREATION_CODE_FIELD },
     });
 
@@ -185,9 +185,9 @@ export class AuthenticationService implements OnModuleInit {
    */
   private async generateAuthInfo(userId: number): Promise<AuthResponse | null> {
     const user = await this.userRepository.findOne({
-      select: ['id', 'name', 'username', 'roles', 'active'],
+      select: { id: true, name: true, username: true, roles: { id: true, rights: true }, active: true },
       where: { id: userId },
-      relations: ['roles', 'roles.rights'],
+      relations: { roles: { rights: true } },
     });
 
     if (!user || !user.active) {

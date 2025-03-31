@@ -24,8 +24,8 @@ export class AccountManagementService {
   // *** USERS ***
   async getUsers(): Promise<User[]> {
     const dbUsers = await this.userRepository.find({
-      select: ['id', 'name', 'username', 'roles', 'active', 'lastLogin'],
-      relations: ['roles'],
+      select: { id: true, name: true, username: true, lastLogin: true, active: true, roles: { id: true, name: true, description: true } },
+      relations: { roles: true },
       order: { id: 'ASC' },
     });
 
@@ -59,8 +59,8 @@ export class AccountManagementService {
     });
 
     const user = await this.userRepository.findOne({
-      select: ['id', 'name', 'username', 'roles', 'active', 'lastLogin'],
-      relations: ['roles'],
+      select: { id: true, name: true, username: true, lastLogin: true, active: true, roles: { id: true, name: true, description: true } },
+      relations: { roles: true },
       where: [{ id }],
     });
 
@@ -91,8 +91,8 @@ export class AccountManagementService {
     });
 
     const user = await this.userRepository.findOne({
-      select: ['id', 'name', 'username', 'roles', 'active', 'lastLogin'],
-      relations: ['roles'],
+      select: { id: true, name: true, username: true, lastLogin: true, active: true, roles: { id: true, name: true, description: true } },
+      relations: { roles: true },
       where: [{ id }],
     });
 
@@ -113,8 +113,8 @@ export class AccountManagementService {
   // *** ROLES ***
   async getRoles(): Promise<Role[]> {
     const dbRoles = await this.roleRepository.find({
-      select: ['id', 'name', 'description', 'rights'],
-      relations: ['rights'],
+      select: { id: true, name: true, description: true, rights: { id: true, name: true, description: true } },
+      relations: { rights: true },
       order: { id: 'ASC' },
     });
 
@@ -140,8 +140,8 @@ export class AccountManagementService {
     });
 
     const role = await this.roleRepository.findOne({
-      select: ['id', 'name', 'description', 'rights'],
-      relations: ['rights'],
+      select: { id: true, name: true, description: true, rights: { id: true, name: true, description: true } },
+      relations: { rights: true },
       where: [{ id: newRole.id }],
     });
 
@@ -172,8 +172,8 @@ export class AccountManagementService {
     });
 
     const role = await this.roleRepository.findOne({
-      select: ['id', 'name', 'description', 'rights'],
-      relations: ['rights'],
+      select: { id: true, name: true, description: true, rights: { id: true, name: true, description: true } },
+      relations: { rights: true },
       where: [{ id }],
     });
 
@@ -201,10 +201,12 @@ export class AccountManagementService {
   // *** RIGHTS ***
   async getRights(): Promise<Right[]> {
     const dbRights = await this.rightRepository.find({
-      select: ['id', 'name', 'description', 'internalName'],
-      relations: ['roles'],
+      select: { id: true, name: true, description: true, internalName: true, roles: { id: true } },
+      relations: { roles: true },
       order: { id: 'ASC' },
     });
+
+    console.log(dbRights);
 
     const rights: Right[] = dbRights.map((right) => ({
       id: right.id,
