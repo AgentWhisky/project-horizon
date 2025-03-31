@@ -18,7 +18,7 @@
     </button>
     @if(!isLoggedIn()) {
     <button mat-icon-button class="header-icon" (click)="onLogin()" matTooltip="Sign In">
-      <mat-icon>login</mat-icon>
+      <mat-icon>person</mat-icon>
     </button>
     } @else {
     <button mat-icon-button class="header-icon" [matMenuTriggerFor]="userMenu" matTooltip="Account">

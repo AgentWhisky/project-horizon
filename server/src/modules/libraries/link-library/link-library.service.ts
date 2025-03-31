@@ -27,18 +27,6 @@ export class LinkLibraryService {
       order: { id: 'ASC' },
     });
 
-    const linksByCategory = links.reduce(
-      (acc, link) => {
-        const key = link.category.name;
-        if (!acc[key]) {
-          acc[key] = [];
-        }
-        acc[key].push(link);
-        return acc;
-      },
-      {} as Record<string, typeof links>
-    );
-
     const categories = Array.from(new Set(links.map((link) => link.category.name))).sort();
     const tags = Array.from(new Set(links.flatMap((link) => link.tags.map((tag) => tag.name)))).sort();
 
