@@ -18,9 +18,3 @@ export interface LinkTag {
   id: number;
   name: string;
 }
-
-export interface LinkLibrary {
-  links: Link[];
-  categories: string[];
-  tags: string[];
-}

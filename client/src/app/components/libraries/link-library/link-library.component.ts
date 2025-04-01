@@ -1,33 +1,39 @@
-import { Component, inject, OnInit, viewChildren } from '@angular/core';
+import { Component, effect, inject, model, OnInit, viewChildren } from '@angular/core';
 import { LinkLibraryService } from './link-library.service';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { LinkTileComponent } from './link-tile/link-tile.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-link-library',
-  imports: [MatButtonModule, MatInputModule, MatIconModule, MatCardModule, ReactiveFormsModule, LinkTileComponent],
+  imports: [MatButtonModule, MatInputModule, MatIconModule, MatCardModule, MatAutocompleteModule, FormsModule, LinkTileComponent],
   templateUrl: './link-library.component.html',
   styleUrl: './link-library.component.scss',
 })
 export class LinkLibraryComponent implements OnInit {
   private linkLibraryService = inject(LinkLibraryService);
   readonly linksByCategory = this.linkLibraryService.linksByCategory;
-  readonly filterForm = this.linkLibraryService.filterForm;
+
+  readonly linkFilter = model<string>('');
 
   private linkTiles = viewChildren(LinkTileComponent);
+
+  constructor() {
+    effect(() => console.log(this.linkFilter()));
+  }
 
   ngOnInit() {
     this.linkLibraryService.loadLibraryLinks();
   }
 
-  onResetForm() {
-    this.linkLibraryService.resetForm();
+  onResetFilter() {
+    this.linkFilter.set('');
   }
 
   onExapndAll() {

@@ -27,13 +27,6 @@ export class LinkLibraryService {
       order: { id: 'ASC' },
     });
 
-    const categories = Array.from(new Set(links.map((link) => link.category.name))).sort();
-    const tags = Array.from(new Set(links.flatMap((link) => link.tags.map((tag) => tag.name)))).sort();
-
-    return {
-      links,
-      categories,
-      tags,
-    };
+    return links;
   }
 }

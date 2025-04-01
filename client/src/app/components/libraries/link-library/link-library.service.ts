@@ -1,7 +1,7 @@
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { TokenService } from '../../../services/token.service';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Link, LinkLibrary, LinksByCategory } from './link-library';
+import { Link, LinksByCategory } from './link-library';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable({
@@ -13,12 +13,6 @@ export class LinkLibraryService {
 
   private _links = signal<Link[]>([]);
   readonly links = this._links.asReadonly();
-
-  private _tags = signal<string[]>([]);
-  readonly tags = this._tags.asReadonly();
-
-  private _categories = signal<string[]>([]);
-  readonly categories = this._categories.asReadonly();
 
   private _linkFilter = signal('');
   readonly filterForm = signal(this.getFilterForm());
@@ -32,11 +26,6 @@ export class LinkLibraryService {
   );
 
   readonly linksByCategory = computed(() => this.getLinksByCategory(this._filteredLinks()));
-
-  constructor() {
-    effect(() => console.log(this._tags()));
-    effect(() => console.log(this._categories()));
-  }
 
   // *** Filter Functions ***
   getFilterForm() {
@@ -58,10 +47,8 @@ export class LinkLibraryService {
   // *** Links ***
   async loadLibraryLinks() {
     try {
-      const libraryLinks = await this.getLibraryLinks();
-      this._links.set(libraryLinks.links);
-      this._categories.set(libraryLinks.categories);
-      this._tags.set(libraryLinks.tags);
+      const links = await this.getLibraryLinks();
+      this._links.set(links);
     } catch (error) {
       console.error(`Error Fetching Links: ${error}`);
     }
@@ -69,12 +56,12 @@ export class LinkLibraryService {
 
   // *** Private Link Functions ***
   private async getLibraryLinks() {
-    const links$ = this.tokenService.getWithTokenRefresh<LinkLibrary>('/link-library');
+    const links$ = this.tokenService.getWithTokenRefresh<Link[]>('/link-library');
     return firstValueFrom(links$);
   }
 
   // ** Group Links ***
-  private getLinksByCategory(links: Link[]) {
+  getLinksByCategory(links: Link[]) {
     const linksByCategoryObj: { [key: number]: LinksByCategory } = {};
 
     links.forEach((link) => {

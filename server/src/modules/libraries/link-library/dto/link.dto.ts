@@ -41,14 +41,3 @@ export class LinkResponseDto {
   @ApiProperty({ example: 'azz', description: 'The sort order key of this link' })
   sortKey: string;
 }
-
-export class LinkLibraryResponseDto {
-  @ApiProperty({ type: [LinkResponseDto], description: 'List of links in the library' })
-  links: LinkResponseDto[];
-
-  @ApiProperty({ type: [String], description: 'List of categories in the library' })
-  categories: string[];
-
-  @ApiProperty({ type: [String], description: 'List of tags in the library' })
-  tags: string[];
-}

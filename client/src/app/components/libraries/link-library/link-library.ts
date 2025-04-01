@@ -25,9 +25,3 @@ export interface LinksByCategory {
   description: string;
   links: Link[];
 }
-
-export interface LinkLibrary {
-  links: Link[];
-  categories: string[];
-  tags: string[];
-}
