@@ -26,10 +26,6 @@ export class LinkLibraryComponent implements OnInit {
 
   private linkTiles = viewChildren(LinkTileComponent);
 
-  constructor() {
-    effect(() => console.log(this.linkFilter()));
-  }
-
   ngOnInit() {
     this.linkLibraryService.loadLibraryLinks();
   }
