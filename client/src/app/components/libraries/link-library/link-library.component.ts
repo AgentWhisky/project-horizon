@@ -1,4 +1,4 @@
-import { Component, effect, inject, model, OnInit, viewChildren } from '@angular/core';
+import { Component, computed, effect, inject, model, OnInit, viewChildren } from '@angular/core';
 import { LinkLibraryService } from './link-library.service';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -18,9 +18,11 @@ import { FormsModule } from '@angular/forms';
 })
 export class LinkLibraryComponent implements OnInit {
   private linkLibraryService = inject(LinkLibraryService);
-  readonly linksByCategory = this.linkLibraryService.linksByCategory;
 
+  readonly links = this.linkLibraryService.links;
   readonly linkFilter = model<string>('');
+  readonly filteredLinks = computed(() => this.onFilterLinks());
+  readonly linksByCategory = computed(() => this.linkLibraryService.getLinksByCategory(this.filteredLinks()));
 
   private linkTiles = viewChildren(LinkTileComponent);
 
@@ -42,5 +44,19 @@ export class LinkLibraryComponent implements OnInit {
 
   onCollapseAll() {
     this.linkTiles().forEach((tile) => tile.onCloseView());
+  }
+
+  onFilterLinks() {
+    const filter = this.linkFilter()?.toLowerCase();
+    if (!filter) {
+      return this.links();
+    }
+
+    return this.links().filter(
+      (link) =>
+        link.name?.toLowerCase().includes(filter) ||
+        link.category.name?.toLowerCase().includes(filter) ||
+        link.tags.some((tag) => tag.name?.toLowerCase().includes(filter))
+    );
   }
 }
