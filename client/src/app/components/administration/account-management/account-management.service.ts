@@ -29,8 +29,6 @@ export class AccountManagementService {
   private _rights = signal<RightCode[]>([]);
   readonly rights = this._rights.asReadonly();
 
-  constructor() {}
-
   // *** USERS ***
   async loadUsers() {
     try {

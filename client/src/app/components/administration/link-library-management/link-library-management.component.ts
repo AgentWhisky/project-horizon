@@ -66,6 +66,8 @@ export class LinkLibraryManagementComponent implements OnInit {
     effect(() => {
       this.linkDataSource.sort = this.linkSort() ?? null;
       this.linkDataSource.paginator = this.linkPaginator() ?? null;
+      this.linkDataSource.sortingDataAccessor = (item, property) =>
+        property === 'category' ? item.category.name : (item as any)[property];
     });
 
     // Category Table

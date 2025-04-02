@@ -9,6 +9,7 @@ import { jwtDecode } from 'jwt-decode';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { TokenService } from './token.service';
 
 @Injectable({
   providedIn: 'root',
@@ -27,24 +28,6 @@ export class UserService {
   private _userRights = computed(() => new Set(this._userInfo()?.rights?.map((item) => item.internalName) || []));
 
   readonly isLoggedIn = computed(() => !!this._userInfo());
-
-  onInitUser() {
-    const accessToken = localStorage.getItem('accessToken');
-    const refreshToken = localStorage.getItem('refreshToken');
-
-    try {
-      if (accessToken && refreshToken) {
-        const decodedToken: AuthInfoPayload = jwtDecode(accessToken);
-        const isExpired = Date.now() >= decodedToken.exp * 1000;
-
-        if (decodedToken && !isExpired) {
-          this.updateUserInfo(accessToken);
-        } else {
-          this.clearUserInfo();
-        }
-      }
-    } catch {}
-  }
 
   loginDialog() {
     this.dialog.open(LoginDialogComponent, {

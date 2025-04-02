@@ -23,8 +23,6 @@ export class LinkLibraryManagementService {
   readonly linkTags = this._linkTags.asReadonly();
   readonly linkTagList = computed(() => this._linkTags().map((item) => item.name));
 
-  constructor() {}
-
   // *** LINK FUNCTIONS ***
   async loadLinks() {
     try {

@@ -80,11 +80,18 @@ export class AuthenticationController {
 
   @Post('refresh')
   @ApiOperation({ summary: 'Refresh access token', description: 'Exchanges a valid refresh token for a new access token.' })
-  @ApiBody({ type: RefreshTokenDto })
-  @ApiCreatedResponse({ description: 'New access token issued.', type: AuthResponseDto })
-  @ApiBadRequestResponse({ description: 'Invalid refresh token format.' })
   @ApiUnauthorizedResponse({ description: 'Expired or invalid refresh token.' })
-  async refresh(@Body() refreshTokenDto: RefreshTokenDto): Promise<AuthResponseDto> {
-    return this.authenticationService.refresh(refreshTokenDto.refreshToken);
+  async refresh(@Req() req): Promise<AuthResponseDto> {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('RefreshToken ')) {
+      throw new UnauthorizedException();
+    }
+
+    const refreshToken = authHeader.split(' ')[1];
+    if (!refreshToken) {
+      throw new UnauthorizedException();
+    }
+
+    return this.authenticationService.refresh(refreshToken);
   }
 }

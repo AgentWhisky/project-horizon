@@ -14,10 +14,6 @@ export class AdminDashboardService {
   private _dashboardInfo = signal<AdminDashboardInfo>({ creationCode: '' });
   readonly dashboardInfo = this._dashboardInfo.asReadonly();
 
-  constructor() {
-    effect(() => console.log('DASHBOARD INFO', this._dashboardInfo()));
-  }
-
   async loadDashboard() {
     try {
       const dashboard = await this.getDashboard();

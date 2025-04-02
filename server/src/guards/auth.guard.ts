@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -31,7 +31,7 @@ export class AuthGuard implements CanActivate {
 
       const payload: AuthPayload = this.jwtService.verify(token);
       if (!payload || !payload.sub) {
-        throw new ForbiddenException();
+        throw new UnauthorizedException();
       }
 
       // Check if the only right is DEFAULT (Require Auth Token Only)
@@ -59,7 +59,7 @@ export class AuthGuard implements CanActivate {
 
       return true;
     } catch {
-      throw new ForbiddenException();
+      throw new UnauthorizedException();
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -26,7 +26,7 @@ interface DialogResult {
   templateUrl: './base-convert-tile-dialog.component.html',
   styleUrl: './base-convert-tile-dialog.component.scss',
 })
-export class BaseConvertTileDialogComponent {
+export class BaseConvertTileDialogComponent implements OnInit {
   private fb = inject(FormBuilder);
 
   readonly dialogRef = inject(MatDialogRef<BaseConvertTileDialogComponent>);
@@ -40,7 +40,7 @@ export class BaseConvertTileDialogComponent {
   readonly primaryBases = signal<number[]>([...this.defaultPrimaryBases]);
   readonly conversionBases = signal<number[]>([...defaultNumericBases]);
 
-  constructor() {
+  ngOnInit() {
     // Filter Conversion Bases on Primary Base Selection
     this.baseForm
       .get('base')
