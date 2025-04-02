@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { AuthInfo, AuthInfoPayload } from '../types/auth';
-import { catchError, Observable, of, retry, tap, throwError } from 'rxjs';
+import { catchError, firstValueFrom, from, mergeMap, Observable, of, retry, tap, throwError } from 'rxjs';
 import { UserService } from './user.service';
 import { jwtDecode } from 'jwt-decode';
 
@@ -14,6 +14,7 @@ export class TokenService {
   private userService = inject(UserService);
 
   private apiUrl = environment.apiUrl;
+  private refreshInProgress: Promise<AuthInfo> | null = null;
 
   // General HTTP Actions
   getWithTokenRefresh<T>(url: string, options?: {}) {
@@ -22,9 +23,9 @@ export class TokenService {
         count: 1,
         delay: (error) => {
           if (error instanceof HttpErrorResponse && error.status === 401) {
-            return this.refresh();
+            return from(this.refresh()).pipe(mergeMap(() => of(null)));
           }
-          return of(error);
+          return throwError(() => error);
         },
       })
     );
@@ -36,9 +37,9 @@ export class TokenService {
         count: 1,
         delay: (error) => {
           if (error instanceof HttpErrorResponse && error.status === 401) {
-            return this.refresh();
+            return from(this.refresh()).pipe(mergeMap(() => of(null)));
           }
-          return of(error);
+          return throwError(() => error);
         },
       })
     );
@@ -50,9 +51,9 @@ export class TokenService {
         count: 1,
         delay: (error) => {
           if (error instanceof HttpErrorResponse && error.status === 401) {
-            return this.refresh();
+            return from(this.refresh()).pipe(mergeMap(() => of(null)));
           }
-          return of(error);
+          return throwError(() => error);
         },
       })
     );
@@ -64,59 +65,73 @@ export class TokenService {
         count: 1,
         delay: (error) => {
           if (error instanceof HttpErrorResponse && error.status === 401) {
-            return this.refresh();
+            return from(this.refresh()).pipe(mergeMap(() => of(null)));
           }
-          return of(error);
+          return throwError(() => error);
         },
       })
     );
   }
 
-  onInitUser() {
+  async onInitUser() {
     const accessToken = localStorage.getItem('accessToken');
     const refreshToken = localStorage.getItem('refreshToken');
 
-    try {
-      if (accessToken && refreshToken) {
-        const decodedToken: AuthInfoPayload = jwtDecode(accessToken);
-        const isExpired = Date.now() >= decodedToken.exp * 1000;
-
-        if (decodedToken && !isExpired) {
-          this.userService.updateUserInfo(accessToken); // Continue as logged in
-        } else if (decodedToken) {
-          this.refresh(); // Attempt to refresh token
-        } else {
-          this.userService.clearUserInfo(); // Clear login
-        }
-      }
-    } catch {}
-  }
-
-  refresh(): Observable<AuthInfo> {
-    console.log('REFRESH TOKEN');
-    const refreshToken = localStorage.getItem('refreshToken');
-    if (!refreshToken) {
+    if (!accessToken || !refreshToken) {
       this.userService.clearUserInfo();
-      return throwError(() => new Error('No refresh token'));
+      return;
     }
 
-    const headers = new HttpHeaders().set('Authorization', `RefreshToken ${refreshToken}`);
+    try {
+      const decodedToken: AuthInfoPayload = jwtDecode(accessToken);
+      const isExpired = Date.now() >= decodedToken.exp * 1000;
 
-    return this.http.post<AuthInfo>(`${this.apiUrl}/refresh`, {}, { headers }).pipe(
-      tap((authInfo) => {
+      if (decodedToken && !isExpired) {
+        this.userService.updateUserInfo(accessToken); // Continue as logged in
+      } else {
+        await this.refresh(); // Attempt to refresh token
+      }
+    } catch {
+      this.userService.clearUserInfo();
+    }
+  }
+
+  refresh(): Promise<AuthInfo> {
+    if (this.refreshInProgress) {
+      return this.refreshInProgress;
+    }
+
+    this.refreshInProgress = new Promise(async (resolve, reject) => {
+      try {
+        const refreshToken = localStorage.getItem('refreshToken');
+
+        if (!refreshToken) {
+          this.userService.clearUserInfo();
+          throw new Error('No refresh token');
+        }
+
+        const headers = new HttpHeaders().set('Authorization', `RefreshToken ${refreshToken}`);
+        const authInfo = await firstValueFrom(this.http.post<AuthInfo>(`${this.apiUrl}/refresh`, {}, { headers }));
+
         if (!authInfo || !authInfo.accessToken || !authInfo.refreshToken) {
           this.userService.clearUserInfo();
-          throw new Error('Invalid Auth Response');
+          throw new Error('Refresh failed');
         }
 
         localStorage.setItem('accessToken', authInfo.accessToken);
         localStorage.setItem('refreshToken', authInfo.refreshToken);
         this.userService.updateUserInfo(authInfo.accessToken);
-      }),
-      catchError((error) => {
+
+        resolve(authInfo);
+      } catch (error) {
+        console.log('ERROR');
         this.userService.clearUserInfo();
-        return throwError(() => error);
-      })
-    );
+        reject(error);
+      } finally {
+        this.refreshInProgress = null;
+      }
+    });
+
+    return this.refreshInProgress;
   }
 }

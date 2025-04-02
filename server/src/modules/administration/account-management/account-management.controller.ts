@@ -33,7 +33,6 @@ export class AccountManagementController {
   @ApiOperation({ summary: 'Retrieve all users' })
   @ApiOkResponse({ description: 'List of all users', type: [UserResponseDto] })
   async getUsers(): Promise<UserResponseDto[]> {
-    console.log('USERS');
     return this.accountManagementService.getUsers();
   }
 

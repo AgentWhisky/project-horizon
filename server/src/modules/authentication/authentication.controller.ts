@@ -16,7 +16,6 @@ import {
 } from '@nestjs/swagger';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { RegistrationDto } from './dto/registration.dto';
-import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RequireRight } from 'src/decorators/require-right.decorator';
 import { USER_RIGHTS } from 'src/common/constants/user-rights.constants';
 import { CacheUtils } from 'src/common/utils/cache.utils';
@@ -24,10 +23,7 @@ import { CacheUtils } from 'src/common/utils/cache.utils';
 @ApiTags('Authentication')
 @Controller()
 export class AuthenticationController {
-  constructor(
-    private readonly authenticationService: AuthenticationService,
-    private readonly cacheUtils: CacheUtils
-  ) {}
+  constructor(private readonly authenticationService: AuthenticationService) {}
 
   @Post('login')
   @HttpCode(200)

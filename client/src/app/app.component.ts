@@ -11,8 +11,8 @@ import { TokenService } from './services/token.service';
 export class AppComponent implements OnInit {
   private tokenService = inject(TokenService);
 
-  ngOnInit() {
-    this.tokenService.onInitUser();
+  async ngOnInit() {
+    await this.tokenService.onInitUser();
   }
 
   title = 'horizon';

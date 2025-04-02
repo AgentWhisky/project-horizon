@@ -206,8 +206,6 @@ export class AccountManagementService {
       order: { id: 'ASC' },
     });
 
-    console.log(dbRights);
-
     const rights: Right[] = dbRights.map((right) => ({
       id: right.id,
       name: right.name,
