@@ -4,12 +4,14 @@ import { Category, CategoryPayload, Link, LinkPayload, Tag, TagPayload } from '.
 import { firstValueFrom } from 'rxjs';
 import { DeleteResponse } from '../../../types/delete-response';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DownloadService } from '../../../services/download.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LinkLibraryManagementService {
   private tokenService = inject(TokenService);
+  private downloadService = inject(DownloadService);
   private snackbar = inject(MatSnackBar);
 
   private _links = signal<Link[]>([]);
@@ -179,6 +181,24 @@ export class LinkLibraryManagementService {
     }
   }
 
+  // *** Import/Export Functions
+  async importLinkLibrary() {
+    console.log('IMPORT NOT IMPLEMENTED');
+  }
+
+  async exportLinkLibrary() {
+    try {
+      const exportFile = await this.getLinkLibraryExport();
+
+      this.downloadService.downloadFile(exportFile, 'linkLibraryExport.json')
+
+      this.snackbar.open('Successfully exported Link Library', 'Close', { duration: 3000 });
+    } catch (error) {
+      this.snackbar.open('Failed to export Link Library', 'Close', { duration: 3000 });
+      console.error(`Failed to export Link Library: ${error}`);
+    }
+  }
+
   // *** PRIVATE FUNCTIONS ***
   // *** LINK ***
   private async getLinks() {
@@ -241,5 +261,12 @@ export class LinkLibraryManagementService {
   private async deleteTag(id: number) {
     const deleteResponse$ = this.tokenService.deleteWithTokenRefresh<DeleteResponse>(`/link-library-management/tags/${id}`);
     return firstValueFrom(deleteResponse$);
+  }
+
+  private async getLinkLibraryExport() {
+    const exportFile$ = this.tokenService.getWithTokenRefresh<Blob>(`/link-library-management/export`, {
+      responseType: 'blob' as 'json',
+    });
+    return firstValueFrom(exportFile$);
   }
 }

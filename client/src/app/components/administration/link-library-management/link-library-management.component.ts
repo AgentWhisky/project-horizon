@@ -231,4 +231,12 @@ export class LinkLibraryManagementComponent implements OnInit {
       )
       .subscribe();
   }
+
+  onImportLinkLibrary() {
+    this.linkLibraryManagementService.importLinkLibrary();
+  }
+
+  onExportLinkLibrary() {
+    this.linkLibraryManagementService.exportLinkLibrary();
+  }
 }

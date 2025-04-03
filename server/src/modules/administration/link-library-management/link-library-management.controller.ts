@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Res, UseInterceptors } from '@nestjs/common';
 import { LinkLibraryManagementService } from './link-library-management.service';
 import { RequireRight } from 'src/decorators/require-right.decorator';
 import { LinkDto } from './dto/link.dto';
@@ -14,6 +14,7 @@ import { DeleteResponseDto } from 'src/common/dto/delete-response.dto';
 import { CategoryResponseDto } from './dto/category-response.dto';
 import { TagResponseDto } from './dto/tag-response.dto';
 import { LinkResponseDto } from './dto/link-response.dto';
+import { Response } from 'express';
 
 @ApiTags('Link Library Management')
 @Controller('link-library-management')
@@ -166,5 +167,20 @@ export class LinkLibraryManagementController {
     const deleteResponse = await this.linkLibraryManagementService.deleteTag(id);
     await this.cacheUtils.clearLinkTagCache();
     return deleteResponse;
+  }
+
+  @Post('import')
+  @RequireRight(USER_RIGHTS.MANAGE_LINKS)
+  async importLinkLibrary() {}
+
+  @Get('export')
+  @RequireRight(USER_RIGHTS.MANAGE_LINKS)
+  async exportLinkLibrary(@Res() res: Response) {
+    const jsonString = await this.linkLibraryManagementService.exportLinkLibrary();
+
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Disposition', 'attachment; filename="data.json"');
+
+    res.send(jsonString);
   }
 }

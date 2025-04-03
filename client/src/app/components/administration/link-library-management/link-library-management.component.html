@@ -1,4 +1,14 @@
 <div class="flex flex-col">
+  <div class="flex flex-row justify-end gap-3 py-3">
+    <button mat-flat-button (click)="onExportLinkLibrary()">
+      <mat-icon>download</mat-icon>
+      Export Library
+    </button>
+    <button mat-flat-button (click)="onImportLinkLibrary()">
+      <mat-icon>upload</mat-icon>
+      Import Library
+    </button>
+  </div>
   <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
     <mat-tab label="Links" class="flex flex-col">
       <div class="flex justify-end mt-3">

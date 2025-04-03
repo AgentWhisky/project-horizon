@@ -4,7 +4,7 @@ import { LinkCategoryEntity } from 'src/entities/link-categories.entity';
 import { LinkTagEntity } from 'src/entities/link-tags.entity';
 import { LinkEntity } from 'src/entities/link.entity';
 import { Repository } from 'typeorm';
-import { Category, CategoryPayload, Link, LinkPayload, Tag, TagPayload } from './link-library-management.model';
+import { Category, CategoryPayload, Link, LinkCategory, LinkPayload, LinkTag, Tag, TagPayload } from './link-library-management.model';
 import { DeleteResponse } from 'src/common/model/delete-response.model';
 
 @Injectable()
@@ -227,5 +227,51 @@ export class LinkLibraryManagementService {
       success: deleteResult.affected === 1,
       id,
     };
+  }
+
+  // *** Import/Export Library ***
+  async exportLinkLibrary(): Promise<string> {
+    // Get Links to export
+    const links: Link[] = await this.libraryLinkRepository.find({
+      select: {
+        id: true,
+        url: true,
+        name: true,
+        description: true,
+        category: { id: true, name: true },
+        tags: { id: true, name: true },
+        sortKey: true,
+      },
+      relations: { category: true, tags: true },
+      order: { id: 'ASC' },
+    });
+
+    // Get Categories to export
+    const categories: LinkCategory[] = await this.linkCategoryRepository.find({
+      select: {
+        id: true,
+        name: true,
+        description: true,
+      },
+      order: { id: 'ASC' },
+    });
+
+    // Get Tags to export
+    const tags: LinkTag[] = await this.linkTagRepository.find({
+      select: { id: true, name: true },
+      order: { id: 'ASC' },
+    });
+
+    const exportLibrary = {
+      links: links.map((item) => ({
+        ...item,
+        category: item.category.id,
+        tags: item.tags.map((tag) => tag.id),
+      })),
+      categories,
+      tags,
+    };
+
+    return JSON.stringify(exportLibrary, null, 2);
   }
 }
