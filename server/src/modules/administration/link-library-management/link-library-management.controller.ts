@@ -246,7 +246,7 @@ export class LinkLibraryManagementController {
     const jsonString = await this.linkLibraryManagementService.exportLinkLibrary();
 
     res.setHeader('Content-Type', 'application/json');
-    res.setHeader('Content-Disposition', 'attachment; filename="data.json"');
+    res.setHeader('Content-Disposition', 'attachment; filename="linkLibraryExport.json"');
 
     res.send(jsonString);
   }
