@@ -1,4 +1,17 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Res, UseInterceptors } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  Res,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { LinkLibraryManagementService } from './link-library-management.service';
 import { RequireRight } from 'src/decorators/require-right.decorator';
 import { LinkDto } from './dto/link.dto';
@@ -8,13 +21,25 @@ import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
 import { CacheUtils } from 'src/common/utils/cache.utils';
 import { CACHE_KEY } from 'src/common/constants/cache-keys.constants';
 import { USER_RIGHTS } from 'src/common/constants/user-rights.constants';
-import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { DeleteResponse } from 'src/common/model/delete-response.model';
 import { DeleteResponseDto } from 'src/common/dto/delete-response.dto';
 import { CategoryResponseDto } from './dto/category-response.dto';
 import { TagResponseDto } from './dto/tag-response.dto';
 import { LinkResponseDto } from './dto/link-response.dto';
 import { Response } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { LinkLibrary } from './link-library-management.model';
 
 @ApiTags('Link Library Management')
 @Controller('link-library-management')
@@ -171,10 +196,52 @@ export class LinkLibraryManagementController {
 
   @Post('import')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
-  async importLinkLibrary() {}
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Import link library from JSON file' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'JSON file containing the link library data',
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiCreatedResponse({ description: 'Link library imported successfully' })
+  @ApiBadRequestResponse({ description: 'Invalid file or data format' })
+  async importLinkLibrary(@UploadedFile() file: Express.Multer.File) {
+    if (!file || file.mimetype !== 'application/json') {
+      throw new BadRequestException('Invalid file type. Please upload a JSON file.');
+    }
+
+    try {
+      const jsonString = file.buffer.toString('utf-8');
+      const jsonObject: LinkLibrary = JSON.parse(jsonString); // Now you have your JSON object
+
+      this.linkLibraryManagementService.importLinkLibrary(jsonObject);
+
+      return { message: 'File imported successfully' };
+    } catch (error) {
+      throw new BadRequestException('Failed to parse JSON file. Please ensure it is valid JSON.');
+    }
+  }
 
   @Get('export')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Export link library as JSON file' })
+  @ApiOkResponse({
+    description: 'Returns a downloadable JSON file',
+    schema: {
+      type: 'string',
+      format: 'binary',
+    },
+  })
   async exportLinkLibrary(@Res() res: Response) {
     const jsonString = await this.linkLibraryManagementService.exportLinkLibrary();
 

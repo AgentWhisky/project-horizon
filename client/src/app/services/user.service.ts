@@ -9,7 +9,6 @@ import { jwtDecode } from 'jwt-decode';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { TokenService } from './token.service';
 
 @Injectable({
   providedIn: 'root',

@@ -52,3 +52,30 @@ export interface Tag {
   name: string;
   inUse: boolean;
 }
+
+// *** Link Library ***
+export interface LibraryLink {
+  url: string;
+  name: string;
+  description: string;
+  category: number;
+  tags: number[];
+  sortKey?: string;
+}
+
+export interface LibraryCategory {
+  id: number;
+  name: string;
+  description: string;
+}
+
+export interface LibraryTag {
+  id: number;
+  name: string;
+}
+
+export interface LinkLibrary {
+  links: LibraryLink[];
+  categories: LibraryCategory[];
+  tags: LibraryTag[];
+}

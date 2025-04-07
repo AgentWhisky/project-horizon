@@ -1,0 +1,23 @@
+@if(!isFileLimitReached()) {
+<div
+  class="file-dropzone"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave($event)"
+  (drop)="onFileDrop($event)"
+  [class.file-drag-hover]="isDragOver()">
+  <span>Drag & Drop to Upload File</span>
+  <span>OR</span>
+  <button mat-flat-button (click)="fileInput.click()">Browse</button>
+  <input
+    #fileInput
+    type="file"
+    hidden
+    [accept]="allowedExtensions().join(',')"
+    [multiple]="maxAllowedFiles() > 1"
+    (change)="onFileSelected($event)" />
+</div>
+} @else {
+<div class="file-display">
+  <span>File limit reached</span>
+</div>
+}

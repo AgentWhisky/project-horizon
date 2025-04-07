@@ -4,7 +4,17 @@ import { LinkCategoryEntity } from 'src/entities/link-categories.entity';
 import { LinkTagEntity } from 'src/entities/link-tags.entity';
 import { LinkEntity } from 'src/entities/link.entity';
 import { Repository } from 'typeorm';
-import { Category, CategoryPayload, Link, LinkCategory, LinkPayload, LinkTag, Tag, TagPayload } from './link-library-management.model';
+import {
+  Category,
+  CategoryPayload,
+  Link,
+  LinkCategory,
+  LinkLibrary,
+  LinkPayload,
+  LinkTag,
+  Tag,
+  TagPayload,
+} from './link-library-management.model';
 import { DeleteResponse } from 'src/common/model/delete-response.model';
 
 @Injectable()
@@ -230,6 +240,10 @@ export class LinkLibraryManagementService {
   }
 
   // *** Import/Export Library ***
+  async importLinkLibrary(linkLibrary: LinkLibrary) {
+    console.log(linkLibrary);
+  }
+
   async exportLinkLibrary(): Promise<string> {
     // Get Links to export
     const links: Link[] = await this.libraryLinkRepository.find({
@@ -262,7 +276,7 @@ export class LinkLibraryManagementService {
       order: { id: 'ASC' },
     });
 
-    const exportLibrary = {
+    const exportLibrary: LinkLibrary = {
       links: links.map((item) => ({
         ...item,
         category: item.category.id,

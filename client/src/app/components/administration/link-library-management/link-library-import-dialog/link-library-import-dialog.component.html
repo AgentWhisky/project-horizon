@@ -1,0 +1,10 @@
+<mat-dialog-content>
+  <app-file-input class="w-full" (outputSelectedFiles)="onUpdateFiles($event)" [allowedExtensions]="['.json']"></app-file-input>
+  @for(file of selectedFiles(); track file.name) {
+  <span>{{ file.name }}</span>
+  }
+</mat-dialog-content>
+<mat-dialog-actions class="flex gap-3">
+  <button mat-button (click)="onClose()">Cancel</button>
+  <button mat-flat-button (click)="onSubmit()" [disabled]="true">Import</button>
+</mat-dialog-actions>

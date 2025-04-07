@@ -18,6 +18,7 @@ import { LinkTagDialogComponent } from './link-tag-dialog/link-tag-dialog.compon
 import { LinkLibraryManagementService } from './link-library-management.service';
 import { Category, Link, Tag } from './link-library-management';
 import { MessageCardComponent } from '../../../core/message-card/message-card.component';
+import { LinkLibraryImportDialogComponent } from './link-library-import-dialog/link-library-import-dialog.component';
 
 @Component({
   selector: 'app-link-library-management',
@@ -233,7 +234,18 @@ export class LinkLibraryManagementComponent implements OnInit {
   }
 
   onImportLinkLibrary() {
-    this.linkLibraryManagementService.importLinkLibrary();
+    this.dialog
+      .open(LinkLibraryImportDialogComponent, {
+        width: '560px',
+      })
+      .afterClosed()
+      .pipe(
+        filter((result) => result && result.status === true),
+        tap((result) => console.log(result))
+      )
+      .subscribe();
+
+    //this.linkLibraryManagementService.importLinkLibrary();
   }
 
   onExportLinkLibrary() {
