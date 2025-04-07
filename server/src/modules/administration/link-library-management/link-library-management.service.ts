@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { LinkCategoryEntity } from 'src/entities/link-categories.entity';
 import { LinkTagEntity } from 'src/entities/link-tags.entity';
 import { LinkEntity } from 'src/entities/link.entity';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import {
   Category,
   CategoryPayload,
@@ -27,7 +27,10 @@ export class LinkLibraryManagementService {
     private readonly linkCategoryRepository: Repository<LinkCategoryEntity>,
 
     @InjectRepository(LinkTagEntity)
-    private readonly linkTagRepository: Repository<LinkTagEntity>
+    private readonly linkTagRepository: Repository<LinkTagEntity>,
+
+    @InjectEntityManager()
+    private readonly entityManager: EntityManager
   ) {}
 
   // *** LINK FUNCTIONS ***
@@ -241,15 +244,47 @@ export class LinkLibraryManagementService {
 
   // *** Import/Export Library ***
   async importLinkLibrary(linkLibrary: LinkLibrary) {
-    await this.linkTagRepository.save(linkLibrary.tags);
-    await this.linkCategoryRepository.save(linkLibrary.categories);
-    await this.libraryLinkRepository.save(
-      linkLibrary.links.map((link) => ({
-        ...link,
-        category: { id: link.category },
-        tags: link.tags.map((tagId) => ({ id: tagId })),
-      }))
-    );
+    const tags = linkLibrary.tags.map((tag) => ({ ...tag }));
+    const categories = linkLibrary.categories.map((category) => ({ ...category }));
+
+    const queryRunner = this.entityManager.connection.createQueryRunner();
+    await queryRunner.startTransaction();
+
+    try {
+      // Clear Link Library Lists
+      await queryRunner.manager.delete(LinkEntity, {});
+      await queryRunner.manager.delete(LinkCategoryEntity, {});
+      await queryRunner.manager.delete(LinkTagEntity, {});
+
+      // Import Tags
+      const dbTags = await queryRunner.manager.save(LinkTagEntity, tags);
+      const tagMap = new Map<number, number>();
+      linkLibrary.tags.forEach((oldTag) => tagMap.set(oldTag.id, dbTags.find((newTag) => newTag.name === oldTag.name).id));
+
+      // Import Categories
+      const dbCategories = await queryRunner.manager.save(LinkCategoryEntity, categories);
+      const categoryMap = new Map<number, number>();
+      linkLibrary.categories.forEach((oldCategory) =>
+        categoryMap.set(oldCategory.id, dbCategories.find((newCategory) => newCategory.name === oldCategory.name).id)
+      );
+
+      // Import Links
+      await queryRunner.manager.save(
+        LinkEntity,
+        linkLibrary.links.map((link) => ({
+          ...link,
+          category: { id: categoryMap.get(link.category) },
+          tags: link.tags.map((tagId) => ({ id: tagMap.get(tagId) })),
+        }))
+      );
+
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async exportLinkLibrary(): Promise<string> {

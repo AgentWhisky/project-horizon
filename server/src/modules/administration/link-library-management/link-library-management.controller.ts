@@ -224,6 +224,7 @@ export class LinkLibraryManagementController {
       const jsonObject: LinkLibrary = JSON.parse(jsonString); // Now you have your JSON object
 
       this.linkLibraryManagementService.importLinkLibrary(jsonObject);
+      await this.cacheUtils.clearLinkLibraryCache();
 
       return { message: 'File imported successfully' };
     } catch (error) {
@@ -233,6 +234,7 @@ export class LinkLibraryManagementController {
 
   @Get('export')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
+  @CacheKey(CACHE_KEY.LINK_LIBRARY_EXPORT)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Export link library as JSON file' })
   @ApiOkResponse({
