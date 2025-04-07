@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -8,6 +8,7 @@ import { FileInputComponent } from '../../../../core/file-input/file-input.compo
 
 interface DialogResult {
   status: boolean;
+  file: File;
 }
 
 @Component({
@@ -17,13 +18,13 @@ interface DialogResult {
   styleUrl: './link-library-import-dialog.component.scss',
 })
 export class LinkLibraryImportDialogComponent {
-  private linkLibraryManagementService = inject(LinkLibraryManagementService);
   private dialogRef = inject(MatDialogRef<LinkLibraryImportDialogComponent>);
 
-  readonly selectedFiles = signal<File[]>([]);
+  readonly selectedFile = signal<File | null>(null);
+  readonly isFileSelected = computed(() => !!this.selectedFile());
 
   onUpdateFiles(files: File[]) {
-    this.selectedFiles.set([...files]);
+    this.selectedFile.set(files[0]);
   }
 
   onClose() {
@@ -33,10 +34,15 @@ export class LinkLibraryImportDialogComponent {
   }
 
   onSubmit() {
-    const dialogResult: DialogResult = {
-      status: true,
-    };
+    const file = this.selectedFile();
 
-    this.dialogRef.close(dialogResult);
+    if (file) {
+      const dialogResult: DialogResult = {
+        status: true,
+        file,
+      };
+
+      this.dialogRef.close(dialogResult);
+    }
   }
 }

@@ -241,7 +241,15 @@ export class LinkLibraryManagementService {
 
   // *** Import/Export Library ***
   async importLinkLibrary(linkLibrary: LinkLibrary) {
-    console.log(linkLibrary);
+    await this.linkTagRepository.save(linkLibrary.tags);
+    await this.linkCategoryRepository.save(linkLibrary.categories);
+    await this.libraryLinkRepository.save(
+      linkLibrary.links.map((link) => ({
+        ...link,
+        category: { id: link.category },
+        tags: link.tags.map((tagId) => ({ id: tagId })),
+      }))
+    );
   }
 
   async exportLinkLibrary(): Promise<string> {

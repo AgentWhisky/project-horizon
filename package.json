@@ -10,8 +10,7 @@
   },
   "dependencies": {
     "@angular/cli": "^19.0.2",
-    "@nestjs/cli": "^10.0.0",
-    "@types/multer": "^1.4.12"
+    "@nestjs/cli": "^10.0.0"
   },
   "author": "",
   "license": "ISC",

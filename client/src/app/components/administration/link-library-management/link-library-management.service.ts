@@ -182,15 +182,21 @@ export class LinkLibraryManagementService {
   }
 
   // *** Import/Export Functions
-  async importLinkLibrary() {
-    console.log('IMPORT NOT IMPLEMENTED');
+  async importLinkLibrary(file: File) {
+    try {
+      await this.postLinkLibraryImport(file);
+      this.snackbar.open('Successfully imported Link Library', 'Close', { duration: 3000 });
+    } catch (error) {
+      this.snackbar.open('Failed to import Link Library', 'Close', { duration: 3000 });
+      console.error(`Failed to import Link Library: ${error}`);
+    }
   }
 
   async exportLinkLibrary() {
     try {
       const exportFile = await this.getLinkLibraryExport();
 
-      this.downloadService.downloadFile(exportFile, 'linkLibraryExport.json')
+      this.downloadService.downloadFile(exportFile, 'linkLibraryExport.json');
 
       this.snackbar.open('Successfully exported Link Library', 'Close', { duration: 3000 });
     } catch (error) {
@@ -261,6 +267,14 @@ export class LinkLibraryManagementService {
   private async deleteTag(id: number) {
     const deleteResponse$ = this.tokenService.deleteWithTokenRefresh<DeleteResponse>(`/link-library-management/tags/${id}`);
     return firstValueFrom(deleteResponse$);
+  }
+
+  private async postLinkLibraryImport(file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const result$ = this.tokenService.postWithTokenRefresh('/link-library-management/import', formData);
+    return firstValueFrom(result$);
   }
 
   private async getLinkLibraryExport() {

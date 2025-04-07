@@ -1,11 +1,12 @@
 import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-file-input',
-  imports: [MatButtonModule],
+  imports: [MatButtonModule, MatIconModule],
   templateUrl: './file-input.component.html',
   styleUrl: './file-input.component.scss',
 })

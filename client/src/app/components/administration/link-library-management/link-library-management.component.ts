@@ -241,11 +241,9 @@ export class LinkLibraryManagementComponent implements OnInit {
       .afterClosed()
       .pipe(
         filter((result) => result && result.status === true),
-        tap((result) => console.log(result))
+        tap((result) => this.linkLibraryManagementService.importLinkLibrary(result.file))
       )
       .subscribe();
-
-    //this.linkLibraryManagementService.importLinkLibrary();
   }
 
   onExportLinkLibrary() {
