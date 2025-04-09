@@ -29,6 +29,10 @@ export const routes: Routes = [
         path: 'base-converter',
         loadComponent: () => import('./components/tools/base-converter/base-converter.component').then((c) => c.BaseConverterComponent),
       },
+      {
+        path: 'pathfinder',
+        loadComponent: () => import('./components/tools/pathfinder/pathfinder.component').then((c) => c.PathfinderComponent),
+      },
       // *** ADMINISTRATION ***
       {
         path: 'administration',

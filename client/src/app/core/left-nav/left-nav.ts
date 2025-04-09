@@ -19,14 +19,14 @@ export const navSections: NavSection[] = [
   },
   {
     title: 'Libraries',
-    navItems: [
-      { routerLink: '/link-library', name: 'Link Library', icon: 'link' },
-      { routerLink: '/book-library', name: 'Book Library', icon: 'local_library' },
-    ],
+    navItems: [{ routerLink: '/link-library', name: 'Link Library', icon: 'link' }],
   },
   {
     title: 'Tools',
-    navItems: [{ routerLink: '/base-converter', name: 'Base Converter', icon: 'calculate' }],
+    navItems: [
+      { routerLink: '/base-converter', name: 'Base Converter', icon: 'calculate' },
+      { routerLink: '/pathfinder', name: 'Pathfinder', icon: 'route' },
+    ],
   },
   {
     title: 'Administration',
