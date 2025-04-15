@@ -1,0 +1,12 @@
+<div class="tile" [matMenuTriggerFor]="tileMenu" (click)="onClick($event)" (contextmenu)="onRightClick($event)"></div>
+
+<mat-menu #tileMenu="matMenu">
+  <button mat-menu-item>
+    <mat-icon>line_start_circle</mat-icon>
+    Set Start
+  </button>
+  <button mat-menu-item>
+    <mat-icon>line_start_end</mat-icon>
+    Set End
+  </button>
+</mat-menu>

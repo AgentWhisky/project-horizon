@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { BaseConvertTileComponent } from './base-convert-tile/base-convert-tile.component';
-import { MatDialog } from '@angular/material/dialog';
 
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 
 import { RemoveConfirmComponent } from '../../../dialogs/remove-confirm/remove-confirm.component';
 import { BaseConverterService } from './base-converter.service';

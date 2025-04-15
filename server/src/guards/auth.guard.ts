@@ -30,8 +30,12 @@ export class AuthGuard implements CanActivate {
       const token = request.headers.authorization?.split(' ')[1];
 
       const payload: AuthPayload = this.jwtService.verify(token);
-      if (!payload || !payload.sub) {
-        throw new UnauthorizedException();
+      if (!payload) {
+        throw new UnauthorizedException('Missing or invalid authorization token');
+      }
+
+      if (!payload.sub) {
+        throw new UnauthorizedException('Token payload is malformed or missing subject');
       }
 
       // Check if the only right is DEFAULT (Require Auth Token Only)
@@ -46,7 +50,7 @@ export class AuthGuard implements CanActivate {
       });
 
       if (!user || !user.active || !user.roles) {
-        throw new ForbiddenException();
+        throw new ForbiddenException('Access denied: user not found, inactive, or improperly configured');
       }
 
       const userRights = user.roles.flatMap((role) => role.rights.map((right) => right.internalName));
@@ -54,12 +58,16 @@ export class AuthGuard implements CanActivate {
       const hasRequiredRight = requiredRights.some((right) => userRights.includes(right));
 
       if (!hasRequiredRight) {
-        throw new ForbiddenException();
+        throw new ForbiddenException('Insufficient permissions for this action');
       }
 
       return true;
-    } catch {
-      throw new UnauthorizedException();
+    } catch (error) {
+      if (error instanceof UnauthorizedException || error instanceof ForbiddenException) {
+        throw error;
+      }
+
+      throw new UnauthorizedException('Authentication failed due to an unexpected error');
     }
   }
 }

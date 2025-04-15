@@ -1,0 +1,23 @@
+.grid-container {
+  @apply relative overflow-hidden flex-1 justify-items-center p-3;
+
+  background-color: var(--mat-sys-surface-container-low) !important;
+  border: 1px solid var(--mat-sys-outline-variant) !important;
+  border-radius: var(--mat-sys-corner-extra-small) !important;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--pathfinder-columns), var(--pathfinder-tile-size));
+  grid-template-rows: repeat(var(--pathfinder-rows), var(--pathfinder-tile-size));
+  gap: 2px;
+  transition: transform 0.3s ease;
+  transform: translateZ(0);
+  will-change: transform;
+  //border: 2px dashed red;
+  cursor: grab;
+}
+
+.grid:active {
+  cursor: grabbing;
+}

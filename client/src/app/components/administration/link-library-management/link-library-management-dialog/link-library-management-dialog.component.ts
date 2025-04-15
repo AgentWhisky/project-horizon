@@ -65,7 +65,7 @@ export class LinkLibraryManagementDialogComponent implements OnInit {
       name: ['', [Validators.required, Validators.maxLength(30)]],
       description: ['', [Validators.required, Validators.maxLength(250)]],
       url: ['', [Validators.required, Validators.maxLength(2048), Validators.pattern(URL_REGEX)]],
-      category: [null as unknown as number, [Validators.required]],
+      category: this.fb.control<number | null>(null, [Validators.required]),
       tags: [[] as number[]],
       sortKey: ['', [Validators.maxLength(12)]],
     });

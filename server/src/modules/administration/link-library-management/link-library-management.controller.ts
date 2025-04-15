@@ -195,7 +195,7 @@ export class LinkLibraryManagementController {
   }
 
   @Post('import')
-  @RequireRight(USER_RIGHTS.MANAGE_LINKS)
+  @RequireRight(USER_RIGHTS.IMPORT_LINK_LIBRARY)
   @UseInterceptors(FileInterceptor('file'))
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Import link library from JSON file' })
@@ -216,24 +216,24 @@ export class LinkLibraryManagementController {
   @ApiBadRequestResponse({ description: 'Invalid file or data format' })
   async importLinkLibrary(@UploadedFile() file: Express.Multer.File) {
     if (!file || file.mimetype !== 'application/json') {
-      throw new BadRequestException('Invalid file type. Please upload a JSON file.');
+      throw new BadRequestException();
     }
 
     try {
       const jsonString = file.buffer.toString('utf-8');
-      const jsonObject: LinkLibrary = JSON.parse(jsonString); // Now you have your JSON object
+      const jsonObject: LinkLibrary = JSON.parse(jsonString);
 
       this.linkLibraryManagementService.importLinkLibrary(jsonObject);
       await this.cacheUtils.clearLinkLibraryCache();
 
       return { message: 'File imported successfully' };
     } catch (error) {
-      throw new BadRequestException('Failed to parse JSON file. Please ensure it is valid JSON.');
+      throw new BadRequestException();
     }
   }
 
   @Get('export')
-  @RequireRight(USER_RIGHTS.MANAGE_LINKS)
+  @RequireRight(USER_RIGHTS.MANAGE_LINKS, USER_RIGHTS.IMPORT_LINK_LIBRARY)
   @CacheKey(CACHE_KEY.LINK_LIBRARY_EXPORT)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Export link library as JSON file' })

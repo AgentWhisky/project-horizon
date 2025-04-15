@@ -36,12 +36,20 @@ export class ValidatorMessagePipe implements PipeTransform {
 
       // Check In Length
       if (key === 'minlength') {
-        return `Min length required [${value.actualLength}/${value.requiredLength}]`;
+        return `Minimum length required [${value.actualLength}/${value.requiredLength}]`;
       }
 
       // Check Max Length
       if (key === 'maxlength') {
-        return `Max length exceeded [${value.actualLength}/${value.requiredLength}]`;
+        return `Maximum length exceeded [${value.actualLength}/${value.requiredLength}]`;
+      }
+
+      if (key === 'min') {
+        return `Minimum value required: ${value.min}`;
+      }
+
+      if (key === 'max') {
+        return `Maximum value exceeded: ${value.max}`;
       }
 
       console.log('Unhandeld Error Message', `${key}:${value}`);
