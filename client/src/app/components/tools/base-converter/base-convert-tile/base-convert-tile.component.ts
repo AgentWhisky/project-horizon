@@ -10,7 +10,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
 import { ConvertBase, ReorderConversion } from '../base-converter';
 import { baseNames, convertToBase } from '../../../../utilities/base-conversion.util';
-import { BaseInputRestrictDirective } from '../../../../directives/base-input-restrict.directive';
+import { UppercaseDirective } from '../../../../directives/uppercase.directive';
 
 @Component({
   selector: 'app-base-convert-tile',
@@ -24,7 +24,7 @@ import { BaseInputRestrictDirective } from '../../../../directives/base-input-re
     FormsModule,
     CdkDropList,
     CdkDrag,
-    BaseInputRestrictDirective,
+    UppercaseDirective,
   ],
   templateUrl: './base-convert-tile.component.html',
   styleUrl: './base-convert-tile.component.scss',
@@ -53,13 +53,37 @@ export class BaseConvertTileComponent {
   }
 
   convert() {
+    const value = this.convertInput();
+
     const conversionMap = new Map<number, string>();
     const fromBase = this.convertBase().base;
     const toBases = this.convertBase().conversions;
-    const value = this.convertInput();
 
     toBases.forEach((toBase) => conversionMap.set(toBase, convertToBase(fromBase, toBase, value)));
 
     return conversionMap;
   }
+
+  getPattern() {
+    return baseCharMap[this.convertBase().base];
+  }
 }
+
+const baseCharMap: Record<number, RegExp> = {
+  2: /^[01]$/,
+  3: /^[0-2]$/,
+  4: /^[0-3]$/,
+  5: /^[0-4]$/,
+  6: /^[0-5]$/,
+  7: /^[0-6]$/,
+  8: /^[0-7]$/,
+  9: /^[0-8]$/,
+  10: /^[0-9]$/,
+  11: /^[0-9A]$/,
+  12: /^[0-9A-B]$/,
+  16: /^[0-9A-F]$/,
+  20: /^[0-9A-J]$/,
+  26: /^[A-Z]$/,
+  32: /^[0-9A-V]$/,
+  36: /^[0-9A-Z]$/,
+};
