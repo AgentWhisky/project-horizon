@@ -1,3 +1,5 @@
+export const SMALL_SCREEN_SIZE = 1100;
+
 export const ACCESS_TOKEN = 'accessToken';
 export const REFRESH_TOKEN = 'refreshToken';
 
@@ -6,6 +8,7 @@ export const USER_RIGHTS = {
   MANAGE_USERS: 'MANAGE_USERS',
   MANAGE_ROLES: 'MANAGE_ROLES',
   MANAGE_LINKS: 'MANAGE_LINKS',
+  IMPORT_LINK_LIBRARY: 'IMPORT_LINK_LIBRARY',
 };
 
 // Regular Expressions

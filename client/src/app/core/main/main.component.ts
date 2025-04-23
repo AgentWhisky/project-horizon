@@ -13,6 +13,7 @@ import { LeftNavComponent } from '../left-nav/left-nav.component';
 import { NavigationService } from '../../services/navigation.service';
 import { ThemeService } from '../../services/theme.service';
 import { UserService } from '../../services/user.service';
+import { ScreenService } from '../../services/screen.service';
 
 @Component({
   selector: 'app-main',
@@ -30,12 +31,13 @@ import { UserService } from '../../services/user.service';
   ],
 })
 export class MainComponent {
+  private screenService = inject(ScreenService);
   private navigationService = inject(NavigationService);
   private userService = inject(UserService);
   private themeService = inject(ThemeService);
 
+  readonly isSmallScreen = this.screenService.isSmallScreen;
   readonly isLeftNavOpen = this.navigationService.isLeftNavOpen;
-  readonly isSmallScreen = this.navigationService.isSmallScreen;
   readonly isLoggedIn = this.userService.isLoggedIn;
   readonly isDarkmode = this.themeService.isDarkTheme;
 

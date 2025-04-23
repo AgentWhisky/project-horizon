@@ -1,37 +1,30 @@
-<div class="flex flex-col h-full">
+<div class="flex flex-col">
   <div class="flex flex-row justify-end gap-3 py-3">
-    <button mat-flat-button (click)="onCreateBoard()">
+    <button mat-mini-fab (click)="onCreateBoard()" matTooltip="Create New Board" aria-label="Create new pathfinder board">
       <mat-icon>add</mat-icon>
-      Create New Board
     </button>
-    <button mat-flat-button (click)="onSave()">
+    <button mat-mini-fab (click)="onSave()" matTooltip="Save Pathfinder Board" aria-label="Save pathfinder board">
       <mat-icon>save</mat-icon>
-      Save
     </button>
-    <button mat-flat-button (click)="onLoad()">
+    <button mat-mini-fab (click)="onLoad()" matTooltip="Load Pathfinder Board" aria-label="Load pathfinder board">
       <mat-icon>upload_file</mat-icon>
-      Load
     </button>
   </div>
 
   @if(hasBoard()) {
-  <div
-    class="grid-container"
-    (touchstart)="onTouchStart($event)"
-    (touchmove)="onTouchMove($event)"
-    (touchend)="onTouchEnd($event)">
+  <div class="grid-container" (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)" (touchend)="onTouchEnd($event)">
     <div
       class="grid"
       (wheel)="onScroll($event)"
       [style.--pathfinder-tile-size]="tileSize() + 'px'"
       [style.--pathfinder-columns]="boardSize().columns"
       [style.--pathfinder-rows]="boardSize().rows">
-      @for(row of board(); track $index) { 
-        @for(tile of row; track columnTrack(tile)) {
-        <app-pathfinder-tile [tile]="tile"></app-pathfinder-tile>
-        } 
-      }
+      @for(row of board(); track $index) { @for(tile of row; track columnTrack(tile)) {
+      <app-pathfinder-tile [tile]="tile"></app-pathfinder-tile>
+      } }
     </div>
   </div>
+  } @else {
+  <app-message-card message="No board found. Please create a board."></app-message-card>
   }
 </div>

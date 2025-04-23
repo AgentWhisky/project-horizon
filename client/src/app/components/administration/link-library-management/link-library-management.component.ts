@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit, viewChild } from '@angular/core';
+import { Component, effect, inject, OnInit, signal, viewChild } from '@angular/core';
 
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -19,6 +19,8 @@ import { LinkLibraryManagementService } from './link-library-management.service'
 import { Category, Link, Tag } from './link-library-management';
 import { MessageCardComponent } from '../../../core/message-card/message-card.component';
 import { LinkLibraryImportDialogComponent } from './link-library-import-dialog/link-library-import-dialog.component';
+import { UserService } from '../../../services/user.service';
+import { USER_RIGHTS } from '../../../constants';
 
 @Component({
   selector: 'app-link-library-management',
@@ -37,8 +39,11 @@ import { LinkLibraryImportDialogComponent } from './link-library-import-dialog/l
   styleUrl: './link-library-management.component.scss',
 })
 export class LinkLibraryManagementComponent implements OnInit {
+  private userService = inject(UserService);
   private linkLibraryManagementService = inject(LinkLibraryManagementService);
   private dialog = inject(MatDialog);
+
+  readonly hasImportLibraryRight = signal<boolean>(this.userService.hasRights([USER_RIGHTS.IMPORT_LINK_LIBRARY]));
 
   // Link Table
   readonly linkSort = viewChild<MatSort>('linkSort');

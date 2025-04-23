@@ -4,10 +4,12 @@
       <mat-icon>download</mat-icon>
       Export Library
     </button>
+    @if(hasImportLibraryRight()) {
     <button mat-flat-button (click)="onImportLinkLibrary()">
       <mat-icon>upload</mat-icon>
       Import Library
     </button>
+    }
   </div>
   <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
     <mat-tab label="Links" class="flex flex-col">

@@ -1,5 +1,5 @@
-import { Component, computed, input, model, output } from '@angular/core';
-import { CdkDragDrop, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
+import { Component, computed, inject, input, model, output } from '@angular/core';
+import { CdkDragDrop, CdkDropList, CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -12,6 +12,7 @@ import { BASE_CHAR_PATTERNS, ConvertBase, ReorderConversion } from '../base-conv
 import { baseNames, convertToBase } from '../../../../utilities/base-conversion.util';
 import { UppercaseDirective } from '../../../../directives/uppercase.directive';
 import { CharacterRestrictDirective } from '../../../../directives/character-restrict.directive';
+import { ScreenService } from '../../../../services/screen.service';
 
 @Component({
   selector: 'app-base-convert-tile',
@@ -25,6 +26,7 @@ import { CharacterRestrictDirective } from '../../../../directives/character-res
     FormsModule,
     CdkDropList,
     CdkDrag,
+    CdkDragHandle,
     UppercaseDirective,
     CharacterRestrictDirective,
   ],
@@ -32,8 +34,10 @@ import { CharacterRestrictDirective } from '../../../../directives/character-res
   styleUrl: './base-convert-tile.component.scss',
 })
 export class BaseConvertTileComponent {
-  readonly convertBase = input.required<ConvertBase>();
+  readonly screenService = inject(ScreenService);
+  readonly isSmallScreen = this.screenService.isSmallScreen;
 
+  readonly convertBase = input.required<ConvertBase>();
   readonly convertInput = model<string>('');
 
   readonly updateConversions = output<number>();
