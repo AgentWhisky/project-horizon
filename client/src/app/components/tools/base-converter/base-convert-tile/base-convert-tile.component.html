@@ -8,8 +8,8 @@
     <div class="w-full flex flex-col my-3 gap-3">
       <mat-form-field appearance="outline">
         <mat-label>Convert</mat-label>
-        <textarea matInput #conversionInput [(ngModel)]="convertInput" uppercase></textarea>
-        <mat-hint>Character Count: {{ conversionInput.textLength }}</mat-hint>
+        <textarea matInput #conversionInput [(ngModel)]="convertInput" charRestrict [charRestrictPattern]="basePattern().regex" uppercase></textarea>
+        <mat-hint> {{ basePattern().displayText }} • Character Count: {{ conversionInput.textLength }} </mat-hint>
       </mat-form-field>
 
       <mat-divider></mat-divider>
