@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { SMALL_SCREEN_SIZE } from '../constants';
+import { SMALL_SCREEN_SIZE } from '../constants/constants';
 
 @Injectable({
   providedIn: 'root',

@@ -1,5 +1,5 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { ACCESS_TOKEN } from '../constants';
+import { ACCESS_TOKEN } from '../constants/constants';
 
 export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
   const excludedUrls = ['/api/login', '/api/refresh'];

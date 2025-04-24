@@ -18,7 +18,7 @@ import { UserDialogComponent } from './user-dialog/user-dialog.component';
 import { DatePipe } from '@angular/common';
 import { RoleDialogComponent } from './role-dialog/role-dialog.component';
 import { UserService } from '../../../services/user.service';
-import { USER_RIGHTS } from '../../../constants';
+import { USER_RIGHTS } from '../../../constants/constants';
 import { MessageCardComponent } from '../../../core/message-card/message-card.component';
 
 @Component({

@@ -5,7 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
-import { defaultNumericBases } from '../../../../constants';
+import { defaultNumericBases } from '../../../../constants/constants';
 import { baseNames } from '../../../../utilities/base-conversion.util';
 
 interface DialogData {

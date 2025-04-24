@@ -8,7 +8,7 @@ import { ValidatorMessagePipe } from '../../../../pipes/validator-message.pipe';
 import { MatSelectModule } from '@angular/material/select';
 import { baseNames } from '../../../../utilities/base-conversion.util';
 import { tap } from 'rxjs';
-import { defaultNumericBases } from '../../../../constants';
+import { defaultNumericBases } from '../../../../constants/constants';
 
 interface DialogData {
   existingBases: number[];

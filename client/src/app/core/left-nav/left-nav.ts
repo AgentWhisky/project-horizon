@@ -1,4 +1,4 @@
-import { USER_RIGHTS } from '../../constants';
+import { USER_RIGHTS } from '../../constants/constants';
 
 export interface NavSection {
   title?: string;

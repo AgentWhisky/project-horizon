@@ -20,7 +20,7 @@ import { Category, Link, Tag } from './link-library-management';
 import { MessageCardComponent } from '../../../core/message-card/message-card.component';
 import { LinkLibraryImportDialogComponent } from './link-library-import-dialog/link-library-import-dialog.component';
 import { UserService } from '../../../services/user.service';
-import { USER_RIGHTS } from '../../../constants';
+import { USER_RIGHTS } from '../../../constants/constants';
 
 @Component({
   selector: 'app-link-library-management',

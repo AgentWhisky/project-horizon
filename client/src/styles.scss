@@ -71,6 +71,15 @@ body {
   border-radius: var(--mat-sys-corner-extra-small);
 }
 
+.dev-banner {
+  @apply w-full p-3;
+
+  background-color: #fff3cd;
+  color: #856404;
+
+  border-radius: var(--mat-sys-corner-extra-small) !important;
+}
+
 // *** SEARCH INPUT ***
 .page-search {
   @apply flex w-full max-w-96 sm:max-w-lg md:max-w-xl lg:max-w-3xl xl:max-w-4xl;

@@ -8,7 +8,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { Link, LinkPayload } from '../link-library-management';
 import { LinkLibraryManagementService } from '../link-library-management.service';
 import { ValidatorMessagePipe } from '../../../../pipes/validator-message.pipe';
-import { URL_REGEX } from '../../../../constants';
+import { URL_REGEX } from '../../../../constants/constants';
 import { LowercaseDirective } from '../../../../directives/lowercase.directive';
 
 interface DialogData {
