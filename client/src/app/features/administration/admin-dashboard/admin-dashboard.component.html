@@ -5,7 +5,7 @@
     </mat-card-header>
     <mat-card-content>
       <div class="flex flex-wrap gap-3 pt-3">
-        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-form-field subscriptSizing="dynamic">
           <mat-label>Account Creation Code</mat-label>
           <input matInput #creationCodeInput [value]="dashboardInfo().creationCode" readonly />
           <button matSuffix mat-icon-button aria-label="Copy Creation Code" (click)="onCopyToClipboard(creationCodeInput.value)" matTooltip="Copy">
