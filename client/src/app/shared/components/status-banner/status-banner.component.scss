@@ -1,0 +1,23 @@
+.status-banner {
+  @apply w-full flex items-center gap-3 p-3;
+
+  border-radius: var(--mat-sys-corner-extra-small) !important;
+}
+
+.status-banner mat-icon {
+  flex-shrink: 0;
+  min-width: 24px;
+  height: 24px;
+}
+
+.status-banner--info {
+  @apply bg-blue-100 text-blue-900 dark:bg-blue-900 dark:text-blue-100;
+}
+
+.status-banner--warning {
+  @apply bg-yellow-100 text-yellow-900 dark:bg-yellow-900 dark:text-yellow-100;
+}
+
+.status-banner--error {
+  @apply bg-red-100 text-red-900 dark:bg-red-900 dark:text-red-100;
+}

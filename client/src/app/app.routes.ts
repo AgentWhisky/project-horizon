@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { AuthGuard } from './guards/auth.guard';
+import { AuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./core/main/main.component').then((c) => c.MainComponent),
+    loadComponent: () => import('./layout/main/main.component').then((c) => c.MainComponent),
     children: [
       {
         path: '',
@@ -13,38 +13,42 @@ export const routes: Routes = [
       },
       {
         path: 'dashboard',
-        loadComponent: () => import('./components/dashboard/dashboard.component').then((c) => c.DashboardComponent),
+        loadComponent: () => import('./features/dashboard/dashboard.component').then((c) => c.DashboardComponent),
       },
       // *** LIBRARIES ***
       {
         path: 'link-library',
-        loadComponent: () => import('./components/libraries/link-library/link-library.component').then((c) => c.LinkLibraryComponent),
+        loadComponent: () => import('./features/libraries/link-library/link-library.component').then((c) => c.LinkLibraryComponent),
       },
       {
         path: 'book-library',
-        loadComponent: () => import('./components/libraries/book-library/book-library.component').then((c) => c.BookLibraryComponent),
+        loadComponent: () => import('./features/libraries/book-library/book-library.component').then((c) => c.BookLibraryComponent),
       },
       // *** TOOLS ***
       {
+        path: 'text-analyzer',
+        loadComponent: () => import('./features/tools/text-analyzer/text-analyzer.component').then((c) => c.TextAnalyzerComponent),
+      },
+      {
         path: 'base-converter',
-        loadComponent: () => import('./components/tools/base-converter/base-converter.component').then((c) => c.BaseConverterComponent),
+        loadComponent: () => import('./features/tools/base-converter/base-converter.component').then((c) => c.BaseConverterComponent),
       },
       {
         path: 'pathfinder',
-        loadComponent: () => import('./components/tools/pathfinder/pathfinder.component').then((c) => c.PathfinderComponent),
+        loadComponent: () => import('./features/tools/pathfinder/pathfinder.component').then((c) => c.PathfinderComponent),
       },
       // *** ADMINISTRATION ***
       {
         path: 'administration',
         loadComponent: () =>
-          import('./components/administration/admin-dashboard/admin-dashboard.component').then((c) => c.AdminDashboardComponent),
+          import('./features/administration/admin-dashboard/admin-dashboard.component').then((c) => c.AdminDashboardComponent),
         canActivate: [AuthGuard],
         data: { requiredRights: ['VIEW_DASHBOARD'] },
       },
       {
         path: 'link-library-management',
         loadComponent: () =>
-          import('./components/administration/link-library-management/link-library-management.component').then(
+          import('./features/administration/link-library-management/link-library-management.component').then(
             (c) => c.LinkLibraryManagementComponent
           ),
         canActivate: [AuthGuard],
@@ -52,9 +56,15 @@ export const routes: Routes = [
       {
         path: 'account-management',
         loadComponent: () =>
-          import('./components/administration/account-management/account-management.component').then((c) => c.AccountManagementComponent),
+          import('./features/administration/account-management/account-management.component').then((c) => c.AccountManagementComponent),
         canActivate: [AuthGuard],
         data: { requiredRights: ['MANAGE_USERS', 'MANAGE_ROLES'] },
+      },
+
+      // *** WILDCARD ***
+      {
+        path: '**',
+        redirectTo: 'dashboard',
       },
     ],
   },

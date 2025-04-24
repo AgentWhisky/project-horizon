@@ -10,6 +10,3 @@ client/.angular/
 # Server Files
 server/dist/
 server/build/
-
-# ToDo Text file
-todo.txt

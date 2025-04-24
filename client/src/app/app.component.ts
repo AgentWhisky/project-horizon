@@ -1,9 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { TokenService } from './services/token.service';
+import { TokenService } from './core/services/token.service';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { GITHUB_ICON, LINKEDIN_ICON } from './constants/svg-icons';
+import { GITHUB_ICON, LINKEDIN_ICON } from './core/constants/icon-definitions.constant';
 
 @Component({
   selector: 'app-root',
