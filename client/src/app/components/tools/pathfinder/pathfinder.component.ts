@@ -1,23 +1,26 @@
-import { ChangeDetectionStrategy, Component, computed, effect, HostListener, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 import { PathfinderCreateDialogComponent } from './pathfinder-create-dialog/pathfinder-create-dialog.component';
 import { filter, tap } from 'rxjs';
 import { PathfinderService } from './pathfinder.service';
 import { PathfinderTileComponent } from './pathfinder-tile/pathfinder-tile.component';
 import { Tile } from './pathfinder';
+import { MessageCardComponent } from '../../../core/message-card/message-card.component';
 
 const minTileSize = 12;
 const maxTileSize = 32;
 
 @Component({
   selector: 'app-pathfinder',
-  imports: [MatButtonModule, MatIconModule, PathfinderTileComponent],
+  imports: [MatButtonModule, MatIconModule, MatTooltipModule, PathfinderTileComponent, MessageCardComponent],
   templateUrl: './pathfinder.component.html',
   styleUrl: './pathfinder.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  //changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PathfinderComponent {
   private pathfinderService = inject(PathfinderService);
@@ -30,10 +33,6 @@ export class PathfinderComponent {
 
   readonly boardZoom = signal<number>(1);
   readonly tileSize = computed(() => this.calculateTileSize() * this.boardZoom());
-
-  constructor() {
-    effect(() => console.log(this.boardZoom()));
-  }
 
   onCreateBoard() {
     this.dialog

@@ -5,6 +5,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { RemoveConfirmComponent } from '../../../dialogs/remove-confirm/remove-confirm.component';
 import { BaseConverterService } from './base-converter.service';
@@ -15,7 +16,7 @@ import { MessageCardComponent } from '../../../core/message-card/message-card.co
 
 @Component({
   selector: 'app-base-converter',
-  imports: [MatButtonModule, MatIconModule, MatTabsModule, BaseConvertTileComponent, MessageCardComponent],
+  imports: [MatButtonModule, MatIconModule, MatTabsModule, MatTooltipModule, BaseConvertTileComponent, MessageCardComponent],
   templateUrl: './base-converter.component.html',
   styleUrl: './base-converter.component.scss',
 })
