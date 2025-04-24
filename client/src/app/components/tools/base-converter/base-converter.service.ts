@@ -23,7 +23,7 @@ export class BaseConverterService {
     localStorage.setItem('baseConversions', JSON.stringify(this._baseConversions()));
   }
 
-  loadBaseConversions() {
+  loadBaseConversions(): ConvertBase[] {
     const baseConversions = localStorage.getItem('baseConversions');
     return baseConversions ? JSON.parse(baseConversions) : [];
   }

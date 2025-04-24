@@ -15,22 +15,16 @@
   </div>
 
   @if(hasBoard()) {
-  <div
-    class="grid-container"
-    (touchstart)="onTouchStart($event)"
-    (touchmove)="onTouchMove($event)"
-    (touchend)="onTouchEnd($event)">
+  <div class="grid-container" (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)" (touchend)="onTouchEnd($event)">
     <div
       class="grid"
       (wheel)="onScroll($event)"
       [style.--pathfinder-tile-size]="tileSize() + 'px'"
-      [style.--pathfinder-columns]="boardSize().columns"
-      [style.--pathfinder-rows]="boardSize().rows">
-      @for(row of board(); track $index) { 
-        @for(tile of row; track columnTrack(tile)) {
-        <app-pathfinder-tile [tile]="tile"></app-pathfinder-tile>
-        } 
-      }
+      [style.--pathfinder-columns]="boardCols()"
+      [style.--pathfinder-rows]="boardRows()">
+      @for(row of board(); track $index) { @for(tile of row; track columnTrack(tile)) {
+      <app-pathfinder-tile [tile]="tile"></app-pathfinder-tile>
+      } }
     </div>
   </div>
   }

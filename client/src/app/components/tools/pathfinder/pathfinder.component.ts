@@ -10,7 +10,7 @@ import { PathfinderTileComponent } from './pathfinder-tile/pathfinder-tile.compo
 import { Tile } from './pathfinder';
 
 const minTileSize = 12;
-const maxTileSize = 64;
+const maxTileSize = 32;
 
 @Component({
   selector: 'app-pathfinder',
@@ -24,8 +24,9 @@ export class PathfinderComponent {
   private dialog = inject(MatDialog);
 
   readonly board = this.pathfinderService.board;
-  readonly boardSize = this.pathfinderService.boardSize;
   readonly hasBoard = this.pathfinderService.hasBoard;
+  readonly boardRows = this.pathfinderService.boardRows;
+  readonly boardCols = this.pathfinderService.boardCols;
 
   readonly boardZoom = signal<number>(1);
   readonly tileSize = computed(() => this.calculateTileSize() * this.boardZoom());
@@ -103,8 +104,8 @@ export class PathfinderComponent {
     const containerWidth = window.innerWidth; // or a fixed container width
     const containerHeight = window.innerHeight;
 
-    const maxTileWidth = Math.floor(containerWidth / this.boardSize().columns);
-    const maxTileHeight = Math.floor(containerHeight / this.boardSize().rows);
+    const maxTileWidth = Math.floor(containerWidth / this.boardCols());
+    const maxTileHeight = Math.floor(containerHeight / this.boardRows());
 
     // Use the smaller of the two to keep tiles square and fitting in view
     const adjustedSize = Math.min(maxTileWidth, maxTileHeight);
