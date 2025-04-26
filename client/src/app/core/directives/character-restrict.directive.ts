@@ -31,14 +31,4 @@ export class CharacterRestrictDirective {
       event.preventDefault();
     }
   }
-
-  @HostListener('input', ['$event'])
-  onInput(event: Event) {
-    const inputElement = event.target as HTMLInputElement;
-    const value = inputElement.value.toUpperCase();
-
-    if (!this.charRestrictPattern().test(value)) {
-      inputElement.value = value.replace(new RegExp(`[^${this.charRestrictPattern().source}]`, 'g'), '');
-    }
-  }
 }
