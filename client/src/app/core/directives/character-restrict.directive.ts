@@ -1,10 +1,10 @@
 import { Directive, HostListener, input, Input } from '@angular/core';
 
 @Directive({
-  selector: '[charRestrict]'
+  selector: '[charRestrict]',
 })
 export class CharacterRestrictDirective {
-  readonly charRestrictPattern = input.required<RegExp>()
+  readonly charRestrictPattern = input.required<RegExp>();
 
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
@@ -28,6 +28,16 @@ export class CharacterRestrictDirective {
     const pasteText = clipboardData?.getData('text').toUpperCase() ?? '';
 
     if (!this.charRestrictPattern().test(pasteText)) {
+      event.preventDefault();
+    }
+  }
+
+  @HostListener('input', ['$event'])
+  onInput(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    const value = inputElement.value.toUpperCase();
+
+    if (!this.charRestrictPattern().test(value)) {
       event.preventDefault();
     }
   }
