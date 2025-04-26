@@ -38,7 +38,7 @@ export class CharacterRestrictDirective {
     const value = inputElement.value.toUpperCase();
 
     if (!this.charRestrictPattern().test(value)) {
-      event.preventDefault();
+      inputElement.value = value.replace(new RegExp(`[^${this.charRestrictPattern().source}]`, 'g'), '');
     }
   }
 }
