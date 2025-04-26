@@ -19,9 +19,9 @@ export function getCharacterCount(text: string, caseSensitive: boolean = true): 
   }
 
   const charCounter: Record<string, number> = {};
+  const totalChars = text.length;
 
   for (const char of text) {
-
     // Check for non-visible special characters
     const key = charLabels[char] ?? char;
 
@@ -32,7 +32,11 @@ export function getCharacterCount(text: string, caseSensitive: boolean = true): 
     charCounter[key]++;
   }
 
-  return Object.entries(charCounter).map(([char, count]) => ({ character: char, count }));
+  return Object.entries(charCounter).map(([char, count]) => ({
+    character: char,
+    count,
+    percent: parseFloat(((count / totalChars) * 100).toFixed(2)),
+  }));
 }
 
 /**

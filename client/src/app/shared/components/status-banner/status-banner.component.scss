@@ -11,13 +11,15 @@
 }
 
 .status-banner--info {
-  @apply bg-blue-100 text-blue-900 dark:bg-blue-900 dark:text-blue-100;
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
 }
 
 .status-banner--warning {
-  @apply bg-yellow-100 text-yellow-900 dark:bg-yellow-900 dark:text-yellow-100;
+  @apply bg-yellow-100 text-yellow-900;
 }
 
 .status-banner--error {
-  @apply bg-red-100 text-red-900 dark:bg-red-900 dark:text-red-100;
+  background-color: var(--mat-sys-error);
+  color: var(--mat-sys-on-error);
 }

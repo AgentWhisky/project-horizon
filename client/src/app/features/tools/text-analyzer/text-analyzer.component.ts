@@ -6,7 +6,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
-import { StatusBannerComponent } from '../../../shared/components/status-banner/status-banner.component';
 import { getCharacterCount, getWordCount } from '../../../core/utilities/text.util';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -27,7 +26,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatSortModule,
     MatSlideToggleModule,
     FormsModule,
-    StatusBannerComponent,
   ],
   templateUrl: './text-analyzer.component.html',
   styleUrl: './text-analyzer.component.scss',
@@ -43,7 +41,7 @@ export class TextAnalyzerComponent implements OnInit {
 
   // Character Table
   readonly charBreakdownSort = viewChild<MatSort>('charBreakdownSort');
-  readonly charBreakdownDisplayedColumns: string[] = ['character', 'count'];
+  readonly charBreakdownDisplayedColumns: string[] = ['character', 'count', 'percent'];
   readonly charBreakdownDataSource = new MatTableDataSource<CharacterBreakdown>();
 
   constructor() {
