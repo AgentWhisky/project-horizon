@@ -59,4 +59,8 @@ export class MainComponent {
   onToggleTheme() {
     this.themeService.toggleTheme();
   }
+
+  onOpenInNewTab(url: string) {
+    window.open(url, '_blank', 'noopener');
+  }
 }

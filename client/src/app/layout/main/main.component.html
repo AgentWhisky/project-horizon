@@ -1,6 +1,6 @@
 <div>
-  <mat-toolbar class="header-toolbar">
-    <button mat-icon-button class="header-icon" (click)="onToggleLeftNav()">
+  <mat-toolbar class="header-toolbar" role="navigation" aria-label="Main toolbar">
+    <button mat-icon-button class="header-icon" (click)="onToggleLeftNav()" aria-label="Toggle Left Navigation">
       <mat-icon>menu</mat-icon>
     </button>
 
@@ -8,9 +8,40 @@
 
     <span class="w-full"></span>
 
-    <!-- Normal Screen Size -->
+    <!-- Social Icons -->
+    @if(isSmallScreen()) {
+    <button
+      mat-icon-button
+      class="header-icon"
+      [matMenuTriggerFor]="socialMenu"
+      matTooltip="Social Links"
+      aria-label="Open social links menu">
+      <mat-icon>share</mat-icon>
+    </button>
 
-    <a mat-icon-button href="https://github.com/AgentWhisky" target="_blank" rel="noopener" class="header-icon" matTooltip="Github">
+    <mat-menu #socialMenu="matMenu">
+      <button mat-menu-item (click)="onOpenInNewTab('https://github.com/AgentWhisky')" aria-label="Open GitHub in new tab">
+        <mat-icon svgIcon="github"></mat-icon>
+        <span>GitHub</span>
+      </button>
+      <button
+        mat-menu-item
+        (click)="onOpenInNewTab('https://www.linkedin.com/in/tyler-harris-495112181')"
+        aria-label="Open LinkedIn in new tab">
+        <mat-icon svgIcon="linkedin"></mat-icon>
+        <span>LinkedIn</span>
+      </button>
+    </mat-menu>
+
+    } @else {
+    <a
+      mat-icon-button
+      href="https://github.com/AgentWhisky"
+      target="_blank"
+      rel="noopener"
+      class="header-icon"
+      matTooltip="Github"
+      aria-label="Open GitHub in new tab">
       <mat-icon svgIcon="github"></mat-icon>
     </a>
 
@@ -20,17 +51,23 @@
       target="_blank"
       rel="noopener"
       class="header-icon"
-      matTooltip="LinkedIn">
+      matTooltip="LinkedIn"
+      aria-label="Open LinkedIn in new tab">
       <mat-icon svgIcon="linkedin"></mat-icon>
     </a>
+    }
 
+    <!-- Toggle Theme Icons -->
     <button
       mat-icon-button
       class="header-icon"
       (click)="onToggleTheme()"
-      [matTooltip]="isDarkmode() ? 'Enable light mode' : 'Enable dark mode'">
+      [matTooltip]="isDarkmode() ? 'Switch to light mode' : 'Switch to dark mode'"
+      [attr.aria-label]="isDarkmode() ? 'Switch to light mode' : 'Switch to dark mode'">
       <mat-icon>{{ isDarkmode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
     </button>
+
+    <!-- Login/Account Icons -->
     @if(!isLoggedIn()) {
     <button mat-icon-button class="header-icon" (click)="onLogin()" matTooltip="Sign In">
       <mat-icon>person</mat-icon>
@@ -40,14 +77,6 @@
       <mat-icon>account_circle</mat-icon>
     </button>
     <mat-menu #userMenu="matMenu">
-      <button mat-menu-item>
-        <mat-icon>manage_accounts</mat-icon>
-        <span>Account Information</span>
-      </button>
-      <button mat-menu-item>
-        <mat-icon>settings</mat-icon>
-        <span>Settings</span>
-      </button>
       <button mat-menu-item (click)="onLogout()">
         <mat-icon>logout</mat-icon>
         <span>Sign Out</span>
