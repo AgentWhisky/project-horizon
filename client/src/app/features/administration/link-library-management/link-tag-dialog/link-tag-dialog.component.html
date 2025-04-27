@@ -1,6 +1,6 @@
 <h2 mat-dialog-title>{{ this.data.type === 'create' ? 'Create Tag' : 'Edit Tag' }}</h2>
 <mat-dialog-content>
-  <form class="flex flex-col gap-3" [formGroup]="tagForm">
+  <form class="flex flex-col gap-3 py-1" [formGroup]="tagForm">
     <mat-form-field class="w-full">
       <mat-label>Name</mat-label>
       <input matInput formControlName="name" (keydown.enter)="onSubmit()" />

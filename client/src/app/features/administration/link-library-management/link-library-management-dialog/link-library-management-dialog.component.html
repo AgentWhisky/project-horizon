@@ -1,6 +1,6 @@
 <h2 mat-dialog-title>{{ this.data.type === 'create' ? 'Create Link' : 'Edit Link' }}</h2>
 <mat-dialog-content>
-  <form class="flex flex-col gap-3" [formGroup]="linkForm">
+  <form class="flex flex-col gap-3 py-1" [formGroup]="linkForm">
     <mat-form-field class="w-full">
       <mat-label>Name</mat-label>
       <input matInput formControlName="name" />

@@ -1,7 +1,10 @@
 Client
 ------------------------------
 Tools
-    Character counter & Breakdown
+    Latex Renderer
+
+Bugs
+    Validate all mat inputs are not cutoff as outline - matInput*
 
 
 Server
