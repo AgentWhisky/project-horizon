@@ -1,8 +1,18 @@
 @use '@angular/material' as mat;
 
-// *** HEADER ***
+// =========================
+// HEADER
+// =========================
 .header-toolbar {
   @apply flex justify-between items-center p-2 w-full h-12;
+  transition: box-shadow 0.3s ease;
+  position: fixed;
+  top: 0;
+  z-index: 3;
+}
+
+.header-toolbar.scrolled {
+  box-shadow: 0 4px 6px var(--mat-sys-surface-container);
 }
 
 .header-toolbar-text {
@@ -13,17 +23,56 @@
   @apply mx-1;
 }
 
-// *** APP CONTENT ***
-.app-content {
+// =========================
+// APP CONTENT
+// =========================
+.app-drawer {
   @apply flex flex-grow w-full bg-transparent;
+
+  padding-top: 48px;
   min-height: calc(100vh - 48px);
 }
 
-// *** LEFT NAVIGATION ***
+.app-content {
+  @apply w-full flex flex-col;
+  min-height: calc(100vh - 48px);
+}
+
+// =========================
+// LEFT NAVIGATION
+// =========================
 .left-nav-container {
   @apply border-none p-3;
   width: 240px;
 
   background: var(--mat-sys-surface-container-low);
   border-radius: 0 !important;
+
+  position: fixed;
+  top: 48px;
+}
+
+// =========================
+// FOOTER
+// =========================
+.footer {
+  @apply flex justify-center items-center px-3 py-1;
+}
+
+.footer-content {
+  @apply w-full flex justify-between items-center;
+  font-size: 14px;
+}
+
+.social-icons {
+  @apply flex gap-3;
+}
+
+.social-icons a {
+  transition: color 0.3s ease, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.social-icons a:hover {
+  color: var(--mat-sys-primary);
+  transform: translateY(-5px);
 }

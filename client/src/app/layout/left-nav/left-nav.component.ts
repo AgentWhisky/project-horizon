@@ -25,7 +25,7 @@ export class LeftNavComponent {
       if (!item.requiredRights) {
         return true;
       }
-      return this.hasRights(item.requiredRights || []);
+      return this.userService.hasRights(item.requiredRights || []);
     });
   }
 

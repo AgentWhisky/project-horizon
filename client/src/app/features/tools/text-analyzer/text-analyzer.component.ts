@@ -13,6 +13,7 @@ import { CharacterBreakdown } from '../../../core/types/text.type';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'hz-text-analyzer',
@@ -25,6 +26,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatTableModule,
     MatSortModule,
     MatSlideToggleModule,
+    MatDividerModule,
     FormsModule,
   ],
   templateUrl: './text-analyzer.component.html',
@@ -37,6 +39,7 @@ export class TextAnalyzerComponent implements OnInit {
   readonly caseSensitive = model<boolean>(true);
 
   readonly characterBreakdown = computed(() => getCharacterCount(this.textInput(), this.caseSensitive()));
+  readonly characterCount = computed(() => this.textInput().length);
   readonly wordCount = computed(() => getWordCount(this.textInput()));
 
   // Character Table

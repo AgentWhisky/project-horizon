@@ -9,10 +9,11 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { LinkTileComponent } from './link-tile/link-tile.component';
 import { FormsModule } from '@angular/forms';
+import { StatusBannerComponent } from '../../../shared/components/status-banner/status-banner.component';
 
 @Component({
   selector: 'app-link-library',
-  imports: [MatButtonModule, MatInputModule, MatIconModule, MatCardModule, MatAutocompleteModule, FormsModule, LinkTileComponent],
+  imports: [MatButtonModule, MatInputModule, MatIconModule, MatCardModule, MatAutocompleteModule, FormsModule, LinkTileComponent, StatusBannerComponent],
   templateUrl: './link-library.component.html',
   styleUrl: './link-library.component.scss',
 })

@@ -1,6 +1,5 @@
 .status-banner {
   @apply w-full flex items-center gap-3 p-3;
-
   border-radius: var(--mat-sys-corner-extra-small) !important;
 }
 
@@ -22,4 +21,16 @@
 .status-banner--error {
   background-color: var(--mat-sys-error);
   color: var(--mat-sys-on-error);
+}
+
+.text-align-start {
+  text-align: left;
+}
+
+.text-align-center {
+  text-align: center;
+}
+
+.text-align-end {
+  text-align: right;
 }

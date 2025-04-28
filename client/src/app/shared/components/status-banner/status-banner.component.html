@@ -1,4 +1,4 @@
-<div class="status-banner" [ngClass]="'status-banner--' + type()">
+<div class="status-banner" [ngClass]="['status-banner--' + type(), 'text-align-' + align()]">
   <mat-icon>{{ type() }}</mat-icon>
-  <span>{{ message() }}</span>
+  <span class="w-full">{{ message() }}</span>
 </div>
