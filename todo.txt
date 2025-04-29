@@ -1,7 +1,16 @@
 Client
 ------------------------------
 Tools
+    Text Analyzer
+        Count Sentences
+        Count Paragraphs
+        Commonly used words
+        Reading time estimate
+        Longest & Shortest words
+        Palindrome Finder
+        Character Category breakdown (Letters, numbers, special characters, punctuation)
     Latex Renderer
+
 
 Bugs
     Validate all mat inputs are not cutoff as outline - matInput*
