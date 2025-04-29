@@ -11,6 +11,9 @@ Tools
         Character Category breakdown (Letters, numbers, special characters, punctuation)
     Latex Renderer
 
+    Base Converter
+        Update Banner Message
+
 
 Bugs
     Validate all mat inputs are not cutoff as outline - matInput*

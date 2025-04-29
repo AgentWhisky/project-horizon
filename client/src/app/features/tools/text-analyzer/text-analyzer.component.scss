@@ -9,3 +9,14 @@
   border: 1px solid var(--mat-sys-outline-variant) !important;
   border-radius: var(--mat-sys-corner-extra-small) !important;
 }
+
+table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+td,
+th {
+  word-break: break-word; /* Newer way to force word breaks */
+  white-space: normal;
+}
