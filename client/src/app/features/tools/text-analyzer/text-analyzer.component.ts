@@ -6,14 +6,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
-import { getCharacterCount, getWordCount } from '../../../core/utilities/text.util';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
-import { CharacterBreakdown } from '../../../core/types/text.type';
-import { MatButtonModule } from '@angular/material/button';
-import { FormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatButtonModule } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
+import { getCharacterBreakdown, getWordBreakdown } from '../../../core/utilities/text.util';
+import { CharacterCount, WordCount } from '../../../core/types/text.type';
 
 @Component({
   selector: 'hz-text-analyzer',
@@ -38,22 +38,34 @@ export class TextAnalyzerComponent implements OnInit {
   readonly textInput = model<string>('');
   readonly caseSensitive = model<boolean>(true);
 
-  readonly characterBreakdown = computed(() => getCharacterCount(this.textInput(), this.caseSensitive()));
-  readonly characterCount = computed(() => this.textInput().length);
-  readonly wordCount = computed(() => getWordCount(this.textInput()));
+  readonly characterBreakdown = computed(() => getCharacterBreakdown(this.textInput(), this.caseSensitive()));
+  readonly wordBreakdown = computed(() => getWordBreakdown(this.textInput()));
 
   // Character Table
   readonly charBreakdownSort = viewChild<MatSort>('charBreakdownSort');
   readonly charBreakdownDisplayedColumns: string[] = ['character', 'count', 'percent'];
-  readonly charBreakdownDataSource = new MatTableDataSource<CharacterBreakdown>();
+  readonly charBreakdownDataSource = new MatTableDataSource<CharacterCount>();
+
+  // Word Table
+  readonly wordBreakdownSort = viewChild<MatSort>('wordBreakdownSort');
+  readonly wordBreakdownDisplayedColumns: string[] = ['word', 'count', 'percent'];
+  readonly wordBreakdownDataSource = new MatTableDataSource<WordCount>();
 
   constructor() {
     effect(() => {
-      this.charBreakdownDataSource.data = this.characterBreakdown();
+      this.charBreakdownDataSource.data = this.characterBreakdown().characterCount;
     });
 
     effect(() => {
       this.charBreakdownDataSource.sort = this.charBreakdownSort() ?? null;
+    });
+
+    effect(() => {
+      this.wordBreakdownDataSource.data = this.wordBreakdown().wordCount;
+    });
+
+    effect(() => {
+      this.wordBreakdownDataSource.sort = this.wordBreakdownSort() ?? null;
     });
   }
 

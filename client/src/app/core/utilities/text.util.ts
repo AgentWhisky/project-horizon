@@ -1,16 +1,19 @@
 import { charLabels } from '../constants/text.constants';
-import { CharacterBreakdown } from '../types/text.type';
+import { CharacterBreakdown, CharacterCount, WordBreakdown, WordCount } from '../types/text.type';
 
 /**
  * Analyzes a string and returns a breakdown of each character and how many times it appears.
  *
  * @param text - The input string to analyze.
  * @param caseSensitive - Whether to treat uppercase and lowercase letters as different characters.
- * @returns An array of CharacterBreakdown objects, each containing a character and its count.
+ * @returns A CharacterBreakdown object, with an array of character counts and total characters
  */
-export function getCharacterCount(text: string, caseSensitive: boolean = true): CharacterBreakdown[] {
+export function getCharacterBreakdown(text: string, caseSensitive: boolean = true): CharacterBreakdown {
   if (!text) {
-    return [];
+    return {
+      total: 0,
+      characterCount: [],
+    };
   }
 
   // Check case sensitivity
@@ -32,26 +35,61 @@ export function getCharacterCount(text: string, caseSensitive: boolean = true): 
     charCounter[key]++;
   }
 
-  return Object.entries(charCounter).map(([char, count]) => ({
+  const characterCount: CharacterCount[] = Object.entries(charCounter).map(([char, count]) => ({
     character: char,
     count,
     percent: parseFloat(((count / totalChars) * 100).toFixed(2)),
   }));
+
+  return {
+    total: totalChars,
+    characterCount,
+  };
 }
 
 /**
- * Counts the number of words in a given string.
+ * Analyzes a string and returns a breakdown of each word and how many times it appears.
+ * All words are forced to lowercase then capitalized.
+ * Special characters are removed from words before counting.
  *
  * @param text - The input string to analyze.
- * @returns The number of words in the input string.
+ * @returns A WordBreakdown object, with an array of word counts and total words
  */
-export function getWordCount(text: string) {
+export function getWordBreakdown(text: string): WordBreakdown {
   if (!text) {
-    return 0;
+    return {
+      total: 0,
+      wordCount: [],
+    };
   }
 
-  return text
-    .trim()
-    .split(/\s+/)
-    .filter((word) => word.length > 0).length;
+  const wordCounter: Record<string, number> = {};
+  const rawWords = text.trim().split(/\s+/);
+
+  const words = rawWords
+    .map((word) => word.replace(/[^a-zA-Z0-9]/g, '')) // Remove special characters
+    .filter((word) => word.length > 0); // Remove any empty results after cleanup
+
+  const totalWords = words.length;
+
+  for (const rawWord of words) {
+    const lower = rawWord.toLowerCase();
+    const word = lower.charAt(0).toUpperCase() + lower.slice(1);
+
+    if (!wordCounter[word]) {
+      wordCounter[word] = 0;
+    }
+    wordCounter[word]++;
+  }
+
+  const wordCount: WordCount[] = Object.entries(wordCounter).map(([word, count]) => ({
+    word,
+    count,
+    percent: parseFloat(((count / totalWords) * 100).toFixed(2)),
+  }));
+
+  return {
+    total: totalWords,
+    wordCount,
+  };
 }

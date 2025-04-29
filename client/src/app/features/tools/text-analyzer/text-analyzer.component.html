@@ -12,18 +12,18 @@
         </button>
       </div>
     </div>
-    <mat-slide-toggle [(ngModel)]="caseSensitive"> Case Sensitive</mat-slide-toggle>
+    <mat-slide-toggle [(ngModel)]="caseSensitive">Case Sensitive</mat-slide-toggle>
   </div>
 
   @if(textInput()) {
   <div class="text-display-tile">
-    <span>Characters: {{ characterCount() }}</span>
+    <span>Characters: {{ characterBreakdown().total }}</span>
     <mat-divider vertical></mat-divider>
-    <span>Words: {{ wordCount() }}</span>
+    <span>Words: {{ wordBreakdown().total }}</span>
   </div>
 
-  <div class="hz-card w-full items-center p-3">
-    <table class="w-96" mat-table [dataSource]="charBreakdownDataSource" matSort #charBreakdownSort="matSort" class="mat-elevation-z8">
+  <div class="hz-card flex flex-grow p-3">
+    <table mat-table [dataSource]="charBreakdownDataSource" matSort #charBreakdownSort="matSort" class="mat-elevation-z8">
       <ng-container matColumnDef="character">
         <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by character">Character</th>
         <td mat-cell *matCellDef="let element">{{ element.character }}</td>
@@ -41,6 +41,28 @@
 
       <tr mat-header-row *matHeaderRowDef="charBreakdownDisplayedColumns"></tr>
       <tr mat-row class="table-row" *matRowDef="let row; columns: charBreakdownDisplayedColumns"></tr>
+    </table>
+  </div>
+
+  <div class="hz-card flex flex-grow p-3">
+    <table mat-table [dataSource]="wordBreakdownDataSource" matSort #wordBreakdownSort="matSort" class="mat-elevation-z8">
+      <ng-container matColumnDef="word">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by word">Word</th>
+        <td mat-cell *matCellDef="let element">{{ element.word }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="count">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by count">Count</th>
+        <td mat-cell *matCellDef="let element">{{ element.count }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="percent">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by percent">Percent</th>
+        <td mat-cell *matCellDef="let element">{{ element.percent }}%</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="wordBreakdownDisplayedColumns"></tr>
+      <tr mat-row class="table-row" *matRowDef="let row; columns: wordBreakdownDisplayedColumns"></tr>
     </table>
   </div>
   }
