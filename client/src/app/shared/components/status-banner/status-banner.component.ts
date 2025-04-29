@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { StatusBannerType } from './status-banner';
+import { StatusBannerAlign, StatusBannerType } from './status-banner';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -11,5 +11,6 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class StatusBannerComponent {
   readonly type = input<StatusBannerType>('info');
+  readonly align = input<StatusBannerAlign>('start');
   readonly message = input.required<string>();
 }

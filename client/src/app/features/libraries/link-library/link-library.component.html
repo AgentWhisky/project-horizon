@@ -1,7 +1,7 @@
-<div class="flex flex-col justify-center items-center">
+<div class="flex flex-col justify-center items-center gap-3">
   <div class="flex flex-col justify-center items-center w-full">
     <mat-form-field class="page-search" subscriptSizing="dynamic">
-      <mat-label>Search</mat-label>
+      <mat-label>Search Links</mat-label>
       <input
         matInput
         #linkLibrarySearch
@@ -18,12 +18,17 @@
       <mat-error>Invalid Search Filter</mat-error>
     </mat-form-field>
 
+    @if(linksByCategory().length){
     <div class="page-search justify-start flex flex-row gap-3 mt-0 mb-3">
       <button mat-button (click)="onExapndAll()">Expand All</button>
       <button mat-button (click)="onCollapseAll()">Collapse All</button>
     </div>
+    }
   </div>
 
+  @if(!linksByCategory().length && linkLibrarySearch.value.length) {
+  <hz-status-banner class="page-banner" message="No links found. Please refine your search." align="center" type="info"></hz-status-banner>
+  } @else {
   <div class="link-card-container">
     @for(category of linksByCategory(); track category.id) {
 
@@ -42,4 +47,5 @@
     </mat-card>
     }
   </div>
+  }
 </div>

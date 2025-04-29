@@ -1,5 +1,5 @@
 <div>
-  <mat-toolbar class="header-toolbar" role="navigation" aria-label="Main toolbar">
+  <mat-toolbar class="header-toolbar" [class.scrolled]="isScrolled()" role="navigation" aria-label="Main toolbar">
     <button mat-icon-button class="header-icon" (click)="onToggleLeftNav()" aria-label="Toggle Left Navigation">
       <mat-icon>menu</mat-icon>
     </button>
@@ -7,55 +7,6 @@
     <a [routerLink]="['/dashboard']" class="header-toolbar-text">Horizon</a>
 
     <span class="w-full"></span>
-
-    <!-- Social Icons -->
-    @if(isSmallScreen()) {
-    <button
-      mat-icon-button
-      class="header-icon"
-      [matMenuTriggerFor]="socialMenu"
-      matTooltip="Social Links"
-      aria-label="Open social links menu">
-      <mat-icon>share</mat-icon>
-    </button>
-
-    <mat-menu #socialMenu="matMenu">
-      <button mat-menu-item (click)="onOpenInNewTab('https://github.com/AgentWhisky')" aria-label="Open GitHub in new tab">
-        <mat-icon svgIcon="github"></mat-icon>
-        <span>GitHub</span>
-      </button>
-      <button
-        mat-menu-item
-        (click)="onOpenInNewTab('https://www.linkedin.com/in/tyler-harris-495112181')"
-        aria-label="Open LinkedIn in new tab">
-        <mat-icon svgIcon="linkedin"></mat-icon>
-        <span>LinkedIn</span>
-      </button>
-    </mat-menu>
-
-    } @else {
-    <a
-      mat-icon-button
-      href="https://github.com/AgentWhisky"
-      target="_blank"
-      rel="noopener"
-      class="header-icon"
-      matTooltip="Github"
-      aria-label="Open GitHub in new tab">
-      <mat-icon svgIcon="github"></mat-icon>
-    </a>
-
-    <a
-      mat-icon-button
-      href="https://www.linkedin.com/in/tyler-harris-495112181"
-      target="_blank"
-      rel="noopener"
-      class="header-icon"
-      matTooltip="LinkedIn"
-      aria-label="Open LinkedIn in new tab">
-      <mat-icon svgIcon="linkedin"></mat-icon>
-    </a>
-    }
 
     <!-- Toggle Theme Icons -->
     <button
@@ -85,7 +36,8 @@
     }
   </mat-toolbar>
 
-  <mat-drawer-container class="app-content overflow-auto">
+  <mat-drawer-container class="app-drawer overflow-auto">
+    <!-- Left Nav -->
     <mat-drawer
       [opened]="isLeftNavOpen()"
       [mode]="isSmallScreen() ? 'over' : 'side'"
@@ -93,10 +45,31 @@
       (closed)="onCloseLeftNav()">
       <app-left-nav></app-left-nav>
     </mat-drawer>
-    <mat-drawer-content class="w-full flex flex-grow">
-      <div class="w-full p-3">
+
+    <!-- Main Content -->
+    <mat-drawer-content class="app-content">
+      <div class="w-full flex-grow p-3">
         <router-outlet />
       </div>
+
+      <footer class="footer">
+        <div class="footer-content">
+          <span>© 2025 Horizon</span>
+          @if(!isMobileScreen()) {
+          <span>Built with Angular, NestJS, and PostgreSQL</span>
+          }
+
+          <!-- Social Links -->
+          <div class="social-icons">
+            <a href="https://github.com/AgentWhisky" target="_blank" rel="noopener" aria-label="GitHub">
+              <mat-icon svgIcon="github"></mat-icon>
+            </a>
+            <a href="https://www.linkedin.com/in/tyler-harris-495112181" target="_blank" rel="noopener" aria-label="LinkedIn">
+              <mat-icon svgIcon="linkedin"></mat-icon>
+            </a>
+          </div>
+        </div>
+      </footer>
     </mat-drawer-content>
   </mat-drawer-container>
 </div>

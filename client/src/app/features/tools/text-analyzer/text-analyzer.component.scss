@@ -1,5 +1,9 @@
 .text-input-tile {
-  @apply w-full flex flex-col gap-3 p-3;
+  @apply w-full flex flex-col gap-3;
+}
+
+.text-display-tile {
+  @apply w-full flex flex-wrap gap-3 p-3;
 
   background-color: var(--mat-sys-surface-container-low) !important;
   border: 1px solid var(--mat-sys-outline-variant) !important;

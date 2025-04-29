@@ -36,6 +36,9 @@ export class MainComponent {
   private themeService = inject(ThemeService);
 
   readonly isSmallScreen = this.screenService.isSmallScreen;
+  readonly isMobileScreen = this.screenService.isMobileScreen;
+  readonly isScrolled = this.screenService.isScrolled;
+
   readonly isLeftNavOpen = this.navigationService.isLeftNavOpen;
   readonly isLoggedIn = this.userService.isLoggedIn;
   readonly isDarkmode = this.themeService.isDarkTheme;

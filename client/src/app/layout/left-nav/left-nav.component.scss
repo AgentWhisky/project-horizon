@@ -1,4 +1,17 @@
-// *** NAV ITEM ***
+// =========================
+// LEFT NAV
+// =========================
+.nav-section-header {
+  @apply pl-3 font-bold;
+}
+
+.nav-divider {
+  @apply w-full my-1;
+}
+
+// =========================
+// NAV ITEM
+// =========================
 .nav-item {
   @apply flex align-middle w-full rounded-md p-2 gap-3;
 
@@ -12,14 +25,4 @@
 .nav-item.active {
   @apply font-medium;
   background-color: var(--mat-sys-surface-container-highest);
-}
-
-// *** NAV DIVIDER ***
-.nav-divider {
-  @apply w-full my-1;
-}
-
-// *** NAV SECTION HEADER ***
-.nav-section-header {
-  @apply pl-3 font-bold;
 }
