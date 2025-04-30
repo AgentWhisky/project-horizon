@@ -4,8 +4,8 @@ import {
   AVERAGE_TYPING_WORD_PER_MINUTE,
 } from '../../../core/constants/average-action-time.constant';
 import { charLabels } from '../../../core/constants/text.constants';
+import { countSyllables } from '../../../core/utilities/text.util';
 import { AnalyzeTextOptions, CharacterBreakdown, ReadabilityStats, TextBreakdown, WordBreakdown } from './text-analyzer';
-import { syllable } from 'syllable';
 
 export function analyzeText(text: string, options?: AnalyzeTextOptions): TextBreakdown {
   const textBreakdown = createEmptyTextBreakdown();
@@ -16,7 +16,6 @@ export function analyzeText(text: string, options?: AnalyzeTextOptions): TextBre
   // Initial Calculations
   const words = text.match(/\b[\w@#]+(?:['’-][\w]+)*\b/g) || [];
   const sentences = text.match(/(?:[^.?!\n]+[.?!]+(?=\s|$))/g)?.map((s) => s.trim()) || [];
-
   const paragraphs = text
     .split(/\n{2,}/)
     .map((p) => p.trim())
@@ -35,10 +34,8 @@ export function analyzeText(text: string, options?: AnalyzeTextOptions): TextBre
   // Time Estimate Analytics
   if (options && options.timeEstimateAnalytics) {
     const totalWordLength = words.reduce((sum, word) => sum + word.length, 0);
-    const totalSentenceLength = sentences.reduce((sum, sentence) => sum + sentence.length, 0);
 
     textBreakdown.averageWordLength = totalWordLength / words.length;
-    textBreakdown.averageSentenceLength = totalSentenceLength / sentences.length;
     textBreakdown.averageReadTimeSeconds = (words.length / AVERAGE_READ_WORD_PER_MINUTE) * 60;
     textBreakdown.averageSpeakingTimeSeconds = (words.length / AVERAGE_SPEAK_WORD_PER_MINUTE) * 60;
     textBreakdown.averageTypingTimeSeconds = (words.length / AVERAGE_TYPING_WORD_PER_MINUTE) * 60;
@@ -65,6 +62,7 @@ export function analyzeText(text: string, options?: AnalyzeTextOptions): TextBre
     textBreakdown.repetitionRate = 1 - uniqueWordCount / words.length;
   }
 
+  // Readability Analytics
   if (options && options.readabilityAnalytics) {
     const readabilityStatus = getReadabilityStats(text, words, sentences.length);
 
@@ -149,8 +147,9 @@ function getReadabilityStats(text: string, words: string[], sentenceCount: numbe
   let complexWordCount = 0;
 
   words.forEach((word) => {
-    const syllablesInWord = syllable(word);
+    const syllablesInWord = countSyllables(word);
     syllableCount += syllablesInWord;
+
     if (syllablesInWord >= 3) {
       complexWordCount++;
     }
@@ -189,7 +188,6 @@ function createEmptyTextBreakdown(): TextBreakdown {
     paragraphCount: 0,
 
     averageWordLength: 0,
-    averageSentenceLength: 0,
     averageReadTimeSeconds: 0,
     averageSpeakingTimeSeconds: 0,
     averageTypingTimeSeconds: 0,
@@ -205,6 +203,5 @@ function createEmptyTextBreakdown(): TextBreakdown {
     smogIndex: 0,
     automatedReadabilityIndex: 0,
     colemanLiauIndex: 0,
-    linsearWriteFormula: 0,
   };
 }

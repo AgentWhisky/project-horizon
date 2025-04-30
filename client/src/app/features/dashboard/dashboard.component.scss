@@ -1,6 +1,6 @@
 .dashboard-card {
   @apply w-full max-w-96 cursor-pointer;
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   background-color: var(--mat-sys-surface-container-low) !important;
   border: 1px solid var(--mat-sys-outline-variant) !important;
   border-radius: var(--mat-sys-corner-extra-small) !important;

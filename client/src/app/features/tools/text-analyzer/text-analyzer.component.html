@@ -3,7 +3,7 @@
     <div class="flex flex-row gap-3">
       <mat-form-field class="w-full" subscriptSizing="dynamic">
         <mat-label>Analyze Text</mat-label>
-        <textarea matInput #textAnalyzeInput [(ngModel)]="textInput" rows="6"></textarea>
+        <textarea matInput [(ngModel)]="textInput" #textAnalyzeInput rows="10"></textarea>
       </mat-form-field>
       <div class="flex flex-col">
         <button mat-icon-button class="icon-button" matTooltip="Clear" (click)="onResetTextInput()"><mat-icon>clear</mat-icon></button>
@@ -12,60 +12,196 @@
         </button>
       </div>
     </div>
-    <mat-slide-toggle [(ngModel)]="caseSensitive">Case Sensitive</mat-slide-toggle>
+    <div class="flex flex-wrap gap-3">
+      <mat-slide-toggle [(ngModel)]="timeEstimateAnalytics">Time Estimatate Analytics</mat-slide-toggle>
+      <mat-slide-toggle [(ngModel)]="contentQualityAnalytics">Content Quality Analytics</mat-slide-toggle>
+      <mat-slide-toggle [(ngModel)]="readabilityAnalytics">Readability Analytics</mat-slide-toggle>
+    </div>
   </div>
 
-  @if(textInput()) {
-  <div class="text-display-tile">
-    <span>Characters: {{ characterBreakdown().total }}</span>
-    <mat-divider vertical></mat-divider>
-    <span>Words: {{ wordBreakdown().total }}</span>
+  @if(hasTextInput()) {
+  <div class="flex flex-col md:flex-row flex-wrap gap-3 justify-center">
+    <!-- TEXT COUNT ANALYTICS -->
+    <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Text Statistics</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="flex flex-col space-y-1 text-sm pt-3">
+          <div class="display-text">
+            <span>Character Count:</span>
+            <span class="text-right">{{ textBreakdown().characterCount }}</span>
+          </div>
+          <div class="display-text">
+            <span>Word Count:</span>
+            <span class="text-right">{{ textBreakdown().wordCount }}</span>
+          </div>
+          <div class="display-text">
+            <span>Sentence Count:</span>
+            <span class="text-right">{{ textBreakdown().sentenceCount }}</span>
+          </div>
+          <div class="display-text">
+            <span>Line Count:</span>
+            <span class="text-right">{{ textBreakdown().lineCount }}</span>
+          </div>
+          <div class="display-text">
+            <span>Paragraph Count:</span>
+            <span class="text-right">{{ textBreakdown().paragraphCount }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- TIME ESTIMATE ANALYTICS -->
+    @if(timeEstimateAnalytics()) {
+    <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Time Estimates</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="flex flex-col space-y-1 text-sm pt-3">
+          <div class="display-text">
+            <span>Average Word Length:</span>
+            <span class="text-right">{{ textBreakdown().averageWordLength | number : '1.1-2' }} chars</span>
+          </div>
+          <div class="display-text">
+            <span>Average Read Time:</span>
+            <span class="text-right">~{{ textBreakdown().averageReadTimeSeconds | timeFormat }}</span>
+          </div>
+          <div class="display-text">
+            <span>Average Speaking Time:</span>
+            <span class="text-right">~{{ textBreakdown().averageSpeakingTimeSeconds | timeFormat }}</span>
+          </div>
+          <div class="display-text">
+            <span>Average Typing Time:</span>
+            <span class="text-right">~{{ textBreakdown().averageTypingTimeSeconds | timeFormat }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    }
+
+    <!-- CONTENT QUALITY ANALYTICS -->
+    @if(contentQualityAnalytics()){
+    <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Content Quality</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="flex flex-col space-y-1 text-sm pt-3">
+          <div class="display-text">
+            <span>Longest Word:</span>
+            <span class="text-right">{{ textBreakdown().longestWord }}</span>
+          </div>
+          <div class="display-text">
+            <span>Shortest Word:</span>
+            <span class="text-right">{{ textBreakdown().shortestWord }}</span>
+          </div>
+          <div class="display-text">
+            <span>Unique Word Count:</span>
+            <span class="text-right">{{ textBreakdown().uniqueWordCount }}</span>
+          </div>
+          <div class="display-text">
+            <span>Repetition Rate:</span>
+            <span class="text-right">{{ textBreakdown().repetitionRate | percent : '1.0-2' }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    }
+
+    <!-- READABILITY ANALYTICS -->
+    @if(readabilityAnalytics()) {
+    <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Readability</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="flex flex-col space-y-1 text-sm pt-3">
+          <div class="display-text">
+            <span>Flesch Reading Ease:</span>
+            <span class="text-right">{{ textBreakdown().fleschReadingEaseScore | number : '1.1-2' }}</span>
+          </div>
+          <div class="display-text">
+            <span>Flesch-Kincaid Grade:</span>
+            <span class="text-right">{{ textBreakdown().fleschKincaidGradeLevel | number : '1.1-2' }}</span>
+          </div>
+          <div class="display-text">
+            <span>Gunning Fog Index:</span>
+            <span class="text-right">{{ textBreakdown().gunningFogIndex | number : '1.1-2' }}</span>
+          </div>
+          <div class="display-text">
+            <span>SMOG Index:</span>
+            <span class="text-right">{{ textBreakdown().smogIndex | number : '1.1-2' }}</span>
+          </div>
+          <div class="display-text">
+            <span>Automated Readability:</span>
+            <span class="text-right">{{ textBreakdown().automatedReadabilityIndex | number : '1.1-2' }}</span>
+          </div>
+          <div class="display-text">
+            <span>Coleman-Liau Index:</span>
+            <span class="text-right">{{ textBreakdown().colemanLiauIndex | number : '1.1-2' }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    }
   </div>
 
   <div class="flex flex-col md:flex-row flex-wrap gap-3 items-start">
-    <div class="hz-card p-3 flex-1">
-      <table mat-table [dataSource]="charBreakdownDataSource" matSort #charBreakdownSort="matSort" class="mat-elevation-z8">
-        <ng-container matColumnDef="character">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by character">Character</th>
-          <td mat-cell *matCellDef="let element">{{ element.character }}</td>
-        </ng-container>
+    <mat-card class="hz-card flex-1">
+      <mat-card-header>
+        <mat-card-title>Character Breakdown</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <table mat-table [dataSource]="charBreakdownDataSource" matSort #charBreakdownSort="matSort" class="mat-elevation-z8">
+          <ng-container matColumnDef="character">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by character">Character</th>
+            <td mat-cell *matCellDef="let element">{{ element.character }}</td>
+          </ng-container>
 
-        <ng-container matColumnDef="count">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by count">Count</th>
-          <td mat-cell *matCellDef="let element">{{ element.count }}</td>
-        </ng-container>
+          <ng-container matColumnDef="count">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by count">Count</th>
+            <td mat-cell *matCellDef="let element">{{ element.count }}</td>
+          </ng-container>
 
-        <ng-container matColumnDef="percent">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by percent">Percent</th>
-          <td mat-cell *matCellDef="let element">{{ element.percent }}%</td>
-        </ng-container>
+          <ng-container matColumnDef="percent">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by percent">Percent</th>
+            <td mat-cell *matCellDef="let element">{{ element.percent }}%</td>
+          </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="charBreakdownDisplayedColumns"></tr>
-        <tr mat-row class="table-row" *matRowDef="let row; columns: charBreakdownDisplayedColumns"></tr>
-      </table>
-    </div>
+          <tr mat-header-row *matHeaderRowDef="charBreakdownDisplayedColumns"></tr>
+          <tr mat-row class="table-row" *matRowDef="let row; columns: charBreakdownDisplayedColumns"></tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
 
-    <div class="hz-card p-3 flex-1">
-      <table mat-table [dataSource]="wordBreakdownDataSource" matSort #wordBreakdownSort="matSort" class="mat-elevation-z8">
-        <ng-container matColumnDef="word">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by word">Word</th>
-          <td mat-cell *matCellDef="let element">{{ element.word }}</td>
-        </ng-container>
+    <mat-card class="hz-card flex-1">
+      <mat-card-header>
+        <mat-card-title>Word Breakdown</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <table mat-table [dataSource]="wordBreakdownDataSource" matSort #wordBreakdownSort="matSort" class="mat-elevation-z8">
+          <ng-container matColumnDef="word">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by word">Word</th>
+            <td mat-cell *matCellDef="let element">{{ element.word }}</td>
+          </ng-container>
 
-        <ng-container matColumnDef="count">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by count">Count</th>
-          <td mat-cell *matCellDef="let element">{{ element.count }}</td>
-        </ng-container>
+          <ng-container matColumnDef="count">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by count">Count</th>
+            <td mat-cell *matCellDef="let element">{{ element.count }}</td>
+          </ng-container>
 
-        <ng-container matColumnDef="percent">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by percent">Percent</th>
-          <td mat-cell *matCellDef="let element">{{ element.percent }}%</td>
-        </ng-container>
+          <ng-container matColumnDef="percent">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by percent">Percent</th>
+            <td mat-cell *matCellDef="let element">{{ element.percent }}%</td>
+          </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="wordBreakdownDisplayedColumns"></tr>
-        <tr mat-row class="table-row" *matRowDef="let row; columns: wordBreakdownDisplayedColumns"></tr>
-      </table>
-    </div>
+          <tr mat-header-row *matHeaderRowDef="wordBreakdownDisplayedColumns"></tr>
+          <tr mat-row class="table-row" *matRowDef="let row; columns: wordBreakdownDisplayedColumns"></tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
   </div>
   }
 </div>

@@ -22,7 +22,6 @@ export interface TextBreakdown {
 
   // Time Estimate Analytics
   averageWordLength: number;
-  averageSentenceLength: number;
   averageReadTimeSeconds: number;
   averageSpeakingTimeSeconds: number;
   averageTypingTimeSeconds: number;
@@ -33,14 +32,13 @@ export interface TextBreakdown {
   uniqueWordCount: number;
   repetitionRate: number;
 
-  // Flesch-Kincaid Readability
+  // Text Readability Analytics
   fleschReadingEaseScore: number;
   fleschKincaidGradeLevel: number;
   gunningFogIndex: number;
   smogIndex: number;
   automatedReadabilityIndex: number;
   colemanLiauIndex: number;
-  linsearWriteFormula: number;
 }
 
 export interface AnalyzeTextOptions {
