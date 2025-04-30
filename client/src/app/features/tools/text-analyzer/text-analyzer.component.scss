@@ -15,8 +15,7 @@ table {
   table-layout: fixed;
 }
 
-td,
-th {
-  word-break: break-word; /* Newer way to force word breaks */
+td {
+  word-break: break-word;
   white-space: normal;
 }

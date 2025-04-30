@@ -14,6 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { getCharacterBreakdown, getWordBreakdown } from '../../../core/utilities/text.util';
 import { CharacterCount, WordCount } from '../../../core/types/text.type';
+import { analyzeText } from './text-analyzer.utils';
 
 @Component({
   selector: 'hz-text-analyzer',
@@ -41,6 +42,14 @@ export class TextAnalyzerComponent implements OnInit {
   readonly characterBreakdown = computed(() => getCharacterBreakdown(this.textInput(), this.caseSensitive()));
   readonly wordBreakdown = computed(() => getWordBreakdown(this.textInput()));
 
+  readonly textBreakdown = computed(() =>
+    analyzeText(this.textInput(), {
+      timeEstimateAnalytics: true,
+      contentQualityAnalytics: true,
+      readabilityAnalytics: true,
+    })
+  );
+
   // Character Table
   readonly charBreakdownSort = viewChild<MatSort>('charBreakdownSort');
   readonly charBreakdownDisplayedColumns: string[] = ['character', 'count', 'percent'];
@@ -67,6 +76,8 @@ export class TextAnalyzerComponent implements OnInit {
     effect(() => {
       this.wordBreakdownDataSource.sort = this.wordBreakdownSort() ?? null;
     });
+
+    effect(() => console.log('TEXT BREAKDOWN', this.textBreakdown()));
   }
 
   ngOnInit() {

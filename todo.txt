@@ -1,5 +1,11 @@
 Client
 ------------------------------
+[HARD] Short flash of lightmode when loading page
+Add text limit to all inputs
+Fix inUse if not refersh
+Update favicon for app
+Fix caching to reflect newer app versions (Ctrl-Shift-R until) - May be fixed
+
 Tools
     Text Analyzer
         Count Sentences
@@ -14,6 +20,9 @@ Tools
     Base Converter
         Update Banner Message
 
+Global
+    Smooth transition between light and dark mode
+
 
 Bugs
     Validate all mat inputs are not cutoff as outline - matInput*
@@ -24,3 +33,4 @@ Server
 
 General
 ------------------------------
+Fix default light mode on page load for 1s
