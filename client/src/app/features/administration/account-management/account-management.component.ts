@@ -125,6 +125,7 @@ export class AccountManagementComponent implements OnInit {
       .open(UserDialogComponent, {
         data: { type: 'update', user },
         width: '560px',
+        panelClass: 'hz-dialog-container',
       })
       .afterClosed()
       .pipe(
@@ -144,6 +145,7 @@ export class AccountManagementComponent implements OnInit {
       .open(RoleDialogComponent, {
         data: { type: 'create' },
         width: '560px',
+        panelClass: 'hz-dialog-container',
       })
       .afterClosed()
       .pipe(
@@ -158,6 +160,7 @@ export class AccountManagementComponent implements OnInit {
       .open(RoleDialogComponent, {
         data: { type: 'update', role },
         width: '560px',
+        panelClass: 'hz-dialog-container',
       })
       .afterClosed()
       .pipe(
@@ -171,7 +174,7 @@ export class AccountManagementComponent implements OnInit {
     const message = 'Are you sure you want to remove this role?';
 
     this.dialog
-      .open(RemoveConfirmComponent, { data: { message } })
+      .open(RemoveConfirmComponent, { data: { message }, panelClass: 'hz-dialog-container' })
       .afterClosed()
       .pipe(
         filter((result) => result),

@@ -29,7 +29,7 @@ export class BaseConverterComponent {
 
   onAddBase() {
     this.dialog
-      .open(BaseConvertTileDialogComponent, { data: { existingBases: this.bases() }, width: '560px' })
+      .open(BaseConvertTileDialogComponent, { data: { existingBases: this.bases() }, width: '560px', panelClass: 'hz-dialog-container' })
       .afterClosed()
       .pipe(
         filter((result) => result && result.status),
@@ -42,7 +42,7 @@ export class BaseConverterComponent {
     const message = `Are you sure you want to remove the Base ${base} tile?`;
 
     this.dialog
-      .open(RemoveConfirmComponent, { data: { message } })
+      .open(RemoveConfirmComponent, { data: { message }, panelClass: 'hz-dialog-container' })
       .afterClosed()
       .pipe(
         filter((result) => result),
@@ -55,7 +55,7 @@ export class BaseConverterComponent {
     const message = `Are you sure you want to remove all base tiles?`;
 
     this.dialog
-      .open(RemoveConfirmComponent, { data: { message } })
+      .open(RemoveConfirmComponent, { data: { message }, panelClass: 'hz-dialog-container' })
       .afterClosed()
       .pipe(
         filter((result) => result),
@@ -75,6 +75,7 @@ export class BaseConverterComponent {
         data: { base, existingConversions: convertBase.conversions },
         height: '220px',
         width: '560px',
+        panelClass: 'hz-dialog-container',
       })
       .afterClosed()
       .pipe(

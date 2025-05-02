@@ -31,6 +31,7 @@ export class UserService {
   loginDialog() {
     this.dialog.open(LoginDialogComponent, {
       width: '560px',
+      panelClass: 'hz-dialog-container',
     });
   }
 

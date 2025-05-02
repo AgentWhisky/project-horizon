@@ -109,6 +109,7 @@ export class LinkLibraryManagementComponent implements OnInit {
       .open(LinkLibraryManagementDialogComponent, {
         data: { type: 'create' },
         width: '560px',
+        panelClass: 'hz-dialog-container',
       })
       .afterClosed()
       .pipe(
@@ -123,6 +124,7 @@ export class LinkLibraryManagementComponent implements OnInit {
       .open(LinkLibraryManagementDialogComponent, {
         data: { type: 'update', link },
         width: '560px',
+        panelClass: 'hz-dialog-container',
       })
       .afterClosed()
       .pipe(
@@ -136,7 +138,7 @@ export class LinkLibraryManagementComponent implements OnInit {
     const message = 'Are you sure you want to remove this link?';
 
     this.dialog
-      .open(RemoveConfirmComponent, { data: { message } })
+      .open(RemoveConfirmComponent, { data: { message }, panelClass: 'hz-dialog-container' })
       .afterClosed()
       .pipe(
         filter((result) => result),
@@ -152,6 +154,7 @@ export class LinkLibraryManagementComponent implements OnInit {
         data: { type: 'create' },
         height: '440px',
         width: '560px',
+        panelClass: 'hz-dialog-container',
       })
       .afterClosed()
       .pipe(
@@ -167,6 +170,7 @@ export class LinkLibraryManagementComponent implements OnInit {
         data: { type: 'update', category },
         height: '440px',
         width: '560px',
+        panelClass: 'hz-dialog-container',
       })
       .afterClosed()
       .pipe(
@@ -185,7 +189,7 @@ export class LinkLibraryManagementComponent implements OnInit {
     const message = 'Are you sure you want to remove this category?';
 
     this.dialog
-      .open(RemoveConfirmComponent, { data: { message } })
+      .open(RemoveConfirmComponent, { data: { message }, panelClass: 'hz-dialog-container' })
       .afterClosed()
       .pipe(
         filter((result) => result),
@@ -201,6 +205,7 @@ export class LinkLibraryManagementComponent implements OnInit {
         data: { type: 'create' },
         height: '220px',
         width: '560px',
+        panelClass: 'hz-dialog-container',
       })
       .afterClosed()
       .pipe(
@@ -216,6 +221,7 @@ export class LinkLibraryManagementComponent implements OnInit {
         data: { type: 'update', tag },
         height: '220px',
         width: '560px',
+        panelClass: 'hz-dialog-container',
       })
       .afterClosed()
       .pipe(
@@ -229,7 +235,7 @@ export class LinkLibraryManagementComponent implements OnInit {
     const message = 'Are you sure you want to remove this tag?';
 
     this.dialog
-      .open(RemoveConfirmComponent, { data: { message } })
+      .open(RemoveConfirmComponent, { data: { message }, panelClass: 'hz-dialog-container' })
       .afterClosed()
       .pipe(
         filter((result) => result),
@@ -242,6 +248,7 @@ export class LinkLibraryManagementComponent implements OnInit {
     this.dialog
       .open(LinkLibraryImportDialogComponent, {
         width: '560px',
+        panelClass: 'hz-dialog-container',
       })
       .afterClosed()
       .pipe(

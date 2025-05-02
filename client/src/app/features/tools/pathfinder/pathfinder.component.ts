@@ -37,7 +37,7 @@ export class PathfinderComponent {
 
   onCreateBoard() {
     this.dialog
-      .open(PathfinderCreateDialogComponent, { width: '560px' })
+      .open(PathfinderCreateDialogComponent, { width: '560px', panelClass: 'hz-dialog-container' })
       .afterClosed()
       .pipe(
         filter((result) => result && result.status),
