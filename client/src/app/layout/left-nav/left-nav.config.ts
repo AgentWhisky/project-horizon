@@ -7,7 +7,8 @@ export interface NavSection {
 
 export interface NavItem {
   name: string;
-  icon: string;
+  icon?: string;
+  svgIcon?: string;
   routerLink: string;
   requiredRights?: string[];
 }
@@ -26,7 +27,8 @@ export const navSections: NavSection[] = [
     navItems: [
       { routerLink: '/text-analyzer', name: 'Text Analyzer', icon: 'manage_search' },
       { routerLink: '/base-converter', name: 'Base Converter', icon: 'calculate' },
-      { routerLink: '/pathfinder', name: 'Pathfinder', icon: 'route' },
+      { routerLink: '/steam-insight', name: 'Steam Insight', svgIcon: 'steam' },
+      //{ routerLink: '/pathfinder', name: 'Pathfinder', icon: 'route' },
     ],
   },
   {

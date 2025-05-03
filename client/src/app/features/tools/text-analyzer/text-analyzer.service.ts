@@ -22,7 +22,12 @@ export class TextAnalyzerService {
   }
 
   resetTextInput() {
-    this.textInput.set('');
+    try {
+      this.textInput.set('');
+      this.snackbar.open(`Successfully cleared text input`, 'Close', { duration: 3000 });
+    } catch (error) {
+      this.snackbar.open(`Failed to clear text input`, 'Close', { duration: 3000 });
+    }
   }
 
   copyTextInput() {

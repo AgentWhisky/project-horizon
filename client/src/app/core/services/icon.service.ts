@@ -12,5 +12,6 @@ export class IconService {
   registerIcons() {
     this.matIconRegistry.addSvgIcon('github', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/github-brands.svg'));
     this.matIconRegistry.addSvgIcon('linkedin', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/linkedin-brands.svg'));
+    this.matIconRegistry.addSvgIcon('steam', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/steam-brands.svg'));
   }
 }

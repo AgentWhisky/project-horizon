@@ -34,6 +34,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/tools/base-converter/base-converter.component').then((c) => c.BaseConverterComponent),
       },
       {
+        path: 'steam-insight',
+        loadComponent: () => import('./features/tools/steam-insight/steam-insight.component').then((c) => c.SteamInsightComponent),
+      },
+      {
         path: 'pathfinder',
         loadComponent: () => import('./features/tools/pathfinder/pathfinder.component').then((c) => c.PathfinderComponent),
       },
