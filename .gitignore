@@ -10,3 +10,6 @@ client/.angular/
 # Server Files
 server/dist/
 server/build/
+
+# Script Files
+scripts/

@@ -7,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrl: './steam-insight.component.scss'
 })
 export class SteamInsightComponent {
-
+  
 }
