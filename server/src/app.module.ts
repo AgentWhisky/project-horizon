@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSourceConfig } from 'db/data-source';
-import { MaintenanceModule } from './maintenance/maintenance.module';
+import { JobsModule } from './jobs/jobs.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards/auth.guard';
@@ -31,7 +31,7 @@ import { CacheModule } from '@nestjs/cache-manager';
         },
       ],
     }),
-    MaintenanceModule,
+    JobsModule,
     AuthenticationModule,
     AdminDashboardModule,
     AccountManagementModule,

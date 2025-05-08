@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LessThan, Repository } from 'typeorm';
-import { Cron } from '@nestjs/schedule';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { RefreshTokenEntity } from 'src/entities/refresh-token.entity';
 
 @Injectable()
@@ -18,13 +18,8 @@ export class RefreshTokenCleanupService implements OnModuleInit {
   }
 
   // Function that cleans up tokens at midnight daily
-  @Cron('0 0 * * *')
-  async cleanExpiredTokensAuto() {
-    this.cleanupTokens();
-  }
-
-  // Function that cleans up tokens on demand
-  async cleanExpiredTokens() {
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async cleanExpiredTokensJob() {
     this.cleanupTokens();
   }
 

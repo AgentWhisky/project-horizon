@@ -16,7 +16,7 @@ import {
 } from '@nestjs/swagger';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { RegistrationDto } from './dto/registration.dto';
-import { RequireRight } from 'src/decorators/require-right.decorator';
+import { RequireRight } from 'src/common/decorators/require-right.decorator';
 import { USER_RIGHTS } from 'src/common/constants/user-rights.constants';
 import { CacheUtils } from 'src/common/utils/cache.utils';
 

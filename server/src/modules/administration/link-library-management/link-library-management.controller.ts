@@ -13,7 +13,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { LinkLibraryManagementService } from './link-library-management.service';
-import { RequireRight } from 'src/decorators/require-right.decorator';
+import { RequireRight } from 'src/common/decorators/require-right.decorator';
 import { LinkDto } from './dto/link.dto';
 import { CategoryDto } from './dto/category.dto';
 import { TagDto } from './dto/tag.dto';

@@ -1,0 +1,326 @@
+import { HttpService } from '@nestjs/axios';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
+import { InjectRepository } from '@nestjs/typeorm';
+import { firstValueFrom } from 'rxjs';
+import { MAX_STEAM_API_RETRIES, STEAM_APP_INFO_URL, STEAM_APP_LIST_URL } from 'src/common/constants/steam-api.constants';
+import { SteamAppEntity } from 'src/entities/steam-app.entity';
+import { SteamUpdateLog } from 'src/entities/steam-update-log.entity';
+import { Repository } from 'typeorm';
+
+@Injectable()
+export class SteamInsightUpdaterService implements OnModuleInit {
+  private updateInProgress = false;
+
+  constructor(
+    @InjectRepository(SteamAppEntity)
+    private readonly steamAppRepository: Repository<SteamAppEntity>,
+    @InjectRepository(SteamUpdateLog)
+    private readonly steamUpdateLogRepository: Repository<SteamUpdateLog>,
+    private readonly httpService: HttpService
+  ) {}
+
+  onModuleInit() {
+    console.log('[INITIAL] Updating Steam Apps...');
+    this.updateSteamApps()
+      .then(() => {
+        console.log('[INITIAL] Steam App update complete');
+      })
+      .catch((error) => {
+        console.error('[INITIAL] Steam app update failed:', error);
+      });
+  }
+
+  @Cron(CronExpression.EVERY_HOUR)
+  updateSteamAppsJob() {
+    console.log('[CRON] Updating Steam Apps...');
+    this.updateSteamApps()
+      .then(() => {
+        console.log('[CRON] Steam App update complete');
+      })
+      .catch((error) => {
+        console.error('[CRON] Steam app update failed:', error);
+      });
+  }
+
+  // *** PRIVATE FUNCTIONS ***
+  private async updateSteamApps() {
+    if (this.updateInProgress) {
+      console.log('Steam App Update in Progress.');
+      return;
+    }
+
+    const updateStartTime = new Date();
+    let updateSuccesses: number[] = [];
+    let updateFailures: number[] = [];
+    let notes = '';
+
+    try {
+      this.updateInProgress = true;
+
+      const result = await this.steamAppRepository.createQueryBuilder('app').select('MAX(app.last_modified)', 'lastModified').getRawOne();
+
+      const lastModified = result?.lastModified;
+      if (!lastModified) {
+        notes = 'Failed to find most recent update date. Validate connection or data set.';
+        throw new Error(notes);
+      }
+
+      const appList = await this.getAppUpdates(lastModified);
+      if (!appList) {
+        notes = 'Failed to retrieve app list from external API.';
+        throw new Error(notes);
+      }
+
+      // Update App Info
+      for (const app of appList) {
+        try {
+          const appInfo = await this.getAppInfo(app.appid);
+          await this.saveAppInfo(app, appInfo);
+
+          updateSuccesses.push(app.appid);
+        } catch {
+          updateFailures.push(app.appid);
+        }
+      }
+    } catch (error) {
+      console.log('Failed to update apps:', error);
+    } finally {
+      const updateEndTime = new Date();
+
+      // Create Update Log
+      await this.steamUpdateLogRepository.save({
+        startTime: updateStartTime,
+        endTime: updateEndTime,
+        successCount: updateSuccesses.length,
+        failureCount: updateFailures.length,
+        successAppIds: updateSuccesses,
+        failureAppIds: updateFailures,
+        notes,
+      });
+
+      this.updateInProgress = false;
+    }
+  }
+
+  private async getAppUpdates(lastModified: Date): Promise<SteamListApp[]> {
+    const lastModifiedEpoch = lastModified.valueOf() / 1000;
+
+    const params = {
+      key: process.env.STEAM_API_KEY,
+      max_results: 50000,
+      include_games: 'True',
+      include_dlc: 'True',
+      if_modified_since: lastModifiedEpoch,
+    };
+
+    const response = await firstValueFrom(this.httpService.get(STEAM_APP_LIST_URL, { params }));
+    return response?.data?.response?.apps;
+  }
+
+  private async getAppInfo(appid: number): Promise<SteamAppInfo> {
+    const params = {
+      appids: appid,
+    };
+
+    for (let attempt = 0; attempt < MAX_STEAM_API_RETRIES; attempt++) {
+      try {
+        const response = await firstValueFrom(this.httpService.get(STEAM_APP_INFO_URL, { params }));
+        return response?.data?.[String(appid)]?.data ?? null;
+      } catch (error) {
+        const status = error?.response?.status;
+
+        if (status === 429) {
+          console.warn(`Recieved 429 Error from steam appid ${appid}. Waiting 5 minutes before retry...`);
+          await new Promise((res) => setTimeout(res, 5 * 60 * 1000)); // Wait 5 minutes
+        } else {
+          console.warn(`Failed to retrieve app info for appid ${appid}. Retry [${attempt + 1}/${MAX_STEAM_API_RETRIES}]`);
+          await new Promise((res) => setTimeout(res, 1000)); // Wait 1 second
+        }
+      }
+    }
+    return null;
+  }
+
+  private async saveAppInfo(listApp: SteamListApp, appInfo: SteamAppInfo) {
+    const entity = this.steamAppRepository.create({
+      appid: listApp.appid,
+      name: listApp.name,
+      lastModified: new Date(listApp.last_modified * 1000),
+      type: appInfo.type,
+      requiredAge: parseInt((appInfo.required_age || '0').toString().replace('+', '')),
+      isFree: !!appInfo.is_free,
+      recommendationsTotal: appInfo.recommendations?.total,
+      comingSoon: appInfo.release_date?.coming_soon,
+      releaseDate: appInfo.release_date?.date,
+      supportUrl: appInfo.support_info?.url,
+      supportEmail: appInfo.support_info?.email,
+      contentDescriptorNotes: appInfo.content_descriptors?.notes,
+      dlc: appInfo.dlc,
+      packages: appInfo.packages,
+      contentDescriptorIds: appInfo.content_descriptors?.ids,
+      developers: appInfo.developers,
+      publishers: appInfo.publishers,
+      categories: appInfo.categories?.map((c) => c.description),
+      genres: appInfo.genres?.map((g) => g.description),
+      detailedDescription: appInfo.detailed_description,
+      aboutTheGame: appInfo.about_the_game,
+      shortDescription: appInfo.short_description,
+      supportedLanguages: appInfo.supported_languages,
+      reviews: appInfo.reviews,
+      legalNotice: appInfo.legal_notice,
+      screenshots: appInfo.screenshots,
+      movies: appInfo.movies,
+      achievements: appInfo.achievements,
+      ratings: appInfo.ratings,
+      packageGroups: appInfo.package_groups,
+      demos: appInfo.demos,
+      fullgame: appInfo.fullgame,
+      headerImage: appInfo.header_image,
+      capsuleImage: appInfo.capsule_image,
+      capsuleImagev5: appInfo.capsule_imagev5,
+      website: appInfo.website,
+      backgroundUrl: appInfo.background,
+      backgroundRawUrl: appInfo.background_raw,
+      pcMinimum: appInfo.pc_requirements?.minimum,
+      pcRecommended: appInfo.pc_requirements?.recommended,
+      macMinimum: appInfo.mac_requirements?.minimum,
+      macRecommended: appInfo.mac_requirements?.recommended,
+      linuxMinimum: appInfo.linux_requirements?.minimum,
+      linuxRecommended: appInfo.linux_requirements?.recommended,
+      supportsWindows: appInfo.platforms?.windows ?? false,
+      supportsMac: appInfo.platforms?.mac ?? false,
+      supportsLinux: appInfo.platforms?.linux ?? false,
+      currency: appInfo.price_overview?.currency,
+      initialPrice: appInfo.price_overview?.initial,
+      finalPrice: appInfo.price_overview?.final,
+      discountPercent: appInfo.price_overview?.discount_percent,
+      initialFormatted: appInfo.price_overview?.initial_formatted,
+      finalFormatted: appInfo.price_overview?.final_formatted,
+      metacriticScore: appInfo.metacritic?.score,
+      metacriticUrl: appInfo.metacritic?.url,
+    });
+
+    await this.steamAppRepository.save(entity);
+  }
+}
+
+// *** INTERFACES ***
+interface SteamListApp {
+  appid: number;
+  name: string;
+  last_modified: number;
+  price_change_number: number;
+}
+
+interface SteamAppInfo {
+  type: string;
+  name: string;
+  steam_appid: number;
+  required_age: number | string;
+  controller_support?: string;
+  is_free: boolean;
+  dlc?: number[];
+  detailed_description: string;
+  about_the_game: string;
+  short_description: string;
+  fullgame?: { appid: number; name: string }[];
+  supported_languages: string;
+  header_image: string;
+  capsule_image?: string;
+  capsule_imagev5?: string;
+  website?: string;
+  background?: string;
+  background_raw?: string;
+  reviews?: string;
+  legal_notice?: string;
+  ratings?: any;
+  developers?: string[];
+  publishers?: string[];
+  categories?: { id: number; description: string }[];
+  genres?: { id: string; description: string }[];
+  screenshots?: Screenshot[];
+  movies?: Movie[];
+  achievements?: {
+    total: number;
+    highlighted: { name: string; path: string }[];
+  };
+  release_date: {
+    coming_soon: boolean;
+    date: string;
+  };
+  support_info?: {
+    url: string;
+    email: string;
+  };
+  content_descriptors?: {
+    ids?: number[];
+    notes?: string;
+  };
+  platforms?: {
+    windows: boolean;
+    mac: boolean;
+    linux: boolean;
+  };
+  metacritic?: {
+    score: number;
+    url: string;
+  };
+  recommendations?: {
+    total: number;
+  };
+  price_overview?: {
+    currency: string;
+    initial: number;
+    final: number;
+    discount_percent: number;
+    initial_formatted: string;
+    final_formatted: string;
+  };
+  packages?: number[];
+  package_groups?: PackageGroup[];
+  demos?: { appid: number; description: string }[];
+  pc_requirements?: Requirements;
+  mac_requirements?: Requirements;
+  linux_requirements?: Requirements;
+}
+
+interface Requirements {
+  minimum: string;
+  recommended?: string;
+}
+
+interface PackageGroup {
+  name: string;
+  title: string;
+  description: string;
+  selection_text: string;
+  save_text: string;
+  display_type: 0 | 1;
+  is_recurring_subscription?: string;
+  subs: {
+    packageid: number;
+    percent_savings_text: string;
+    percent_savings: number;
+    option_text: string;
+    option_description: string;
+    can_get_free_license?: string;
+    is_free_license: boolean;
+    price_in_cents_with_discount: number;
+  }[];
+}
+
+interface Screenshot {
+  id: number;
+  path_thumbnail: string;
+  path_full: string;
+}
+
+interface Movie {
+  id: number;
+  name: string;
+  thumbnail: string;
+  webm: { '480': string; max: string };
+  mp4: { '480': string; max: string };
+  highlight: boolean;
+}

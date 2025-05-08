@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { USER_RIGHTS } from 'src/common/constants/user-rights.constants';
-import { REQUIRE_RIGHTS_KEY } from 'src/decorators/require-right.decorator';
+import { REQUIRE_RIGHTS_KEY } from 'src/common/decorators/require-right.decorator';
 import { UserEntity } from 'src/entities/users.entity';
 import { AuthPayload } from 'src/modules/authentication/authentication.model';
 import { Repository } from 'typeorm';

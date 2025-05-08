@@ -1,7 +1,7 @@
 import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('steam_apps')
-export class SteamApp {
+export class SteamAppEntity {
   @PrimaryColumn({ name: 'appid' })
   appid: number;
 

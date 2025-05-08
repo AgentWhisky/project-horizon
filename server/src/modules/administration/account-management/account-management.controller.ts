@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseInter
 import { AccountManagementService } from './account-management.service';
 import { RoleDto } from './dto/role.dto';
 import { UserDto } from './dto/user.dto';
-import { RequireRight } from 'src/decorators/require-right.decorator';
+import { RequireRight } from 'src/common/decorators/require-right.decorator';
 import { USER_RIGHTS } from 'src/common/constants/user-rights.constants';
 import {
   ApiBearerAuth,

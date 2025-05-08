@@ -1,6 +1,6 @@
 import { Controller, Get, Post, UseInterceptors } from '@nestjs/common';
 import { AdminDashboardService } from './admin-dashboard.service';
-import { RequireRight } from 'src/decorators/require-right.decorator';
+import { RequireRight } from 'src/common/decorators/require-right.decorator';
 import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
 import { CacheUtils } from 'src/common/utils/cache.utils';
 import { CACHE_KEY } from 'src/common/constants/cache-keys.constants';
