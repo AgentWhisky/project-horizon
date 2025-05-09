@@ -11,11 +11,17 @@ export class SteamUpdateLog {
   @Column({ name: 'end_time', type: 'timestamptz' })
   endTime: Date;
 
-  @Column({ name: 'success_count', type: 'int' })
+  @Column({ name: 'success_count', type: 'int', default: 0 })
   successCount: number;
 
-  @Column({ name: 'failure_count', type: 'int' })
+  @Column({ name: 'failure_count', type: 'int', default: 0 })
   failureCount: number;
+
+  @Column({ name: 'created_count', type: 'int', default: 0 })
+  createdCount: number;
+
+  @Column({ name: 'updated_count', type: 'int', default: 0 })
+  updatedCount: number;
 
   @Column({ name: 'success_appids', type: 'int', array: true, nullable: true })
   successAppIds: number[];

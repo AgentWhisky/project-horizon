@@ -2,6 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
+import { stat } from 'fs';
 import { firstValueFrom } from 'rxjs';
 import { MAX_STEAM_API_RETRIES, STEAM_APP_INFO_URL, STEAM_APP_LIST_URL } from 'src/common/constants/steam-api.constants';
 import { SteamAppEntity } from 'src/entities/steam-app.entity';
@@ -21,26 +22,34 @@ export class SteamInsightUpdaterService implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    console.log('[INITIAL] Updating Steam Apps...');
-    this.updateSteamApps()
-      .then(() => {
-        console.log('[INITIAL] Steam App update complete');
-      })
-      .catch((error) => {
-        console.error('[INITIAL] Steam app update failed:', error);
-      });
+    // Update Steam Apps if enabled
+    if (process.env.STEAM_UPDATE_ENABLE === 'true') {
+      console.log('[INITIAL] Updating Steam Apps...');
+      // Run Initial Update
+      this.updateSteamApps()
+        .then(() => {
+          console.log('[INITIAL] Steam App update complete');
+        })
+        .catch((error) => {
+          console.error('[INITIAL] Steam app update failed:', error);
+        });
+    } else {
+      console.warn('Updating Steam Apps is disabled in server config.');
+    }
   }
 
   @Cron(CronExpression.EVERY_HOUR)
   updateSteamAppsJob() {
-    console.log('[CRON] Updating Steam Apps...');
-    this.updateSteamApps()
-      .then(() => {
-        console.log('[CRON] Steam App update complete');
-      })
-      .catch((error) => {
-        console.error('[CRON] Steam app update failed:', error);
-      });
+    if (process.env.STEAM_UPDATE_ENABLE === 'true') {
+      console.log('[CRON] Updating Steam Apps...');
+      this.updateSteamApps()
+        .then(() => {
+          console.log('[CRON] Steam App update complete');
+        })
+        .catch((error) => {
+          console.error('[CRON] Steam app update failed:', error);
+        });
+    }
   }
 
   // *** PRIVATE FUNCTIONS ***
@@ -51,7 +60,7 @@ export class SteamInsightUpdaterService implements OnModuleInit {
     }
 
     const updateStartTime = new Date();
-    let updateSuccesses: number[] = [];
+    let updateSuccesses: SteamAppEntry[] = [];
     let updateFailures: number[] = [];
     let notes = '';
 
@@ -76,15 +85,17 @@ export class SteamInsightUpdaterService implements OnModuleInit {
       for (const app of appList) {
         try {
           const appInfo = await this.getAppInfo(app.appid);
-          await this.saveAppInfo(app, appInfo);
+          const type = await this.saveAppInfo(app, appInfo);
 
-          updateSuccesses.push(app.appid);
+          updateSuccesses.push({ appid: app.appid, type });
         } catch {
           updateFailures.push(app.appid);
         }
       }
     } catch (error) {
-      console.log('Failed to update apps:', error);
+      if (!notes) {
+        notes = `Failed to update steam apps`;
+      }
     } finally {
       const updateEndTime = new Date();
 
@@ -94,7 +105,9 @@ export class SteamInsightUpdaterService implements OnModuleInit {
         endTime: updateEndTime,
         successCount: updateSuccesses.length,
         failureCount: updateFailures.length,
-        successAppIds: updateSuccesses,
+        createdCount: updateSuccesses.filter((s) => s.type === 'CREATE').length,
+        updatedCount: updateSuccesses.filter((s) => s.type === 'UPDATE').length,
+        successAppIds: updateSuccesses.map((s) => s.appid),
         failureAppIds: updateFailures,
         notes,
       });
@@ -142,7 +155,9 @@ export class SteamInsightUpdaterService implements OnModuleInit {
     return null;
   }
 
-  private async saveAppInfo(listApp: SteamListApp, appInfo: SteamAppInfo) {
+  private async saveAppInfo(listApp: SteamListApp, appInfo: SteamAppInfo): Promise<SteamAppEntryType> {
+    const existing = await this.steamAppRepository.findOneBy({ appid: listApp.appid });
+
     const entity = this.steamAppRepository.create({
       appid: listApp.appid,
       name: listApp.name,
@@ -202,10 +217,19 @@ export class SteamInsightUpdaterService implements OnModuleInit {
     });
 
     await this.steamAppRepository.save(entity);
+
+    return existing ? 'UPDATE' : 'CREATE';
   }
 }
 
-// *** INTERFACES ***
+// *** INTERFACES & TYPES ***
+type SteamAppEntryType = 'CREATE' | 'UPDATE';
+
+interface SteamAppEntry {
+  appid: number;
+  type: SteamAppEntryType;
+}
+
 interface SteamListApp {
   appid: number;
   name: string;
