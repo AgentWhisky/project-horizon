@@ -6,7 +6,7 @@ import { stat } from 'fs';
 import { firstValueFrom } from 'rxjs';
 import { MAX_STEAM_API_RETRIES, STEAM_APP_INFO_URL, STEAM_APP_LIST_URL } from 'src/common/constants/steam-api.constants';
 import { SteamAppEntity } from 'src/entities/steam-app.entity';
-import { SteamUpdateLog } from 'src/entities/steam-update-log.entity';
+import { SteamUpdateLogEntity } from 'src/entities/steam-update-log.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -16,8 +16,8 @@ export class SteamInsightUpdaterService implements OnModuleInit {
   constructor(
     @InjectRepository(SteamAppEntity)
     private readonly steamAppRepository: Repository<SteamAppEntity>,
-    @InjectRepository(SteamUpdateLog)
-    private readonly steamUpdateLogRepository: Repository<SteamUpdateLog>,
+    @InjectRepository(SteamUpdateLogEntity)
+    private readonly steamUpdateLogRepository: Repository<SteamUpdateLogEntity>,
     private readonly httpService: HttpService
   ) {}
 
@@ -81,32 +81,54 @@ export class SteamInsightUpdaterService implements OnModuleInit {
         throw new Error(notes);
       }
 
+      let temp = 0;
+
       // Update App Info
       for (const app of appList) {
+        temp++;
+        if (temp > 10) {
+          return;
+        }
+
         try {
           const appInfo = await this.getAppInfo(app.appid);
-          const type = await this.saveAppInfo(app, appInfo);
+          const appEntry = await this.saveAppInfo(app, appInfo);
 
-          updateSuccesses.push({ appid: app.appid, type });
+          updateSuccesses.push(appEntry);
         } catch {
           updateFailures.push(app.appid);
         }
       }
     } catch (error) {
       if (!notes) {
-        notes = `Failed to update steam apps`;
+        notes = `Failed to update steam apps.`;
       }
     } finally {
       const updateEndTime = new Date();
+
+      const successCount = updateSuccesses.length;
+      const failureCount = updateFailures.length;
+
+      if (!notes) {
+        if (successCount > 0 && failureCount === 0) {
+          notes = 'Successfully updated steam apps.';
+        } else if (successCount > 0 && failureCount > 0) {
+          notes = 'Successfully updated steam apps with failures.';
+        } else {
+          notes = 'No updates to steam apps.';
+        }
+      }
 
       // Create Update Log
       await this.steamUpdateLogRepository.save({
         startTime: updateStartTime,
         endTime: updateEndTime,
-        successCount: updateSuccesses.length,
-        failureCount: updateFailures.length,
-        createdCount: updateSuccesses.filter((s) => s.type === 'CREATE').length,
-        updatedCount: updateSuccesses.filter((s) => s.type === 'UPDATE').length,
+        successCount,
+        failureCount,
+        createdGameCount: updateSuccesses.filter((s) => s.action === 'CREATE' && s.type === 'game').length,
+        createdDlcCount: updateSuccesses.filter((s) => s.action === 'CREATE' && s.type === 'dlc').length,
+        updatedGameCount: updateSuccesses.filter((s) => s.action === 'UPDATE' && s.type === 'game').length,
+        updatedDlcCount: updateSuccesses.filter((s) => s.action === 'UPDATE' && s.type === 'dlc').length,
         successAppIds: updateSuccesses.map((s) => s.appid),
         failureAppIds: updateFailures,
         notes,
@@ -155,7 +177,7 @@ export class SteamInsightUpdaterService implements OnModuleInit {
     return null;
   }
 
-  private async saveAppInfo(listApp: SteamListApp, appInfo: SteamAppInfo): Promise<SteamAppEntryType> {
+  private async saveAppInfo(listApp: SteamListApp, appInfo: SteamAppInfo): Promise<SteamAppEntry> {
     const existing = await this.steamAppRepository.findOneBy({ appid: listApp.appid });
 
     const entity = this.steamAppRepository.create({
@@ -218,16 +240,19 @@ export class SteamInsightUpdaterService implements OnModuleInit {
 
     await this.steamAppRepository.save(entity);
 
-    return existing ? 'UPDATE' : 'CREATE';
+    return {
+      appid: appInfo.steam_appid,
+      type: appInfo.type,
+      action: existing ? 'UPDATE' : 'CREATE',
+    };
   }
 }
 
 // *** INTERFACES & TYPES ***
-type SteamAppEntryType = 'CREATE' | 'UPDATE';
-
 interface SteamAppEntry {
   appid: number;
-  type: SteamAppEntryType;
+  type: string;
+  action: 'CREATE' | 'UPDATE';
 }
 
 interface SteamListApp {

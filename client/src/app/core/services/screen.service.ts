@@ -29,7 +29,7 @@ export class ScreenService implements OnDestroy {
     window.addEventListener('scroll', this.scrollListener);
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     window.removeEventListener('resize', this.resizeListener);
     window.removeEventListener('scroll', this.scrollListener);
   }

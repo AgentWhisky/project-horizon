@@ -1,0 +1,12 @@
+.display-text {
+  @apply flex justify-between p-3;
+
+  background-color: none;
+  border-bottom: 1px solid var(--mat-sys-outline) !important;
+  border-top-left-radius: var(--mat-sys-corner-extra-small) !important;
+  border-top-right-radius: var(--mat-sys-corner-extra-small) !important;
+}
+
+.display-text:hover {
+  background-color: var(--mat-sys-surface-container-high);
+}

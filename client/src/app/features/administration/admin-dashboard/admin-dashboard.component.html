@@ -1,21 +1,154 @@
 <div class="w-full flex flex-col gap-3">
-  <mat-card class="card-border">
-    <mat-card-header>
-      <mat-card-title>Admin Settings</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="flex flex-wrap gap-3 pt-3">
-        <mat-form-field subscriptSizing="dynamic">
-          <mat-label>Account Creation Code</mat-label>
-          <input matInput #creationCodeInput [value]="dashboardInfo().creationCode" readonly />
-          <button matSuffix mat-icon-button aria-label="Copy Creation Code" (click)="onCopyToClipboard(creationCodeInput.value)" matTooltip="Copy">
-            <mat-icon>content_copy</mat-icon>
-          </button>
-          <button matSuffix class="mr-3" mat-icon-button aria-label="Refresh Creation Code" (click)="onRefreshCreationCode()" matTooltip="Refresh">
-            <mat-icon>refresh</mat-icon>
-          </button>
-        </mat-form-field>
+  <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
+    <mat-tab label="Settings">
+      <div class="pt-3">
+        <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
+          <mat-card-header>
+            <mat-card-title>App Settings</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="flex flex-col space-y-1 text-sm pt-3">
+              <div class="display-text">
+                <span>Account Creation Code:</span>
+                <span class="text-right">{{ dashboardInfo().settings.creationCode }}</span>
+              </div>
+            </div>
+            <div class="flex flex-wrap gap-3 pt-3">
+              <button mat-flat-button (click)="onCopyToClipboard(dashboardInfo().settings.creationCode)">Copy Creation Code</button>
+              <button mat-flat-button (click)="onRefreshCreationCode()">Refresh Creation Code</button>
+            </div>
+          </mat-card-content>
+        </mat-card>
       </div>
-    </mat-card-content>
-  </mat-card>
+    </mat-tab>
+    <mat-tab label="Steam Insight">
+      <div class="flex flex-col gap-3 pt-3">
+        <div class="flex flex-col md:flex-row flex-wrap gap-3 justify-center">
+          <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
+            <mat-card-header>
+              <mat-card-title>App Update Stats (Past Week)</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="flex flex-col space-y-1 text-sm pt-3">
+                <div class="display-text">
+                  <span>New Games:</span>
+                  <span class="text-right">{{ dashboardInfo().steamInsight.totalNewGames | number }}</span>
+                </div>
+                <div class="display-text">
+                  <span>Updated Games:</span>
+                  <span class="text-right">{{ dashboardInfo().steamInsight.totalUpdatedGames | number }}</span>
+                </div>
+                <div class="display-text">
+                  <span>New DLC:</span>
+                  <span class="text-right">{{ dashboardInfo().steamInsight.totalNewDlc | number }}</span>
+                </div>
+                <div class="display-text">
+                  <span>Updated DLC:</span>
+                  <span class="text-right">{{ dashboardInfo().steamInsight.totalUpdatedDlc | number }}</span>
+                </div>
+                <div class="display-text">
+                  <span>Total Failures:</span>
+                  <span class="text-right">{{ dashboardInfo().steamInsight.totalFailures | number }}</span>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
+            <mat-card-header>
+              <mat-card-title>App Stats (All Time)</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="flex flex-col space-y-1 text-sm pt-3">
+                <div class="display-text">
+                  <span>Total Games</span>
+                  <span class="text-right">{{ dashboardInfo().steamInsight.totalGames | number }}</span>
+                </div>
+                <div class="display-text">
+                  <span>Total DLC</span>
+                  <span class="text-right">{{ dashboardInfo().steamInsight.totalDLC | number }}</span>
+                </div>
+                <div class="display-text">
+                  <span>Last Modified Game:</span>
+                  <span class="text-right">{{ dashboardInfo().steamInsight.gameLastModified | date : 'short' }}</span>
+                </div>
+                <div class="display-text">
+                  <span>Last Modified DLC:</span>
+                  <span class="text-right">{{ dashboardInfo().steamInsight.dlcLastModified | date : 'short' }}</span>
+                </div>
+                <div class="display-text">
+                  <span>Max Appid</span>
+                  <span class="text-right">{{ dashboardInfo().steamInsight.maxAppid }}</span>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
+          <mat-card-header>
+            <mat-card-title>Steam App Update Logs (Past Week)</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <table mat-table [dataSource]="appUpdateLogsDataSource" matSort #appUpdateLogsSort="matSort" class="mat-elevation-z8">
+              <ng-container matColumnDef="runDateRange">
+                <th mat-header-cell *matHeaderCellDef>Update Dates</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.startTime | date : 'short' }} - {{ element.endTime | date : 'short' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="runtime">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by runtime">Runtime</th>
+                <td mat-cell *matCellDef="let element">{{ element.runtime | duration }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="createdGameCount">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by new game count">New Games</th>
+                <td mat-cell *matCellDef="let element">{{ element.createdGameCount | number }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="updatedGameCount">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by updated game count">Updated Games</th>
+                <td mat-cell *matCellDef="let element">{{ element.updatedGameCount | number }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="createdDlcCount">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by new dlc count">New DLC</th>
+                <td mat-cell *matCellDef="let element">{{ element.createdDlcCount | number }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="updatedDlcCount">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by updated dlc count">Updated DLC</th>
+                <td mat-cell *matCellDef="let element">{{ element.updatedDlcCount | number }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="failureCount">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by failure count">Failures</th>
+                <td mat-cell *matCellDef="let element">{{ element.failureCount | number }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="notes">
+                <th mat-header-cell *matHeaderCellDef>Notes</th>
+                <td mat-cell *matCellDef="let element">
+                  @if(element.notes) {
+                  <mat-icon [matTooltip]="element.notes">description</mat-icon>
+                  } @else { {{ '—' }} }
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="appUpdateLogsDisplayedColumns()"></tr>
+              <tr mat-row class="table-row" *matRowDef="let row; columns: appUpdateLogsDisplayedColumns()"></tr>
+            </table>
+
+            <mat-paginator
+              [pageSizeOptions]="[25, 50, 100]"
+              #appUpdateLogsPaginator
+              showFirstLastButtons
+              aria-label="Steam App Update Logs Paginator"></mat-paginator>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 </div>

@@ -3,6 +3,7 @@ import { TokenService } from '../../../core/services/token.service';
 import { firstValueFrom } from 'rxjs';
 import { AdminDashboardInfo, CreationCodeRefresh } from './admin-dashboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ScreenService } from '../../../core/services/screen.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,7 @@ export class AdminDashboardService {
   private tokenService = inject(TokenService);
   private snackbar = inject(MatSnackBar);
 
-  private _dashboardInfo = signal<AdminDashboardInfo>({ creationCode: '' });
+  private _dashboardInfo = signal<AdminDashboardInfo>(EMPTY_ADMIN_DASHBOARD_INFO);
   readonly dashboardInfo = this._dashboardInfo.asReadonly();
 
   async loadDashboard() {
@@ -25,11 +26,9 @@ export class AdminDashboardService {
 
   async refreshCreationCode() {
     try {
-      const creationCodeRefresh = await this.postCreationCodeRefresh();
-      this._dashboardInfo.set({
-        ...this._dashboardInfo(),
-        creationCode: creationCodeRefresh.creationCode,
-      });
+      await this.postCreationCodeRefresh();
+      await this.loadDashboard();
+
       this.snackbar.open('Successfully refreshed account creation code', 'Close', { duration: 3000 });
     } catch (error) {
       this.snackbar.open('Failed to refresh account creation code', 'Close', { duration: 3000 });
@@ -47,3 +46,22 @@ export class AdminDashboardService {
     return firstValueFrom(creationCode$);
   }
 }
+
+const EMPTY_ADMIN_DASHBOARD_INFO: AdminDashboardInfo = {
+  settings: {
+    creationCode: '',
+  },
+  steamInsight: {
+    logs: [],
+    totalNewGames: 0,
+    totalUpdatedGames: 0,
+    totalNewDlc: 0,
+    totalUpdatedDlc: 0,
+    totalFailures: 0,
+    totalGames: 0,
+    totalDLC: 0,
+    gameLastModified: new Date(),
+    dlcLastModified: new Date(),
+    maxAppid: 0,
+  },
+};

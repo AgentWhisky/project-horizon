@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('steam_update_logs')
-export class SteamUpdateLog {
+export class SteamUpdateLogEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -17,11 +17,17 @@ export class SteamUpdateLog {
   @Column({ name: 'failure_count', type: 'int', default: 0 })
   failureCount: number;
 
-  @Column({ name: 'created_count', type: 'int', default: 0 })
-  createdCount: number;
+  @Column({ name: 'created_game_count', type: 'int', default: 0 })
+  createdGameCount: number;
 
-  @Column({ name: 'updated_count', type: 'int', default: 0 })
-  updatedCount: number;
+  @Column({ name: 'created_dlc_count', type: 'int', default: 0 })
+  createdDlcCount: number;
+
+  @Column({ name: 'updated_game_count', type: 'int', default: 0 })
+  updatedGameCount: number;
+
+  @Column({ name: 'updated_dlc_count', type: 'int', default: 0 })
+  updatedDlcCount: number;
 
   @Column({ name: 'success_appids', type: 'int', array: true, nullable: true })
   successAppIds: number[];

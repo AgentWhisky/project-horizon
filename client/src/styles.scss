@@ -39,6 +39,13 @@ body {
       background-color: transparent,
     )
   );
+
+  // Paginator
+  @include mat.paginator-overrides(
+    (
+      container-background-color: transparent,
+    )
+  );
 }
 
 .mdc-notched-outline__notch {

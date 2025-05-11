@@ -5,10 +5,10 @@ import { RefreshTokenCleanupService } from './refresh-token-cleanup.service';
 import { SteamInsightUpdaterService } from './steam-insight-updater.service';
 import { SteamAppEntity } from 'src/entities/steam-app.entity';
 import { HttpModule } from '@nestjs/axios';
-import { SteamUpdateLog } from 'src/entities/steam-update-log.entity';
+import { SteamUpdateLogEntity } from 'src/entities/steam-update-log.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([RefreshTokenEntity, SteamAppEntity, SteamUpdateLog]), HttpModule],
+  imports: [TypeOrmModule.forFeature([RefreshTokenEntity, SteamAppEntity, SteamUpdateLogEntity]), HttpModule],
   providers: [RefreshTokenCleanupService, SteamInsightUpdaterService],
   exports: [RefreshTokenCleanupService, SteamInsightUpdaterService],
 })
