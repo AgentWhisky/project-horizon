@@ -91,6 +91,10 @@ export class AdminDashboardComponent implements OnInit {
     this.adminDashboardService.loadDashboard();
   }
 
+  onRefreshDashboard() {
+    this.adminDashboardService.loadDashboard();
+  }
+
   onCopyToClipboard(text: string) {
     navigator.clipboard
       .writeText(text)
