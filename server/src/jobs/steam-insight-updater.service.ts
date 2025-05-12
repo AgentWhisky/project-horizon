@@ -81,15 +81,8 @@ export class SteamInsightUpdaterService implements OnModuleInit {
         throw new Error(notes);
       }
 
-      let temp = 0;
-
       // Update App Info
       for (const app of appList) {
-        temp++;
-        if (temp > 10) {
-          return;
-        }
-
         try {
           const appInfo = await this.getAppInfo(app.appid);
           const appEntry = await this.saveAppInfo(app, appInfo);
