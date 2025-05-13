@@ -51,8 +51,8 @@ export class AdminDashboardComponent implements OnInit {
   readonly appUpdateLogsPaginator = viewChild<MatPaginator>('appUpdateLogsPaginator');
   readonly appUpdateLogsDisplayedColumns = computed(() =>
     this.isSmallScreen()
-      ? ['runDateRange', 'runtime', 'failureCount']
-      : ['runDateRange', 'runtime', 'createdGameCount', 'updatedGameCount', 'createdDlcCount', 'updatedDlcCount', 'failureCount', 'notes']
+      ? ['startTime', 'runtime', 'failureCount']
+      : ['startTime', 'runtime', 'createdGameCount', 'updatedGameCount', 'createdDlcCount', 'updatedDlcCount', 'failureCount', 'notes']
   );
   readonly appUpdateLogsDataSource = new MatTableDataSource<SteamAppUpdateLogDisplay>();
 
@@ -64,10 +64,8 @@ export class AdminDashboardComponent implements OnInit {
         const runtime = end.getTime() - start.getTime();
 
         return {
-          runDateRange: '',
-          runtime,
           startTime: log.startTime,
-          endTime: log.endTime,
+          runtime,
           successCount: log.successCount,
           failureCount: log.failureCount,
           successAppIds: log.successAppIds,
@@ -92,7 +90,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   onRefreshDashboard() {
-    this.adminDashboardService.loadDashboard();
+    this.adminDashboardService.loadDashboard(true);
   }
 
   onCopyToClipboard(text: string) {

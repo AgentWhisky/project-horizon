@@ -10,3 +10,12 @@
 .display-text:hover {
   background-color: var(--mat-sys-surface-container-high);
 }
+
+.copy-icon {
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.copy-icon:hover {
+  color: var(--mat-sys-primary);
+}

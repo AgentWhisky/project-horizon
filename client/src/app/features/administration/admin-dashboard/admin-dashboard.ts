@@ -41,10 +41,8 @@ export interface SteamAppUpdateLog {
 }
 
 export interface SteamAppUpdateLogDisplay {
-  runDateRange: string;
-  runtime: number;
   startTime: Date;
-  endTime: Date;
+  runtime: number;
   successCount: number;
   failureCount: number;
   successAppIds: number[];

@@ -1,6 +1,12 @@
 <div class="w-full flex flex-col gap-3">
   <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
     <mat-tab label="Settings">
+      <div class="flex justify-end pt-3">
+        <button mat-button (click)="onRefreshDashboard()">
+          <mat-icon>refresh</mat-icon>
+          Refresh
+        </button>
+      </div>
       <div class="pt-3">
         <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
           <mat-card-header>
@@ -22,11 +28,13 @@
       </div>
     </mat-tab>
     <mat-tab label="Steam Insight">
+      <div class="flex justify-end pt-3">
+        <button mat-button (click)="onRefreshDashboard()">
+          <mat-icon>refresh</mat-icon>
+          Refresh
+        </button>
+      </div>
       <div class="flex flex-col gap-3 pt-3">
-        <div class="flex justify-end">
-          <button mat-flat-button (click)="onRefreshDashboard()"><mat-icon>refresh</mat-icon>Refresh</button>
-        </div>
-
         <div class="flex flex-col md:flex-row flex-wrap gap-3 justify-center">
           <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
             <mat-card-header>
@@ -82,7 +90,7 @@
                 </div>
                 <div class="display-text">
                   <span>Max Appid</span>
-                  <span class="text-right">{{ dashboardInfo().steamInsight.maxAppid }}</span>
+                  <span class="text-right">{{ dashboardInfo().steamInsight.maxAppid | number }}</span>
                 </div>
               </div>
             </mat-card-content>
@@ -95,11 +103,9 @@
           </mat-card-header>
           <mat-card-content>
             <table mat-table [dataSource]="appUpdateLogsDataSource" matSort #appUpdateLogsSort="matSort" class="mat-elevation-z8">
-              <ng-container matColumnDef="runDateRange">
-                <th mat-header-cell *matHeaderCellDef>Update Dates</th>
-                <td mat-cell *matCellDef="let element">
-                  {{ element.startTime | date : 'short' }} - {{ element.endTime | date : 'short' }}
-                </td>
+              <ng-container matColumnDef="startTime">
+                <th mat-header-cell *matHeaderCellDef>Start Time</th>
+                <td mat-cell *matCellDef="let element">{{ element.startTime | date : 'short' }}</td>
               </ng-container>
 
               <ng-container matColumnDef="runtime">
@@ -129,7 +135,19 @@
 
               <ng-container matColumnDef="failureCount">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by failure count">Failures</th>
-                <td mat-cell *matCellDef="let element">{{ element.failureCount | number }}</td>
+                <td mat-cell *matCellDef="let element">
+                  @if(element.failureCount) {
+                  <mat-icon
+                    class="copy-icon"
+                    [matTooltip]="'[' + element.failureCount + '] ' + element.failureAppIds.join(', ')"
+                    (click)="onCopyToClipboard(element.failureAppIds.join(', '))">
+                    error
+                  </mat-icon>
+
+                  } @else {
+                  <mat-icon matTooltip="No Failures">check</mat-icon>
+                  }
+                </td>
               </ng-container>
 
               <ng-container matColumnDef="notes">
