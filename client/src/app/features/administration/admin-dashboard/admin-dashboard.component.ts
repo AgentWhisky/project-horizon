@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, OnInit, viewChild } from '@angular/core';
+import { Component, computed, effect, inject, model, OnInit, viewChild } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -16,6 +16,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { DurationPipe } from '../../../core/pipes/duration.pipe';
 import { ScreenService } from '../../../core/services/screen.service';
 import { DatePipe, DecimalPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -30,6 +31,7 @@ import { DatePipe, DecimalPipe } from '@angular/common';
     MatPaginatorModule,
     MatTabsModule,
     MatExpansionModule,
+    FormsModule,
     DurationPipe,
     DatePipe,
     DecimalPipe,
@@ -43,7 +45,6 @@ export class AdminDashboardComponent implements OnInit {
   private screenService = inject(ScreenService);
 
   readonly isSmallScreen = this.screenService.isSmallScreen;
-
   readonly dashboardInfo = this.adminDashboardService.dashboardInfo;
 
   // Steam App Update Logs Table
@@ -55,6 +56,8 @@ export class AdminDashboardComponent implements OnInit {
       : ['startTime', 'runtime', 'createdGameCount', 'updatedGameCount', 'createdDlcCount', 'updatedDlcCount', 'failureCount', 'notes']
   );
   readonly appUpdateLogsDataSource = new MatTableDataSource<SteamAppUpdateLogDisplay>();
+
+  readonly steamAppid = model<number>();
 
   constructor() {
     effect(() => {
@@ -91,6 +94,10 @@ export class AdminDashboardComponent implements OnInit {
 
   onRefreshDashboard() {
     this.adminDashboardService.loadDashboard(true);
+  }
+
+  onSearchSteamAppid() {
+    console.log('APPID', this.steamAppid());
   }
 
   onCopyToClipboard(text: string) {

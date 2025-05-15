@@ -1,12 +1,13 @@
-<div class="w-full flex flex-col gap-3">
+<div class="w-full flex flex-col">
+  <div class="flex justify-end">
+    <button mat-flat-button (click)="onRefreshDashboard()">
+      <mat-icon>refresh</mat-icon>
+      Refresh Dashboard
+    </button>
+  </div>
   <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
+    <!-- SETTINGS -->
     <mat-tab label="Settings">
-      <div class="flex justify-end pt-3">
-        <button mat-button (click)="onRefreshDashboard()">
-          <mat-icon>refresh</mat-icon>
-          Refresh
-        </button>
-      </div>
       <div class="pt-3">
         <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
           <mat-card-header>
@@ -16,7 +17,9 @@
             <div class="flex flex-col space-y-1 text-sm pt-3">
               <div class="display-text">
                 <span>Account Creation Code:</span>
-                <span class="text-right">{{ dashboardInfo().settings.creationCode }}</span>
+                <span class="text-right">
+                  {{ dashboardInfo().settings.creationCode }}
+                </span>
               </div>
             </div>
             <div class="flex flex-wrap gap-3 pt-3">
@@ -27,14 +30,11 @@
         </mat-card>
       </div>
     </mat-tab>
+
+    <!-- STEAM INSIGHT -->
     <mat-tab label="Steam Insight">
-      <div class="flex justify-end pt-3">
-        <button mat-button (click)="onRefreshDashboard()">
-          <mat-icon>refresh</mat-icon>
-          Refresh
-        </button>
-      </div>
       <div class="flex flex-col gap-3 pt-3">
+        <!-- APP UPDATE STATS -->
         <div class="flex flex-col md:flex-row flex-wrap gap-3 justify-center">
           <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
             <mat-card-header>
@@ -66,6 +66,7 @@
             </mat-card-content>
           </mat-card>
 
+          <!-- APP STATS -->
           <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
             <mat-card-header>
               <mat-card-title>App Stats (All Time)</mat-card-title>
@@ -97,6 +98,7 @@
           </mat-card>
         </div>
 
+        <!-- STEAM UPDATE LOGS -->
         <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
           <mat-card-header>
             <mat-card-title>Steam App Update Logs (Past Week)</mat-card-title>

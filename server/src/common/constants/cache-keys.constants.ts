@@ -7,5 +7,6 @@ export const CACHE_KEY = {
   LINK_LIBRARY_MANAGEMENT: 'link-library-management:GET',
   LINK_CATEGORY_MANAGEMENT: 'link-library-management/categories:GET',
   LINK_TAG_MANAGEMENT: 'link-library-management/tags:GET',
-  LINK_LIBRARY_EXPORT: 'link-library-management/export:GET'
+  LINK_LIBRARY_EXPORT: 'link-library-management/export:GET',
+  STEAM_INSIGHT: 'steam-insight:GET',
 } as const;

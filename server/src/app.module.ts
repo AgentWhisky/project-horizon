@@ -14,6 +14,7 @@ import { AccountManagementModule } from './modules/administration/account-manage
 import { LinkLibraryModule } from './modules/libraries/link-library/link-library.module';
 import { LinkLibraryManagementModule } from './modules/administration/link-library-management/link-library-management.module';
 import { CacheModule } from '@nestjs/cache-manager';
+import { SteamInsightModule } from './modules/tools/steam-insight/steam-insight.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { CacheModule } from '@nestjs/cache-manager';
     AccountManagementModule,
     LinkLibraryManagementModule,
     LinkLibraryModule,
+    SteamInsightModule,
   ],
   controllers: [AppController],
   providers: [
