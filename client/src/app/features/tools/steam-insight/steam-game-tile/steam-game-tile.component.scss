@@ -1,0 +1,30 @@
+.steam-game-tile {
+  @apply flex flex-col w-full h-full overflow-hidden;
+
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  cursor: pointer;
+  max-width: 480px;
+
+  background-color: var(--mat-sys-surface-container-low);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-medium);
+}
+
+.steam-game-tile:hover {
+  background-color: var(--mat-sys-surface-container-high) !important;
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.steam-game-tile:active {
+  background-color: var(--mat-sys-surface-container) !important;
+  transform: translateY(-2px) scale(0.98);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.steam-header-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}

@@ -12,10 +12,8 @@ export class SteamInsightController {
   constructor(private readonly steamInsightService: SteamInsightService) {}
 
   @Get()
-  @CacheKey(CACHE_KEY.STEAM_INSIGHT)
+  //@CacheKey(CACHE_KEY.STEAM_INSIGHT)
   async getSteamGames(@Query() query: SteamGameQueryDto) {
-    //const offset = (query.pageNumber - 1) * query.pageSize;
-
-    return this.steamInsightService.getSteamGames();
+    return this.steamInsightService.getSteamGames(query);
   }
 }

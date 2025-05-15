@@ -1,3 +1,35 @@
-<div class="flex flex-col">
-  <hz-status-banner message="This page is still under development and may not function correctly" type="info"></hz-status-banner>
+<div class="flex flex-col justify-center items-center gap-3">
+  <hz-status-banner
+    class="w-full"
+    message="This page is still under development and may not function correctly"
+    type="info"></hz-status-banner>
+
+  <mat-form-field class="page-search" subscriptSizing="dynamic">
+    <mat-label>Search Steam Games</mat-label>
+    <input
+      matInput
+      #steamGameSearchInput
+      [(ngModel)]="steamGameSearch"
+      placeholder="Ex. Elden Ring"
+      maxlength="1024"
+      aria-label="Link library search"
+      (keydown.enter)="onSearch()" />
+    @if(steamGameSearchInput.value && steamGameSearchInput.value !== '') {
+    <button matSuffix class="mr-3" mat-icon-button aria-label="Clear" (click)="onResetFilter()">
+      <mat-icon>close</mat-icon>
+    </button>
+    }
+    <mat-error>Invalid Search Filter</mat-error>
+  </mat-form-field>
+  <div class="flex flex-wrap w-full gap-3 justify-center">
+    @for(steamGame of steamGames(); track steamGame.appid) {
+    <hz-steam-game-tile [steamGame]="steamGame"></hz-steam-game-tile>
+    }
+  </div>
+  <mat-paginator
+    #steamGamePaginator
+    [length]="pageSettings().pageLength"
+    [pageSize]="pageSettings().pageSize"
+    showFirstLastButtons
+    (page)="onSearch()"></mat-paginator>
 </div>

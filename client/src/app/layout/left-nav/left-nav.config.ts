@@ -27,7 +27,7 @@ export const navSections: NavSection[] = [
     navItems: [
       { routerLink: '/text-analyzer', name: 'Text Analyzer', icon: 'manage_search' },
       { routerLink: '/base-converter', name: 'Base Converter', icon: 'calculate' },
-      //{ routerLink: '/steam-insight', name: 'Steam Insight', svgIcon: 'steam' },
+      { routerLink: '/steam-insight', name: 'Steam Insight', svgIcon: 'steam' },
       //{ routerLink: '/pathfinder', name: 'Pathfinder', icon: 'route' },
     ],
   },

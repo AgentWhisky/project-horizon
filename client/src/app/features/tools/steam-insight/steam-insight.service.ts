@@ -1,6 +1,9 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { effect, inject, Injectable, signal } from '@angular/core';
 import { TokenService } from '../../../core/services/token.service';
-import { SteamAppSummary } from './steam-insight';
+import { PageSettings, SteamAppSearchInfo, SteamGameSearchOptions, SteamGameSummary } from './steam-insight';
+import { firstValueFrom } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
+import { cleanObject } from '../../../core/utilities/clean-object.util';
 
 @Injectable({
   providedIn: 'root',
@@ -8,10 +11,34 @@ import { SteamAppSummary } from './steam-insight';
 export class SteamInsightService {
   private tokenService = inject(TokenService);
 
-  private _steamApps = signal<SteamAppSummary[]>([]);
-  readonly steamApps = this._steamApps.asReadonly();
+  private _steamGames = signal<SteamGameSummary[]>([]);
+  readonly steamGames = this._steamGames.asReadonly();
 
-  constructor() {}
+  private _pageSettings = signal<PageSettings>({ pageLength: 0, pageSize: 0 });
+  readonly pageSettings = this._pageSettings.asReadonly();
 
-  async loadSteamApps(search: string, allowAdultContent = false, pageNumber: number = 1, pageSize: number = 20) {}
+  constructor() {
+    effect(() => console.log('STEAM GAMES', this._steamGames()));
+  }
+
+  async loadSteamGames(options?: SteamGameSearchOptions) {
+    try {
+      const searchInfo = await this.getSteamGames(options);
+      this._steamGames.set(searchInfo.steamGames);
+      this._pageSettings.set({
+        pageLength: searchInfo.pageLength,
+        pageSize: searchInfo.pageSize,
+      });
+    } catch (error) {
+      console.error(`Error Fetching Steam Games: ${error}`);
+    }
+  }
+
+  // *** PRIVATE FUNCTIONS ***
+  private async getSteamGames(options?: SteamGameSearchOptions) {
+    const params = new HttpParams({ fromObject: cleanObject(options) });
+
+    const games$ = this.tokenService.getWithTokenRefresh<SteamAppSearchInfo>('/steam-insight', { params });
+    return firstValueFrom(games$);
+  }
 }
