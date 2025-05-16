@@ -4,12 +4,14 @@ import { PageSettings, SteamAppSearchInfo, SteamGameSearchOptions, SteamGameSumm
 import { firstValueFrom } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { cleanObject } from '../../../core/utilities/clean-object.util';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SteamInsightService {
   private tokenService = inject(TokenService);
+  private snackbar = inject(MatSnackBar);
 
   private _steamGames = signal<SteamGameSummary[]>([]);
   readonly steamGames = this._steamGames.asReadonly();
@@ -31,6 +33,7 @@ export class SteamInsightService {
       });
     } catch (error) {
       console.error(`Error Fetching Steam Games: ${error}`);
+      this.snackbar.open('Failed to load Steam apps. Please try again in about a minute.', 'Close', { duration: 3000 });
     }
   }
 

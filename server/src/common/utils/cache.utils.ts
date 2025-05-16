@@ -5,6 +5,8 @@ import { CACHE_KEY } from '../constants/cache-keys.constants';
 
 @Injectable()
 export class CacheUtils {
+  readonly cachedSteamInsightKeys = new Set<string>();
+
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 
   // Administration
@@ -39,5 +41,16 @@ export class CacheUtils {
     await this.cacheManager.del(CACHE_KEY.LINK_LIBRARY_MANAGEMENT);
     await this.cacheManager.del(CACHE_KEY.LINK_CATEGORY_MANAGEMENT);
     await this.cacheManager.del(CACHE_KEY.LINK_TAG_MANAGEMENT);
+  }
+
+  async clearSteamInsightKeys() {
+    const deletePromises: Promise<boolean>[] = [];
+
+    for (const key of this.cachedSteamInsightKeys) {
+      deletePromises.push(this.cacheManager.del(key));
+      this.cachedSteamInsightKeys.delete(key);
+    }
+
+    await Promise.all(deletePromises);
   }
 }

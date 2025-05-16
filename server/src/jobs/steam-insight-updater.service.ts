@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { stat } from 'fs';
 import { firstValueFrom } from 'rxjs';
 import { MAX_STEAM_API_RETRIES, STEAM_APP_INFO_URL, STEAM_APP_LIST_URL } from 'src/common/constants/steam-api.constants';
+import { CacheUtils } from 'src/common/utils/cache.utils';
 import { SteamAppEntity } from 'src/entities/steam-app.entity';
 import { SteamUpdateLogEntity } from 'src/entities/steam-update-log.entity';
 import { Repository } from 'typeorm';
@@ -18,7 +19,8 @@ export class SteamInsightUpdaterService implements OnModuleInit {
     private readonly steamAppRepository: Repository<SteamAppEntity>,
     @InjectRepository(SteamUpdateLogEntity)
     private readonly steamUpdateLogRepository: Repository<SteamUpdateLogEntity>,
-    private readonly httpService: HttpService
+    private readonly httpService: HttpService,
+    private readonly cacheUtils: CacheUtils
   ) {}
 
   onModuleInit() {
@@ -126,6 +128,8 @@ export class SteamInsightUpdaterService implements OnModuleInit {
         failureAppIds: updateFailures,
         notes,
       });
+
+      await this.cacheUtils.clearSteamInsightKeys();
 
       this.updateInProgress = false;
     }

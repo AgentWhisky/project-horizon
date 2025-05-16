@@ -15,25 +15,26 @@ export class SteamInsightService {
     const { pageIndex = 1, pageSize = 20, search, allowAdultContent = false } = options;
     const skip = pageIndex * pageSize;
 
-    console.log('OPTIONS: ', options);
+    // Setup Keyword Query
+    const qb = this.steamAppRepository.createQueryBuilder('app');
+    qb.select(['app.appid', 'app.name', 'app.headerImage', 'app.shortDescription', 'app.categories']);
+    qb.where('app.type = :type', { type: 'game' });
+    qb.skip(skip).take(pageSize);
 
-    const [steamGames, total] = await this.steamAppRepository.findAndCount({
-      where: {
-        type: 'game',
-        ...(search && {
-          name: ILike(`%${search}%`),
-        }),
-      },
-      skip,
-      take: pageSize,
-      select: {
-        appid: true,
-        name: true,
-        headerImage: true,
-        shortDescription: true,
-        categories: true,
-      },
-    });
+    if (search) {
+      const keywords = search
+        .trim()
+        .split(/\s+/)
+        .map((word) => word.toLowerCase());
+
+      keywords.forEach((word, index) => {
+        qb.andWhere(`LOWER(app.name) ILIKE :kw${index}`, {
+          [`kw${index}`]: `%${word}%`,
+        });
+      });
+    }
+
+    const [steamGames, total] = await qb.getManyAndCount();
 
     return {
       pageLength: total,

@@ -1,4 +1,4 @@
-import { Component, inject, model, OnInit, viewChild } from '@angular/core';
+import { Component, inject, model, OnInit, signal, ViewChild, viewChild } from '@angular/core';
 import { StatusBannerComponent } from '../../../shared/components/status-banner/status-banner.component';
 import { SteamInsightService } from './steam-insight.service';
 import { SteamGameTileComponent } from './steam-game-tile/steam-game-tile.component';
@@ -20,21 +20,33 @@ export class SteamInsightComponent implements OnInit {
   readonly pageSettings = this.steamInsightService.pageSettings;
 
   readonly steamGameSearch = model<string>('');
-  readonly steamGamePaginator = viewChild<MatPaginator>('steamGamePaginator');
+  @ViewChild('steamGamePaginator') steamGamePaginator!: MatPaginator;
+
+  readonly isDirty = signal<boolean>(false);
 
   ngOnInit() {
     this.steamInsightService.loadSteamGames();
   }
 
   onSearch() {
+    if (this.isDirty()) {
+      this.steamGamePaginator.pageIndex = 0;
+    }
+
     this.steamInsightService.loadSteamGames({
       search: this.steamGameSearch(),
-      pageIndex: this.steamGamePaginator()?.pageIndex ?? 0,
+      pageIndex: this.steamGamePaginator.pageIndex,
       pageSize: 20,
     });
+    this.isDirty.set(false);
+  }
+
+  onSearchDirty() {
+    this.isDirty.set(true);
   }
 
   onResetFilter() {
     this.steamGameSearch.set('');
+    this.onSearch();
   }
 }

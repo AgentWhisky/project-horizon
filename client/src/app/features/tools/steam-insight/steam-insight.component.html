@@ -10,10 +10,14 @@
       matInput
       #steamGameSearchInput
       [(ngModel)]="steamGameSearch"
+      (ngModelChange)="onSearchDirty()"
       placeholder="Ex. Elden Ring"
       maxlength="1024"
       aria-label="Link library search"
       (keydown.enter)="onSearch()" />
+    <button matSuffix class="mr-3" mat-icon-button aria-label="Search" (click)="onSearch()">
+      <mat-icon>search</mat-icon>
+    </button>
     @if(steamGameSearchInput.value && steamGameSearchInput.value !== '') {
     <button matSuffix class="mr-3" mat-icon-button aria-label="Clear" (click)="onResetFilter()">
       <mat-icon>close</mat-icon>
@@ -28,6 +32,7 @@
   </div>
   <mat-paginator
     #steamGamePaginator
+    hidePageSize
     [length]="pageSettings().pageLength"
     [pageSize]="pageSettings().pageSize"
     showFirstLastButtons
