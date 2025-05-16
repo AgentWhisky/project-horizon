@@ -1,8 +1,8 @@
 import { CACHE_MANAGER, CacheInterceptor } from '@nestjs/cache-manager';
 import { ExecutionContext, Inject, Injectable } from '@nestjs/common';
-import { CACHE_KEY } from '../constants/cache-keys.constants';
+import { CACHE_KEY } from '../../../../common/constants/cache-keys.constants';
 import { createHash } from 'crypto';
-import { CacheUtils } from '../utils/cache.utils';
+import { CacheUtils } from '../../../../common/utils/cache.utils';
 import { Reflector } from '@nestjs/core';
 
 @Injectable()
@@ -20,7 +20,7 @@ export class QueryAwareCacheInterceptor extends CacheInterceptor {
     const query = request.query;
     const queryHash = this.hashQuery(query);
 
-    const cacheKey = `${CACHE_KEY.STEAM_INSIGHT}:${queryHash}`;
+    const cacheKey = `${CACHE_KEY.STEAM_INSIGHT_SEARCH}:${queryHash}`;
 
     // Add Cache Key to utils for tracking
     this.cacheUtils.cachedSteamInsightKeys.add(cacheKey);

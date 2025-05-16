@@ -1,9 +1,10 @@
-import { Controller, Get, Query, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Param, Query, UseInterceptors } from '@nestjs/common';
 import { SteamInsightService } from './steam-insight.service';
-import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 import { ApiTags } from '@nestjs/swagger';
 import { SteamGameQueryDto } from './dto/steam-query.dto';
-import { QueryAwareCacheInterceptor } from 'src/common/interceptors/query-aware-cache.interceptor';
+import { QueryAwareCacheInterceptor } from 'src/modules/tools/steam-insight/interceptors/query-aware-cache.interceptor';
+import { ParamAwareCacheInterceptor } from 'src/modules/tools/steam-insight/interceptors/param-aware-cache.interceptor';
 
 @ApiTags('Steam Insight')
 @Controller('steam-insight')
@@ -15,5 +16,11 @@ export class SteamInsightController {
   @UseInterceptors(QueryAwareCacheInterceptor)
   async getSteamGames(@Query() query: SteamGameQueryDto) {
     return this.steamInsightService.getSteamGames(query);
+  }
+
+  @Get(':appid')
+  @UseInterceptors(ParamAwareCacheInterceptor)
+  async getSteamAppById(@Param('appid') appid: number) {
+    return this.steamInsightService.getSteamAppDetails(appid);
   }
 }

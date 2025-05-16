@@ -1,5 +1,5 @@
 .steam-game-tile {
-  @apply flex flex-col w-full h-full max-w-96 overflow-hidden;
+  @apply flex flex-col w-full h-full max-w-96 overflow-hidden shadow-md;
 
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   cursor: pointer;

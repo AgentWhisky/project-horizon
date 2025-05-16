@@ -1,10 +1,11 @@
 import { Component, input } from '@angular/core';
 import { MatChipsModule } from '@angular/material/chips';
-import { SteamGameSummary } from '../steam-insight';
+import { SteamGameSummary } from '../steam-insight-search';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'hz-steam-game-tile',
-  imports: [MatChipsModule],
+  imports: [MatChipsModule, RouterModule],
   templateUrl: './steam-game-tile.component.html',
   styleUrl: './steam-game-tile.component.scss',
 })

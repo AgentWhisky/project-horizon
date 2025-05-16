@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SteamAppEntity } from 'src/entities/steam-app.entity';
 import { ILike, Repository } from 'typeorm';
-import { SteamAppSearchInfo, SteamAppSearchOptions } from './steam-insight.model';
+import { SteamAppDetails, SteamAppSearchInfo, SteamAppSearchOptions } from './steam-insight.model';
 
 @Injectable()
 export class SteamInsightService {
@@ -41,5 +41,16 @@ export class SteamInsightService {
       pageSize,
       steamGames,
     };
+  }
+
+  async getSteamAppDetails(appid: number): Promise<SteamAppDetails> {
+    const appDetailsDB = await this.steamAppRepository.findOne({ where: { appid } });
+
+    if (!appDetailsDB) {
+      throw new NotFoundException(`Steam App with appid: ${appid} not found`);
+    }
+
+    const { createdDate, updatedDate, ...appDetails } = appDetailsDB;
+    return appDetails;
   }
 }

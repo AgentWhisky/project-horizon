@@ -1,4 +1,4 @@
-<div class="steam-game-tile">
+<div class="steam-game-tile" [routerLink]="['/steam-insight', steamGame().appid]">
   <img [src]="steamGame().headerImage || './assets/images/steam-app-placeholder.jpg'" [alt]="steamGame().name" class="steam-header-img" />
 
   <div class="flex flex-col p-3 gap-1">
@@ -6,10 +6,10 @@
     <p class="text-sm line-clamp-3">
       {{ steamGame().shortDescription }}
     </p>
-    <mat-chip-set class="mt-1" aria-label="Game Genres">
+    <!--<mat-chip-set class="mt-1" aria-label="Game Genres">
       @for(category of steamGame().categories; track category) {
       <mat-chip>{{ category }}</mat-chip>
       }
-    </mat-chip-set>
+    </mat-chip-set>-->
   </div>
 </div>

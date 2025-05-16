@@ -1,15 +1,16 @@
 import { effect, inject, Injectable, signal } from '@angular/core';
-import { TokenService } from '../../../core/services/token.service';
-import { PageSettings, SteamAppSearchInfo, SteamGameSearchOptions, SteamGameSummary } from './steam-insight';
+
+import { PageSettings, SteamAppSearchInfo, SteamGameSearchOptions, SteamGameSummary } from './steam-insight-search';
 import { firstValueFrom } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
-import { cleanObject } from '../../../core/utilities/clean-object.util';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TokenService } from '../../../../core/services/token.service';
+import { cleanObject } from '../../../../core/utilities/clean-object.util';
 
 @Injectable({
   providedIn: 'root',
 })
-export class SteamInsightService {
+export class SteamInsightSearchService {
   private tokenService = inject(TokenService);
   private snackbar = inject(MatSnackBar);
 
@@ -18,10 +19,6 @@ export class SteamInsightService {
 
   private _pageSettings = signal<PageSettings>({ pageLength: 0, pageSize: 0 });
   readonly pageSettings = this._pageSettings.asReadonly();
-
-  constructor() {
-    effect(() => console.log('STEAM GAMES', this._steamGames()));
-  }
 
   async loadSteamGames(options?: SteamGameSearchOptions) {
     try {

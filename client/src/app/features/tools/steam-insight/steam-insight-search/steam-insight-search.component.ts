@@ -1,6 +1,6 @@
 import { Component, inject, model, OnInit, signal, ViewChild, viewChild } from '@angular/core';
-import { StatusBannerComponent } from '../../../shared/components/status-banner/status-banner.component';
-import { SteamInsightService } from './steam-insight.service';
+import { StatusBannerComponent } from '../../../../shared/components/status-banner/status-banner.component';
+import { SteamInsightSearchService } from './steam-insight-search.service';
 import { SteamGameTileComponent } from './steam-game-tile/steam-game-tile.component';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
@@ -8,13 +8,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
-  selector: 'hz-steam-insight',
+  selector: 'hz-steam-insight-search',
   imports: [MatInputModule, MatIconModule, MatPaginatorModule, FormsModule, StatusBannerComponent, SteamGameTileComponent],
-  templateUrl: './steam-insight.component.html',
-  styleUrl: './steam-insight.component.scss',
+  templateUrl: './steam-insight-search.component.html',
+  styleUrl: './steam-insight-search.component.scss',
 })
-export class SteamInsightComponent implements OnInit {
-  private steamInsightService = inject(SteamInsightService);
+export class SteamInsightSearchComponent implements OnInit {
+  private steamInsightService = inject(SteamInsightSearchService);
 
   readonly steamGames = this.steamInsightService.steamGames;
   readonly pageSettings = this.steamInsightService.pageSettings;

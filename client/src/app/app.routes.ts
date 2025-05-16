@@ -35,7 +35,22 @@ export const routes: Routes = [
       },
       {
         path: 'steam-insight',
-        loadComponent: () => import('./features/tools/steam-insight/steam-insight.component').then((c) => c.SteamInsightComponent),
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./features/tools/steam-insight/steam-insight-search/steam-insight-search.component').then(
+                (c) => c.SteamInsightSearchComponent
+              ),
+          },
+          {
+            path: ':appid',
+            loadComponent: () =>
+              import('./features/tools/steam-insight/steam-insight-detail/steam-insight-detail.component').then(
+                (c) => c.SteamInsightDetailComponent
+              ),
+          },
+        ],
       },
       {
         path: 'pathfinder',
