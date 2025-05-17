@@ -9,7 +9,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'hz-steam-insight-search',
-  imports: [MatInputModule, MatIconModule, MatPaginatorModule, FormsModule, StatusBannerComponent, SteamGameTileComponent],
+  imports: [MatInputModule, MatIconModule, MatPaginatorModule, FormsModule, SteamGameTileComponent],
   templateUrl: './steam-insight-search.component.html',
   styleUrl: './steam-insight-search.component.scss',
 })

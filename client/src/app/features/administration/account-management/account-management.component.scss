@@ -1,6 +1,10 @@
+:host {
+  width: 100%;
+}
+
 table {
   th,
   td {
-    @apply py-1
+    @apply py-1;
   }
 }

@@ -1,3 +1,7 @@
+:host {
+  width: 100%;
+}
+
 .grid-container {
   @apply relative overflow-hidden flex-1 justify-items-center p-3;
 

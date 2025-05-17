@@ -1,1 +1,111 @@
-<p>appid: {{ appid() }}</p>
+<!--<div class="app-details-container" [ngStyle]="{ 'background-image': 'url(' + appDetails().backgroundUrl + ')' }">-->
+<div class="app-details-container">
+  <div class="flex flex-row">
+    <a mat-flat-button routerLink="/steam-insight" aria-label="Back to steam game search">
+      <mat-icon aria-hidden="true">arrow_back</mat-icon> Back to search
+    </a>
+  </div>
+  <div class="header-card">
+    <div class="text-content">
+      <h2 class="text-lg font-semibold break-words">
+        {{ appDetails().name }}
+      </h2>
+      <p class="text-sm break-words">
+        {{ appDetails().shortDescription }}
+      </p>
+    </div>
+    <div class="image-wrapper">
+      <img [src]="appDetails().headerImage" [alt]="appDetails().name" class="game-image" />
+    </div>
+  </div>
+
+  <mat-chip-set class="flex flex-row flex-wrap gap-3" aria-label="Game Categories">
+    @for(category of appDetails().categories; track category) {
+    <mat-chip>{{ category }}</mat-chip>
+    }
+  </mat-chip-set>
+
+  <mat-chip-set class="flex flex-row flex-wrap gap-3" aria-label="Game Genres">
+    @for(genre of appDetails().genres; track genre) {
+    <mat-chip>{{ genre }}</mat-chip>
+    }
+  </mat-chip-set>
+
+  <div class="flex flex-col md:flex-row flex-wrap gap-3 justify-center">
+    <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Details</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="flex flex-col space-y-1 text-sm pt-3">
+          <div class="display-text">
+            <span>App ID</span>
+            <span class="text-right">{{ appDetails().appid | number }}</span>
+          </div>
+          <div class="display-text">
+            <span>Name</span>
+            <span class="text-right">{{ appDetails().name }}</span>
+          </div>
+          <div class="display-text">
+            <span>Type</span>
+            <span class="text-right">{{ appDetails().type | titlecase }}</span>
+          </div>
+          <div class="display-text">
+            <span>Release Date</span>
+            <span class="text-right">{{ appDetails().releaseDate ? (appDetails().releaseDate | date : 'mediumDate') : '—' }}</span>
+          </div>
+          <div class="display-text">
+            <span>Last Updated</span>
+            <span class="text-right">{{ appDetails().lastModified | date : 'short' }}</span>
+          </div>
+          <div class="display-text">
+            <span>Website</span>
+            <span class="text-right">
+              @if (appDetails().website) {
+              <a [href]="appDetails().website" target="_blank" rel="noopener noreferrer" class="underline hover:text-primary">
+                {{ appDetails().website }}
+              </a>
+              } @else { — }
+            </span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>App Update Stats (Past Week)</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="flex flex-col space-y-1 text-sm pt-3">
+          <div class="display-text">
+            <span>Supported Languages</span>
+            <span class="text-right" [innerHTML]="appDetails().supportedLanguages || '—'"></span>
+          </div>
+          <div class="display-text">
+            <span>Developers</span>
+            <span class="text-right">{{ appDetails().developers.join(', ') }}</span>
+          </div>
+          <div class="display-text">
+            <span>Publishers</span>
+            <span class="text-right">{{ appDetails().publishers.join(', ') }}</span>
+          </div>
+          <div class="display-text">
+            <span>Legal Notice</span>
+            <span class="text-right">{{ appDetails().legalNotice || '—' }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-tab-group class="hz-card" mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
+    <!-- DETAILS -->
+    <mat-tab label="Details"> </mat-tab>
+
+    <!-- ACHIEVEMENTS -->
+    <mat-tab label="Achievements">
+      <h2>Achievement Table</h2>
+    </mat-tab>
+  </mat-tab-group>
+</div>

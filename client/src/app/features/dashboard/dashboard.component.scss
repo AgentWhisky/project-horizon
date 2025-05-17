@@ -1,3 +1,7 @@
+:host {
+  width: 100%;
+}
+
 .dashboard-card {
   @apply w-full max-w-96 cursor-pointer;
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;

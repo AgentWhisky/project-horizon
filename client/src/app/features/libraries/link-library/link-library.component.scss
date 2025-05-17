@@ -1,5 +1,9 @@
 @use '@angular/material' as mat;
 
+:host {
+  width: 100%;
+}
+
 .link-button {
   @apply w-full items-center text-center;
 

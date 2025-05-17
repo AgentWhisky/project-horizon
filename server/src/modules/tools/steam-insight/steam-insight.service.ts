@@ -12,7 +12,7 @@ export class SteamInsightService {
   ) {}
 
   async getSteamGames(options?: SteamAppSearchOptions): Promise<SteamAppSearchInfo> {
-    const { pageIndex = 1, pageSize = 20, search, allowAdultContent = false } = options;
+    const { pageIndex = 0, pageSize = 20, search, allowAdultContent = false } = options;
     const skip = pageIndex * pageSize;
 
     // Setup Keyword Query
