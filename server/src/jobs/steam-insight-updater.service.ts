@@ -91,7 +91,8 @@ export class SteamInsightUpdaterService implements OnModuleInit {
       // Update App Info
       for (const app of appList) {
         try {
-          const [appInfo, appAchievements] = await Promise.all([this.getAppInfo(app.appid), this.getAppAchievements(app.appid)]);
+          const appInfo = await this.getAppInfo(app.appid);
+          const appAchievements = await this.getAppAchievements(app.appid);
 
           const appEntry = await this.saveAppInfo(app, appInfo, appAchievements);
 
@@ -190,6 +191,10 @@ export class SteamInsightUpdaterService implements OnModuleInit {
       try {
         const response = await firstValueFrom(this.httpService.get(STEAM_APP_SCHEMA_URL, { params }));
         const achievements = response?.data?.game?.availableGameStats?.achievements;
+
+        if (!achievements) {
+          return null;
+        }
 
         return {
           total: achievements.length,
