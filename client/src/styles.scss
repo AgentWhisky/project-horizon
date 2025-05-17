@@ -46,6 +46,14 @@ body {
       container-background-color: transparent,
     )
   );
+
+  // Expansion Panel
+  @include mat.expansion-overrides(
+    (
+      container-background-color: transparent,
+      container-shape: var(--mat-sys-corner-extra-small),
+    )
+  );
 }
 
 .mdc-notched-outline__notch {

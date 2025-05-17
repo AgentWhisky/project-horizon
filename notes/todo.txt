@@ -1,0 +1,12 @@
+Bugs
+------------------------
+Smooth transition between light and dark mode
+Fix inUse if not refersh (Administration)
+Validate all mat inputs are not cutoff as outline appearance
+Sort Key is empty in PROD
+
+
+New Functionality
+------------------------
+Tools
+  Latex Renderer

@@ -4,7 +4,12 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { stat } from 'fs';
 import { firstValueFrom } from 'rxjs';
-import { MAX_STEAM_API_RETRIES, STEAM_APP_INFO_URL, STEAM_APP_LIST_URL } from 'src/common/constants/steam-api.constants';
+import {
+  MAX_STEAM_API_RETRIES,
+  STEAM_APP_INFO_URL,
+  STEAM_APP_LIST_URL,
+  STEAM_APP_SCHEMA_URL,
+} from 'src/common/constants/steam-api.constants';
 import { CacheUtils } from 'src/common/utils/cache.utils';
 import { SteamAppEntity } from 'src/entities/steam-app.entity';
 import { SteamUpdateLogEntity } from 'src/entities/steam-update-log.entity';
@@ -86,8 +91,9 @@ export class SteamInsightUpdaterService implements OnModuleInit {
       // Update App Info
       for (const app of appList) {
         try {
-          const appInfo = await this.getAppInfo(app.appid);
-          const appEntry = await this.saveAppInfo(app, appInfo);
+          const [appInfo, appAchievements] = await Promise.all([this.getAppInfo(app.appid), this.getAppAchievements(app.appid)]);
+
+          const appEntry = await this.saveAppInfo(app, appInfo, appAchievements);
 
           updateSuccesses.push(appEntry);
         } catch {
@@ -163,10 +169,10 @@ export class SteamInsightUpdaterService implements OnModuleInit {
         const status = error?.response?.status;
 
         if (status === 429) {
-          console.warn(`Recieved 429 Error from steam appid ${appid}. Waiting 5 minutes before retry...`);
+          console.warn(`[APP INFO] Recieved 429 Error from steam appid ${appid}. Waiting 5 minutes before retry...`);
           await new Promise((res) => setTimeout(res, 5 * 60 * 1000)); // Wait 5 minutes
         } else {
-          console.warn(`Failed to retrieve app info for appid ${appid}. Retry [${attempt + 1}/${MAX_STEAM_API_RETRIES}]`);
+          console.warn(`[APP INFO] Failed to retrieve app info for appid ${appid}. Retry [${attempt + 1}/${MAX_STEAM_API_RETRIES}]`);
           await new Promise((res) => setTimeout(res, 1000)); // Wait 1 second
         }
       }
@@ -174,13 +180,46 @@ export class SteamInsightUpdaterService implements OnModuleInit {
     return null;
   }
 
-  private async saveAppInfo(listApp: SteamListApp, appInfo: SteamAppInfo): Promise<SteamAppEntry> {
+  private async getAppAchievements(appid: number): Promise<SteamAppAchievements> {
+    const params = {
+      key: process.env.STEAM_API_KEY,
+      appid,
+    };
+
+    for (let attempt = 0; attempt < MAX_STEAM_API_RETRIES; attempt++) {
+      try {
+        const response = await firstValueFrom(this.httpService.get(STEAM_APP_SCHEMA_URL, { params }));
+        const achievements = response?.data?.game?.availableGameStats?.achievements;
+
+        return {
+          total: achievements.length,
+          data: achievements,
+        };
+      } catch (error) {
+        const status = error?.response?.status;
+
+        if (status === 429) {
+          console.warn(`[ACHIEVEMENTS] Received 429 Error from Steam for appid ${appid}. Waiting 5 minutes before retry...`);
+          await new Promise((res) => setTimeout(res, 5 * 60 * 1000)); // Wait 5 minutes
+        } else {
+          console.warn(
+            `[ACHIEVEMENTS] Failed to retrieve achievements for appid ${appid}. Retry [${attempt + 1}/${MAX_STEAM_API_RETRIES}]`
+          );
+          await new Promise((res) => setTimeout(res, 1000)); // Wait 1 second
+        }
+      }
+    }
+    return null;
+  }
+
+  private async saveAppInfo(listApp: SteamListApp, appInfo: SteamAppInfo, appAchievements: SteamAppAchievements): Promise<SteamAppEntry> {
     const existing = await this.steamAppRepository.findOneBy({ appid: listApp.appid });
 
     const entity = this.steamAppRepository.create({
       appid: listApp.appid,
       name: listApp.name,
       lastModified: new Date(listApp.last_modified * 1000),
+      achievements: appAchievements,
       type: appInfo.type,
       requiredAge: parseInt((appInfo.required_age || '0').toString().replace('+', '')),
       isFree: !!appInfo.is_free,
@@ -205,7 +244,6 @@ export class SteamInsightUpdaterService implements OnModuleInit {
       legalNotice: appInfo.legal_notice,
       screenshots: appInfo.screenshots,
       movies: appInfo.movies,
-      achievements: appInfo.achievements,
       ratings: appInfo.ratings,
       packageGroups: appInfo.package_groups,
       demos: appInfo.demos,
@@ -329,6 +367,21 @@ interface SteamAppInfo {
   pc_requirements?: Requirements;
   mac_requirements?: Requirements;
   linux_requirements?: Requirements;
+}
+
+interface SteamAppAchievements {
+  total: number;
+  data: SteamAchievement[];
+}
+
+interface SteamAchievement {
+  name: string;
+  defaultvalue: number;
+  displayName: string;
+  hidden: number;
+  description: string;
+  icon: string;
+  icongray: string;
 }
 
 interface Requirements {

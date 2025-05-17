@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pathfinding Visualizer</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: #1e1e1e;
+      color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    header {
+      background-color: #282c34;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .toolbar button {
+      background: #444;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .toolbar button:hover {
+      background: #666;
+    }
+
+    .main {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .sidebar {
+      width: 200px;
+      background-color: #2a2a2a;
+      padding: 1rem;
+      box-sizing: border-box;
+      border-right: 1px solid #444;
+    }
+
+    .grid-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+      overflow: auto;
+      position: relative;
+    }
+
+    .zoom-controls {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .zoom-controls button {
+      padding: 0.5rem;
+      background: #444;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(10, var(--tile-size));
+      grid-template-rows: repeat(10, var(--tile-size));
+      gap: 2px;
+      transition: transform 0.3s ease;
+    }
+
+    .tile {
+      width: var(--tile-size);
+      height: var(--tile-size);
+      background-color: #333;
+      border-radius: 3px;
+      transition: background-color 0.2s;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .tile.wall {
+      background-color: #888;
+    }
+
+    .tile.start {
+      background-color: green;
+    }
+
+    .tile.end {
+      background-color: red;
+    }
+
+    .tile.cost {
+      background-color: #4a90e2;
+    }
+
+    .tile.selected {
+      outline: 2px solid yellow;
+    }
+
+    .tile-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: #222;
+      padding: 0.5rem;
+      border: 1px solid #555;
+      border-radius: 5px;
+      display: none;
+      flex-direction: column;
+      gap: 0.25rem;
+      z-index: 10;
+    }
+
+    .tile-menu button {
+      background: #555;
+      border: none;
+      color: white;
+      padding: 0.25rem;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+
+    footer {
+      background-color: #282c34;
+      padding: 0.5rem;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Pathfinding Visualizer</h1>
+    <div class="toolbar">
+      <button>Wall Tool</button>
+      <button>Cost Tool</button>
+      <button>Start Node</button>
+      <button>End Node</button>
+      <button>Reset</button>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="sidebar">
+      <h3>Algorithms</h3>
+      <button>A*</button>
+      <button>Dijkstra</button>
+      <button>BFS</button>
+      <button>DFS</button>
+    </div>
+
+    <div class="grid-container">
+      <div class="zoom-controls">
+        <button onclick="zoomIn()">Zoom In +</button>
+        <button onclick="zoomOut()">Zoom Out -</button>
+      </div>
+      <div class="grid" id="grid" style="--tile-size: 40px;">
+        <!-- 10x10 grid -->
+        <script>
+          const gridElement = document.currentScript.parentElement;
+          for (let i = 0; i < 100; i++) {
+            const tile = document.createElement('div');
+            tile.className = 'tile';
+            tile.dataset.index = i;
+
+            const menu = document.createElement('div');
+            menu.className = 'tile-menu';
+            menu.innerHTML = `
+              <button onclick="setWall(this)">Make Wall</button>
+              <button onclick="setCost(this)">Add Cost</button>
+              <button onclick="setStart(this)">Set Start</button>
+              <button onclick="setEnd(this)">Set End</button>
+            `;
+
+            tile.appendChild(menu);
+            tile.addEventListener('click', (e) => {
+              e.stopPropagation();
+              document.querySelectorAll('.tile').forEach(t => {
+                t.classList.remove('selected');
+                t.querySelector('.tile-menu').style.display = 'none';
+              });
+              tile.classList.add('selected');
+              menu.style.display = 'flex';
+            });
+
+            gridElement.appendChild(tile);
+          }
+
+          document.body.addEventListener('click', () => {
+            document.querySelectorAll('.tile').forEach(t => {
+              t.classList.remove('selected');
+              t.querySelector('.tile-menu').style.display = 'none';
+            });
+          });
+
+          function setWall(btn) {
+            const tile = btn.closest('.tile');
+            tile.className = 'tile wall';
+          }
+
+          function setCost(btn) {
+            const tile = btn.closest('.tile');
+            tile.className = 'tile cost';
+          }
+
+          function setStart(btn) {
+            document.querySelectorAll('.tile.start').forEach(t => t.classList.remove('start'));
+            const tile = btn.closest('.tile');
+            tile.className = 'tile start';
+          }
+
+          function setEnd(btn) {
+            document.querySelectorAll('.tile.end').forEach(t => t.classList.remove('end'));
+            const tile = btn.closest('.tile');
+            tile.className = 'tile end';
+          }
+        </script>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Built with ❤️ using Angular
+  </footer>
+
+  <script>
+    let tileSize = 40;
+    const grid = document.getElementById('grid');
+
+    function zoomIn() {
+      tileSize = Math.min(tileSize + 10, 100);
+      grid.style.setProperty('--tile-size', `${tileSize}px`);
+    }
+
+    function zoomOut() {
+      tileSize = Math.max(tileSize - 10, 10);
+      grid.style.setProperty('--tile-size', `${tileSize}px`);
+    }
+  </script>
+
+</body>
+</html>

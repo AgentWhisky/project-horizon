@@ -101,7 +101,15 @@ export class SteamAppEntity {
   @Column({ name: 'achievements', type: 'jsonb', nullable: true })
   achievements: {
     total: number;
-    highlighted: { name: string; path: string }[];
+    data: {
+      name: string;
+      defaultvalue: number;
+      displayName: string;
+      hidden: number;
+      description: string;
+      icon: string;
+      icongray: string;
+    }[];
   };
 
   @Column({ name: 'ratings', type: 'jsonb', nullable: true })

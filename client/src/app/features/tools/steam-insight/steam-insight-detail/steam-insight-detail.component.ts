@@ -10,10 +10,25 @@ import { CommonModule, DecimalPipe, TitleCasePipe } from '@angular/common';
 import { SteamInsightDetailService } from './steam-insight-detail.service';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
+import { DecodeHtmlPipe } from '../../../../core/pipes/decode-html.pipe';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'hz-steam-insight-detail',
-  imports: [MatButtonModule, MatIconModule, MatInputModule, MatTabsModule, MatChipsModule, MatCardModule, RouterModule, CommonModule, DecimalPipe, TitleCasePipe],
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    MatInputModule,
+    MatTabsModule,
+    MatChipsModule,
+    MatCardModule,
+    MatExpansionModule,
+    RouterModule,
+    CommonModule,
+    DecimalPipe,
+    TitleCasePipe,
+    DecodeHtmlPipe,
+  ],
   templateUrl: './steam-insight-detail.component.html',
   styleUrl: './steam-insight-detail.component.scss',
 })
@@ -26,5 +41,50 @@ export class SteamInsightDetailComponent implements OnInit {
 
   ngOnInit() {
     this.steamInsightDetailService.loadSteamAppDetails(this.appid());
+  }
+
+  getFormattedReleaseDate(): string {
+    const rawDate = this.appDetails().releaseDate;
+
+    if (!rawDate) {
+      return '—';
+    }
+
+    // Try to parse a full date first
+    const parsed = new Date(rawDate);
+    if (!isNaN(parsed.getTime())) {
+      const today = new Date();
+      const isFuture = parsed > today;
+
+      const formatted = parsed.toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+
+      return isFuture ? `${formatted} (Upcoming)` : formatted;
+    }
+
+    // Fallback for just year/month strings
+    if (/^\d{4}$/.test(rawDate)) {
+      return rawDate;
+    }
+
+    if (/^\d{4}-\d{2}$/.test(rawDate)) {
+      const [year, month] = rawDate.split('-');
+      const date = new Date(Number(year), Number(month) - 1);
+      const formatted = date.toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'long',
+      });
+
+      // Check if that month/year is in the future
+      const now = new Date();
+      const isFuture = date > now;
+
+      return isFuture ? `${formatted} (Upcoming)` : formatted;
+    }
+
+    return rawDate; // fallback to whatever it is
   }
 }

@@ -51,6 +51,11 @@ export class SteamInsightService {
     }
 
     const { createdDate, updatedDate, ...appDetails } = appDetailsDB;
-    return appDetails;
+
+    return {
+      ...appDetails,
+      categories: appDetails.categories ? [...new Set(appDetails.categories)] : appDetails.categories,
+      genres: appDetails.genres ? [...new Set(appDetails.genres)] : appDetails.genres,
+    };
   }
 }

@@ -47,8 +47,17 @@ export interface SteamAppDetails {
   }[];
   achievements: {
     total: number;
-    highlighted: { name: string; path: string }[];
+    data: {
+      name: string;
+      defaultvalue: number;
+      displayName: string;
+      hidden: number;
+      description: string;
+      icon: string;
+      icongray: string;
+    }[];
   };
+
   ratings: {
     esrb?: RatingDetails;
     dejus?: RatingDetails;
@@ -162,8 +171,9 @@ export const emptySteamAppDetails: SteamAppDetails = {
   movies: [],
   achievements: {
     total: 0,
-    highlighted: [],
+    data: [],
   },
+
   ratings: {},
 
   packageGroups: [],
