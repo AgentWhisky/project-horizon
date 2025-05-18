@@ -7,7 +7,7 @@ export class SteamAppEntity {
 
   @Column({ name: 'name' })
   @Index()
-  name: string;
+  name: string; // Column has a GIN Index using pg_trgm 
 
   @Column({ name: 'last_modified', type: 'timestamptz' })
   lastModified: Date;
