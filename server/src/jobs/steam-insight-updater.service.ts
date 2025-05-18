@@ -206,6 +206,9 @@ export class SteamInsightUpdaterService implements OnModuleInit {
         if (status === 429) {
           console.warn(`[ACHIEVEMENTS] Received 429 Error from Steam for appid ${appid}. Waiting 5 minutes before retry...`);
           await new Promise((res) => setTimeout(res, 5 * 60 * 1000)); // Wait 5 minutes
+        } else if (status === 403) {
+          console.warn(`[ACHIEVEMENTS] Received 403 Error from Steam for appid ${appid}. Skipping...`);
+          break;
         } else {
           console.warn(
             `[ACHIEVEMENTS] Failed to retrieve achievements for appid ${appid}. Retry [${attempt + 1}/${MAX_STEAM_API_RETRIES}]`
