@@ -150,7 +150,7 @@ export class SteamAppEntity {
   demos: { appid: number; description: string }[];
 
   @Column({ name: 'fullgame', type: 'jsonb', nullable: true })
-  fullgame: { appid: number; name: string }[];
+  fullgame: { appid: number; name: string };
 
   // *** URLS & MEDIA ***
   @Column({ name: 'header_image', type: 'text', nullable: true })

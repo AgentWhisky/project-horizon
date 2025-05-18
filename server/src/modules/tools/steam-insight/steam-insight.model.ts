@@ -112,7 +112,7 @@ export interface SteamAppDetails {
     }[];
   }[];
   demos: { appid: number; description: string }[];
-  fullgame: { appid: number; name: string }[];
+  fullgame: { appid: number; name: string };
 
   // URLS & MEDIA
   headerImage: string;

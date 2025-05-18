@@ -5,6 +5,10 @@ Fix inUse if not refersh (Administration)
 Validate all mat inputs are not cutoff as outline appearance
 Sort Key is empty in PROD
 
+Steam Insight
+  > Resets search when returning to search page
+  > 
+
 
 New Functionality
 ------------------------

@@ -1,9 +1,19 @@
 <!--<div class="app-details-container" [ngStyle]="{ 'background-image': 'url(' + appDetails().backgroundUrl + ')' }">-->
 <div class="app-details-container">
-  <div class="flex flex-row">
+  <div class="flex flex-row gap-3 justify-between">
     <a mat-button routerLink="/steam-insight" aria-label="Back to steam game search">
       <mat-icon aria-hidden="true">arrow_back</mat-icon>
       Back to search
+    </a>
+
+    <a
+      mat-button
+      [href]="'https://store.steampowered.com/app/' + appDetails().appid"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Open Steam store page">
+      <mat-icon aria-hidden="true">open_in_new</mat-icon>
+      View on Steam
     </a>
   </div>
 
@@ -40,101 +50,199 @@
     </div>
   </div>
 
-  <div class="flex flex-col md:flex-row flex-wrap gap-3 justify-center">
-    <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
-      <mat-card-header>
-        <mat-card-title>Details</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="flex flex-col space-y-1 text-sm pt-3">
-          <div class="display-text">
-            <span>App ID</span>
-            <span class="text-right">{{ appDetails().appid | number }}</span>
-          </div>
-          <div class="display-text">
-            <span>Name</span>
-            <span class="text-right">{{ appDetails().name }}</span>
-          </div>
-          <div class="display-text">
-            <span>Type</span>
-            <span class="text-right">{{ appDetails().type | titlecase }}</span>
-          </div>
-          <div class="display-text">
-            <span>Release Date</span>
-            <span class="text-right">{{ getFormattedReleaseDate() }}</span>
-          </div>
-          <div class="display-text">
-            <span>Last Updated</span>
-            <span class="text-right">{{ appDetails().lastModified | date : 'medium' }}</span>
-          </div>
-          <div class="display-text">
-            <span>Website</span>
-            <span class="text-right">
-              @if (appDetails().website) {
-              <a [href]="appDetails().website" target="_blank" rel="noopener noreferrer">
-                {{ appDetails().website }}
-              </a>
-              } @else { — }
-            </span>
-          </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
-      <mat-card-header>
-        <mat-card-title>Developer & Publisher Info</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="flex flex-col space-y-1 text-sm pt-3">
-          <div class="display-text">
-            <span>Developers</span>
-            <span class="text-right">{{ appDetails().developers.join(', ') }}</span>
-          </div>
-          <div class="display-text">
-            <span>Publishers</span>
-            <span class="text-right">{{ appDetails().publishers.join(', ') }}</span>
-          </div>
-          <div class="display-text">
-            <span>Support Email</span>
-            <span class="text-right">{{ appDetails().supportEmail || '—' }}</span>
-          </div>
-          <div class="display-text">
-            <span>Support URL</span>
-            @if (appDetails().supportUrl) {
-            <a class="text-right display-text-link" [href]="appDetails().supportUrl" target="_blank" rel="noopener noreferrer">
-              {{ appDetails().supportUrl }}
-            </a>
-            } @else {
-            <span class="text-right">—</span>
-            }
-          </div>
-          <div class="display-text">
-            <span>Legal Notice</span>
-            <span class="text-right">{{ appDetails().legalNotice || '—' }}</span>
-          </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </div>
-
   <mat-tab-group class="hz-card" mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
-    <!-- ACHIEVEMENTS -->
-    <mat-tab label="Achievements">
-      <h2>Achievement Table</h2>
-    </mat-tab>
-
     <!-- DETAILS -->
-    <mat-tab label="Details"></mat-tab>
+    <mat-tab label="Details">
+      <div class="flex flex-col p-3">
+        <div class="display-text">
+          <span>App ID</span>
+          <span class="text-right">{{ appDetails().appid | number }}</span>
+        </div>
+        <div class="display-text">
+          <span>Name</span>
+          <span class="text-right">{{ appDetails().name }}</span>
+        </div>
+        <div class="display-text">
+          <span>Type</span>
+          <span class="text-right">{{ appDetails().type | titlecase }}</span>
+        </div>
+        @if(appDetails().type === 'dlc') {
+        <div class="display-text">
+          <span>Full Game</span>
+          <span class="text-right">{{ appDetails().fullgame.name }}</span>
+        </div>
+        }
+        <div class="display-text">
+          <span>Release Date</span>
+          <span class="text-right">{{ getFormattedReleaseDate() }}</span>
+        </div>
+        <div class="display-text">
+          <span>Last Updated</span>
+          <span class="text-right">{{ appDetails().lastModified | date : 'medium' }}</span>
+        </div>
+        <div class="display-text">
+          <span>Website</span>
+          <span class="text-right">
+            @if (appDetails().website) {
+            <a [href]="appDetails().website" target="_blank" rel="noopener noreferrer">
+              {{ appDetails().website }}
+            </a>
+            } @else { — }
+          </span>
+        </div>
+        <div class="display-text">
+          <span>Developers</span>
+          <span class="text-right">{{ appDetails().developers.join(', ') }}</span>
+        </div>
+        <div class="display-text">
+          <span>Publishers</span>
+          <span class="text-right">{{ appDetails().publishers.join(', ') }}</span>
+        </div>
+        <div class="display-text">
+          <span>Support Email</span>
+          <span class="text-right">{{ appDetails().supportEmail || '—' }}</span>
+        </div>
+        <div class="display-text">
+          <span>Support URL</span>
+          @if (appDetails().supportUrl) {
+          <a class="text-right display-text-link" [href]="appDetails().supportUrl" target="_blank" rel="noopener noreferrer">
+            {{ appDetails().supportUrl }}
+          </a>
+          } @else {
+          <span class="text-right">—</span>
+          }
+        </div>
+        <div class="display-text">
+          <span>Legal Notice</span>
+          <span class="text-right">{{ appDetails().legalNotice || '—' }}</span>
+        </div>
+        <div class="display-text">
+          <span>Supported Languages</span>
+          <span class="text-right" [innerHTML]="appDetails().supportedLanguages"></span>
+        </div>
+      </div>
+    </mat-tab>
 
     <!-- ABOUT THE GAME -->
     <mat-tab label="About the game">
       <div class="p-3 overflow-auto text-sm break-words" [innerHTML]="appDetails().aboutTheGame"></div>
     </mat-tab>
 
+    <!-- SYSTEM REQUIREMENTS -->
+    <mat-tab label="System Requirements">
+      <div class="flex flex-col p-3">
+        <span>IN DEVELOPMENT</span>
+
+        <!--
+          // REQUIREMENTS
+          pcMinimum: string;
+          pcRecommended: string;
+          macMinimum: string;
+          macRecommended: string;
+          linuxMinimum: string;
+          linuxRecommended: string;
+
+          // PLATFORMS
+          supportsWindows: boolean;
+          supportsMac: boolean;
+          supportsLinux: boolean;-->
+      </div>
+    </mat-tab>
+
+    <!-- COST -->
+    @if(!appDetails().isFree) {
+    <mat-tab label="Price">
+      <div class="flex flex-col p-3">
+        <div class="display-text">
+          <span>Currency</span>
+          <span class="text-right">{{ appDetails().currency }}</span>
+        </div>
+        <div class="display-text">
+          <span>Initial Price</span>
+          <span class="text-right">{{ appDetails().initialPrice }}</span>
+        </div>
+        <div class="display-text">
+          <span>Final Price</span>
+          <span class="text-right">{{ appDetails().finalPrice }}</span>
+        </div>
+        <div class="display-text">
+          <span>Current Discount</span>
+          <span class="text-right">{{ appDetails().discountPercent }}</span>
+        </div>
+        <div class="display-text">
+          <span>Initial Formatted</span>
+          <span class="text-right">{{ appDetails().initialFormatted }}</span>
+        </div>
+        <div class="display-text">
+          <span>Final Formatted</span>
+          <span class="text-right">{{ appDetails().finalFormatted }}</span>
+        </div>
+      </div>
+    </mat-tab>
+    }
+  </mat-tab-group>
+
+  <mat-tab-group class="hz-card" mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
+    <!-- ACHIEVEMENTS -->
+    <mat-tab label="Achievements">
+      <div class="flex flex-col p-3">
+        <span>IN DEVELOPMENT</span>
+      </div>
+    </mat-tab>
+
+    <!-- DLC -->
+    <mat-tab label="DLC">
+      <div class="flex flex-col p-3">
+        <span>IN DEVELOPMENT - appids: [{{ appDetails().dlc ? appDetails().dlc.join(', ') : '—' }}]</span>
+      </div>
+      <!--dlc: number[];-->
+    </mat-tab>
+
+    <!-- PACKAGES -->
+    <mat-tab label="Packages">
+      <div class="flex flex-col p-3">
+        <span>IN DEVELOPMENT</span>
+        <!--
+        packages: number[];
+        packageGroups: {
+          name: string;
+          title: string;
+          description: string;
+          selection_text: string;
+          save_text: string;
+          display_type: number;
+          is_recurring_subscription: string;
+          subs: {
+            packageid: number;
+            percent_savings_text: string;
+            percent_savings: number;
+            option_text: string;
+            option_description: string;
+            can_get_free_license: string;
+            is_free_license: boolean;
+            price_in_cents_with_discount: number;
+          }[];
+            }[];
+        -->
+      </div>
+    </mat-tab>
+
     <!-- MEDIA -->
-    <mat-tab label="Media">
-      <h2>Media</h2>
+    <mat-tab label="Mediaa">
+      <div class="flex flex-col p-3"></div>
+      <!--screenshots: { id: number; path_thumbnail: string; path_full: string }[];
+        movies: {
+          id: number;
+          name: string;
+          thumbnail: string;
+          video_urls: {
+            webm_480: string;
+            webm_max: string;
+            mp4_480: string;
+            mp4_max: string;
+          };
+          highlight: boolean;
+        }[];-->
     </mat-tab>
   </mat-tab-group>
 </div>

@@ -26,7 +26,7 @@
 }
 
 .display-text {
-  @apply flex justify-between p-3;
+  @apply flex flex-wrap justify-between gap-3 p-3 text-sm;
 
   background-color: none;
   border-bottom: 1px solid var(--mat-sys-outline) !important;

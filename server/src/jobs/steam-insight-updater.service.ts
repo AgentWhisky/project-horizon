@@ -255,7 +255,7 @@ export class SteamInsightUpdaterService implements OnModuleInit {
       ratings: appInfo.ratings,
       packageGroups: appInfo.package_groups,
       demos: appInfo.demos,
-      fullgame: appInfo.fullgame,
+      fullgame: Array.isArray(appInfo.fullgame) ? appInfo.fullgame[0] : (appInfo.fullgame ?? null),
       headerImage: appInfo.header_image,
       capsuleImage: appInfo.capsule_image,
       capsuleImagev5: appInfo.capsule_imagev5,
