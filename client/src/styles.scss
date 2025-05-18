@@ -145,3 +145,40 @@ body {
 .drag-list.cdk-drop-list-dragging .drag-box:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
+
+// *** STEAM HTML CSS ***
+.game_area_description {
+  line-height: 1.5em;
+  font-size: 14px;
+  margin-top: 30px;
+  overflow: hidden;
+  width: 616px;
+  max-width: 100%;
+  font-family: 'Motiva Sans', Sans-serif;
+  font-weight: normal;
+}
+
+.bb_tag {
+  margin-top: 18px;
+  margin-bottom: 0px;
+  background-image: none;
+  font-size: 15px;
+  color: #2f89bc;
+  text-transform: none;
+  letter-spacing: 0px;
+}
+
+.bb_tag strong {
+  font-family: 'Motiva Sans', Sans-serif;
+  font-weight: 500;
+}
+
+.bb_img {
+  clip-path: inset(0);
+}
+
+.bb_paragraph {
+  min-height: 0.15em;
+  line-height: 1.5em;
+  margin: 0.5em 0;
+}

@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
 
 @Entity('steam_apps')
 export class SteamAppEntity {
@@ -6,12 +6,14 @@ export class SteamAppEntity {
   appid: number;
 
   @Column({ name: 'name' })
+  @Index()
   name: string;
 
   @Column({ name: 'last_modified', type: 'timestamptz' })
   lastModified: Date;
 
   @Column({ name: 'type' })
+  @Index()
   type: string;
 
   // *** APP INFO ***
