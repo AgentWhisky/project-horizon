@@ -5,4 +5,4 @@ export const charLabels: Record<string, string> = {
   '\r': 'CARRIAGE_RETURN',
   '\v': 'VERTICAL_TAB',
   '\f': 'FORM_FEED',
-};
+} as const;;

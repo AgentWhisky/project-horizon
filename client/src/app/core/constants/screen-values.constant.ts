@@ -1,4 +1,4 @@
-export const SMALL_SCREEN_SIZE = 1100;
-export const MOBILE_SCREEN_SIZE = 768;
+export const SMALL_SCREEN_SIZE = 1100 as const;;
+export const MOBILE_SCREEN_SIZE = 768 as const;;
 
-export const SCROLL_Y = 0;
+export const SCROLL_Y = 0 as const;;
