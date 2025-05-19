@@ -16,3 +16,8 @@ export interface SteamGameSearchOptions {
   pageIndex?: number;
   pageSize?: number;
 }
+
+export interface SelectedApp {
+  appid: number;
+  name: string;
+}

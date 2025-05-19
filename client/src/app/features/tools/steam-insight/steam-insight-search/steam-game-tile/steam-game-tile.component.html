@@ -1,4 +1,4 @@
-<div class="steam-game-tile" [routerLink]="['/steam-insight', steamGame().appid]">
+<div class="steam-game-tile" (click)="onSelectApp()">
   <img [src]="steamGame().headerImage || './assets/images/steam-app-placeholder.jpg'" [alt]="steamGame().name" class="steam-header-img" />
 
   <div class="flex flex-col p-3 gap-1">

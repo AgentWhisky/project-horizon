@@ -1,1 +1,1 @@
-export const MAX_SEARCH_HISTORY = 20 as const;
+export const MAX_SEARCH_HISTORY = 10 as const;

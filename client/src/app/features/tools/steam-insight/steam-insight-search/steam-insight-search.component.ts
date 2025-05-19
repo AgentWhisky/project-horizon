@@ -5,9 +5,10 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { TitleCasePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import { SelectedApp } from './steam-insight-search';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'hz-steam-insight-search',
@@ -16,10 +17,10 @@ import { MatButtonModule } from '@angular/material/button';
     MatInputModule,
     MatIconModule,
     MatPaginatorModule,
-    MatAutocompleteModule,
+    MatChipsModule,
+    MatTooltipModule,
     FormsModule,
     SteamGameTileComponent,
-    TitleCasePipe,
   ],
   templateUrl: './steam-insight-search.component.html',
   styleUrl: './steam-insight-search.component.scss',
@@ -45,6 +46,11 @@ export class SteamInsightSearchComponent implements OnInit {
     this.steamInsightService.search(this.steamGameSearch());
   }
 
+  onChipSearch(app: SelectedApp) {
+    this.steamGameSearch.set(app.name);
+    this.onSearch();
+  }
+
   onSetPage() {
     this.steamInsightService.setPage(this.steamGamePaginator.pageIndex);
   }
@@ -52,6 +58,15 @@ export class SteamInsightSearchComponent implements OnInit {
   onResetFilter() {
     this.steamGameSearch.set('');
     this.onSearch();
+  }
+
+  // *** SEARCH HISTORY FUNCTIONS ***
+  onSelectApp(selectedApp: SelectedApp) {
+    this.steamInsightService.addSelectedApp(selectedApp);
+  }
+
+  onRemoveAppFromHistory(selectedApp: SelectedApp) {
+    this.steamInsightService.removeSelectedApp(selectedApp);
   }
 
   onClearSearchHistory() {

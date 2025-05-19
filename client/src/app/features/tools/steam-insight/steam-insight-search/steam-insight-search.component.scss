@@ -1,3 +1,12 @@
 :host {
   width: 100%;
 }
+
+.search-history-chip {
+  display: inline-block;
+  max-width: 12rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}

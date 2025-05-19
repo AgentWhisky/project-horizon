@@ -1,6 +1,7 @@
 <div class="flex flex-col gap-3">
   <div class="flex flex-col gap-3">
-    <div class="flex flex-row flex-wrap justify-center items-center gap-3">
+    <div class="flex flex-col justify-center items-center gap-3">
+      <!-- SEARCH INPUT -->
       <mat-form-field class="page-search" subscriptSizing="dynamic">
         <mat-label>Search Steam Games</mat-label>
         <input
@@ -9,28 +10,39 @@
           [(ngModel)]="steamGameSearch"
           maxlength="1024"
           aria-label="Link library search"
-          (keydown.enter)="steamGameSearchInput.blur(); autocompleteTrigger.closePanel(); onSearch()"
-          #autocompleteTrigger="matAutocompleteTrigger"
-          [matAutocomplete]="steamInsightSearchAutocomplete" />
-        <mat-autocomplete #steamInsightSearchAutocomplete="matAutocomplete" (optionSelected)="onSearch()">
-          @for (search of searchHistory(); track search) {
-          <mat-option [value]="search | titlecase" (onSelectionChange)="onSearch()">{{ search | titlecase }}</mat-option>
-          }
-        </mat-autocomplete>
+          (keydown.enter)="steamGameSearchInput.blur(); onSearch()" />
+        <button matSuffix mat-icon-button aria-label="Search" (click)="onSearch()">
+          <mat-icon>search</mat-icon>
+        </button>
+        @if(steamGameSearchInput.value && steamGameSearchInput.value !== '') {
+        <button matSuffix class="mr-3" mat-icon-button aria-label="Clear" (click)="onResetFilter()">
+          <mat-icon>close</mat-icon>
+        </button>
+        }
         <mat-error>Invalid Search Filter</mat-error>
       </mat-form-field>
 
-      <button mat-icon-button class="icon-button" matTooltip="Search" (click)="onSearch()"><mat-icon>search</mat-icon></button>
-      <button mat-icon-button class="icon-button" matTooltip="Clear" (click)="onResetFilter()"><mat-icon>clear</mat-icon></button>
+      <!-- SEARCH HISTORY CHIPS -->
+      <mat-chip-set aria-label="Search History">
+        <div class="w-full flex flex-row flex-wrap items-center justify-center">
+          @for(app of searchHistory(); track app) {
+          <mat-chip (removed)="onRemoveAppFromHistory(app)" (click)="onChipSearch(app)" [matTooltip]="app.name">
+            <span class="search-history-chip">{{ app.name }}</span>
+            <button matChipRemove [attr.aria-label]="'Remove ' + app.name">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+          }
+        </div>
+      </mat-chip-set>
     </div>
-    <button mat-button (click)="onClearSearchHistory()">Clear Search History</button>
   </div>
 
   <!-- STEAM GAME TILES -->
   <div class="flex flex-col justify-center items-center">
     <div class="flex flex-wrap w-full gap-3 justify-center">
       @for(steamGame of steamGames(); track steamGame.appid) {
-      <hz-steam-game-tile [steamGame]="steamGame"></hz-steam-game-tile>
+      <hz-steam-game-tile [steamGame]="steamGame" (selectedApp)="onSelectApp($event)"></hz-steam-game-tile>
       }
     </div>
     <mat-paginator

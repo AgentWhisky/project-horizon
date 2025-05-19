@@ -1,6 +1,6 @@
 import { effect, inject, Injectable, signal } from '@angular/core';
 
-import { SteamAppSearchInfo, SteamGameSearchOptions, SteamGameSummary } from './steam-insight-search';
+import { SteamAppSearchInfo, SteamGameSearchOptions, SteamGameSummary, SelectedApp } from './steam-insight-search';
 import { firstValueFrom } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -30,7 +30,7 @@ export class SteamInsightSearchService {
   private _currentSearch = signal<string>('');
   readonly currentSearch = this._currentSearch.asReadonly();
 
-  private _searchHistory = signal<string[]>(this.loadSearchHistory());
+  private _searchHistory = signal<SelectedApp[]>(this.loadSearchHistory());
   readonly searchHistory = this._searchHistory.asReadonly();
 
   constructor() {
@@ -45,10 +45,6 @@ export class SteamInsightSearchService {
   resetSearch() {
     this._currentSearch.set('');
     this._pageIndex.set(0);
-  }
-
-  clearSearchHistory() {
-    this._searchHistory.set([]);
   }
 
   async initalLoad() {
@@ -69,12 +65,6 @@ export class SteamInsightSearchService {
     this._currentSearch.set(cleanedSearch);
     this._pageIndex.set(0);
 
-    // Add to search history
-    if (cleanedSearch) {
-      const cleanedHistory = [...this._searchHistory()].filter((s) => s !== cleanedSearch).slice(0, MAX_SEARCH_HISTORY);
-      this._searchHistory.set([cleanedSearch, ...cleanedHistory]);
-    }
-
     this.loadSteamGames();
   }
 
@@ -94,6 +84,25 @@ export class SteamInsightSearchService {
     }
   }
 
+  // *** SEARCH HISTORY FUNCTIONS ***
+  addSelectedApp(app: SelectedApp) {
+    const existingSearch = this._searchHistory()
+      .filter((item) => item.appid !== app.appid)
+      .slice(0, MAX_SEARCH_HISTORY);
+
+    this._searchHistory.set([app, ...existingSearch]);
+  }
+
+  removeSelectedApp(app: SelectedApp) {
+    const existingSearch = this._searchHistory().filter((item) => item.appid !== app.appid);
+
+    this._searchHistory.set([...existingSearch]);
+  }
+
+  clearSearchHistory() {
+    this._searchHistory.set([]);
+  }
+
   // *** PRIVATE FUNCTIONS ***
   private async getSteamGames(options?: SteamGameSearchOptions) {
     const params = new HttpParams({ fromObject: cleanObject(options) });
@@ -106,7 +115,7 @@ export class SteamInsightSearchService {
     localStorage.setItem(STEAM_INSIGHT_SEARCH_HISTORY, JSON.stringify(this._searchHistory()));
   }
 
-  private loadSearchHistory(): string[] {
+  private loadSearchHistory(): SelectedApp[] {
     const searchHistoryString = localStorage.getItem(STEAM_INSIGHT_SEARCH_HISTORY);
     return searchHistoryString ? JSON.parse(searchHistoryString) : [];
   }
