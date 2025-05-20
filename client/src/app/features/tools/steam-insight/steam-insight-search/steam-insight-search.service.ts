@@ -55,7 +55,7 @@ export class SteamInsightSearchService {
   }
 
   async search(search: string) {
-    const cleanedSearch = search.trim().toLowerCase();
+    const cleanedSearch = search.trim();
 
     // Ignore identical search
     if (!this._isInitalSearch() && cleanedSearch === this._currentSearch()) {
@@ -88,7 +88,7 @@ export class SteamInsightSearchService {
   addSelectedApp(app: SelectedApp) {
     const existingSearch = this._searchHistory()
       .filter((item) => item.appid !== app.appid)
-      .slice(0, MAX_SEARCH_HISTORY);
+      .slice(0, MAX_SEARCH_HISTORY-1);
 
     this._searchHistory.set([app, ...existingSearch]);
   }
