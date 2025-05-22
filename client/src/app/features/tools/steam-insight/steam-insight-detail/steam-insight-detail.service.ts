@@ -1,8 +1,9 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { effect, inject, Injectable, signal } from '@angular/core';
 import { TokenService } from '../../../../core/services/token.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { emptySteamAppDetails, SteamAppDetails } from './steam-insight-detail';
 import { firstValueFrom } from 'rxjs';
+import { STEAM_INSIGHT_SHOW_ACHIEVEMENTS } from '../../../../core/constants/storage-keys.constant';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,11 @@ export class SteamInsightDetailService {
   private _appDetails = signal<SteamAppDetails>(emptySteamAppDetails);
   readonly appDetails = this._appDetails.asReadonly();
 
-  constructor() {}
+  readonly showHiddenAchievements = signal<boolean>(this.loadShowHiddenAchievements());
+
+  constructor() {
+    effect(() => this.saveShowHiddenAchievements());
+  }
 
   async loadSteamAppDetails(appid: number) {
     try {
@@ -29,5 +34,13 @@ export class SteamInsightDetailService {
   private async getSteamAppDetails(appid: number) {
     const appDetails$ = this.tokenService.getWithTokenRefresh<SteamAppDetails>(`/steam-insight/${appid}`);
     return firstValueFrom(appDetails$);
+  }
+
+  saveShowHiddenAchievements() {
+    localStorage.setItem(STEAM_INSIGHT_SHOW_ACHIEVEMENTS, JSON.stringify(this.showHiddenAchievements()));
+  }
+
+  loadShowHiddenAchievements(): boolean {
+    return JSON.parse(localStorage.getItem(STEAM_INSIGHT_SHOW_ACHIEVEMENTS) || 'false');
   }
 }

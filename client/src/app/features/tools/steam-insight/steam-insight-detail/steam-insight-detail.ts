@@ -47,15 +47,7 @@ export interface SteamAppDetails {
   }[];
   achievements: {
     total: number;
-    data: {
-      name: string;
-      defaultvalue: number;
-      displayName: string;
-      hidden: number;
-      description: string;
-      icon: string;
-      icongray: string;
-    }[];
+    data: SteamAchievement[];
   };
 
   ratings: {
@@ -131,6 +123,21 @@ export interface RatingDetails {
   required_age?: string;
   use_age_gate?: string;
   interactive_elements?: string;
+}
+
+export interface SteamAchievement {
+  name: string;
+  defaultvalue: number;
+  displayName: string;
+  hidden: number;
+  description: string;
+  icon: string;
+  icongray: string;
+}
+
+export interface SteamAchievements {
+  total: number;
+  data: SteamAchievement[];
 }
 
 export const emptySteamAppDetails: SteamAppDetails = {

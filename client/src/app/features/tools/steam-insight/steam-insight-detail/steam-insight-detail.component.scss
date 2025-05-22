@@ -42,3 +42,31 @@
   text-decoration: underline;
   cursor: pointer;
 }
+
+.steam-achievement-img {
+  object-fit: contain;
+}
+
+table {
+  th,
+  td {
+    @apply py-1;
+  }
+}
+
+.table-text {
+  white-space: normal;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+.blurred {
+  filter: blur(5px);
+  user-select: none;
+  pointer-events: none;
+  transition: filter 0.3s ease;
+}
+
+tr.table-row:hover .blurred {
+  filter: none;
+}

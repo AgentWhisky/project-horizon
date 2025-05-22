@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit } from '@angular/core';
+import { Component, computed, effect, inject, input, model, OnInit, viewChild } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,6 +12,12 @@ import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { DecodeHtmlPipe } from '../../../../core/pipes/decode-html.pipe';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { SteamAchievement } from './steam-insight-detail';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { ScreenService } from '../../../../core/services/screen.service';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'hz-steam-insight-detail',
@@ -23,7 +29,10 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatChipsModule,
     MatCardModule,
     MatExpansionModule,
+    MatTableModule,
+    MatSlideToggleModule,
     RouterModule,
+    FormsModule,
     CommonModule,
     DecimalPipe,
     TitleCasePipe,
@@ -36,10 +45,25 @@ export class SteamInsightDetailComponent implements OnInit {
   readonly appid = input.required<number>();
 
   readonly steamInsightDetailService = inject(SteamInsightDetailService);
+  private screenService = inject(ScreenService);
 
   readonly appDetails = this.steamInsightDetailService.appDetails;
+  readonly showHiddenAchievements = this.steamInsightDetailService.showHiddenAchievements;
+
+  readonly isMobileScreen = this.screenService.isMobileScreen;
+
+  // Achievements Table
+  readonly achievementDisplayedColumns = computed(() =>
+    this.isMobileScreen() ? ['index', 'icon', 'name'] : ['index', 'icon', 'name', 'description']
+  );
+  readonly achievementDataSource = new MatTableDataSource<SteamAchievement>();
+
+  constructor() {
+    effect(() => (this.achievementDataSource.data = this.appDetails().achievements.data));
+  }
 
   ngOnInit() {
     this.steamInsightDetailService.loadSteamAppDetails(this.appid());
+    
   }
 }

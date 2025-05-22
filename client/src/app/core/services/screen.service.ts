@@ -1,4 +1,4 @@
-import { inject, Injectable, NgZone, OnDestroy, signal } from '@angular/core';
+import { effect, inject, Injectable, NgZone, OnDestroy, signal } from '@angular/core';
 import { MOBILE_SCREEN_SIZE, SCROLL_Y, SMALL_SCREEN_SIZE } from '../constants/screen-values.constant';
 
 @Injectable({
@@ -16,14 +16,6 @@ export class ScreenService implements OnDestroy {
   private _isScrolled = signal(window.scrollY > SCROLL_Y);
   readonly isScrolled = this._isScrolled.asReadonly();
 
-  private resizeListener = () => {
-    this.zone.run(() => this.updateScreenSize());
-  };
-
-  private scrollListener = () => {
-    this.zone.run(() => this.onScroll());
-  };
-
   constructor() {
     window.addEventListener('resize', this.resizeListener);
     window.addEventListener('scroll', this.scrollListener);
@@ -33,6 +25,14 @@ export class ScreenService implements OnDestroy {
     window.removeEventListener('resize', this.resizeListener);
     window.removeEventListener('scroll', this.scrollListener);
   }
+
+  private resizeListener = () => {
+    this.zone.run(() => this.updateScreenSize());
+  };
+
+  private scrollListener = () => {
+    this.zone.run(() => this.onScroll());
+  };
 
   // *** Navigation for Screen Size ***
   private updateScreenSize() {

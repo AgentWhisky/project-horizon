@@ -11,7 +11,7 @@
           maxlength="1024"
           aria-label="Link library search"
           (keydown.enter)="steamGameSearchInput.blur(); onSearch()" />
-        <button matSuffix mat-icon-button aria-label="Search" (click)="onSearch()">
+        <button matSuffix mat-icon-button aria-label="Search" (click)="steamGameSearchInput.blur(); onSearch()">
           <mat-icon>search</mat-icon>
         </button>
         @if(steamGameSearchInput.value && steamGameSearchInput.value !== '') {
