@@ -11,6 +11,7 @@ Steam Insight
   > Fix achievements null
   > Search continuing even if rate limited
   > Force header image size (for different sizes)
+  > Redirect back to search if no valid appid
 
 
 New Functionality

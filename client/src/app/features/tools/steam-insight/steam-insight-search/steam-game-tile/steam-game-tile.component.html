@@ -1,15 +1,13 @@
-<div class="steam-game-tile" (click)="onSelectApp()">
+<a
+  class="steam-game-tile block"
+  [routerLink]="['/steam-insight', steamGame().appid]"
+  (mousedown)="onSelectApp()"
+  target="_self"
+  rel="noopener noreferrer">
   <img [src]="steamGame().headerImage || './assets/images/steam-app-placeholder.jpg'" [alt]="steamGame().name" class="steam-header-img" />
 
   <div class="flex flex-col p-3 gap-1">
     <h2 class="text-lg font-semibold line-clamp-1">{{ steamGame().name }}</h2>
-    <p class="text-sm line-clamp-3">
-      {{ steamGame().shortDescription }}
-    </p>
-    <!--<mat-chip-set class="mt-1" aria-label="Game Genres">
-      @for(category of steamGame().categories; track category) {
-      <mat-chip>{{ category }}</mat-chip>
-      }
-    </mat-chip-set>-->
+    <p class="text-sm line-clamp-3">{{ steamGame().shortDescription }}</p>
   </div>
-</div>
+</a>

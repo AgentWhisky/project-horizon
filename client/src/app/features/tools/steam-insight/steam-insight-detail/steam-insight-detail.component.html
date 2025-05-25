@@ -183,9 +183,9 @@
   </mat-tab-group>
 
   <mat-tab-group class="hz-card" mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
-    @if(appDetails().achievements) {
     <!-- ACHIEVEMENTS -->
     <mat-tab label="Achievements">
+      @if(appDetails().achievements) {
       <div class="flex flex-col p-3">
         <div>
           <mat-slide-toggle [(ngModel)]="showHiddenAchievements">Show All Hidden Achievements</mat-slide-toggle>
@@ -234,8 +234,12 @@
           showFirstLastButtons
           aria-label="Achievement Paginator"></mat-paginator>
       </div>
+      } @else {
+      <div class="flex p-3">
+        <span class="display-text-warning">This game has no achievements to display.</span>
+      </div>
+      }
     </mat-tab>
-    }
 
     <!-- DLC -->
     @if(appDetails().dlc){

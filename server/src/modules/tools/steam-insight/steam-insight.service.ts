@@ -21,6 +21,7 @@ export class SteamInsightService {
     qb.select(['app.appid', 'app.name', 'app.headerImage', 'app.shortDescription', 'app.categories']);
     qb.where('app.type = :type', { type: 'game' });
     qb.skip(skip).take(STEAM_INSIGHT_PAGE_SIZE);
+    qb.orderBy('app.appid', 'DESC');
 
     if (search) {
       const keywords = search

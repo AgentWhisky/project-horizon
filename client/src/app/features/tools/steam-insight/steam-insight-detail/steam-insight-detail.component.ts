@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, model, OnInit, viewChild } from '@angular/core';
+import { Component, computed, effect, inject, input, model, OnDestroy, OnInit, viewChild } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,6 +19,7 @@ import { ScreenService } from '../../../../core/services/screen.service';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { TitleService } from '../../../../core/services/title.service';
 
 @Component({
   selector: 'hz-steam-insight-detail',
@@ -43,11 +44,12 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
   templateUrl: './steam-insight-detail.component.html',
   styleUrl: './steam-insight-detail.component.scss',
 })
-export class SteamInsightDetailComponent implements OnInit {
+export class SteamInsightDetailComponent implements OnInit, OnDestroy {
   readonly appid = input.required<number>();
 
   readonly steamInsightDetailService = inject(SteamInsightDetailService);
   private screenService = inject(ScreenService);
+  private titleService = inject(TitleService);
 
   readonly appDetails = this.steamInsightDetailService.appDetails;
   readonly showHiddenAchievements = this.steamInsightDetailService.showHiddenAchievements;
@@ -67,9 +69,15 @@ export class SteamInsightDetailComponent implements OnInit {
     effect(() => {
       this.achievementDataSource.paginator = this.achievementPaginator() ?? null;
     });
+
+    effect(() => this.titleService.setTitle(this.appDetails().name));
   }
 
   ngOnInit() {
     this.steamInsightDetailService.loadSteamAppDetails(this.appid());
+  }
+
+  ngOnDestroy() {
+    this.titleService.resetTitle();
   }
 }
