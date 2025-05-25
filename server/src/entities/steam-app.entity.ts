@@ -7,7 +7,7 @@ export class SteamAppEntity {
 
   @Column({ name: 'name' })
   @Index()
-  name: string; // Column has a GIN Index using pg_trgm 
+  name: string; // Column has a GIN Index using pg_trgm
 
   @Column({ name: 'last_modified', type: 'timestamptz' })
   lastModified: Date;
@@ -227,6 +227,11 @@ export class SteamAppEntity {
 
   @Column({ name: 'metacritic_url', type: 'varchar', nullable: true })
   metacriticUrl: string;
+
+  // *** ADULT FLAG ***
+  @Column({ name: 'is_adult', default: false })
+  @Index()
+  isAdult: boolean;
 
   // *** AUDIT FIELDS ***
   @CreateDateColumn({ name: 'created_date', type: 'timestamptz' })
