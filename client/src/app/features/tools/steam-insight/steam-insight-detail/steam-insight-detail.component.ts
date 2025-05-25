@@ -18,6 +18,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { ScreenService } from '../../../../core/services/screen.service';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'hz-steam-insight-detail',
@@ -31,6 +32,7 @@ import { FormsModule } from '@angular/forms';
     MatExpansionModule,
     MatTableModule,
     MatSlideToggleModule,
+    MatPaginatorModule,
     RouterModule,
     FormsModule,
     CommonModule,
@@ -53,6 +55,7 @@ export class SteamInsightDetailComponent implements OnInit {
   readonly isMobileScreen = this.screenService.isMobileScreen;
 
   // Achievements Table
+  readonly achievementPaginator = viewChild<MatPaginator>('achievementPaginator');
   readonly achievementDisplayedColumns = computed(() =>
     this.isMobileScreen() ? ['index', 'icon', 'name'] : ['index', 'icon', 'name', 'description']
   );
@@ -60,10 +63,13 @@ export class SteamInsightDetailComponent implements OnInit {
 
   constructor() {
     effect(() => (this.achievementDataSource.data = this.appDetails().achievements.data));
+
+    effect(() => {
+      this.achievementDataSource.paginator = this.achievementPaginator() ?? null;
+    });
   }
 
   ngOnInit() {
     this.steamInsightDetailService.loadSteamAppDetails(this.appid());
-    
   }
 }

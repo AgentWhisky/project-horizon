@@ -226,16 +226,24 @@
           <tr mat-header-row *matHeaderRowDef="achievementDisplayedColumns()"></tr>
           <tr mat-row class="table-row" *matRowDef="let row; columns: achievementDisplayedColumns()"></tr>
         </table>
+        <mat-paginator
+          [pageSizeOptions]="[25, 50, 100]"
+          [pageSize]="25"
+          #achievementPaginator
+          showFirstLastButtons
+          aria-label="Achievement Paginator"></mat-paginator>
       </div>
     </mat-tab>
 
     <!-- DLC -->
+    @if(appDetails().dlc){
     <mat-tab label="DLC">
       <div class="flex flex-col p-3">
         <span>IN DEVELOPMENT - appids: [{{ appDetails().dlc ? appDetails().dlc.join(', ') : '—' }}]</span>
       </div>
       <!--dlc: number[];-->
     </mat-tab>
+    }
 
     <!-- PACKAGES -->
     <mat-tab label="Packages">

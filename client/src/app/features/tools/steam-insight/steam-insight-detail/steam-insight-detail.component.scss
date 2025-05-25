@@ -32,6 +32,11 @@
   border-bottom: 1px solid var(--mat-sys-outline) !important;
   border-top-left-radius: var(--mat-sys-corner-extra-small) !important;
   border-top-right-radius: var(--mat-sys-corner-extra-small) !important;
+
+  span,
+  a {
+    @apply text-ellipsis overflow-hidden;
+  }
 }
 
 .display-text:hover {
