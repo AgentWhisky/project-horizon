@@ -7,7 +7,10 @@ Sort Key is empty in PROD
 
 Steam Insight
   > Resets search when returning to search page
-  > 
+  > Show page count & Jump to page
+  > Fix achievements null
+  > Search continuing even if rate limited
+  > Force header image size (for different sizes)
 
 
 New Functionality

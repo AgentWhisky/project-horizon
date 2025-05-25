@@ -62,7 +62,7 @@ export class SteamInsightDetailComponent implements OnInit {
   readonly achievementDataSource = new MatTableDataSource<SteamAchievement>();
 
   constructor() {
-    effect(() => (this.achievementDataSource.data = this.appDetails().achievements.data));
+    effect(() => (this.achievementDataSource.data = this.appDetails()?.achievements?.data ?? []));
 
     effect(() => {
       this.achievementDataSource.paginator = this.achievementPaginator() ?? null;
