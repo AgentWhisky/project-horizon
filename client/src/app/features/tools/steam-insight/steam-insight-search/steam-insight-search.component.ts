@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { SelectedApp } from './steam-insight-search';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'hz-steam-insight-search',
@@ -19,6 +20,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatPaginatorModule,
     MatChipsModule,
     MatTooltipModule,
+    RouterModule,
     FormsModule,
     SteamGameTileComponent,
   ],

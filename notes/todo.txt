@@ -6,12 +6,17 @@ Validate all mat inputs are not cutoff as outline appearance
 Sort Key is empty in PROD
 
 Steam Insight
-  > Resets search when returning to search page
-  > Show page count & Jump to page
-  > Fix achievements null
-  > Search continuing even if rate limited
-  > Force header image size (for different sizes)
-  > Redirect back to search if no valid appid
+  > Search
+    - Show page count & Jump to page
+    - Fix page incrementing on rate limited
+    - Chip opens game directly
+
+    - Search Tile
+      :Set max size for tile
+
+  > Details
+    - Redirect back to search if no valid appid
+    - Update app history on page load rather than search
 
 
 New Functionality
