@@ -138,6 +138,9 @@ export class SteamInsightUpdaterService implements OnModuleInit {
 
       await this.cacheUtils.clearSteamInsightKeys();
 
+      // Run VACUUM to keep index-only scans effective
+      await this.steamAppRepository.query(`VACUUM (ANALYZE) steam_apps;`);
+
       this.updateInProgress = false;
     }
   }
