@@ -15,7 +15,7 @@ import { MessageCardComponent } from '../../../shared/components/message-card/me
 import { RemoveConfirmComponent } from '../../../shared/dialogs/remove-confirm/remove-confirm.component';
 
 @Component({
-  selector: 'app-base-converter',
+  selector: 'hz-base-converter',
   imports: [MatButtonModule, MatIconModule, MatTabsModule, MatTooltipModule, BaseConvertTileComponent, MessageCardComponent],
   templateUrl: './base-converter.component.html',
   styleUrl: './base-converter.component.scss',

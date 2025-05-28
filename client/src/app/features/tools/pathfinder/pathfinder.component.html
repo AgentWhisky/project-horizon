@@ -22,11 +22,11 @@
       [style.--pathfinder-columns]="boardCols()"
       [style.--pathfinder-rows]="boardRows()">
       @for(row of board(); track $index) { @for(tile of row; track columnTrack(tile)) {
-      <app-pathfinder-tile [tile]="tile"></app-pathfinder-tile>
+      <hz-pathfinder-tile [tile]="tile"></hz-pathfinder-tile>
       } }
     </div>
   </div>
   } @else {
-  <app-message-card message="No board found. Please create a board."></app-message-card>
+  <hz-message-card message="No board found. Please create a board."></hz-message-card>
   }
 </div>

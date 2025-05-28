@@ -10,7 +10,7 @@ import { UserService } from '../../core/services/user.service';
 import { NavSection, navSections } from './left-nav.config';
 
 @Component({
-  selector: 'app-left-nav',
+  selector: 'hz-left-nav',
   imports: [RouterModule, MatButtonModule, MatIconModule, MatDividerModule, MatRippleModule],
   templateUrl: './left-nav.component.html',
   styleUrl: './left-nav.component.scss',

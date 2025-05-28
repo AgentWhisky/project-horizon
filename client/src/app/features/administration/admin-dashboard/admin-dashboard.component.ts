@@ -19,7 +19,7 @@ import { DatePipe, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-admin-dashboard',
+  selector: 'hz-admin-dashboard',
   imports: [
     MatCardModule,
     MatButtonModule,

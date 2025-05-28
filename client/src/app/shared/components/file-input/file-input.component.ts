@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'app-file-input',
+  selector: 'hz-file-input',
   imports: [MatButtonModule, MatIconModule],
   templateUrl: './file-input.component.html',
   styleUrl: './file-input.component.scss',

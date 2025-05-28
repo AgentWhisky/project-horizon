@@ -30,10 +30,8 @@ export interface SteamAppSearchResult {
   type: 'INIT' | 'PAG' | 'REFRESH';
 
   // INIT & REFRESH
-  total?: number
+  total?: number;
   expiresAt?: Date;
-
-  // PAG
 }
 
 // *** STEAM DETAIL ***

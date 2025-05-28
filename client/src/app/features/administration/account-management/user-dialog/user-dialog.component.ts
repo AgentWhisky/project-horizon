@@ -21,7 +21,7 @@ interface DialogResult {
 }
 
 @Component({
-  selector: 'app-user-dialog',
+  selector: 'hz-user-dialog',
   imports: [MatButtonModule, MatInputModule, MatSelectModule, MatDialogModule, ReactiveFormsModule],
   templateUrl: './user-dialog.component.html',
   styleUrl: './user-dialog.component.scss',

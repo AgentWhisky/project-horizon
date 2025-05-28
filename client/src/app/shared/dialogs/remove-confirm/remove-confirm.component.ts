@@ -10,7 +10,7 @@ interface DialogData {
 }
 
 @Component({
-  selector: 'app-remove-confirm',
+  selector: 'hz-remove-confirm',
   imports: [MatDialogModule, MatButtonModule, MatIconModule],
   templateUrl: './remove-confirm.component.html',
   styleUrl: './remove-confirm.component.scss',

@@ -8,17 +8,17 @@
     </button>
   </div>
   @if(!baseConversions().length) {
-  <app-message-card message="No base tiles found"></app-message-card>
+  <hz-message-card message="No base tiles found"></hz-message-card>
 
   } @else {
   <div class="base-container">
     @for(convertBase of baseConversions(); track convertBase.base) {
-    <app-base-convert-tile
+    <hz-base-convert-tile
       class="w-full max-w-96 min-w-80"
       [convertBase]="convertBase"
       (updateConversions)="onUpdateBaseConversions($event)"
       (removeTile)="onRemoveBase($event)"
-      (reorderConversions)="onReorderConversions($event.base, $event.prevIndex, $event.currentIndex)"></app-base-convert-tile>
+      (reorderConversions)="onReorderConversions($event.base, $event.prevIndex, $event.currentIndex)"></hz-base-convert-tile>
     }
   </div>
   }

@@ -20,7 +20,7 @@ interface DialogResult {
 }
 
 @Component({
-  selector: 'app-role-dialog',
+  selector: 'hz-role-dialog',
   imports: [MatButtonModule, MatInputModule, MatSelectModule, MatDialogModule, ReactiveFormsModule],
   templateUrl: './role-dialog.component.html',
   styleUrl: './role-dialog.component.scss',

@@ -10,7 +10,7 @@ interface DialogResult {
 }
 
 @Component({
-  selector: 'app-link-library-import-dialog',
+  selector: 'hz-link-library-import-dialog',
   imports: [MatButtonModule, MatInputModule, MatDialogModule, FileInputComponent],
   templateUrl: './link-library-import-dialog.component.html',
   styleUrl: './link-library-import-dialog.component.scss',

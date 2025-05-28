@@ -22,7 +22,7 @@ interface DialogResult {
 }
 
 @Component({
-  selector: 'app-link-library-management-dialog',
+  selector: 'hz-link-library-management-dialog',
   imports: [
     MatButtonModule,
     MatInputModule,

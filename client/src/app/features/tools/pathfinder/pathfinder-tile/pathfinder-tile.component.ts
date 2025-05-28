@@ -5,7 +5,7 @@ import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-pathfinder-tile',
+  selector: 'hz-pathfinder-tile',
   imports: [MatIconModule, MatMenuModule],
   templateUrl: './pathfinder-tile.component.html',
   styleUrl: './pathfinder-tile.component.scss',

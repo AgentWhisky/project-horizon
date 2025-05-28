@@ -23,7 +23,7 @@ import { RemoveConfirmComponent } from '../../../shared/dialogs/remove-confirm/r
 import { USER_RIGHTS } from '../../../core/constants/user-rights.constant';
 
 @Component({
-  selector: 'app-link-library-management',
+  selector: 'hz-link-library-management',
   imports: [
     MatTableModule,
     MatSortModule,

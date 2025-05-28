@@ -5,7 +5,7 @@ import { IconService } from './core/services/icon.service';
 import { TitleService } from './core/services/title.service';
 
 @Component({
-  selector: 'app-root',
+  selector: 'hz-root',
   imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

@@ -21,7 +21,7 @@ interface DialogResult {
 }
 
 @Component({
-  selector: 'app-link-category-dialog',
+  selector: 'hz-link-category-dialog',
   imports: [MatButtonModule, MatInputModule, MatDialogModule, ReactiveFormsModule, ValidatorMessagePipe],
   templateUrl: './link-category-dialog.component.html',
   styleUrl: './link-category-dialog.component.scss',

@@ -64,7 +64,7 @@
       </table>
       <mat-paginator [pageSizeOptions]="[25, 50, 100]" #userPaginator showFirstLastButtons aria-label="User Paginator"></mat-paginator>
       } @else {
-      <app-message-card message="No users found"></app-message-card>
+      <hz-message-card message="No users found"></hz-message-card>
 
       }
     </mat-tab>
@@ -130,7 +130,7 @@
 
       <mat-paginator [pageSizeOptions]="[25, 50, 100]" #rolePaginator showFirstLastButtons aria-label="Role Paginator"></mat-paginator>
       } @else {
-      <app-message-card message="No roles found"></app-message-card>
+      <hz-message-card message="No roles found"></hz-message-card>
       }
     </mat-tab>
 
@@ -163,7 +163,7 @@
 
       <mat-paginator [pageSizeOptions]="[25, 50, 100]" #rightPaginator showFirstLastButtons></mat-paginator>
       } @else {
-      <app-message-card message="No rights found"></app-message-card>
+      <hz-message-card message="No rights found"></hz-message-card>
       }
     </mat-tab>
   </mat-tab-group>

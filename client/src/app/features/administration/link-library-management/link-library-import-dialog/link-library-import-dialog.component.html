@@ -1,5 +1,5 @@
 <mat-dialog-content>
-  <app-file-input class="w-full" (outputSelectedFiles)="onUpdateFiles($event)" [allowedExtensions]="['.json']"></app-file-input>
+  <hz-file-input class="w-full" (outputSelectedFiles)="onUpdateFiles($event)" [allowedExtensions]="['.json']"></hz-file-input>
   @if(isFileSelected()) {
   <span>{{ selectedFile()?.name }}</span>
   }

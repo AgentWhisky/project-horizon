@@ -8,7 +8,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Link } from '../link-library';
 
 @Component({
-  selector: 'app-link-tile',
+  selector: 'hz-link-tile',
   imports: [MatButtonModule, MatIconModule, MatChipsModule, MatTooltipModule],
   templateUrl: './link-tile.component.html',
   styleUrl: './link-tile.component.scss',

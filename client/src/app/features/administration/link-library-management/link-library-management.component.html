@@ -83,7 +83,7 @@
 
       <mat-paginator [pageSizeOptions]="[25, 50, 100]" #linkPaginator showFirstLastButtons aria-label="Link Paginator"></mat-paginator>
       } @else {
-      <app-message-card message="No links found"></app-message-card>
+      <hz-message-card message="No links found"></hz-message-card>
       }
     </mat-tab>
 
@@ -137,7 +137,7 @@
         aria-label="Category Paginator"></mat-paginator>
 
       } @else {
-      <app-message-card message="No categories found"></app-message-card>
+      <hz-message-card message="No categories found"></hz-message-card>
       }
     </mat-tab>
 
@@ -181,7 +181,7 @@
 
       <mat-paginator [pageSizeOptions]="[25, 50, 100]" #tagPaginator showFirstLastButtons></mat-paginator>
       } @else {
-      <app-message-card message="No tags found"></app-message-card>
+      <hz-message-card message="No tags found"></hz-message-card>
       }
     </mat-tab>
   </mat-tab-group>

@@ -20,7 +20,7 @@ interface DialogResult {
 }
 
 @Component({
-  selector: 'app-base-convert-tile-dialog',
+  selector: 'hz-base-convert-tile-dialog',
   imports: [MatButtonModule, MatInputModule, MatDialogModule, MatSelectModule, ReactiveFormsModule, ValidatorMessagePipe],
   templateUrl: './base-convert-tile-dialog.component.html',
   styleUrl: './base-convert-tile-dialog.component.scss',

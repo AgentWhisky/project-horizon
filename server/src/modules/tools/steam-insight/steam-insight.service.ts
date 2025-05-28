@@ -46,12 +46,32 @@ export class SteamInsightService {
   }
 
   async runSearch(options?: SteamInitSearchOptions) {
-    const allowAdult = options?.allowAdultContent ?? false;
+    const { query, lastAppid, allowAdultContent = false, expiresAt } = options;
 
-    const keywords = options.query
-      .trim()
-      .split(/\s+/)
-      .map((word) => word.toLowerCase());
+    const qb = this.steamAppRepository.createQueryBuilder('app');
+
+    qb.select(['app.appid', 'app.name', 'app.headerImage', 'app.shortDescription', 'app.categories']);
+    qb.where('app.type = :type', { type: 'game' });
+    qb.orderBy('app.appid', 'DESC');
+
+    // Allow adult content
+    if (!allowAdultContent) {
+      qb.andWhere('app.is_adult = false');
+    }
+
+    // Add keywords to query
+    if (query) {
+      const keywords = query
+        .trim()
+        .split(/\s+/)
+        .map((keyword) => keyword.toLowerCase());
+
+      keywords.forEach((keyword, index) => {
+        qb.andWhere(`LOWER(app.name) LIKE :kw${index}`, {
+          [`kw${index}`]: `%${keyword}%`,
+        });
+      });
+    }
   }
 
   /**

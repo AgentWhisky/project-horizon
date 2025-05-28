@@ -21,7 +21,7 @@ interface DialogResult {
 }
 
 @Component({
-  selector: 'app-link-tag-dialog',
+  selector: 'hz-link-tag-dialog',
   imports: [MatButtonModule, MatInputModule, MatDialogModule, ReactiveFormsModule, ValidatorMessagePipe],
   templateUrl: './link-tag-dialog.component.html',
   styleUrl: './link-tag-dialog.component.scss',

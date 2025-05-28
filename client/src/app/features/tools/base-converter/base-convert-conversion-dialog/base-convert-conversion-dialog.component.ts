@@ -18,7 +18,7 @@ interface DialogResult {
 }
 
 @Component({
-  selector: 'app-base-convert-conversion-dialog',
+  selector: 'hz-base-convert-conversion-dialog',
   imports: [MatButtonModule, MatInputModule, MatDialogModule, MatSelectModule, ReactiveFormsModule],
   templateUrl: './base-convert-conversion-dialog.component.html',
   styleUrl: './base-convert-conversion-dialog.component.scss',

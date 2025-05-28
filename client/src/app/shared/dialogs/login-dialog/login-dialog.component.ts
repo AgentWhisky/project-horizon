@@ -17,7 +17,7 @@ import { confirmPasswordValidator } from '../../../core/validators/confirm-passw
 import { NewAccountCredentials } from '../../../core/types/login-credentials';
 
 @Component({
-  selector: 'app-login-dialog',
+  selector: 'hz-login-dialog',
   imports: [
     MatDialogModule,
     MatButtonModule,

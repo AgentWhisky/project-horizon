@@ -17,7 +17,7 @@ const minTileSize = 12;
 const maxTileSize = 32;
 
 @Component({
-  selector: 'app-pathfinder',
+  selector: 'hz-pathfinder',
   imports: [MatButtonModule, MatIconModule, MatTooltipModule, PathfinderTileComponent, MessageCardComponent, StatusBannerComponent],
   templateUrl: './pathfinder.component.html',
   styleUrl: './pathfinder.component.scss',

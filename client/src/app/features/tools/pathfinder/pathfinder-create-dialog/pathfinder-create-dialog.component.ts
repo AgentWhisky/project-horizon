@@ -13,7 +13,7 @@ interface DialogResult {
 }
 
 @Component({
-  selector: 'app-pathfinder-create-dialog',
+  selector: 'hz-pathfinder-create-dialog',
   imports: [MatButtonModule, MatInputModule, MatDialogModule, ReactiveFormsModule, ValidatorMessagePipe],
   templateUrl: './pathfinder-create-dialog.component.html',
   styleUrl: './pathfinder-create-dialog.component.scss',

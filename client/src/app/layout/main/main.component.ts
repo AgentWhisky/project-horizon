@@ -15,7 +15,7 @@ import { ThemeService } from '../../core/services/theme.service';
 import { LeftNavComponent } from '../left-nav/left-nav.component';
 
 @Component({
-  selector: 'app-main',
+  selector: 'hz-main',
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
   imports: [

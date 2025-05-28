@@ -16,7 +16,7 @@ import { ScreenService } from '../../../../core/services/screen.service';
 import { BASE_CHAR_PATTERNS, baseNames } from '../base-converter.config';
 
 @Component({
-  selector: 'app-base-convert-tile',
+  selector: 'hz-base-convert-tile',
   imports: [
     MatInputModule,
     MatButtonModule,
