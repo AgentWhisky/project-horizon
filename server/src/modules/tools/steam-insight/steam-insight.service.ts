@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SteamAppEntity } from 'src/entities/steam-app.entity';
 import { ILike, Repository } from 'typeorm';
-import { SteamAppDetails, SteamAppSearchInfo, SteamAppSearchOptions } from './steam-insight.model';
+import { SteamAppDetails, SteamAppSearchInfo, SteamAppSearchOptions, SteamInitSearchOptions } from './steam-insight.model';
 import { STEAM_INSIGHT_PAGE_SIZE } from 'src/common/constants/steam-api.constants';
 
 @Injectable()
@@ -45,6 +45,20 @@ export class SteamInsightService {
     };
   }
 
+  async runSearch(options?: SteamInitSearchOptions) {
+    const allowAdult = options?.allowAdultContent ?? false;
+
+    const keywords = options.query
+      .trim()
+      .split(/\s+/)
+      .map((word) => word.toLowerCase());
+  }
+
+  /**
+   * Get full steam app details object for a given appid
+   * @param appid is the appid for the app to retrieve details for
+   * @returns app details or 404 on not found
+   */
   async getSteamAppDetails(appid: number): Promise<SteamAppDetails> {
     const appDetailsDB = await this.steamAppRepository.findOne({ where: { appid } });
 

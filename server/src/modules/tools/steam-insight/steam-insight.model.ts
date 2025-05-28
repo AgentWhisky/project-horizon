@@ -18,6 +18,24 @@ export interface SteamAppSearchOptions {
   pageIndex?: number;
 }
 
+// Steam Search 2
+export interface SteamInitSearchOptions {
+  query?: string;
+  allowAdultContent?: boolean;
+  lastAppid?: number;
+  expiresAt?: Date;
+}
+
+export interface SteamAppSearchResult {
+  type: 'INIT' | 'PAG' | 'REFRESH';
+
+  // INIT & REFRESH
+  total?: number
+  expiresAt?: Date;
+
+  // PAG
+}
+
 // *** STEAM DETAIL ***
 export interface SteamAppDetails {
   appid: number;
