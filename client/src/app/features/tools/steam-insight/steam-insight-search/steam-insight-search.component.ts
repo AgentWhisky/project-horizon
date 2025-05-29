@@ -6,10 +6,11 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
-import { SelectedApp } from './steam-insight-search';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
+import { SteamGameHistoryEntry } from '../steam-insight';
+import { SteamInsightHistoryService } from '../steam-insight-history.service';
 
 @Component({
   selector: 'hz-steam-insight-search',
@@ -29,11 +30,13 @@ import { RouterModule } from '@angular/router';
 })
 export class SteamInsightSearchComponent implements OnInit {
   private steamInsightService = inject(SteamInsightSearchService);
+  private steamInsightHistoryService = inject(SteamInsightHistoryService);
 
   readonly steamGames = this.steamInsightService.steamGames;
   readonly pageLength = this.steamInsightService.pageLength;
   readonly pageIndex = this.steamInsightService.pageIndex;
-  readonly searchHistory = this.steamInsightService.searchHistory;
+
+  readonly steamGameHistory = this.steamInsightHistoryService.steamGameHistory;
 
   readonly steamGameSearch = model<string>('');
 
@@ -48,11 +51,6 @@ export class SteamInsightSearchComponent implements OnInit {
     this.steamInsightService.search(this.steamGameSearch());
   }
 
-  onChipSearch(app: SelectedApp) {
-    this.steamGameSearch.set(app.name);
-    this.onSearch();
-  }
-
   onSetPage() {
     this.steamInsightService.setPage(this.steamGamePaginator.pageIndex);
   }
@@ -62,16 +60,7 @@ export class SteamInsightSearchComponent implements OnInit {
     this.onSearch();
   }
 
-  // *** SEARCH HISTORY FUNCTIONS ***
-  onSelectApp(selectedApp: SelectedApp) {
-    this.steamInsightService.addSelectedApp(selectedApp);
-  }
-
-  onRemoveAppFromHistory(selectedApp: SelectedApp) {
-    this.steamInsightService.removeSelectedApp(selectedApp);
-  }
-
-  onClearSearchHistory() {
-    this.steamInsightService.clearSearchHistory();
+  onRemoveAppFromHistory(app: SteamGameHistoryEntry) {
+    this.steamInsightHistoryService.removeApp(app);
   }
 }

@@ -1,11 +1,11 @@
-import { Component, computed, effect, inject, input, model, OnDestroy, OnInit, viewChild } from '@angular/core';
+import { Component, computed, effect, inject, input, OnDestroy, OnInit, viewChild } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatChipsModule } from '@angular/material/chips';
-import { CommonModule, DecimalPipe, TitleCasePipe } from '@angular/common';
+import { CommonModule, TitleCasePipe } from '@angular/common';
 
 import { SteamInsightDetailService } from './steam-insight-detail.service';
 import { RouterModule } from '@angular/router';
@@ -14,7 +14,6 @@ import { DecodeHtmlPipe } from '../../../../core/pipes/decode-html.pipe';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { SteamAchievement } from './steam-insight-detail';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatSort, MatSortModule } from '@angular/material/sort';
 import { ScreenService } from '../../../../core/services/screen.service';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
@@ -37,7 +36,6 @@ import { TitleService } from '../../../../core/services/title.service';
     RouterModule,
     FormsModule,
     CommonModule,
-    DecimalPipe,
     TitleCasePipe,
     DecodeHtmlPipe,
   ],
@@ -48,6 +46,7 @@ export class SteamInsightDetailComponent implements OnInit, OnDestroy {
   readonly appid = input.required<number>();
 
   readonly steamInsightDetailService = inject(SteamInsightDetailService);
+
   private screenService = inject(ScreenService);
   private titleService = inject(TitleService);
 
@@ -64,13 +63,12 @@ export class SteamInsightDetailComponent implements OnInit, OnDestroy {
   readonly achievementDataSource = new MatTableDataSource<SteamAchievement>();
 
   constructor() {
-    effect(() => (this.achievementDataSource.data = this.appDetails()?.achievements?.data ?? []));
+    // Achievements Table
+    effect(() => this.onAppDetailsInit());
 
     effect(() => {
       this.achievementDataSource.paginator = this.achievementPaginator() ?? null;
     });
-
-    effect(() => this.titleService.setTitle(this.appDetails().name));
   }
 
   ngOnInit() {
@@ -79,5 +77,11 @@ export class SteamInsightDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.titleService.resetTitle();
+    this.steamInsightDetailService.clearAppDetails();
+  }
+
+  private onAppDetailsInit() {
+    this.titleService.setTitle(this.appDetails().name);
+    this.achievementDataSource.data = this.appDetails().achievements?.data ?? [];
   }
 }

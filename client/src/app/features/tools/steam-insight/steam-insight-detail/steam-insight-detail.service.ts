@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { emptySteamAppDetails, SteamAppDetails } from './steam-insight-detail';
 import { firstValueFrom } from 'rxjs';
 import { STEAM_INSIGHT_SHOW_ACHIEVEMENTS } from '../../../../core/constants/storage-keys.constant';
+import { SteamInsightHistoryService } from '../steam-insight-history.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,7 @@ import { STEAM_INSIGHT_SHOW_ACHIEVEMENTS } from '../../../../core/constants/stor
 export class SteamInsightDetailService {
   private tokenService = inject(TokenService);
   private snackbar = inject(MatSnackBar);
+  readonly steamInsightHistoryService = inject(SteamInsightHistoryService);
 
   private _appDetails = signal<SteamAppDetails>(emptySteamAppDetails);
   readonly appDetails = this._appDetails.asReadonly();
@@ -25,10 +27,15 @@ export class SteamInsightDetailService {
     try {
       const appDetails = await this.getSteamAppDetails(appid);
       this._appDetails.set(appDetails);
+      this.steamInsightHistoryService.addApp({ appid: appDetails.appid, name: appDetails.name });
     } catch (error) {
       console.error(`Error Fetching Steam App Details: ${error}`);
       this.snackbar.open('Failed to load Steam App details.', 'Close', { duration: 3000 });
     }
+  }
+
+  clearAppDetails() {
+    this._appDetails.set(emptySteamAppDetails);
   }
 
   private async getSteamAppDetails(appid: number) {
@@ -36,11 +43,11 @@ export class SteamInsightDetailService {
     return firstValueFrom(appDetails$);
   }
 
-  saveShowHiddenAchievements() {
+  private saveShowHiddenAchievements() {
     localStorage.setItem(STEAM_INSIGHT_SHOW_ACHIEVEMENTS, JSON.stringify(this.showHiddenAchievements()));
   }
 
-  loadShowHiddenAchievements(): boolean {
+  private loadShowHiddenAchievements(): boolean {
     return JSON.parse(localStorage.getItem(STEAM_INSIGHT_SHOW_ACHIEVEMENTS) || 'false');
   }
 }

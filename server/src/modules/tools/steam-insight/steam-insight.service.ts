@@ -45,7 +45,7 @@ export class SteamInsightService {
     };
   }
 
-  async runSearch(options?: SteamInitSearchOptions) {
+  async runSteamGameSearch(options?: SteamInitSearchOptions) {
     const { query, lastAppid, allowAdultContent = false, expiresAt } = options;
 
     const qb = this.steamAppRepository.createQueryBuilder('app');
