@@ -285,6 +285,10 @@ export class SteamInsightUpdaterService implements OnModuleInit {
       isAdult: isAdultGame(appInfo),
     });
 
+    // Check if record needs to move between partitions
+    if (existing && existing.isAdult !== entity.isAdult) {
+      await this.steamAppRepository.delete({ appid: entity.appid });
+    }
     await this.steamAppRepository.save(entity);
 
     return {

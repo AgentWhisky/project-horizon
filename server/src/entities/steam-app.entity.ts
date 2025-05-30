@@ -1,19 +1,29 @@
 import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
 
+/**
+ * Note: This table uses advanced PostgreSQL features not available as part of typeorm
+ *
+ * 1) GIN Indexes for keyword search on {name}
+ * 2) Partitions on {is_adult}
+ *
+ * As such, any updates to this entity require a manual migration update to ensure
+ *
+ * 1) Parent and Children (3 tables total) do not get out-of-sync
+ * 2)
+ */
+
 @Entity('steam_apps')
 export class SteamAppEntity {
   @PrimaryColumn({ name: 'appid' })
   appid: number;
 
   @Column({ name: 'name' })
-  @Index()
   name: string; // Column has a GIN Index using pg_trgm
 
   @Column({ name: 'last_modified', type: 'timestamptz' })
   lastModified: Date;
 
   @Column({ name: 'type' })
-  @Index()
   type: string;
 
   // *** APP INFO ***
@@ -229,8 +239,7 @@ export class SteamAppEntity {
   metacriticUrl: string;
 
   // *** ADULT FLAG ***
-  @Column({ name: 'is_adult', default: false })
-  @Index()
+  @PrimaryColumn({ name: 'is_adult', default: false })
   isAdult: boolean;
 
   // *** AUDIT FIELDS ***
