@@ -24,15 +24,23 @@
 
       <!-- SEARCH HISTORY CHIPS -->
       <mat-chip-set aria-label="Search History">
-        <div class="w-full flex flex-row flex-wrap items-center justify-center">
-          @for(app of steamGameHistory(); track app) {
-          <mat-chip [routerLink]="['/steam-insight', app.appid]" class="!cursor-pointer" [matTooltip]="app.name">
-            <span class="search-history-chip !cursor-pointer">{{ app.name }}</span>
-
-            <button matChipRemove (click)="onRemoveAppFromHistory(app); $event.stopPropagation()" [attr.aria-label]="'Remove ' + app.name">
-              <mat-icon>cancel</mat-icon>
-            </button>
-          </mat-chip>
+        <div class="w-full flex flex-row flex-wrap items-center justify-center gap-1" [@chipSetAnimation]>
+          @for (app of steamGameHistory(); track app.appid) {
+          <ng-container>
+            <mat-chip
+              [@chipAnimation]
+              [routerLink]="['/steam-insight', app.appid]"
+              class="!cursor-pointer overflow-hidden"
+              [matTooltip]="app.name">
+              <span class="search-history-chip !cursor-pointer">{{ app.name }}</span>
+              <button
+                matChipRemove
+                (click)="onRemoveAppFromHistory(app); $event.stopPropagation()"
+                [attr.aria-label]="'Remove ' + app.name">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip>
+          </ng-container>
           }
         </div>
       </mat-chip-set>
