@@ -73,7 +73,7 @@ export class SteamInsightService {
     // Run EXPLAIN ANALYZE using native query
     const result = await this.steamAppRepository.query(`EXPLAIN (ANALYZE, BUFFERS, VERBOSE, FORMAT TEXT) ${sql}`, params);
 
-    console.log(result.join('\n')); // each row is a line of EXPLAIN output
+    console.log(result.map((r) => r['QUERY PLAN']).join('\n'));
 
     return {
       pageLength: 0,
