@@ -13,6 +13,7 @@ export class SteamInsightService {
   ) {}
 
   async getSteamGames(options?: SteamAppSearchOptions): Promise<SteamAppSearchInfo> {
+    /*
     const { pageIndex = 0, search, allowAdultContent = false } = options;
     const skip = pageIndex * STEAM_INSIGHT_PAGE_SIZE;
 
@@ -42,6 +43,41 @@ export class SteamInsightService {
     return {
       pageLength: total,
       steamGames,
+    };*/
+
+    const { pageIndex = 0, search, allowAdultContent = false } = options;
+    const skip = pageIndex * STEAM_INSIGHT_PAGE_SIZE;
+
+    const qb = this.steamAppRepository.createQueryBuilder('app');
+    qb.select(['app.appid', 'app.name', 'app.headerImage', 'app.shortDescription', 'app.categories']);
+    qb.where('app.type = :type AND app.is_adult = :isAdult', { type: 'game', isAdult: false });
+    qb.skip(skip).take(STEAM_INSIGHT_PAGE_SIZE);
+    qb.orderBy('app.appid', 'DESC');
+
+    if (search) {
+      const keywords = search
+        .trim()
+        .split(/\s+/)
+        .map((word) => word.toLowerCase());
+
+      keywords.forEach((word, index) => {
+        qb.andWhere(`LOWER(app.name) ILIKE :kw${index}`, {
+          [`kw${index}`]: `%${word}%`,
+        });
+      });
+    }
+
+    // Extract SQL and parameters
+    const [sql, params] = qb.getQueryAndParameters();
+
+    // Run EXPLAIN ANALYZE using native query
+    const result = await this.steamAppRepository.query(`EXPLAIN (ANALYZE, BUFFERS, VERBOSE, FORMAT TEXT) ${sql}`, params);
+
+    console.log(result.join('\n')); // each row is a line of EXPLAIN output
+
+    return {
+      pageLength: 0,
+      steamGames: [],
     };
   }
 
