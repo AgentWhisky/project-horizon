@@ -61,7 +61,7 @@ export class SteamInsightService {
         .map((word) => word.toLowerCase());
 
       keywords.forEach((word, index) => {
-        qb.andWhere(`LOWER(app.name) ILIKE :kw${index}`, {
+        qb.andWhere(`app.name ILIKE :kw${index}`, {
           [`kw${index}`]: `%${word}%`,
         });
       });
@@ -77,7 +77,7 @@ export class SteamInsightService {
 
     return {
       pageLength: 0,
-      steamGames: [],
+      steamGames: [], 
     };
   }
 
