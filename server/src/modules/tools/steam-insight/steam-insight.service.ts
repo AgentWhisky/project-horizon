@@ -19,8 +19,8 @@ export class SteamInsightService {
     // Setup Keyword Query
     const qb = this.steamAppRepository.createQueryBuilder('app');
     qb.select(['app.appid', 'app.name', 'app.headerImage', 'app.shortDescription', 'app.categories']);
-    //qb.where('app.type = :type AND app.is_adult = :isAdult', { type: 'game', isAdult: false });
-    qb.where('app.type = :type', { type: 'game' });
+    qb.where('app.type = :type AND app.is_adult = :isAdult', { type: 'game', isAdult: false });
+    //qb.where('app.type = :type', { type: 'game' });
     qb.skip(skip).take(STEAM_INSIGHT_PAGE_SIZE);
     qb.orderBy('app.appid', 'DESC');
 
