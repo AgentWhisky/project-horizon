@@ -12,10 +12,17 @@ import { SteamInsightHistoryService } from '../steam-insight-history.service';
 export class SteamInsightDetailService {
   private tokenService = inject(TokenService);
   private snackbar = inject(MatSnackBar);
+
   readonly steamInsightHistoryService = inject(SteamInsightHistoryService);
 
   private _appDetails = signal<SteamAppDetails>(emptySteamAppDetails);
   readonly appDetails = this._appDetails.asReadonly();
+
+  private _loadingAppDetails = signal<boolean>(false);
+  readonly loadingAppDetails = this._loadingAppDetails.asReadonly();
+
+  private _loadingFailed = signal<boolean>(false);
+  readonly loadingFailed = this._loadingFailed.asReadonly();
 
   readonly showHiddenAchievements = signal<boolean>(this.loadShowHiddenAchievements());
 
@@ -24,18 +31,22 @@ export class SteamInsightDetailService {
   }
 
   async loadSteamAppDetails(appid: number) {
+    this._loadingAppDetails.set(true);
     try {
       const appDetails = await this.getSteamAppDetails(appid);
       this._appDetails.set(appDetails);
       this.steamInsightHistoryService.addApp({ appid: appDetails.appid, name: appDetails.name });
-    } catch (error) {
-      console.error(`Error Fetching Steam App Details: ${error}`);
-      this.snackbar.open('Failed to load Steam App details.', 'Close', { duration: 3000 });
+    } catch (error: any) {
+      this._loadingFailed.set(true);
+    } finally {
+      this._loadingAppDetails.set(false);
     }
   }
 
-  clearAppDetails() {
+  resetAppDetails() {
     this._appDetails.set(emptySteamAppDetails);
+    this._loadingAppDetails.set(false);
+    this._loadingFailed.set(false);
   }
 
   private async getSteamAppDetails(appid: number) {

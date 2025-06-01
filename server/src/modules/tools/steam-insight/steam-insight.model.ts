@@ -13,9 +13,9 @@ export interface SteamAppSearchInfo {
 }
 
 export interface SteamAppSearchOptions {
-  search?: string;
+  query?: string;
+  page?: number;
   allowAdultContent?: boolean;
-  pageIndex?: number;
 }
 
 // Steam Search 2

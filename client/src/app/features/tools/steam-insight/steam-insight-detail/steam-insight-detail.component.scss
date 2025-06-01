@@ -2,67 +2,173 @@
   width: 100%;
 }
 
+// *** PAGE CONTAINER ***
 .app-details-container {
-  @apply flex flex-col h-full gap-3;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 0.75rem;
 
   border-radius: var(--mat-sys-corner-extra-small);
   background-repeat: repeat-y;
   background-size: 100% auto;
 }
 
-.header-card {
-  @apply flex flex-row flex-wrap w-full overflow-hidden shadow-md;
-  background-color: var(--mat-sys-surface-container-low);
-  border: 1px solid var(--mat-sys-outline-variant);
-  border-radius: var(--mat-sys-corner-extra-small);
-
-  .text-content {
-    @apply flex-1 min-w-72 p-3;
-  }
+// *** ERROR MESSAGE ***
+.empty-app-details-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
 }
 
-.header-image {
+.empty-app-details-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 36rem;
+  padding: 0.75rem;
+  text-align: center;
+  font-weight: 600;
+  gap: 0.75rem;
+}
+
+// *** TOP PAGE BUTTONS ***
+.page-header-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 0.75rem;
+  justify-content: space-between;
+}
+
+// *** TITLE CARD ***
+.title-card-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  overflow: hidden;
+}
+
+.title-card-text {
+  flex: 1;
+  min-width: 18rem;
+  padding: 0.75rem;
+}
+
+.title-card-text h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  word-break: break-word;
+  margin: 0;
+}
+
+.title-card-text p {
+  font-size: 0.875rem;
+  word-break: break-word;
+  margin: 0.5rem 0 0 0;
+}
+
+.title-card-header-image {
   object-fit: contain;
 }
 
-.display-text {
-  @apply flex flex-wrap justify-between gap-3 p-3 text-sm;
+// *** CATEGORIES & GENRES ***
+.chip-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem;
+}
+
+.chip-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.section-label {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.chip-set {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+// *** TEXT ROWS ***
+.text-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  font-size: 0.875rem;
 
   background-color: none;
   border-bottom: 1px solid var(--mat-sys-outline) !important;
   border-top-left-radius: var(--mat-sys-corner-extra-small) !important;
   border-top-right-radius: var(--mat-sys-corner-extra-small) !important;
-
-  span,
-  a {
-    @apply text-ellipsis overflow-hidden;
-  }
 }
 
-.display-text:hover {
+.text-row:hover {
   background-color: var(--mat-sys-surface-container-high);
 }
 
-.display-text-link {
+.text-row span {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.text-row a {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+
   text-decoration: underline;
   cursor: pointer;
 }
 
-.display-text-warning {
-  @apply text-sm italic;
+.text-row > :nth-child(2) {
+  text-align: right;
 }
 
+// *** TABS ***
+.tab-container {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem;
+}
+
+.steam-section-header {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+// *** HTML CONTENT ***
+.steam-html-content {
+  padding: 0.75rem;
+  overflow: auto;
+  font-size: 0.875rem;
+  word-break: break-word;
+}
+
+// *** WARNING MESSAGES ***
+.display-text-warning {
+  font-size: 0.875rem;
+  font-style: italic;
+}
+
+// *** ACHIEVEMENTS ***
 .steam-achievement-img {
   object-fit: contain;
   max-width: 64px;
   max-height: 64px;
-}
-
-table {
-  th,
-  td {
-    @apply py-1;
-  }
 }
 
 .table-text {
@@ -80,4 +186,57 @@ table {
 
 tr.table-row:hover .blurred {
   filter: none;
+}
+
+table {
+  th,
+  td {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+}
+
+// *** SCREENSHOTS ***
+.steam-screenshot-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.steam-screenshot-container img {
+  max-height: 215px;
+  height: auto;
+  border-radius: var(--mat-sys-corner-extra-small) !important;
+}
+
+// *** MOVIES ***
+.steam-media-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.steam-media-movie-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 0.25rem;
+}
+
+.steam-media-header {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.steam-media-thumb {
+  max-height: 215px;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: var(--mat-sys-corner-extra-small) !important;
 }

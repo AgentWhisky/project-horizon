@@ -61,8 +61,8 @@ export class SteamInsightSearchService {
 
   async loadSteamGames() {
     const options = {
-      search: this._currentSearch(),
-      pageIndex: this.pageIndex(),
+      query: this._currentSearch(),
+      page: this.pageIndex(),
     };
 
     try {

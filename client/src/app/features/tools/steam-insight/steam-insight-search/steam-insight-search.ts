@@ -12,7 +12,6 @@ export interface SteamAppSearchInfo {
 }
 
 export interface SteamGameSearchOptions {
-  search?: string;
-  pageIndex?: number;
-  pageSize?: number;
+  query?: string;
+  page?: number;
 }

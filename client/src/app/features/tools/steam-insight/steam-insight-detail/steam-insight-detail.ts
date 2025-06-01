@@ -37,13 +37,15 @@ export interface SteamAppDetails {
     id: number;
     name: string;
     thumbnail: string;
-    video_urls: {
-      webm_480: string;
-      webm_max: string;
-      mp4_480: string;
-      mp4_max: string;
-    };
     highlight: boolean;
+    mp4: {
+      '480': string;
+      max: string;
+    };
+    webm: {
+      '480': string;
+      max: string;
+    };
   }[];
   achievements: {
     total: number;

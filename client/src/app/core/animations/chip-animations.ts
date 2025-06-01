@@ -25,9 +25,6 @@ export const chipSetAnimation = trigger('chipSetAnimation', [
       ],
       { optional: true }
     ),
-
-    // Animate move (reordering)
-    query(':enter, :leave, :move', [animateChild()], { optional: true }),
   ]),
 ]);
 

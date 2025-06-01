@@ -13,8 +13,8 @@ export class SteamInsightService {
   ) {}
 
   async getSteamGames(options?: SteamAppSearchOptions): Promise<SteamAppSearchInfo> {
-    const { pageIndex = 0, search, allowAdultContent = false } = options;
-    const skip = pageIndex * STEAM_INSIGHT_PAGE_SIZE;
+    const { page = 0, query, allowAdultContent = false } = options;
+    const skip = page * STEAM_INSIGHT_PAGE_SIZE;
 
     // Setup Keyword Query
     const qb = this.steamAppRepository.createQueryBuilder('app');
@@ -24,8 +24,8 @@ export class SteamInsightService {
     qb.skip(skip).take(STEAM_INSIGHT_PAGE_SIZE);
     qb.orderBy('app.appid', 'DESC');
 
-    if (search) {
-      const keywords = search
+    if (query) {
+      const keywords = query
         .trim()
         .split(/\s+/)
         .map((word) => word.toLowerCase());

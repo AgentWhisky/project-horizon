@@ -1,4 +1,4 @@
-import { effect, Injectable, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { SteamGameHistoryEntry } from './steam-insight';
 import { STEAM_INSIGHT_HISTORY } from '../../../core/constants/storage-keys.constant';
 import { MAX_SEARCH_HISTORY } from '../../../core/constants/steam-insight.constant';
@@ -12,8 +12,6 @@ export class SteamInsightHistoryService {
 
   constructor() {
     window.addEventListener('storage', this.handleHistoryUpdate.bind(this));
-
-    effect(() => console.log('GAME HISTORY', this._steamGameHistory()));
   }
 
   addApp(app: SteamGameHistoryEntry) {

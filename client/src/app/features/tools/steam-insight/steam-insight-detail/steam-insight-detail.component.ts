@@ -19,6 +19,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { TitleService } from '../../../../core/services/title.service';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'hz-steam-insight-detail',
@@ -33,6 +34,7 @@ import { TitleService } from '../../../../core/services/title.service';
     MatTableModule,
     MatSlideToggleModule,
     MatPaginatorModule,
+    MatDividerModule,
     RouterModule,
     FormsModule,
     CommonModule,
@@ -43,14 +45,16 @@ import { TitleService } from '../../../../core/services/title.service';
   styleUrl: './steam-insight-detail.component.scss',
 })
 export class SteamInsightDetailComponent implements OnInit, OnDestroy {
-  readonly appid = input.required<number>();
-
   readonly steamInsightDetailService = inject(SteamInsightDetailService);
+
+  readonly appid = input.required<number>();
 
   private screenService = inject(ScreenService);
   private titleService = inject(TitleService);
 
   readonly appDetails = this.steamInsightDetailService.appDetails;
+  readonly loadingAppDetails = this.steamInsightDetailService.loadingAppDetails;
+  readonly loadingFailed = this.steamInsightDetailService.loadingFailed;
   readonly showHiddenAchievements = this.steamInsightDetailService.showHiddenAchievements;
 
   readonly isMobileScreen = this.screenService.isMobileScreen;
@@ -63,6 +67,9 @@ export class SteamInsightDetailComponent implements OnInit, OnDestroy {
   readonly achievementDataSource = new MatTableDataSource<SteamAchievement>();
 
   constructor() {
+    // Set Not Found on Load Failure
+    effect(() => this.loadingFailed() && this.titleService.setTitle('Not Found'));
+
     // Achievements Table
     effect(() => this.onAppDetailsInit());
 
@@ -77,7 +84,7 @@ export class SteamInsightDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.titleService.resetTitle();
-    this.steamInsightDetailService.clearAppDetails();
+    this.steamInsightDetailService.resetAppDetails();
   }
 
   private onAppDetailsInit() {

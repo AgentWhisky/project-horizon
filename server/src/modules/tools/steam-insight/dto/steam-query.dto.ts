@@ -6,18 +6,12 @@ export class SteamGameQueryDto {
   @Type(() => Number)
   @IsInt()
   @Min(0)
-  pageIndex = 0;
-
-  @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  @Max(100)
-  pageSize = 20;
+  @Max(10000)
+  page = 0;
 
   @IsOptional()
   @IsString()
-  search?: string;
+  query?: string;
 
   @IsOptional()
   @Type(() => Boolean)

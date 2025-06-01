@@ -27,11 +27,7 @@
         <div class="w-full flex flex-row flex-wrap items-center justify-center gap-1" [@chipSetAnimation]>
           @for (app of steamGameHistory(); track app.appid) {
           <ng-container>
-            <mat-chip
-              [@chipAnimation]
-              [routerLink]="['/steam-insight', app.appid]"
-              class="!cursor-pointer overflow-hidden"
-              [matTooltip]="app.name">
+            <mat-chip [@chipAnimation] [routerLink]="['/steam-insight', app.appid]" class="!cursor-pointer overflow-hidden">
               <span class="search-history-chip !cursor-pointer">{{ app.name }}</span>
               <button
                 matChipRemove

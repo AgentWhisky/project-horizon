@@ -1,11 +1,13 @@
 <!--<div class="app-details-container" [ngStyle]="{ 'background-image': 'url(' + appDetails().backgroundUrl + ')' }">-->
 <div class="app-details-container">
-  <div class="flex flex-row gap-3 justify-between">
-    <a mat-button routerLink="/steam-insight" aria-label="Back to steam game search">
+  <!-- PAGE HEADER BUTTONS -->
+  <div class="page-header-buttons">
+    <a mat-button routerLink="/steam-insight" aria-label="Back to steam insight search">
       <mat-icon aria-hidden="true">arrow_back</mat-icon>
       Back to search
     </a>
 
+    @if(!loadingAppDetails() && !loadingFailed()) {
     <a
       mat-button
       [href]="'https://store.steampowered.com/app/' + appDetails().appid"
@@ -15,74 +17,75 @@
       <mat-icon aria-hidden="true">open_in_new</mat-icon>
       View on Steam
     </a>
+    }
   </div>
 
-  <div class="header-card">
-    <div class="text-content">
-      <h2 class="text-2xl font-semibold break-words">
-        {{ appDetails().name }}
-      </h2>
-      <p class="text-sm break-words">
-        {{ appDetails().shortDescription | decodeHtml }}
-      </p>
+  @if(!loadingAppDetails() && !loadingFailed()) {
+  <!-- TITLE CARD -->
+  <div class="hz-card title-card-container">
+    <div class="title-card-text">
+      <h2>{{ appDetails().name }}</h2>
+      <p>{{ appDetails().shortDescription | decodeHtml }}</p>
     </div>
 
-    <img class="header-image" [src]="appDetails().headerImage" [alt]="appDetails().name" />
+    <img class="title-card-header-image" [src]="appDetails().headerImage" [alt]="appDetails().name + ' Header Image'" />
   </div>
 
-  <div class="hz-card flex flex-col gap-3 w-full p-3">
-    <div>
-      <span class="font-medium">Categories</span>
-      <mat-chip-set class="flex flex-row flex-wrap gap-1" aria-label="Game Categories">
-        @for(category of appDetails().categories; track category) {
+  <!-- CATEGORIES & GENRES -->
+  <div class="hz-card chip-container">
+    <div class="chip-block">
+      <span class="section-label">Categories</span>
+      <mat-chip-set class="chip-set" aria-label="Game Categories">
+        @for (category of appDetails().categories; track category) {
         <mat-chip>{{ category }}</mat-chip>
         }
       </mat-chip-set>
     </div>
 
-    <div>
-      <span class="font-medium">Genres</span>
-      <mat-chip-set class="flex flex-row flex-wrap gap-1" aria-label="Game Genres">
-        @for(genre of appDetails().genres; track genre) {
+    <div class="chip-block">
+      <span class="section-label">Genres</span>
+      <mat-chip-set class="chip-set" aria-label="Game Genres">
+        @for (genre of appDetails().genres; track genre) {
         <mat-chip>{{ genre }}</mat-chip>
         }
       </mat-chip-set>
     </div>
   </div>
 
+  <!-- FIRST TAB GROUP -->
   <mat-tab-group class="hz-card" mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
     <!-- DETAILS -->
     <mat-tab label="Details">
-      <div class="flex flex-col p-3">
-        <div class="display-text">
+      <div class="tab-container">
+        <div class="text-row">
           <span>App ID</span>
-          <span class="text-right">{{ appDetails().appid }}</span>
+          <span>{{ appDetails().appid }}</span>
         </div>
-        <div class="display-text">
+        <div class="text-row">
           <span>Name</span>
-          <span class="text-right">{{ appDetails().name }}</span>
+          <span>{{ appDetails().name }}</span>
         </div>
-        <div class="display-text">
+        <div class="text-row">
           <span>Type</span>
-          <span class="text-right">{{ appDetails().type | titlecase }}</span>
+          <span>{{ appDetails().type | titlecase }}</span>
         </div>
         @if(appDetails().type === 'dlc') {
-        <div class="display-text">
+        <div class="text-row">
           <span>Full Game</span>
-          <span class="text-right">{{ appDetails().fullgame.name }}</span>
+          <span>{{ appDetails().fullgame.name }}</span>
         </div>
         }
-        <div class="display-text">
+        <div class="text-row">
           <span>Release Date</span>
-          <span class="text-right">{{ appDetails().releaseDate }}</span>
+          <span>{{ appDetails().releaseDate }}</span>
         </div>
-        <div class="display-text">
+        <div class="text-row">
           <span>Last Updated</span>
-          <span class="text-right">{{ appDetails().lastModified | date : 'medium' }}</span>
+          <span>{{ appDetails().lastModified | date : 'medium' }}</span>
         </div>
-        <div class="display-text">
+        <div class="text-row">
           <span>Website</span>
-          <span class="text-right">
+          <span>
             @if (appDetails().website) {
             <a [href]="appDetails().website" target="_blank" rel="noopener noreferrer">
               {{ appDetails().website }}
@@ -90,103 +93,108 @@
             } @else { — }
           </span>
         </div>
-        <div class="display-text">
+        <div class="text-row">
           <span>Developers</span>
-          <span class="text-right">{{ appDetails().developers.join(', ') }}</span>
+          <span>{{ appDetails().developers.join(', ') }}</span>
         </div>
-        <div class="display-text">
+        <div class="text-row">
           <span>Publishers</span>
-          <span class="text-right">{{ appDetails().publishers.join(', ') }}</span>
+          <span>{{ appDetails().publishers.join(', ') }}</span>
         </div>
-        <div class="display-text">
+        <div class="text-row">
           <span>Support Email</span>
-          <span class="text-right">{{ appDetails().supportEmail || '—' }}</span>
+          <span>{{ appDetails().supportEmail || '—' }}</span>
         </div>
-        <div class="display-text">
+        <div class="text-row">
           <span>Support URL</span>
           @if (appDetails().supportUrl) {
-          <a class="text-right display-text-link" [href]="appDetails().supportUrl" target="_blank" rel="noopener noreferrer">
+          <a [href]="appDetails().supportUrl" target="_blank" rel="noopener noreferrer">
             {{ appDetails().supportUrl }}
           </a>
           } @else {
-          <span class="text-right">—</span>
+          <span>—</span>
           }
         </div>
-        <div class="display-text">
+        <div class="text-row">
           <span>Legal Notice</span>
-          <span class="text-right">{{ appDetails().legalNotice || '—' }}</span>
+          <span>{{ appDetails().legalNotice || '—' }}</span>
         </div>
-        <div class="display-text">
+        <div class="text-row">
           <span>Supported Languages</span>
-          <span class="text-right" [innerHTML]="appDetails().supportedLanguages"></span>
+          <span [innerHTML]="appDetails().supportedLanguages"></span>
         </div>
       </div>
     </mat-tab>
 
     <!-- ABOUT THE GAME -->
     <mat-tab label="About the game">
-      <div class="p-3 overflow-auto text-sm break-words" [innerHTML]="appDetails().aboutTheGame"></div>
+      <div class="steam-html-content" [innerHTML]="appDetails().aboutTheGame"></div>
     </mat-tab>
 
     <!-- SYSTEM REQUIREMENTS -->
     <mat-tab label="System Requirements">
-      <div class="flex flex-col p-3">
-        <span>IN DEVELOPMENT</span>
-
-        <!--
-          // REQUIREMENTS
-          pcMinimum: string;
-          pcRecommended: string;
-          macMinimum: string;
-          macRecommended: string;
-          linuxMinimum: string;
-          linuxRecommended: string;
-
-          // PLATFORMS
-          supportsWindows: boolean;
-          supportsMac: boolean;
-          supportsLinux: boolean;-->
+      <div class="tab-container">
+        @if(appDetails().supportsWindows || appDetails().supportsMac || appDetails().supportsLinux) { @if(appDetails().supportsWindows) {
+        <h3 class="steam-section-header">Windows</h3>
+        <div class="steam-html-content" [innerHTML]="appDetails().pcMinimum"></div>
+        <div class="steam-html-content" [innerHTML]="appDetails().pcRecommended"></div>
+        @if(appDetails().supportsMac || appDetails().supportsLinux) {
+        <mat-divider></mat-divider>
+        } } @if(appDetails().supportsMac) {
+        <h3 class="steam-section-header">macOS</h3>
+        <div class="steam-html-content" [innerHTML]="appDetails().macMinimum"></div>
+        <div class="steam-html-content" [innerHTML]="appDetails().macRecommended"></div>
+        @if(appDetails().supportsLinux) {
+        <mat-divider></mat-divider>
+        } } @if(appDetails().supportsLinux) {
+        <h3 class="steam-section-header">Linux</h3>
+        <div class="steam-html-content" [innerHTML]="appDetails().linuxMinimum"></div>
+        <div class="steam-html-content" [innerHTML]="appDetails().linuxRecommended"></div>
+        } } @else {
+        <span class="display-text-warning">This game has no system requirements to display.</span>
+        }
       </div>
     </mat-tab>
 
-    <!-- COST -->
+    <!-- COST 
     @if(!appDetails().isFree) {
     <mat-tab label="Price">
-      <div class="flex flex-col p-3">
-        <div class="display-text">
+      <div class="tab-container">
+        <div class="text-row">
           <span>Currency</span>
-          <span class="text-right">{{ appDetails().currency }}</span>
+          <span>{{ appDetails().currency }}</span>
         </div>
-        <div class="display-text">
+        <div class="text-row">
           <span>Initial Price</span>
-          <span class="text-right">{{ appDetails().initialPrice }}</span>
+          <span>{{ appDetails().initialPrice }}</span>
         </div>
-        <div class="display-text">
+        <div class="text-row">
           <span>Final Price</span>
-          <span class="text-right">{{ appDetails().finalPrice }}</span>
+          <span>{{ appDetails().finalPrice }}</span>
         </div>
-        <div class="display-text">
+        <div class="text-row">
           <span>Current Discount</span>
-          <span class="text-right">{{ appDetails().discountPercent }}</span>
+          <span>{{ appDetails().discountPercent }}</span>
         </div>
-        <div class="display-text">
+        <div class="text-row">
           <span>Initial Formatted</span>
-          <span class="text-right">{{ appDetails().initialFormatted }}</span>
+          <span>{{ appDetails().initialFormatted }}</span>
         </div>
-        <div class="display-text">
+        <div class="text-row">
           <span>Final Formatted</span>
-          <span class="text-right">{{ appDetails().finalFormatted }}</span>
+          <span>{{ appDetails().finalFormatted }}</span>
         </div>
       </div>
     </mat-tab>
-    }
+    }-->
   </mat-tab-group>
 
+  <!-- SECOND TAB GROUP -->
   <mat-tab-group class="hz-card" mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
     <!-- ACHIEVEMENTS -->
     <mat-tab label="Achievements">
       @if(appDetails().achievements) {
-      <div class="flex flex-col p-3">
+      <div class="tab-container">
         <div>
           <mat-slide-toggle [(ngModel)]="showHiddenAchievements">Show All Hidden Achievements</mat-slide-toggle>
         </div>
@@ -244,7 +252,7 @@
     <!-- DLC -->
     @if(appDetails().dlc){
     <mat-tab label="DLC">
-      <div class="flex flex-col p-3">
+      <div class="tab-container">
         <span>IN DEVELOPMENT - appids: [{{ appDetails().dlc ? appDetails().dlc.join(', ') : '—' }}]</span>
       </div>
       <!--dlc: number[];-->
@@ -253,7 +261,7 @@
 
     <!-- PACKAGES -->
     <mat-tab label="Packages">
-      <div class="flex flex-col p-3">
+      <div class="tab-container">
         <span class="display-text-warning">This game has no packages to display.</span>
         <!--
         packages: number[];
@@ -280,22 +288,44 @@
       </div>
     </mat-tab>
 
-    <!-- MEDIA -->
-    <mat-tab label="Media">
-      <div class="flex flex-col p-3"></div>
-      <!--screenshots: { id: number; path_thumbnail: string; path_full: string }[];
-        movies: {
-          id: number;
-          name: string;
-          thumbnail: string;
-          video_urls: {
-            webm_480: string;
-            webm_max: string;
-            mp4_480: string;
-            mp4_max: string;
-          };
-          highlight: boolean;
-        }[];-->
+    <!-- SCREENSHOTS -->
+    @if(appDetails().screenshots) {
+    <mat-tab label="Screenshots">
+      <div class="tab-container">
+        <div class="steam-screenshot-container">
+          @for(screenshot of appDetails().screenshots; track screenshot.id) {
+          <img [src]="screenshot.path_thumbnail" />
+          }
+        </div>
+      </div>
+    </mat-tab>
+    }
+
+    <!-- MOVIES -->
+    <mat-tab label="Movies">
+      <div class="tab-container">
+        <div class="steam-media-container">
+          @for (movie of appDetails().movies; track movie.id) {
+          <div class="steam-media-movie-container">
+            <span class="steam-section-header">{{ movie.name }}</span>
+            <video class="steam-media-thumb" [poster]="movie.thumbnail" controls preload="metadata">
+              <source [src]="movie.webm.max || movie.webm[480]" type="video/webm" />
+              <source [src]="movie.mp4.max || movie.mp4[480]" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+          }
+        </div>
+      </div>
     </mat-tab>
   </mat-tab-group>
+  } @else {
+  <div class="empty-app-details-container">
+    <div class="hz-card empty-app-details-card">
+      <span>No Steam app was found for App ID {{ appid() }}.</span>
+      <span>Please return to the search page and try again.</span>
+    </div>
+  </div>
+
+  }
 </div>
