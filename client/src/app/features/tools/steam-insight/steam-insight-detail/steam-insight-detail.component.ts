@@ -20,6 +20,7 @@ import { FormsModule } from '@angular/forms';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { TitleService } from '../../../../core/services/title.service';
 import { MatDividerModule } from '@angular/material/divider';
+import { SecureUrlPipe } from '../../../../core/pipes/secure-url.pipe';
 
 @Component({
   selector: 'hz-steam-insight-detail',
@@ -40,6 +41,7 @@ import { MatDividerModule } from '@angular/material/divider';
     CommonModule,
     TitleCasePipe,
     DecodeHtmlPipe,
+    SecureUrlPipe,
   ],
   templateUrl: './steam-insight-detail.component.html',
   styleUrl: './steam-insight-detail.component.scss',

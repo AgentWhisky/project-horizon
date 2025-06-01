@@ -309,9 +309,9 @@
           <div class="steam-media-movie-container">
             <span class="steam-section-header">{{ movie.name }}</span>
             <video class="steam-media-thumb" [poster]="movie.thumbnail" controls preload="metadata">
-              <source [src]="movie.webm.max || movie.webm[480]" type="video/webm" />
-              <source [src]="movie.mp4.max || movie.mp4[480]" type="video/mp4" />
-              Your browser does not support the video tag.
+              <source [src]="movie.webm.max || movie.webm['480'] | secureUrl" type="video/webm" />
+              <source [src]="movie.mp4.max || movie.mp4['480'] | secureUrl" type="video/mp4" />
+              Your browser does not support video.
             </video>
           </div>
           }
