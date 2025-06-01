@@ -28,7 +28,7 @@
       <p>{{ appDetails().shortDescription | decodeHtml }}</p>
     </div>
 
-    <img class="title-card-header-image" [src]="appDetails().headerImage" [alt]="appDetails().name + ' Header Image'" />
+    <img class="title-card-header-image" [src]="appDetails().headerImage | secureUrl" [alt]="appDetails().name + ' Header Image'" />
   </div>
 
   <!-- CATEGORIES & GENRES -->
@@ -209,7 +209,7 @@
             <th mat-header-cell *matHeaderCellDef>Icon</th>
             <td mat-cell *matCellDef="let element">
               <div [class.blurred]="element.hidden === 1 && !showHiddenAchievements()">
-                <img class="steam-achievement-img" [src]="element.icon" alt="Achievement Icon" />
+                <img class="steam-achievement-img" [src]="element.icon | secureUrl" alt="Achievement Icon" />
               </div>
             </td>
           </ng-container>
@@ -294,7 +294,7 @@
       <div class="tab-container">
         <div class="steam-screenshot-container">
           @for(screenshot of appDetails().screenshots; track screenshot.id) {
-          <img [src]="screenshot.path_thumbnail" />
+          <img [src]="screenshot.path_thumbnail | secureUrl" />
           }
         </div>
       </div>
@@ -308,7 +308,7 @@
           @for (movie of appDetails().movies; track movie.id) {
           <div class="steam-media-movie-container">
             <span class="steam-section-header">{{ movie.name }}</span>
-            <video class="steam-media-thumb" [poster]="movie.thumbnail" controls preload="metadata">
+            <video class="steam-media-thumb" [poster]="movie.thumbnail | secureUrl" controls preload="metadata">
               <source [src]="movie.webm.max || movie.webm['480'] | secureUrl" type="video/webm" />
               <source [src]="movie.mp4.max || movie.mp4['480'] | secureUrl" type="video/mp4" />
               Your browser does not support video.
