@@ -207,9 +207,11 @@ table {
 }
 
 .steam-screenshot-container img {
+  display: flex;
+  flex-grow: 1;
   max-height: 215px;
   height: auto;
-  border-radius: var(--mat-sys-corner-extra-small) !important;
+  border-radius: var(--mat-sys-corner-extra-small);
 }
 
 // *** MOVIES ***
@@ -222,21 +224,10 @@ table {
   gap: 0.75rem;
 }
 
-.steam-media-movie-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  gap: 0.25rem;
-}
-
-.steam-media-header {
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-
 .steam-media-thumb {
+  display: flex;
   max-height: 215px;
   max-width: 100%;
   object-fit: contain;
-  border-radius: var(--mat-sys-corner-extra-small) !important;
+  border-radius: var(--mat-sys-corner-extra-small);
 }

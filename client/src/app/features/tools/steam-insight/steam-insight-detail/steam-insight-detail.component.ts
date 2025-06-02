@@ -21,6 +21,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { TitleService } from '../../../../core/services/title.service';
 import { MatDividerModule } from '@angular/material/divider';
 import { SecureUrlPipe } from '../../../../core/pipes/secure-url.pipe';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'hz-steam-insight-detail',
@@ -36,6 +37,7 @@ import { SecureUrlPipe } from '../../../../core/pipes/secure-url.pipe';
     MatSlideToggleModule,
     MatPaginatorModule,
     MatDividerModule,
+    MatTooltipModule,
     RouterModule,
     FormsModule,
     CommonModule,

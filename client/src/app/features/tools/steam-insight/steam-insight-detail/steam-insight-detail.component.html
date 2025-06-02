@@ -259,35 +259,6 @@
     </mat-tab>
     }
 
-    <!-- PACKAGES -->
-    <mat-tab label="Packages">
-      <div class="tab-container">
-        <span class="display-text-warning">This game has no packages to display.</span>
-        <!--
-        packages: number[];
-        packageGroups: {
-          name: string;
-          title: string;
-          description: string;
-          selection_text: string;
-          save_text: string;
-          display_type: number;
-          is_recurring_subscription: string;
-          subs: {
-            packageid: number;
-            percent_savings_text: string;
-            percent_savings: number;
-            option_text: string;
-            option_description: string;
-            can_get_free_license: string;
-            is_free_license: boolean;
-            price_in_cents_with_discount: number;
-          }[];
-            }[];
-        -->
-      </div>
-    </mat-tab>
-
     <!-- SCREENSHOTS -->
     @if(appDetails().screenshots) {
     <mat-tab label="Screenshots">
@@ -306,14 +277,11 @@
       <div class="tab-container">
         <div class="steam-media-container">
           @for (movie of appDetails().movies; track movie.id) {
-          <div class="steam-media-movie-container">
-            <span class="steam-section-header">{{ movie.name }}</span>
-            <video class="steam-media-thumb" [poster]="movie.thumbnail | secureUrl" controls preload="metadata">
-              <source [src]="movie.webm.max || movie.webm['480'] | secureUrl" type="video/webm" />
-              <source [src]="movie.mp4.max || movie.mp4['480'] | secureUrl" type="video/mp4" />
-              Your browser does not support video.
-            </video>
-          </div>
+          <video class="steam-media-thumb" [poster]="movie.thumbnail | secureUrl" controls preload="metadata" [matTooltip]="movie.name">
+            <source [src]="movie.webm.max || movie.webm['480'] | secureUrl" type="video/webm" />
+            <source [src]="movie.mp4.max || movie.mp4['480'] | secureUrl" type="video/mp4" />
+            Your browser does not support video.
+          </video>
           }
         </div>
       </div>
