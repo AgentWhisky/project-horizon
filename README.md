@@ -1,119 +1,71 @@
 # Project Horizon
 
-Web project
+A full-stack web application built using Angular, NestJS, and PostgreSQL. 
 
-## Setup Angular
+## Libraries & Tools
 
-#### Includes Material & Tailwindcss
+### Frontend
+- **[Angular 19](https://angular.io/)** – Main framework for building the app
+- **[Angular Material](https://material.angular.io/)** – UI component library
+- **[TailwindCSS](https://tailwindcss.com/)** - Utility classes for fast, flexible styling
 
-1. Install Angular CLI
+### Backend
+- **[NestJS 11](https://nestjs.com/)** – TypeScript-based Node.js framework
+- **[TypeORM](https://typeorm.io/)** – ORM for PostgreSQL
 
-```bash
-npm install -g @angular/cli
-```
+### Infrastructure
+- **Docker** – Containerization
+- **Heroku** – Deployment platform
+- **Cloudflare** – DNS & SSL/TLS management
+- **PostgreSQL** – Relational database
 
-2. Create Angular App
+---
 
-```bash
-ng new [app name]
-> Choose SCSS
+## Authentication
 
-cd [app name]
-```
+Custom authentication system using **JWT (JSON Web Tokens)**:
 
-3. Component Library
+- **Access Tokens**: Short-lived tokens used for authenticated requests.
+- **Refresh Tokens**: Automatically issued and rotated on expiry.
+- **Auto Refresh Logic**:
+  - Angular interceptors detect token expiration and transparently fetch a new token using the refresh token.
+  - Tokens are stored securely (e.g., HTTP-only cookies or local storage with XSRF protection).
+- **Guards & Role Protection**: NestJS guards restrict access based on roles and scopes.
 
-- Install Angular Material (Optional)
+---
 
-  ```bash
-  ng add @angular/material
+## Development
 
-  > Choose SCSS
-  ```
+- **Separate** Frontend and Backend allows for replacing either at any time
 
-- Install PrimeNG (Optional)
+## Deployment
 
-  ```bash
-  npm install primeng
+- **Frontend** and **Backend** run in separate Docker containers.
+- **Heroku** hosts both containers using a multi-app setup.
+- **Cloudflare** handles:
+  - DNS resolution
+  - SSL with Full (Strict) mode and TLS ≥1.3
+  - CDN caching and performance optimization
 
-  > Add to styles.css
-    @import "primeng/resources/themes/lara-light-blue/theme.css";
-    @import "primeng/resources/primeng.css";
-  ```
+---
 
-4. Install Tailwindcss (Optional)
+## Database - PostgreSQL
 
-```bash
-npm install -D tailwindcss
-npx tailwindcss init
-```
+- Schema defined and managed via TypeORM migrations
+- B-Tree and GIN indexes on tables for efficient searching
+- Utilizes Partitioned tables for commonly split data
 
-5. Update the tailwind.config.js file in [app name]
+---
 
-```bash
-content: [
-    "./src/**/*.{html,ts}",
-  ],
-```
+## Project Structure
 
-5. Add to the top of the styles.scss file in [app name]/src
 
-```bash
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
-```
 
-## Setup Git
 
-1. Remote Angular Git Files
+## Contact
 
-```bash
-Remove .git
-Remove .gitignore
-```
+- **GitHub**: [your-username](https://github.com/your-username)  
+- **LinkedIn**: [your-name](https://www.linkedin.com/in/your-name)
 
-2. Setup Root .gitignore
-
-```bash
-# Global Files
-node_modules/
-.vscode
-.env
-
-# Client Files
-client/.angular/
-
-# Server Files
-server/dist/
-server/build/
-```
-
-## Setup NestJS
-
-1. Install NestJS CLI
-
-```bash
-npm install -g @nestjs/cli
-```
-
-2. Create Nestjs Project
-
-```bash
-nest new [project name]
-    > Choose npm
-
-cd [project name]
-```
-
-3. Setup TypeORM (Optional)
-```bash
-npm install @nestjs/typeorm typeorm pg
-```
-
-4. Create Endpoint
-
-```bash
-nest g resource [endpoint name]
-```
-
+---
+**© 2025 Horizon** - Feel free to use or contribute under the terms of the [MIT License](./LICENSE).
