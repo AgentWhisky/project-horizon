@@ -15,7 +15,7 @@ export interface SteamAppDetails {
   contentDescriptorNotes: string;
 
   // ARRAYS
-  dlc: number[];
+  dlc: DlcDetails[];
   packages: number[];
   contentDescriptorIds: number[];
   developers: string[];
@@ -225,3 +225,11 @@ export const emptySteamAppDetails: SteamAppDetails = {
   metacriticScore: 0,
   metacriticUrl: '',
 };
+
+export interface DlcDetails {
+  appid: number;
+  name: string;
+  headerImage: string;
+  shortDescription: string;
+  releaseDate: string;
+}

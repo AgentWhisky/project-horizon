@@ -35,7 +35,11 @@ export class SteamInsightDetailService {
     try {
       const appDetails = await this.getSteamAppDetails(appid);
       this._appDetails.set(appDetails);
-      this.steamInsightHistoryService.addApp({ appid: appDetails.appid, name: appDetails.name });
+
+      // Only add games to history
+      if (appDetails.type === 'game') {
+        this.steamInsightHistoryService.addApp({ appid: appDetails.appid, name: appDetails.name });
+      }
     } catch (error: any) {
       this._loadingFailed.set(true);
     } finally {

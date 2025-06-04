@@ -207,8 +207,6 @@ table {
 }
 
 .steam-screenshot-container img {
-  display: flex;
-  flex-grow: 1;
   max-height: 215px;
   height: auto;
   border-radius: var(--mat-sys-corner-extra-small);

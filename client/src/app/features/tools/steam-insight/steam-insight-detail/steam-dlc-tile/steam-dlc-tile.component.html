@@ -1,0 +1,12 @@
+<a class="dlc-tile block" [routerLink]="['/steam-insight', dlc().appid]" [attr.aria-label]="'View details for ' + dlc().name">
+  <img
+    loading="lazy"
+    [src]="dlc().headerImage || './assets/images/steam-app-placeholder.jpg'"
+    [alt]="dlc().name || 'DLC image'"
+    class="dlc-header-img" />
+
+  <div class="dlc-content-container">
+    <p class="dlc-title">{{ dlc().name }}</p>
+    <p class="dlc-description">{{ dlc().shortDescription }}</p>
+  </div>
+</a>

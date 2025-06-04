@@ -52,7 +52,7 @@ export interface SteamAppDetails {
   contentDescriptorNotes: string;
 
   // ARRAYS
-  dlc: number[];
+  dlc: DlcDetails[];
   packages: number[];
   contentDescriptorIds: number[];
   developers: string[];
@@ -93,18 +93,6 @@ export interface SteamAppDetails {
       icon: string;
       icongray: string;
     }[];
-  };
-
-  ratings: {
-    esrb?: RatingDetails;
-    dejus?: RatingDetails;
-    pegi?: RatingDetails;
-    usk?: RatingDetails;
-    nzoflc?: RatingDetails;
-    fpb?: RatingDetails;
-    csrr?: RatingDetails;
-    cero?: RatingDetails;
-    crl?: RatingDetails;
   };
   packageGroups: {
     name: string;
@@ -168,4 +156,12 @@ export interface RatingDetails {
   required_age?: string;
   use_age_gate?: string;
   interactive_elements?: string;
+}
+
+export interface DlcDetails {
+  appid: number;
+  name: string;
+  headerImage: string;
+  shortDescription: string;
+  releaseDate: string;
 }

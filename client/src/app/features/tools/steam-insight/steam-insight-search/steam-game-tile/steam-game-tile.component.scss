@@ -21,6 +21,11 @@
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
 }
 
+.steam-game-tile:focus {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
 .steam-header-img {
   display: block;
   width: 100%;
