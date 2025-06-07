@@ -1,4 +1,3 @@
-<!--<div class="app-details-container" [ngStyle]="{ 'background-image': 'url(' + appDetails().backgroundUrl + ')' }">-->
 <div class="app-details-container">
   <!-- PAGE HEADER BUTTONS -->
   <div class="page-header-buttons">
@@ -28,7 +27,12 @@
       <p>{{ appDetails().shortDescription | decodeHtml }}</p>
     </div>
 
-    <img class="title-card-header-image" [src]="appDetails().headerImage | secureUrl" [alt]="appDetails().name + ' Header Image'" />
+    <img
+      class="title-card-header-image"
+      [src]="appDetails().headerImage | secureUrl"
+      [alt]="appDetails().name + ' Header Image'"
+      width="460"
+      height="215" />
   </div>
 
   <!-- CATEGORIES & GENRES -->
@@ -79,11 +83,11 @@
         }
         <div class="text-row">
           <span>Release Date</span>
-          <span>{{ appDetails().releaseDate }}</span>
+          <span>{{ appDetails().releaseDate || '—' }}</span>
         </div>
         <div class="text-row">
           <span>Last Updated</span>
-          <span>{{ appDetails().lastModified | date : 'medium' }}</span>
+          <span>{{ (appDetails().lastModified | date : 'medium') || '—' }}</span>
         </div>
         <div class="text-row">
           <span>Website</span>

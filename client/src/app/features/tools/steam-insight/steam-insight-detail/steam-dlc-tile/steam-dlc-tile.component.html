@@ -3,7 +3,9 @@
     loading="lazy"
     [src]="dlc().headerImage || './assets/images/steam-app-placeholder.jpg'"
     [alt]="dlc().name || 'DLC image'"
-    class="dlc-header-img" />
+    class="dlc-header-img"
+    width="460"
+    height="215" />
 
   <div class="dlc-content-container">
     <p class="dlc-title">{{ dlc().name }}</p>

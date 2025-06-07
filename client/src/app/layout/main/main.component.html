@@ -20,11 +20,11 @@
 
     <!-- Login/Account Icons -->
     @if(!isLoggedIn()) {
-    <button mat-icon-button class="header-icon" (click)="onLogin()" matTooltip="Sign In">
+    <button mat-icon-button class="header-icon" (click)="onLogin()" matTooltip="Sign In" aria-label="Sign In">
       <mat-icon>person</mat-icon>
     </button>
     } @else {
-    <button mat-icon-button class="header-icon" [matMenuTriggerFor]="userMenu" matTooltip="Account">
+    <button mat-icon-button class="header-icon" [matMenuTriggerFor]="userMenu" matTooltip="Account" aria-label="Account">
       <mat-icon>account_circle</mat-icon>
     </button>
     <mat-menu #userMenu="matMenu">

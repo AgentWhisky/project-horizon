@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, OnDestroy, OnInit, signal, ViewChild, viewChild } from '@angular/core';
+import { Component, computed, effect, inject, input, OnDestroy, signal, ViewChild, viewChild } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -73,10 +73,12 @@ export class SteamInsightDetailComponent implements OnDestroy {
   );
   readonly achievementDataSource = new MatTableDataSource<SteamAchievement>();
 
-  // DLC Paginator
+  // DLC Display
   @ViewChild('dlcPaginator') dlcPaginator!: MatPaginator;
-  readonly dlcPage = signal<DlcDetails[]>([]);
-  readonly showDlcPaginator = computed(() => this.appDetails().dlc.length > 0);
+  readonly dlcPageIndex = signal<number>(0);
+  readonly dlcPageSize = computed(() => (this.isMobileScreen() ? DLC_PAGE_SIZE_MOBILE : DLC_PAGE_SIZE));
+  readonly dlcPage = computed(() => this.getDlcPage(this.dlcPageIndex()));
+  readonly showDlcPaginator = computed(() => this.appDetails().dlc.length > this.dlcPageSize());
 
   constructor() {
     // Load app details on appid change
@@ -99,20 +101,18 @@ export class SteamInsightDetailComponent implements OnDestroy {
   }
 
   onDlcPageChange(event: PageEvent) {
-    console.log(event.pageIndex);
-    const newPage = this.getDlcPage(event.pageIndex);
-    this.dlcPage.set(newPage);
+    const newPage = event.pageIndex;
+    this.dlcPageIndex.set(newPage);
   }
 
   // *** PRIVATE FUNCTIONS ***
   private onAppDetailsInit() {
     this.titleService.setTitle(this.appDetails().name);
     this.achievementDataSource.data = this.appDetails().achievements?.data ?? [];
-    this.dlcPage.set(this.getDlcPage(0));
   }
 
-  private getDlcPage(pageIndex: number) {
-    const pageSize = this.screenService.isMobileScreen() ? DLC_PAGE_SIZE_MOBILE : DLC_PAGE_SIZE;
+  private getDlcPage(pageIndex: number): DlcDetails[] {
+    const pageSize = this.dlcPageSize();
     const start = pageIndex * pageSize;
     const end = start + pageSize;
 
