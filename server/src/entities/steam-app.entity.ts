@@ -97,18 +97,7 @@ export class SteamAppEntity {
   screenshots: { id: number; path_thumbnail: string; path_full: string }[];
 
   @Column({ name: 'movies', type: 'jsonb', nullable: true })
-  movies: {
-    id: number;
-    name: string;
-    thumbnail: string;
-    video_urls: {
-      webm_480: string;
-      webm_max: string;
-      mp4_480: string;
-      mp4_max: string;
-    };
-    highlight: boolean;
-  }[];
+  movies: Movie[];
 
   @Column({ name: 'achievements', type: 'jsonb', nullable: true })
   achievements: {
@@ -250,10 +239,25 @@ export class SteamAppEntity {
   updatedDate: Date;
 }
 
-type RatingDetails = {
+interface RatingDetails {
   rating: string;
   descriptors?: string;
   required_age?: string;
   use_age_gate?: string;
   interactive_elements?: string;
-};
+}
+
+interface Movie {
+  id: number;
+  name: string;
+  thumbnail: string;
+  mp4: {
+    '480': string;
+    max: string;
+  };
+  webm: {
+    '480': string;
+    max: string;
+  };
+  highlight: boolean;
+}

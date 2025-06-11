@@ -23,7 +23,7 @@ import { SteamInsightDetailService } from './steam-insight-detail.service';
 import { SteamDlcTileComponent } from './steam-dlc-tile/steam-dlc-tile.component';
 import { DecodeHtmlPipe } from '../../../../core/pipes/decode-html.pipe';
 import { SecureUrlPipe } from '../../../../core/pipes/secure-url.pipe';
-import { DlcDetails, SteamAchievement } from './steam-insight-detail';
+import { Achievement, DlcDetails } from './steam-insight-detail';
 import { DLC_PAGE_SIZE, DLC_PAGE_SIZE_MOBILE } from '../../../../core/constants/steam-insight.constant';
 
 @Component({
@@ -71,7 +71,7 @@ export class SteamInsightDetailComponent implements OnDestroy {
   readonly achievementDisplayedColumns = computed(() =>
     this.isMobileScreen() ? ['index', 'icon', 'name'] : ['index', 'icon', 'name', 'description']
   );
-  readonly achievementDataSource = new MatTableDataSource<SteamAchievement>();
+  readonly achievementDataSource = new MatTableDataSource<Achievement>();
 
   // DLC Display
   @ViewChild('dlcPaginator') dlcPaginator!: MatPaginator;

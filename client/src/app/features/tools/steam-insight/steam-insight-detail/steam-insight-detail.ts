@@ -4,96 +4,38 @@ export interface SteamAppDetails {
   lastModified: Date;
   type: string;
 
-  // APP INFO
-  requiredAge: number;
-  isFree: boolean;
-  recommendationsTotal: number;
-  comingSoon: boolean;
+  // Info
   releaseDate: string;
   supportUrl: string;
   supportEmail: string;
-  contentDescriptorNotes: string;
+  website: string;
 
-  // ARRAYS
+  // Media
+  headerImage: string;
+  backgroundUrl: string;
+  screenshots: Screenshot[];
+  movies: Movie[];
+
+  // Arrays
   dlc: DlcDetails[];
-  packages: number[];
-  contentDescriptorIds: number[];
   developers: string[];
   publishers: string[];
   categories: string[];
   genres: string[];
 
-  // TEXT
-  detailedDescription: string;
+  // Text
   aboutTheGame: string;
   shortDescription: string;
   supportedLanguages: string;
-  reviews: string;
   legalNotice: string;
 
-  // JSON OBJECTS
-  screenshots: { id: number; path_thumbnail: string; path_full: string }[];
-  movies: {
-    id: number;
-    name: string;
-    thumbnail: string;
-    highlight: boolean;
-    mp4: {
-      '480': string;
-      max: string;
-    };
-    webm: {
-      '480': string;
-      max: string;
-    };
-  }[];
-  achievements: {
-    total: number;
-    data: SteamAchievement[];
-  };
+  // Achievements
+  achievements: AchievementBlock;
 
-  ratings: {
-    esrb?: RatingDetails;
-    dejus?: RatingDetails;
-    pegi?: RatingDetails;
-    usk?: RatingDetails;
-    nzoflc?: RatingDetails;
-    fpb?: RatingDetails;
-    csrr?: RatingDetails;
-    cero?: RatingDetails;
-    crl?: RatingDetails;
-  };
-  packageGroups: {
-    name: string;
-    title: string;
-    description: string;
-    selection_text: string;
-    save_text: string;
-    display_type: number;
-    is_recurring_subscription: string;
-    subs: {
-      packageid: number;
-      percent_savings_text: string;
-      percent_savings: number;
-      option_text: string;
-      option_description: string;
-      can_get_free_license: string;
-      is_free_license: boolean;
-      price_in_cents_with_discount: number;
-    }[];
-  }[];
-  demos: { appid: number; description: string }[];
+  // DLC Full Game
   fullgame: { appid: number; name: string };
 
-  // URLS & MEDIA
-  headerImage: string;
-  capsuleImage: string;
-  capsuleImagev5: string;
-  website: string;
-  backgroundUrl: string;
-  backgroundRawUrl: string;
-
-  // REQUIREMENTS
+  // Requirements
   pcMinimum: string;
   pcRecommended: string;
   macMinimum: string;
@@ -101,22 +43,58 @@ export interface SteamAppDetails {
   linuxMinimum: string;
   linuxRecommended: string;
 
-  // PLATFORMS
+  // Platforms
   supportsWindows: boolean;
   supportsMac: boolean;
   supportsLinux: boolean;
 
-  // PRICE
-  currency: string;
-  initialPrice: number;
-  finalPrice: number;
-  discountPercent: number;
-  initialFormatted: string;
-  finalFormatted: string;
-
-  // REVIEWS
+  // Reviews
   metacriticScore: number;
   metacriticUrl: string;
+}
+
+export interface Screenshot {
+  id: number;
+  path_thumbnail: string;
+  path_full: string;
+}
+
+export interface Movie {
+  id: number;
+  name: string;
+  thumbnail: string;
+  mp4: {
+    '480': string;
+    max: string;
+  };
+  webm: {
+    '480': string;
+    max: string;
+  };
+  highlight: boolean;
+}
+
+export interface Achievement {
+  name: string;
+  defaultvalue: number;
+  displayName: string;
+  hidden: number;
+  description: string;
+  icon: string;
+  icongray: string;
+}
+
+export interface AchievementBlock {
+  total: number;
+  data: Achievement[];
+}
+
+export interface DlcDetails {
+  appid: number;
+  name: string;
+  headerImage: string;
+  shortDescription: string;
+  releaseDate: string;
 }
 
 export interface RatingDetails {
@@ -127,21 +105,7 @@ export interface RatingDetails {
   interactive_elements?: string;
 }
 
-export interface SteamAchievement {
-  name: string;
-  defaultvalue: number;
-  displayName: string;
-  hidden: number;
-  description: string;
-  icon: string;
-  icongray: string;
-}
-
-export interface SteamAchievements {
-  total: number;
-  data: SteamAchievement[];
-}
-
+// EMPTY APP DETAILS
 export const emptySteamAppDetails: SteamAppDetails = {
   appid: 0,
   name: '',
@@ -149,30 +113,22 @@ export const emptySteamAppDetails: SteamAppDetails = {
   type: '',
 
   // APP INFO
-  requiredAge: 0,
-  isFree: false,
-  recommendationsTotal: 0,
-  comingSoon: false,
+
   releaseDate: '',
   supportUrl: '',
   supportEmail: '',
-  contentDescriptorNotes: '',
 
   // ARRAYS
   dlc: [],
-  packages: [],
-  contentDescriptorIds: [],
   developers: [],
   publishers: [],
   categories: [],
   genres: [],
 
   // TEXT
-  detailedDescription: '',
   aboutTheGame: '',
   shortDescription: '',
   supportedLanguages: '',
-  reviews: '',
   legalNotice: '',
 
   // JSON OBJECTS
@@ -183,10 +139,6 @@ export const emptySteamAppDetails: SteamAppDetails = {
     data: [],
   },
 
-  ratings: {},
-
-  packageGroups: [],
-  demos: [],
   fullgame: {
     appid: 0,
     name: '',
@@ -194,11 +146,8 @@ export const emptySteamAppDetails: SteamAppDetails = {
 
   // URLS & MEDIA
   headerImage: '',
-  capsuleImage: '',
-  capsuleImagev5: '',
   website: '',
   backgroundUrl: '',
-  backgroundRawUrl: '',
 
   // REQUIREMENTS
   pcMinimum: '',
@@ -212,14 +161,6 @@ export const emptySteamAppDetails: SteamAppDetails = {
   supportsWindows: false,
   supportsMac: false,
   supportsLinux: false,
-
-  // PRICE
-  currency: '',
-  initialPrice: 0,
-  finalPrice: 0,
-  discountPercent: 0,
-  initialFormatted: '',
-  finalFormatted: '',
 
   // REVIEWS
   metacriticScore: 0,

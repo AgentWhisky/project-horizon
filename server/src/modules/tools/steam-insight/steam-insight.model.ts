@@ -18,22 +18,6 @@ export interface SteamAppSearchOptions {
   allowAdultContent?: boolean;
 }
 
-// Steam Search 2
-export interface SteamInitSearchOptions {
-  query?: string;
-  allowAdultContent?: boolean;
-  lastAppid?: number;
-  expiresAt?: Date;
-}
-
-export interface SteamAppSearchResult {
-  type: 'INIT' | 'PAG' | 'REFRESH';
-
-  // INIT & REFRESH
-  total?: number;
-  expiresAt?: Date;
-}
-
 // *** STEAM DETAIL ***
 export interface SteamAppDetails {
   appid: number;
@@ -41,90 +25,38 @@ export interface SteamAppDetails {
   lastModified: Date;
   type: string;
 
-  // APP INFO
-  requiredAge: number;
-  isFree: boolean;
-  recommendationsTotal: number;
-  comingSoon: boolean;
+  // Info
   releaseDate: string;
   supportUrl: string;
   supportEmail: string;
-  contentDescriptorNotes: string;
+  website: string;
 
-  // ARRAYS
+  // Media
+  headerImage: string;
+  backgroundUrl: string;
+  screenshots: Screenshot[];
+  movies: Movie[];
+
+  // Arrays
   dlc: DlcDetails[];
-  packages: number[];
-  contentDescriptorIds: number[];
   developers: string[];
   publishers: string[];
   categories: string[];
   genres: string[];
 
-  // TEXT
-  detailedDescription: string;
+  // Text
   aboutTheGame: string;
   shortDescription: string;
   supportedLanguages: string;
-  reviews: string;
   legalNotice: string;
 
-  // JSON OBJECTS
-  screenshots: { id: number; path_thumbnail: string; path_full: string }[];
-  movies: {
-    id: number;
-    name: string;
-    thumbnail: string;
-    video_urls: {
-      webm_480: string;
-      webm_max: string;
-      mp4_480: string;
-      mp4_max: string;
-    };
-    highlight: boolean;
-  }[];
-  achievements: {
-    total: number;
-    data: {
-      name: string;
-      defaultvalue: number;
-      displayName: string;
-      hidden: number;
-      description: string;
-      icon: string;
-      icongray: string;
-    }[];
-  };
-  packageGroups: {
-    name: string;
-    title: string;
-    description: string;
-    selection_text: string;
-    save_text: string;
-    display_type: number;
-    is_recurring_subscription: string;
-    subs: {
-      packageid: number;
-      percent_savings_text: string;
-      percent_savings: number;
-      option_text: string;
-      option_description: string;
-      can_get_free_license: string;
-      is_free_license: boolean;
-      price_in_cents_with_discount: number;
-    }[];
-  }[];
-  demos: { appid: number; description: string }[];
+  // Achievements
+  achievements: AchievementBlock;
+
+  // DLC Full Game
   fullgame: { appid: number; name: string };
 
-  // URLS & MEDIA
-  headerImage: string;
-  capsuleImage: string;
-  capsuleImagev5: string;
-  website: string;
-  backgroundUrl: string;
-  backgroundRawUrl: string;
-
-  // REQUIREMENTS
+  // Requirements
   pcMinimum: string;
   pcRecommended: string;
   macMinimum: string;
@@ -132,30 +64,50 @@ export interface SteamAppDetails {
   linuxMinimum: string;
   linuxRecommended: string;
 
-  // PLATFORMS
+  // Platforms
   supportsWindows: boolean;
   supportsMac: boolean;
   supportsLinux: boolean;
 
-  // PRICE
-  currency: string;
-  initialPrice: number;
-  finalPrice: number;
-  discountPercent: number;
-  initialFormatted: string;
-  finalFormatted: string;
-
-  // REVIEWS
+  // Reviews
   metacriticScore: number;
   metacriticUrl: string;
 }
 
-export interface RatingDetails {
-  rating: string;
-  descriptors?: string;
-  required_age?: string;
-  use_age_gate?: string;
-  interactive_elements?: string;
+export interface Screenshot {
+  id: number;
+  path_thumbnail: string;
+  path_full: string;
+}
+
+export interface Movie {
+  id: number;
+  name: string;
+  thumbnail: string;
+  mp4: {
+    '480': string;
+    max: string;
+  };
+  webm: {
+    '480': string;
+    max: string;
+  };
+  highlight: boolean;
+}
+
+export interface Achievement {
+  name: string;
+  defaultvalue: number;
+  displayName: string;
+  hidden: number;
+  description: string;
+  icon: string;
+  icongray: string;
+}
+
+export interface AchievementBlock {
+  total: number;
+  data: Achievement[];
 }
 
 export interface DlcDetails {
@@ -164,4 +116,12 @@ export interface DlcDetails {
   headerImage: string;
   shortDescription: string;
   releaseDate: string;
+}
+
+export interface RatingDetails {
+  rating: string;
+  descriptors?: string;
+  required_age?: string;
+  use_age_gate?: string;
+  interactive_elements?: string;
 }
