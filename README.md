@@ -29,8 +29,7 @@ Custom authentication system using **JWT (JSON Web Tokens)**:
 - **Refresh Tokens**: Automatically issued and rotated on expiry.
 - **Auto Refresh Logic**:
   - Angular interceptors detect token expiration and transparently fetch a new token using the refresh token.
-  - Tokens are stored securely (e.g., HTTP-only cookies or local storage with XSRF protection).
-- **Guards & Role Protection**: NestJS guards restrict access based on roles and scopes.
+- **Guards & Role Protection**: NestJS guards restrict access based on roles and rights.
 
 ---
 
