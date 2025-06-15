@@ -8,10 +8,6 @@ import { DEFAULT_TITLE } from '../constants/title.constants';
 export class TitleService {
   private title = inject(Title);
 
-  constructor() {
-    this.title.setTitle(DEFAULT_TITLE);
-  }
-
   setTitle(title: string) {
     this.title.setTitle(`${DEFAULT_TITLE} - ${title}`);
   }

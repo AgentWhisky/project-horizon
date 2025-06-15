@@ -1,5 +1,17 @@
-// chip-animations.ts
-import { animate, style, transition, trigger, query, stagger, animateChild } from '@angular/animations';
+import { animate, style, transition, trigger, query, stagger } from '@angular/animations';
+
+const enterTiming = '300ms cubic-bezier(0.25, 0.8, 0.25, 1)';
+const leaveTiming = '300ms cubic-bezier(0.55, 0, 0.55, 0.2)';
+const chipEnterStyle = {
+  opacity: 0,
+  transform: 'translateY(10px) scale(0.95)',
+  width: '0px',
+};
+const chipFinalStyle = {
+  opacity: 1,
+  transform: 'translateY(0) scale(1)',
+  width: '*',
+};
 
 export const chipSetAnimation = trigger('chipSetAnimation', [
   transition('* => *', [
@@ -7,21 +19,9 @@ export const chipSetAnimation = trigger('chipSetAnimation', [
       ':enter',
       [
         style({
-          opacity: 0,
-          transform: 'translateY(10px) scale(0.9)',
-          width: '0px',
-          overflow: 'hidden',
+          ...chipEnterStyle,
         }),
-        stagger('80ms', [
-          animate(
-            '400ms cubic-bezier(0.25, 0.8, 0.25, 1)',
-            style({
-              opacity: 1,
-              transform: 'translateY(0) scale(1)',
-              width: '*',
-            })
-          ),
-        ]),
+        stagger('80ms', [animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)', style(chipFinalStyle))]),
       ],
       { optional: true }
     ),
@@ -29,24 +29,10 @@ export const chipSetAnimation = trigger('chipSetAnimation', [
 ]);
 
 export const chipAnimation = trigger('chipAnimation', [
-  transition(':enter', [
-    style({
-      opacity: 0,
-      transform: 'translateY(10px) scale(0.95)',
-      width: '0px',
-    }),
-    animate(
-      '300ms cubic-bezier(0.25, 0.8, 0.25, 1)',
-      style({
-        opacity: 1,
-        transform: 'translateY(0) scale(1)',
-        width: '*',
-      })
-    ),
-  ]),
+  transition(':enter', [style(chipEnterStyle), animate(enterTiming, style(chipFinalStyle))]),
   transition(':leave', [
     animate(
-      '300ms cubic-bezier(0.55, 0, 0.55, 0.2)',
+      leaveTiming,
       style({
         opacity: 0,
         transform: 'scale(0.8)',

@@ -23,7 +23,7 @@ import { SteamInsightDetailService } from './steam-insight-detail.service';
 import { SteamDlcTileComponent } from './steam-dlc-tile/steam-dlc-tile.component';
 import { DecodeHtmlPipe } from '../../../../core/pipes/decode-html.pipe';
 import { SecureUrlPipe } from '../../../../core/pipes/secure-url.pipe';
-import { Achievement, DlcDetails } from './steam-insight-detail';
+import { Achievement, DlcDetails, LOADING_STATUS } from './steam-insight-detail';
 import { DLC_PAGE_SIZE, DLC_PAGE_SIZE_MOBILE } from '../../../../core/constants/steam-insight.constant';
 
 @Component({
@@ -60,8 +60,9 @@ export class SteamInsightDetailComponent implements OnDestroy {
   readonly appid = input.required<number>();
 
   readonly appDetails = this.steamInsightDetailService.appDetails;
-  readonly loadingAppDetails = this.steamInsightDetailService.loadingAppDetails;
-  readonly loadingFailed = this.steamInsightDetailService.loadingFailed;
+  readonly loadingInProgress = this.steamInsightDetailService.loadingInProgress;
+  readonly loadingSuccess = this.steamInsightDetailService.loadingSuccess;
+  readonly loadingFailure = this.steamInsightDetailService.loadingFailure;
   readonly showHiddenAchievements = this.steamInsightDetailService.showHiddenAchievements;
 
   readonly isMobileScreen = this.screenService.isMobileScreen;
@@ -84,11 +85,15 @@ export class SteamInsightDetailComponent implements OnDestroy {
     // Load app details on appid change
     effect(() => this.steamInsightDetailService.loadSteamAppDetails(this.appid()));
 
-    // Initialize on app details update
-    effect(() => this.onAppDetailsInit());
-
-    // Set Not Found on Load Failure
-    effect(() => this.loadingFailed() && this.titleService.setTitle('Not Found'));
+    // Update page on loading app details
+    effect(() => {
+      if (this.loadingSuccess()) {
+        this.titleService.setTitle(this.appDetails().name);
+        this.achievementDataSource.data = this.appDetails().achievements?.data ?? [];
+      } else if (this.loadingFailure()) {
+        this.titleService.setTitle('Not Found');
+      }
+    });
 
     effect(() => {
       this.achievementDataSource.paginator = this.achievementPaginator() ?? null;
@@ -106,11 +111,6 @@ export class SteamInsightDetailComponent implements OnDestroy {
   }
 
   // *** PRIVATE FUNCTIONS ***
-  private onAppDetailsInit() {
-    this.titleService.setTitle(this.appDetails().name);
-    this.achievementDataSource.data = this.appDetails().achievements?.data ?? [];
-  }
-
   private getDlcPage(pageIndex: number): DlcDetails[] {
     const pageSize = this.dlcPageSize();
     const start = pageIndex * pageSize;

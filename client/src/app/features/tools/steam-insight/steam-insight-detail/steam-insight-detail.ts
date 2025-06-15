@@ -105,6 +105,14 @@ export interface RatingDetails {
   interactive_elements?: string;
 }
 
+// *** CONSTANTS ***
+export const LOADING_STATUS = {
+  NOT_LOADED: 0,
+  IN_PROGRESS: 1,
+  SUCCESS: 2,
+  FAILED: 3
+}
+
 // EMPTY APP DETAILS
 export const emptySteamAppDetails: SteamAppDetails = {
   appid: 0,

@@ -6,7 +6,7 @@
       Back to search
     </a>
 
-    @if(!loadingAppDetails() && !loadingFailed()) {
+    @if(loadingSuccess()) {
     <a
       mat-button
       [href]="'https://store.steampowered.com/app/' + appDetails().appid"
@@ -19,7 +19,7 @@
     }
   </div>
 
-  @if(!loadingAppDetails() && !loadingFailed()) {
+  @if(loadingSuccess()) {
   <!-- TITLE CARD -->
   <div class="hz-card title-card-container">
     <div class="title-card-text">
@@ -296,14 +296,14 @@
       }
     </mat-tab>
   </mat-tab-group>
-  } @else if(loadingFailed()) {
+  } @else if(loadingFailure()) {
   <div class="empty-app-details-container">
     <div class="hz-card empty-app-details-card">
       <span>No Steam app was found for App ID {{ appid() }}.</span>
       <span>Please return to the search page and try again.</span>
     </div>
   </div>
-  } @else if(loadingAppDetails()) {
+  } @else if(loadingInProgress()) {
   <div class="flex flex-grow items-center justify-center">
     <mat-spinner></mat-spinner>
   </div>

@@ -5,6 +5,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class SecureUrlPipe implements PipeTransform {
   transform(url: string): string {
-    return url?.startsWith('http:') ? url.replace('http:', 'https:') : url;
+    return url?.startsWith('http://') ? url.replace('http://', 'https://') : url;
   }
 }

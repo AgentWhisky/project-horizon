@@ -1,4 +1,4 @@
-import { Directive, HostListener, input, Input } from '@angular/core';
+import { Directive, HostListener, input } from '@angular/core';
 
 @Directive({
   selector: '[charRestrict]',

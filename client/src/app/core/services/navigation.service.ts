@@ -1,5 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
-import { ScreenService } from './screen.service';
+import { Injectable, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +7,6 @@ export class NavigationService {
   private _isLeftNavOpen = signal(this.getLeftNavState());
   readonly isLeftNavOpen = this._isLeftNavOpen.asReadonly();
 
-  // *** Left Navigation Menu State (Open/Closed) ***
   toggleLeftNav() {
     const isOpen = !this._isLeftNavOpen();
 

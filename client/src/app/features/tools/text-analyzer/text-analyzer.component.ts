@@ -13,8 +13,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { TextAnalyzerService } from './text-analyzer.service';
 import { CharacterBreakdown, WordBreakdown } from './text-analyzer';
-import { TimeFormatPipe } from '../../../core/pipes/time-format.pipe';
 import { CommonModule } from '@angular/common';
+import { DurationPipe } from '../../../core/pipes/duration.pipe';
 
 @Component({
   selector: 'hz-text-analyzer',
@@ -30,7 +30,7 @@ import { CommonModule } from '@angular/common';
     MatDividerModule,
     ReactiveFormsModule,
     FormsModule,
-    TimeFormatPipe,
+    DurationPipe,
     CommonModule,
   ],
   templateUrl: './text-analyzer.component.html',

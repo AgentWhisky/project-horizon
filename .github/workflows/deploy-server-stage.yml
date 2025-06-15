@@ -21,4 +21,4 @@ jobs:
           heroku_app_name: ${{secrets.HEROKU_APP_NAME_SERVER_STAGE}}
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           usedocker: true
-          appdir: "server"  # server subfolder
+          appdir: "server"

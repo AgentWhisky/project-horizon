@@ -1,5 +1,5 @@
-import { effect, inject, Injectable, NgZone, OnDestroy, signal } from '@angular/core';
-import { MOBILE_SCREEN_SIZE, SCROLL_Y, SMALL_SCREEN_SIZE } from '../constants/screen-values.constant';
+import { inject, Injectable, NgZone, OnDestroy, signal } from '@angular/core';
+import { SMALL_SCREEN_SIZE, MOBILE_SCREEN_SIZE, SCROLL_Y } from '../constants/screen-values.constant';
 
 @Injectable({
   providedIn: 'root',
@@ -7,14 +7,22 @@ import { MOBILE_SCREEN_SIZE, SCROLL_Y, SMALL_SCREEN_SIZE } from '../constants/sc
 export class ScreenService implements OnDestroy {
   private zone = inject(NgZone);
 
-  private _isSmallScreen = signal(window.innerWidth < SMALL_SCREEN_SIZE);
+  private _isSmallScreen = signal(this.checkSize(SMALL_SCREEN_SIZE));
   readonly isSmallScreen = this._isSmallScreen.asReadonly();
 
-  private _isMobileScreen = signal(window.innerWidth < MOBILE_SCREEN_SIZE);
+  private _isMobileScreen = signal(this.checkSize(MOBILE_SCREEN_SIZE));
   readonly isMobileScreen = this._isMobileScreen.asReadonly();
 
-  private _isScrolled = signal(window.scrollY > SCROLL_Y);
+  private _isScrolled = signal(this.checkScroll());
   readonly isScrolled = this._isScrolled.asReadonly();
+
+  private readonly resizeListener = () => {
+    this.zone.run(() => this.updateScreenSize());
+  };
+
+  private readonly scrollListener = () => {
+    this.zone.run(() => this.updateScrollState);
+  };
 
   constructor() {
     window.addEventListener('resize', this.resizeListener);
@@ -26,21 +34,20 @@ export class ScreenService implements OnDestroy {
     window.removeEventListener('scroll', this.scrollListener);
   }
 
-  private resizeListener = () => {
-    this.zone.run(() => this.updateScreenSize());
-  };
-
-  private scrollListener = () => {
-    this.zone.run(() => this.onScroll());
-  };
-
-  // *** Navigation for Screen Size ***
   private updateScreenSize() {
-    this._isSmallScreen.set(window.innerWidth < SMALL_SCREEN_SIZE);
-    this._isMobileScreen.set(window.innerWidth < MOBILE_SCREEN_SIZE);
+    this._isSmallScreen.set(this.checkSize(SMALL_SCREEN_SIZE));
+    this._isMobileScreen.set(this.checkSize(MOBILE_SCREEN_SIZE));
   }
 
-  private onScroll() {
-    this._isScrolled.set(window.scrollY > SCROLL_Y);
+  private updateScrollState() {
+    this._isScrolled.set(this.checkScroll());
+  }
+
+  private checkSize(threshold: number) {
+    return window.innerWidth < threshold;
+  }
+
+  private checkScroll() {
+    return window.scrollY > SCROLL_Y;
   }
 }
