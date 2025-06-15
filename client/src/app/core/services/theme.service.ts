@@ -6,7 +6,7 @@ import { DARK_MODE_CLASS_NAME } from '../constants/theme.constant';
   providedIn: 'root',
 })
 export class ThemeService {
-  private _isDarkTheme = signal<boolean>(this.getTheme());
+  private _isDarkTheme = signal<boolean>(this.loadTheme());
   readonly isDarkTheme = this._isDarkTheme.asReadonly();
 
   constructor() {
@@ -18,18 +18,18 @@ export class ThemeService {
 
     this._isDarkTheme.set(isDarkMode);
     this.applyThemeClass(isDarkMode);
-    this.setTheme(isDarkMode);
+    this.saveTheme(isDarkMode);
   }
 
   private applyThemeClass(isDarkTheme: boolean) {
     document.body.classList.toggle(DARK_MODE_CLASS_NAME, isDarkTheme);
   }
 
-  private setTheme(isDarkMode: boolean) {
+  private saveTheme(isDarkMode: boolean) {
     localStorage.setItem(DARK_THEME, JSON.stringify(isDarkMode));
   }
 
-  private getTheme() {
+  private loadTheme() {
     return JSON.parse(localStorage.getItem(DARK_THEME) || 'false');
   }
 }

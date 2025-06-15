@@ -14,8 +14,14 @@ export function convertToBase(fromBase: number, toBase: number, value: string): 
       return '';
     }
 
-    const convertedVal = [...value].reduce((acc, curr) => BigInt(parseInt(curr, fromBase)) + BigInt(fromBase) * acc, 0n);
-    return convertedVal.toString(toBase).toUpperCase();
+    let decimalValue = 0n;
+
+    for (const digit of value) {
+      const digitValue = BigInt(parseInt(digit, fromBase));
+      decimalValue = decimalValue * BigInt(fromBase) + digitValue;
+    }
+
+    return decimalValue.toString(toBase).toUpperCase();
   } catch {
     return 'NAN';
   }

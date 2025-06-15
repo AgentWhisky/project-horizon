@@ -13,8 +13,6 @@ export function passwordMatch(fieldName: string): ValidatorFn {
 
     const password = control.parent?.get(fieldName)?.value;
     const confirmPassword = control?.value;
-
-    console.log(password, confirmPassword);
     
     return password === confirmPassword ? null : { passwordMatch: { value: control.value } };
   };

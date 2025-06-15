@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { AuthInfo, AuthInfoPayload } from '../types/auth';
-import { catchError, firstValueFrom, from, mergeMap, Observable, of, retry, tap, throwError } from 'rxjs';
+import { firstValueFrom, from, mergeMap, of, retry, throwError } from 'rxjs';
 import { UserService } from './user.service';
 import { jwtDecode } from 'jwt-decode';
 
@@ -16,7 +16,7 @@ export class TokenService {
   private apiUrl = environment.apiUrl;
   private refreshInProgress: Promise<AuthInfo> | null = null;
 
-  // General HTTP Actions
+  // *** HTTP ACTIONS ***
   getWithTokenRefresh<T>(url: string, options?: {}) {
     return this.http.get<T>(`${this.apiUrl}${url}`, options).pipe(
       retry({
