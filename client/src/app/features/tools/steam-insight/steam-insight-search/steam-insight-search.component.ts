@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 import { SteamGameHistoryEntry } from '../steam-insight';
 import { SteamInsightHistoryService } from '../steam-insight-history.service';
 import { chipAnimation, chipSetAnimation } from '../../../../core/animations/chip-animations';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'hz-steam-insight-search',
@@ -22,6 +23,7 @@ import { chipAnimation, chipSetAnimation } from '../../../../core/animations/chi
     MatPaginatorModule,
     MatChipsModule,
     MatTooltipModule,
+    MatProgressSpinnerModule,
     RouterModule,
     FormsModule,
     SteamGameTileComponent,
@@ -34,23 +36,29 @@ export class SteamInsightSearchComponent implements OnInit {
   private steamInsightService = inject(SteamInsightSearchService);
   private steamInsightHistoryService = inject(SteamInsightHistoryService);
 
+  readonly gameSearchInput = this.steamInsightService.gameSearchInput;
+
   readonly steamGames = this.steamInsightService.steamGames;
   readonly pageLength = this.steamInsightService.pageLength;
   readonly pageIndex = this.steamInsightService.pageIndex;
 
-  readonly steamGameHistory = this.steamInsightHistoryService.steamGameHistory;
+  readonly loadingNotLoaded = this.steamInsightService.loadingNotLoaded;
+  readonly loadingInProgress = this.steamInsightService.loadingInProgress;
+  readonly loadingSuccess = this.steamInsightService.loadingSuccess;
+  readonly loadingFailure = this.steamInsightService.loadingFailure;
 
-  readonly steamGameSearch = model<string>('');
+  readonly steamGameHistory = this.steamInsightHistoryService.steamGameHistory;
 
   @ViewChild('steamGamePaginator') steamGamePaginator!: MatPaginator;
 
   ngOnInit() {
-    this.steamGameSearch.set(this.steamInsightService.currentSearch());
-    this.steamInsightService.initalLoad();
+    if (this.loadingNotLoaded()) {
+      this.steamInsightService.search();
+    }
   }
 
   onSearch() {
-    this.steamInsightService.search(this.steamGameSearch());
+    this.steamInsightService.search();
   }
 
   onSetPage() {
@@ -58,8 +66,7 @@ export class SteamInsightSearchComponent implements OnInit {
   }
 
   onResetFilter() {
-    this.steamGameSearch.set('');
-    this.onSearch();
+    this.steamInsightService.resetSearch();
   }
 
   onRemoveAppFromHistory(app: SteamGameHistoryEntry) {

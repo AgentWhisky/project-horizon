@@ -4,7 +4,8 @@ import { firstValueFrom } from 'rxjs';
 import { TokenService } from '../../../../core/services/token.service';
 import { SteamInsightHistoryService } from '../steam-insight-history.service';
 import { STEAM_INSIGHT_SHOW_ACHIEVEMENTS } from '../../../../core/constants/storage-keys.constant';
-import { LOADING_STATUS, emptySteamAppDetails, SteamAppDetails } from './steam-insight-detail';
+import { SteamAppDetails, EMPTY_STEAM_APP_DETAILS } from './steam-insight-detail';
+import { LOADING_STATUS } from '../../../../core/constants/loading-status.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class SteamInsightDetailService {
 
   readonly steamInsightHistoryService = inject(SteamInsightHistoryService);
 
-  private _appDetails = signal<SteamAppDetails>(emptySteamAppDetails);
+  private _appDetails = signal<SteamAppDetails>(EMPTY_STEAM_APP_DETAILS);
   readonly appDetails = this._appDetails.asReadonly();
 
   private _loadingStatus = signal<number>(LOADING_STATUS.NOT_LOADED);
@@ -34,14 +35,13 @@ export class SteamInsightDetailService {
       const appDetails = await this.getSteamAppDetails(appid);
       this._appDetails.set(appDetails);
 
+      this._loadingStatus.set(LOADING_STATUS.SUCCESS);
       // Only add games to history
       if (appDetails.type === 'game') {
         this.steamInsightHistoryService.addApp({ appid: appDetails.appid, name: appDetails.name });
       }
     } catch {
       this._loadingStatus.set(LOADING_STATUS.FAILED);
-    } finally {
-      this._loadingStatus.set(LOADING_STATUS.SUCCESS);
     }
   }
 
@@ -54,7 +54,7 @@ export class SteamInsightDetailService {
   }
 
   resetAppDetails() {
-    this._appDetails.set(emptySteamAppDetails);
+    this._appDetails.set(EMPTY_STEAM_APP_DETAILS);
     this._loadingStatus.set(LOADING_STATUS.NOT_LOADED);
   }
 

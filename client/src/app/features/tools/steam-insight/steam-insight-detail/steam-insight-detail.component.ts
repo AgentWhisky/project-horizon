@@ -23,7 +23,7 @@ import { SteamInsightDetailService } from './steam-insight-detail.service';
 import { SteamDlcTileComponent } from './steam-dlc-tile/steam-dlc-tile.component';
 import { DecodeHtmlPipe } from '../../../../core/pipes/decode-html.pipe';
 import { SecureUrlPipe } from '../../../../core/pipes/secure-url.pipe';
-import { Achievement, DlcDetails, LOADING_STATUS } from './steam-insight-detail';
+import { Achievement, DlcDetails } from './steam-insight-detail';
 import { DLC_PAGE_SIZE, DLC_PAGE_SIZE_MOBILE } from '../../../../core/constants/steam-insight.constant';
 
 @Component({

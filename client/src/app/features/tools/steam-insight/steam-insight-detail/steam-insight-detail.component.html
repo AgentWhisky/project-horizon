@@ -219,7 +219,7 @@
           aria-label="Achievement Paginator"></mat-paginator>
       </div>
       } @else {
-      <div class="flex p-3">
+      <div class="display-text-warning-container">
         <span class="display-text-warning">This {{ appDetails().type }} has no achievements to display.</span>
       </div>
       }
@@ -231,8 +231,8 @@
     <mat-tab [label]="'DLC (' + appDetails().dlc.length + ')'">
       @if(appDetails().dlc.length) {
       <div class="tab-container">
-        <div class="flex flex-col justify-center items-center">
-          <div class="flex flex-row flex-wrap gap-3 justify-center">
+        <div class="dlc-container">
+          <div class="dlc-tile-container">
             @for(dlc of dlcPage(); track dlc.appid) {
             <hz-steam-dlc-tile [dlc]="dlc"></hz-steam-dlc-tile>
             }
@@ -249,7 +249,7 @@
         </div>
       </div>
       } @else {
-      <div class="flex p-3">
+      <div class="display-text-warning-container">
         <span class="display-text-warning">This {{ appDetails().type }} has no dlc to display.</span>
       </div>
       }
@@ -268,7 +268,7 @@
         </div>
       </div>
       }@else {
-      <div class="flex p-3">
+      <div class="display-text-warning-container">
         <span class="display-text-warning">This {{ appDetails().type }} has no screenshots to display.</span>
       </div>
       }
@@ -290,7 +290,7 @@
         </div>
       </div>
       }@else {
-      <div class="flex p-3">
+      <div class="display-text-warning-container">
         <span class="display-text-warning">This {{ appDetails().type }} has no movies to display.</span>
       </div>
       }
@@ -304,7 +304,7 @@
     </div>
   </div>
   } @else if(loadingInProgress()) {
-  <div class="flex flex-grow items-center justify-center">
+  <div class="spinner-container">
     <mat-spinner></mat-spinner>
   </div>
   }

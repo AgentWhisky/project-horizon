@@ -1,51 +1,47 @@
-<div class="flex flex-col gap-3">
-  <div class="flex flex-col gap-3">
-    <div class="flex flex-col justify-center items-center gap-3">
-      <!-- SEARCH INPUT -->
-      <mat-form-field class="page-search" subscriptSizing="dynamic">
-        <mat-label>Search Steam Games</mat-label>
-        <input
-          matInput
-          #steamGameSearchInput
-          [(ngModel)]="steamGameSearch"
-          maxlength="1024"
-          aria-label="Link library search"
-          (keydown.enter)="steamGameSearchInput.blur(); onSearch()" />
-        <button matSuffix mat-icon-button aria-label="Search" (click)="steamGameSearchInput.blur(); onSearch()">
-          <mat-icon>search</mat-icon>
-        </button>
-        @if(steamGameSearchInput.value && steamGameSearchInput.value !== '') {
-        <button matSuffix class="mr-3" mat-icon-button aria-label="Clear" (click)="onResetFilter()">
-          <mat-icon>close</mat-icon>
-        </button>
+<div class="search-container">
+  <div class="search-input-container">
+    <!-- SEARCH INPUT -->
+    <mat-form-field class="page-search" subscriptSizing="dynamic">
+      <mat-label>Search Steam Games</mat-label>
+      <input
+        matInput
+        #steamGameSearchInput
+        [(ngModel)]="gameSearchInput"
+        maxlength="1024"
+        aria-label="Link library search"
+        (keydown.enter)="steamGameSearchInput.blur(); onSearch()" />
+      <button matSuffix mat-icon-button aria-label="Search" (click)="steamGameSearchInput.blur(); onSearch()">
+        <mat-icon>search</mat-icon>
+      </button>
+      @if(steamGameSearchInput.value && steamGameSearchInput.value !== '') {
+      <button matSuffix class="mr-3" mat-icon-button aria-label="Clear" (click)="onResetFilter()">
+        <mat-icon>close</mat-icon>
+      </button>
+      }
+      <mat-error>Invalid Search Filter</mat-error>
+    </mat-form-field>
+
+    <!-- SEARCH HISTORY CHIPS -->
+    <mat-chip-set aria-label="Search History">
+      <div class="search-chip-container" [@chipSetAnimation]>
+        @for (app of steamGameHistory(); track app.appid) {
+        <ng-container>
+          <mat-chip [@chipAnimation] [routerLink]="['/steam-insight', app.appid]" class="!cursor-pointer overflow-hidden">
+            <span class="search-history-chip">{{ app.name }}</span>
+            <button matChipRemove (click)="onRemoveAppFromHistory(app); $event.stopPropagation()" [attr.aria-label]="'Remove ' + app.name">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+        </ng-container>
         }
-        <mat-error>Invalid Search Filter</mat-error>
-      </mat-form-field>
-
-      <!-- SEARCH HISTORY CHIPS -->
-      <mat-chip-set aria-label="Search History">
-        <div class="w-full flex flex-row flex-wrap items-center justify-center gap-1" [@chipSetAnimation]>
-          @for (app of steamGameHistory(); track app.appid) {
-          <ng-container>
-            <mat-chip [@chipAnimation] [routerLink]="['/steam-insight', app.appid]" class="!cursor-pointer overflow-hidden">
-              <span class="search-history-chip !cursor-pointer">{{ app.name }}</span>
-              <button
-                matChipRemove
-                (click)="onRemoveAppFromHistory(app); $event.stopPropagation()"
-                [attr.aria-label]="'Remove ' + app.name">
-                <mat-icon>cancel</mat-icon>
-              </button>
-            </mat-chip>
-          </ng-container>
-          }
-        </div>
-      </mat-chip-set>
-    </div>
+      </div>
+    </mat-chip-set>
   </div>
-
+  <!-- GAMES LOADED SUCCESSFULLY -->
+  @if(loadingSuccess() && steamGames().length > 0) {
   <!-- STEAM GAME TILES -->
-  <div class="flex flex-col justify-center items-center">
-    <div class="flex flex-wrap w-full gap-3 justify-center">
+  <div class="game-container">
+    <div class="game-tile-container">
       @for(steamGame of steamGames(); track steamGame.appid) {
       <hz-steam-game-tile [steamGame]="steamGame"></hz-steam-game-tile>
       }
@@ -59,4 +55,30 @@
       (page)="onSetPage()"
       [pageIndex]="pageIndex()"></mat-paginator>
   </div>
+
+  }
+  <!-- NO GAMES FOUND -->
+  @else if (loadingSuccess()) {
+  <div class="empty-results-container">
+    <div class="hz-card empty-results-card">
+      <span>No games matched your search.</span>
+      <span>Please try different search keywords.</span>
+    </div>
+  </div>
+  }
+  <!-- FAILED TO LOAD -->
+  @else if(loadingFailure()) {
+  <div class="empty-results-container">
+    <div class="hz-card empty-results-card">
+      <span>Unable to load games.</span>
+      <span>Please try again later.</span>
+    </div>
+  </div>
+  }
+  <!-- LOADING IN PROGRESS -->
+  @else if(loadingInProgress()) {
+  <div class="spinner-container">
+    <mat-spinner></mat-spinner>
+  </div>
+  }
 </div>
