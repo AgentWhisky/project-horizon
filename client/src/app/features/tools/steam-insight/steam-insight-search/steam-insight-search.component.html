@@ -21,6 +21,14 @@
       <mat-error>Invalid Search Filter</mat-error>
     </mat-form-field>
 
+    <!-- SEARCH KEYWORD DISPLAY -->
+    @if(activeSearchQuery()) {
+    <div class="search-keyword-container">
+      <span>Showing results for:</span>
+      <span class="search-keywords">{{ activeSearchQuery() | keyword }}</span>
+    </div>
+    }
+
     <!-- SEARCH HISTORY CHIPS -->
     <mat-chip-set aria-label="Search History">
       <div class="search-chip-container" [@chipSetAnimation]>

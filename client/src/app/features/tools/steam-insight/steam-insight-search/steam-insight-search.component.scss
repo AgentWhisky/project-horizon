@@ -38,6 +38,16 @@
   cursor: pointer !important;
 }
 
+.search-keyword-container {
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.search-keywords {
+  font-weight: 500;
+  padding-left: 0.25rem;
+}
+
 // *** GAME TILE ***
 .game-container {
   display: flex;

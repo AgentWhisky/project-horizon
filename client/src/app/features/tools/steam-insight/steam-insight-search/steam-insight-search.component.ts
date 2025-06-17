@@ -13,6 +13,7 @@ import { SteamGameHistoryEntry } from '../steam-insight';
 import { SteamInsightHistoryService } from '../steam-insight-history.service';
 import { chipAnimation, chipSetAnimation } from '../../../../core/animations/chip-animations';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { KeywordPipe } from '../../../../core/pipes/keyword.pipe';
 
 @Component({
   selector: 'hz-steam-insight-search',
@@ -27,6 +28,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     RouterModule,
     FormsModule,
     SteamGameTileComponent,
+    KeywordPipe,
   ],
   templateUrl: './steam-insight-search.component.html',
   styleUrl: './steam-insight-search.component.scss',
@@ -37,6 +39,7 @@ export class SteamInsightSearchComponent implements OnInit {
   private steamInsightHistoryService = inject(SteamInsightHistoryService);
 
   readonly gameSearchInput = this.steamInsightService.gameSearchInput;
+  readonly activeSearchQuery = this.steamInsightService.activeSearchQuery;
 
   readonly steamGames = this.steamInsightService.steamGames;
   readonly pageLength = this.steamInsightService.pageLength;
