@@ -5,7 +5,7 @@
       const isDarkTheme = localStorage.getItem('dark-theme') === 'true';
       if (isDarkTheme) {
         document.addEventListener('DOMContentLoaded', () => {
-          document.body.classList.add('dark-theme', isDarkTheme);
+          document.documentElement.classList.add('dark-theme');
         });
       }
     </script>

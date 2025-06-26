@@ -1,10 +1,12 @@
 <div class="flex flex-col">
   <div class="flex flex-row justify-end gap-3 py-3">
-    <button mat-mini-fab (click)="onAddBase()" matTooltip="Add Tile" aria-label="Add base conversion tile">
+    <button mat-flat-button (click)="onAddBase()">
       <mat-icon>add</mat-icon>
+      Add Tile
     </button>
-    <button mat-mini-fab (click)="onRemoveAllBases()" matTooltip="Delete All Tiles" aria-label="Delete all base conversion tiles">
+    <button mat-flat-button (click)="onRemoveAllBases()">
       <mat-icon>delete</mat-icon>
+      Remove Tiles
     </button>
   </div>
   @if(!baseConversions().length) {

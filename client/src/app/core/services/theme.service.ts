@@ -22,7 +22,7 @@ export class ThemeService {
   }
 
   private applyThemeClass(isDarkTheme: boolean) {
-    document.body.classList.toggle(DARK_MODE_CLASS_NAME, isDarkTheme);
+    document.documentElement.classList.toggle(DARK_MODE_CLASS_NAME, isDarkTheme);
   }
 
   private saveTheme(isDarkMode: boolean) {

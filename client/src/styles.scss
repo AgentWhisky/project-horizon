@@ -56,8 +56,27 @@ body {
   );
 }
 
+// *** MATERIAL OVERRIDES ***
 .mdc-notched-outline__notch {
   border-right: none !important;
+}
+
+// MAT FLAT BUTTON
+.mat-mdc-unelevated-button,
+.mat-mdc-unelevated-button .mdc-button__ripple {
+  border-radius: 0.5rem !important;
+}
+
+// MAT BUTTON
+.mat-mdc-button,
+.mat-mdc-button .mdc-button__ripple {
+  border-radius: 0.5rem !important;
+}
+
+// MAT STROKED BUTTON
+.mat-mdc-outlined-button,
+.mat-mdc-outlined-button .mdc-button__ripple {
+  border-radius: 0.5rem !important;
 }
 
 // *** CONTAINER CSS ***
