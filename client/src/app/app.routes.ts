@@ -34,6 +34,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/tools/base-converter/base-converter.component').then((c) => c.BaseConverterComponent),
       },
       {
+        path: 'latex-editor',
+        loadComponent: () => import('./features/tools/latex-editor/latex-editor.component').then((c) => c.LatexEditorComponent),
+      },
+      {
         path: 'steam-insight',
         children: [
           {

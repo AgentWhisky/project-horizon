@@ -1,4 +1,4 @@
-import { inject, Injectable, NgZone, OnDestroy, signal } from '@angular/core';
+import { effect, inject, Injectable, NgZone, OnDestroy, signal } from '@angular/core';
 import { SMALL_SCREEN_SIZE, MOBILE_SCREEN_SIZE, SCROLL_Y } from '../constants/screen-values.constant';
 
 @Injectable({
@@ -21,7 +21,7 @@ export class ScreenService implements OnDestroy {
   };
 
   private readonly scrollListener = () => {
-    this.zone.run(() => this.updateScrollState);
+    this.zone.run(() => this.updateScrollState());
   };
 
   constructor() {

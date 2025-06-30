@@ -6,7 +6,7 @@
 .header-toolbar {
   @apply flex justify-between items-center p-2 w-full h-12;
   transition: box-shadow 0.3s ease;
-  position: fixed;
+  position: sticky;
   top: 0;
   z-index: 3;
 }

@@ -4,7 +4,7 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class NavigationService {
-  private _isLeftNavOpen = signal(this.loadLeftNavState());
+  private _isLeftNavOpen = signal<boolean>(this.loadLeftNavState());
   readonly isLeftNavOpen = this._isLeftNavOpen.asReadonly();
 
   toggleLeftNav() {
