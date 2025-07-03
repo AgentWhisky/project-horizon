@@ -1,10 +1,11 @@
-import { effect, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { TokenService } from '../../../../core/services/token.service';
 import { SteamInsightHistoryService } from '../steam-insight-history.service';
 import { STEAM_INSIGHT_SHOW_ACHIEVEMENTS } from '../../../../core/constants/storage-keys.constant';
-import { emptySteamAppDetails, SteamAppDetails } from './steam-insight-detail';
+import { SteamAppDetails, EMPTY_STEAM_APP_DETAILS } from './steam-insight-detail';
+import { LOADING_STATUS } from '../../../../core/constants/loading-status.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -14,14 +15,13 @@ export class SteamInsightDetailService {
 
   readonly steamInsightHistoryService = inject(SteamInsightHistoryService);
 
-  private _appDetails = signal<SteamAppDetails>(emptySteamAppDetails);
+  private _appDetails = signal<SteamAppDetails>(EMPTY_STEAM_APP_DETAILS);
   readonly appDetails = this._appDetails.asReadonly();
 
-  private _loadingAppDetails = signal<boolean>(false);
-  readonly loadingAppDetails = this._loadingAppDetails.asReadonly();
-
-  private _loadingFailed = signal<boolean>(false);
-  readonly loadingFailed = this._loadingFailed.asReadonly();
+  private _loadingStatus = signal<number>(LOADING_STATUS.NOT_LOADED);
+  readonly loadingInProgress = computed(() => this._loadingStatus() === LOADING_STATUS.IN_PROGRESS);
+  readonly loadingSuccess = computed(() => this._loadingStatus() === LOADING_STATUS.SUCCESS);
+  readonly loadingFailure = computed(() => this._loadingStatus() === LOADING_STATUS.FAILED);
 
   readonly showHiddenAchievements = signal<boolean>(this.loadShowHiddenAchievements());
 
@@ -30,29 +30,33 @@ export class SteamInsightDetailService {
   }
 
   async loadSteamAppDetails(appid: number) {
-    this._loadingAppDetails.set(true);
-    this._loadingFailed.set(false);
+    this._loadingStatus.set(LOADING_STATUS.IN_PROGRESS);
     try {
       const appDetails = await this.getSteamAppDetails(appid);
       this._appDetails.set(appDetails);
 
+      this._loadingStatus.set(LOADING_STATUS.SUCCESS);
       // Only add games to history
       if (appDetails.type === 'game') {
         this.steamInsightHistoryService.addApp({ appid: appDetails.appid, name: appDetails.name });
       }
     } catch {
-      this._loadingFailed.set(true);
-    } finally {
-      this._loadingAppDetails.set(false);
+      this._loadingStatus.set(LOADING_STATUS.FAILED);
     }
   }
 
-  resetAppDetails() {
-    this._appDetails.set(emptySteamAppDetails);
-    this._loadingAppDetails.set(false);
-    this._loadingFailed.set(false);
+  isLoadSuccessful() {
+    return this._loadingStatus() === LOADING_STATUS.SUCCESS;
   }
 
+  isLoadFailure() {
+    return this._loadingStatus() === LOADING_STATUS.FAILED;
+  }
+
+  resetAppDetails() {
+    this._appDetails.set(EMPTY_STEAM_APP_DETAILS);
+    this._loadingStatus.set(LOADING_STATUS.NOT_LOADED);
+  }
 
   // *** PRIVATE FUNCTIONS ***
   private async getSteamAppDetails(appid: number) {

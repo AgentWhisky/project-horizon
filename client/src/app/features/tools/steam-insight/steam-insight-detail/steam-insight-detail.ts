@@ -106,7 +106,7 @@ export interface RatingDetails {
 }
 
 // EMPTY APP DETAILS
-export const emptySteamAppDetails: SteamAppDetails = {
+export const EMPTY_STEAM_APP_DETAILS: SteamAppDetails = {
   appid: 0,
   name: '',
   lastModified: new Date(0),

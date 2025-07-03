@@ -3,7 +3,7 @@ import {
   AVERAGE_SPEAK_WORD_PER_MINUTE,
   AVERAGE_TYPING_WORD_PER_MINUTE,
 } from '../../../core/constants/average-action-time.constant';
-import { charLabels } from '../../../core/constants/text.constants';
+import { CHAR_LABELS } from '../../../core/constants/text.constants';
 import { countSyllables } from '../../../core/utilities/text.util';
 import { AnalyzeTextOptions, CharacterBreakdown, ReadabilityStats, TextBreakdown, WordBreakdown } from './text-analyzer';
 
@@ -84,7 +84,7 @@ function getCharacterBreakdown(text: string): CharacterBreakdown[] {
 
   for (const char of text) {
     // Check for non-visible special characters
-    const key = charLabels[char] ?? char.toUpperCase();
+    const key = CHAR_LABELS[char] ?? char.toUpperCase();
 
     if (!charCounter[key]) {
       charCounter[key] = 0;

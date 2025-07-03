@@ -1,31 +1,29 @@
-import { inject, Injectable, signal } from '@angular/core';
-import { ScreenService } from './screen.service';
+import { Injectable, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NavigationService {
-  private _isLeftNavOpen = signal(this.getLeftNavState());
+  private _isLeftNavOpen = signal<boolean>(this.loadLeftNavState());
   readonly isLeftNavOpen = this._isLeftNavOpen.asReadonly();
 
-  // *** Left Navigation Menu State (Open/Closed) ***
   toggleLeftNav() {
     const isOpen = !this._isLeftNavOpen();
 
     this._isLeftNavOpen.set(isOpen);
-    this.setLeftNavState(isOpen);
+    this.saveLeftNavState(isOpen);
   }
 
   closeLeftNav() {
     this._isLeftNavOpen.set(false);
-    this.setLeftNavState(false);
+    this.saveLeftNavState(false);
   }
 
-  private setLeftNavState(isOpen: boolean) {
+  private saveLeftNavState(isOpen: boolean) {
     localStorage.setItem('leftNavState', JSON.stringify(isOpen));
   }
 
-  private getLeftNavState() {
+  private loadLeftNavState() {
     return JSON.parse(localStorage.getItem('leftNavState') || 'false');
   }
 }

@@ -15,8 +15,8 @@
           charRestrict
           [charRestrictPattern]="basePattern().regex"
           uppercase></textarea>
-        <mat-hint>Character Count: {{ conversionInput.textLength }} </mat-hint>
-        <mat-hint align="end">Valid Characters: {{ basePattern().displayText }}</mat-hint>
+        <mat-hint>Character Count: {{ conversionInput.textLength }}</mat-hint>
+        <mat-hint align="end">Characters: {{ basePattern().displayText }}</mat-hint>
       </mat-form-field>
 
       <mat-divider></mat-divider>
@@ -59,8 +59,12 @@
       }
     </div>
   </mat-card-content>
-  <mat-card-actions>
-    <button mat-button (click)="onUpdateConversions()">Update Conversions</button>
-    <button mat-button (click)="onRemoveBase()">Remove Tile</button>
+  <mat-card-actions align="end">
+    <button class="icon-button" mat-icon-button (click)="onUpdateConversions()" matTooltip="Update Tile">
+      <mat-icon>settings</mat-icon>
+    </button>
+    <button class="icon-button" mat-icon-button (click)="onRemoveBase()" matTooltip="Remove Tile">
+      <mat-icon>delete</mat-icon>
+    </button>
   </mat-card-actions>
 </mat-card>

@@ -5,6 +5,9 @@ Fix inUse if not refersh (Administration)
 Validate all mat inputs are not cutoff as outline appearance
 Sort Key is empty in PROD
 
+Navigation
+  > Add 404 page instead of redirecting back to dashboard
+
 Steam Insight
   > Search
     - Show page count & Jump to page
@@ -15,8 +18,6 @@ Steam Insight
       :Set max size for tile
 
   > Details
-    - Redirect back to search if no valid appid
-    - Update app history on page load rather than search
 
 
 New Functionality

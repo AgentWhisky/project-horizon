@@ -10,7 +10,7 @@ export interface AuthInfoPayload {
   name: string;
   username: string;
   roles: UserRole[];
-  rights: UserRights[];
+  rights: UserRight[];
   iat: number;
   exp: number;
   jti: string;
@@ -21,7 +21,7 @@ export interface UserInfo {
   name: string;
   username: string;
   roles: UserRole[];
-  rights: UserRights[];
+  rights: UserRight[];
   iat: number;
   exp: number;
   jti: string;
@@ -32,7 +32,7 @@ export interface UserRole {
   name: string;
 }
 
-export interface UserRights {
+export interface UserRight {
   id: number;
   internalName: string;
 }

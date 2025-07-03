@@ -1,28 +1,35 @@
 import { Injectable, signal } from '@angular/core';
+import { DARK_THEME } from '../constants/storage-keys.constant';
+import { DARK_MODE_CLASS_NAME } from '../constants/theme.constant';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ThemeService {
-  private _isDarkTheme = signal<boolean>(this.getTheme());
+  private _isDarkTheme = signal<boolean>(this.loadTheme());
   readonly isDarkTheme = this._isDarkTheme.asReadonly();
 
   constructor() {
-    document.body.classList.toggle('dark-theme', this._isDarkTheme());
+    this.applyThemeClass(this._isDarkTheme());
   }
 
   toggleTheme() {
-    this._isDarkTheme.set(!this._isDarkTheme());
-    document.body.classList.toggle('dark-theme', this._isDarkTheme());
+    const isDarkMode = !this._isDarkTheme();
 
-    this.setTheme();
+    this._isDarkTheme.set(isDarkMode);
+    this.applyThemeClass(isDarkMode);
+    this.saveTheme(isDarkMode);
   }
 
-  private setTheme() {
-    localStorage.setItem('darkTheme', JSON.stringify(this._isDarkTheme()));
+  private applyThemeClass(isDarkTheme: boolean) {
+    document.documentElement.classList.toggle(DARK_MODE_CLASS_NAME, isDarkTheme);
   }
 
-  private getTheme() {
-    return JSON.parse(localStorage.getItem('darkTheme') || 'false');
+  private saveTheme(isDarkMode: boolean) {
+    localStorage.setItem(DARK_THEME, JSON.stringify(isDarkMode));
+  }
+
+  private loadTheme() {
+    return JSON.parse(localStorage.getItem(DARK_THEME) || 'false');
   }
 }

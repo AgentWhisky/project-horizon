@@ -1,4 +1,4 @@
-export const charLabels: Record<string, string> = {
+export const CHAR_LABELS: Record<string, string> = {
   ' ': 'SPACE',
   '\t': 'TAB',
   '\n': 'NEWLINE',

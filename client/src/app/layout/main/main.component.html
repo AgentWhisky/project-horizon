@@ -54,8 +54,12 @@
 
       <footer class="footer">
         <div class="footer-content">
-          <span>© 2025 Horizon</span>
           @if(!isMobileScreen()) {
+          <span>© 2025 Horizon · A project by AgentWhisky</span>
+          } @else {
+          <span>© 2025 Horizon</span>
+
+          } @if(!isMobileScreen()) {
           <span>Built with Angular, NestJS, and PostgreSQL</span>
           }
 

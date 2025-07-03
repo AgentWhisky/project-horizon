@@ -4,7 +4,9 @@
  * @returns A new object with all `undefined`, `null`, and empty string values removed.
  */
 export function cleanObject<T extends Record<string, any>>(input?: T): Partial<T> {
-  if (!input) return {};
+  if (!input) {
+    return {};
+  }
 
   return Object.fromEntries(
     Object.entries(input).filter(([, value]) => value !== undefined && value !== null && value !== '')

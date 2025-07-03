@@ -2,6 +2,31 @@
   width: 100%;
 }
 
+// *** APP SEARCH ***
+.search-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.search-input-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.search-chip-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
 .search-history-chip {
   display: inline-block;
   max-width: 12rem;
@@ -9,4 +34,58 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   vertical-align: middle;
+
+  cursor: pointer !important;
+}
+
+.search-keyword-container {
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.search-keywords {
+  font-weight: 500;
+  padding-left: 0.25rem;
+}
+
+// *** GAME TILE ***
+.game-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-tile-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+// *** LOADING SPINNER ***
+.spinner-container {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+// *** EMPTY RESULTS CONTAINTER ***
+.empty-results-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.empty-results-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 36rem;
+  padding: 0.75rem;
+  text-align: center;
+  font-weight: 600;
+  gap: 0.75rem;
 }

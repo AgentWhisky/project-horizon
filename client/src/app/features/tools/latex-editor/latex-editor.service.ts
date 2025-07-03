@@ -1,20 +1,22 @@
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
-import { analyzeText } from './text-analyzer.utils';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DomSanitizer } from '@angular/platform-browser';
+import katex from 'katex';
 
 @Injectable({
   providedIn: 'root',
 })
-export class TextAnalyzerService {
+export class LatexEditorService {
+  private sanitizer = inject(DomSanitizer);
   private snackbar = inject(MatSnackBar);
 
   readonly textInput = signal<string>('');
-  readonly timeEstimateAnalytics = signal<boolean>(true);
-  readonly contentQualityAnalytics = signal<boolean>(true);
-  readonly readabilityAnalytics = signal<boolean>(true);
+  readonly renderSize = signal<number>(20);
 
-  readonly hasTextInput = computed(() => !!this.textInput());
-  readonly textBreakdown = computed(() => this.runAnalyzeText());
+  readonly renderedLatex = computed(() =>
+    // Sanitise the rendered LaTex
+    this.sanitizer.bypassSecurityTrustHtml(katex.renderToString(this.textInput(), { throwOnError: false }))
+  );
 
   resetTextInput() {
     try {
@@ -34,14 +36,5 @@ export class TextAnalyzerService {
       .catch(() => {
         this.snackbar.open(`Failed to copy to clipboard`, 'Close', { duration: 3000 });
       });
-  }
-
-  // *** PRIVATE FUNCTIONS ***
-  private runAnalyzeText() {
-    return analyzeText(this.textInput(), {
-      timeEstimateAnalytics: this.timeEstimateAnalytics(),
-      contentQualityAnalytics: this.contentQualityAnalytics(),
-      readabilityAnalytics: this.readabilityAnalytics(),
-    });
   }
 }

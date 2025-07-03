@@ -1,4 +1,4 @@
-import { effect, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 
 import { SteamAppSearchInfo, SteamGameSearchOptions, SteamGameSummary } from './steam-insight-search';
 import { firstValueFrom } from 'rxjs';
@@ -6,7 +6,7 @@ import { HttpParams } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TokenService } from '../../../../core/services/token.service';
 import { cleanObject } from '../../../../core/utilities/clean-object.util';
-import { SteamInsightHistoryService } from '../steam-insight-history.service';
+import { LOADING_STATUS } from '../../../../core/constants/loading-status.constants';
 @Injectable({
   providedIn: 'root',
 })
@@ -20,48 +20,56 @@ export class SteamInsightSearchService {
   private _pageLength = signal<number>(0);
   readonly pageLength = this._pageLength.asReadonly();
 
-  private _isInitalSearch = signal<boolean>(true);
-
   private _pageIndex = signal<number>(0);
   readonly pageIndex = this._pageIndex.asReadonly();
 
-  private _currentSearch = signal<string>('');
-  readonly currentSearch = this._currentSearch.asReadonly();
+  readonly gameSearchInput = signal<string>('');
 
-  setPage(pageIndex: number) {
-    this._pageIndex.set(pageIndex);
-    this.loadSteamGames();
-  }
+  private _activeSearchQuery = signal<string>('');
+  readonly activeSearchQuery = this._activeSearchQuery.asReadonly();
 
-  resetSearch() {
-    this._currentSearch.set('');
-    this._pageIndex.set(0);
-  }
+  private _loadingStatus = signal<number>(LOADING_STATUS.NOT_LOADED);
+  readonly loadingNotLoaded = computed(() => this._loadingStatus() === LOADING_STATUS.NOT_LOADED);
+  readonly loadingInProgress = computed(() => this._loadingStatus() === LOADING_STATUS.IN_PROGRESS);
+  readonly loadingSuccess = computed(() => this._loadingStatus() === LOADING_STATUS.SUCCESS);
+  readonly loadingFailure = computed(() => this._loadingStatus() === LOADING_STATUS.FAILED);
 
-  async initalLoad() {
-    if (this._isInitalSearch()) {
-      await this.search('');
-      this._isInitalSearch.set(false);
-    }
-  }
+  async search() {
+    const query = this.gameSearchInput().trim();
 
-  async search(search: string) {
-    const cleanedSearch = search.trim();
-
-    // Ignore identical search
-    if (!this._isInitalSearch() && cleanedSearch === this._currentSearch()) {
+    // Ignore duplicate searches
+    if (!this.loadingNotLoaded() && query === this.activeSearchQuery()) {
       return;
     }
 
-    this._currentSearch.set(cleanedSearch);
+    this._activeSearchQuery.set(this.gameSearchInput());
     this._pageIndex.set(0);
 
-    this.loadSteamGames();
+    await this.loadSteamGames();
+  }
+
+  async resetSearch() {
+    this.gameSearchInput.set('');
+    this._activeSearchQuery.set('');
+    this._pageIndex.set(0);
+
+    await this.loadSteamGames();
+  }
+
+  async setPage(pageIndex: number) {
+    this._pageIndex.set(pageIndex);
+    if (this._pageIndex() !== pageIndex) {
+    }
+
+    this._pageIndex.set(pageIndex);
+    await this.loadSteamGames();
   }
 
   async loadSteamGames() {
+    this._loadingStatus.set(LOADING_STATUS.IN_PROGRESS);
+
     const options = {
-      query: this._currentSearch(),
+      query: this._activeSearchQuery(),
       page: this.pageIndex(),
     };
 
@@ -69,7 +77,9 @@ export class SteamInsightSearchService {
       const searchInfo = await this.getSteamGames(options);
       this._steamGames.set(searchInfo.steamGames);
       this._pageLength.set(searchInfo.pageLength);
+      this._loadingStatus.set(LOADING_STATUS.SUCCESS);
     } catch (error) {
+      this._loadingStatus.set(LOADING_STATUS.FAILED);
       console.error(`Error Fetching Steam Games: ${error}`);
       this.snackbar.open('Failed to load Steam apps. Please try again in about a minute.', 'Close', { duration: 3000 });
     }

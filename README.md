@@ -29,8 +29,7 @@ Custom authentication system using **JWT (JSON Web Tokens)**:
 - **Refresh Tokens**: Automatically issued and rotated on expiry.
 - **Auto Refresh Logic**:
   - Angular interceptors detect token expiration and transparently fetch a new token using the refresh token.
-  - Tokens are stored securely (e.g., HTTP-only cookies or local storage with XSRF protection).
-- **Guards & Role Protection**: NestJS guards restrict access based on roles and scopes.
+- **Guards & Role Protection**: NestJS guards restrict access based on roles and rights.
 
 ---
 
@@ -55,12 +54,16 @@ Custom authentication system using **JWT (JSON Web Tokens)**:
 - B-Tree and GIN indexes on tables for efficient searching
 - Utilizes Partitioned tables for commonly split data
 
----
 
 ## Project Structure
 
 
+## Security
 
+- **Cloudflare** 
+  - Registered domain
+  - DDOS Protection
+  - Bot Protection to challenge bot traffic and prevent scraping
 
 ## Contact
 
@@ -68,4 +71,5 @@ Custom authentication system using **JWT (JSON Web Tokens)**:
 - **LinkedIn**: [your-name](https://www.linkedin.com/in/your-name)
 
 ---
-**© 2025 Horizon** - Feel free to use or contribute under the terms of the [MIT License](./LICENSE).
+
+**© 2025 Horizon** - Feel free to use under the terms of the [MIT License](./LICENSE).

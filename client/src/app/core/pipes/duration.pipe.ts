@@ -4,19 +4,21 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'duration',
 })
 export class DurationPipe implements PipeTransform {
-  transform(ms: number): string {
-    const seconds = Math.floor(ms / 1000) % 60;
-    const minutes = Math.floor(ms / (1000 * 60)) % 60;
-    const hours = Math.floor(ms / (1000 * 60 * 60)) % 24;
-    const days = Math.floor(ms / (1000 * 60 * 60 * 24));
+  transform(value: number, unit: 'ms' | 's' = 'ms'): string {
+    const totalSeconds = unit === 'ms' ? Math.floor(value / 1000) : Math.floor(value);
 
-    const parts = [];
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
 
-    if (days > 0) parts.push(`${days}d`);
-    if (hours > 0 || days > 0) parts.push(`${hours}h`);
-    if (minutes > 0 || hours > 0 || days > 0) parts.push(`${minutes}m`);
-    parts.push(`${seconds}s`);
+    const sections = [
+      days > 0 && `${days}d`,
+      (hours > 0 || days > 0) && `${hours}h`,
+      (minutes > 0 || hours > 0 || days > 0) && `${minutes}m`,
+      `${seconds}s`,
+    ];
 
-    return parts.join(' ');
+    return sections.filter(Boolean).join(' ');
   }
 }

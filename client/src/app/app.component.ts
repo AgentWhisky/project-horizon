@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+
 import { TokenService } from './core/services/token.service';
 import { IconService } from './core/services/icon.service';
 import { TitleService } from './core/services/title.service';
@@ -20,6 +21,7 @@ export class AppComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.titleService.resetTitle();
     await this.tokenService.onInitUser();
   }
 }

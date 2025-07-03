@@ -1,6 +1,6 @@
 <div class="link-container">
   <div class="flex flex-row">
-    <a mat-stroked-button class="w-full" [href]="link().url" target="_blank" [attr.aria-label]="'Open ' + link().name + ' in a new tab'">
+    <a mat-flat-button class="w-full" [href]="link().url" target="_blank" [attr.aria-label]="'Open ' + link().name + ' in a new tab'">
       {{ link().name }}
     </a>
     <button mat-icon-button class="link-icon" (click)="onToggleView()" aria-label="Toggle link information">
