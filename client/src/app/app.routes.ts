@@ -8,11 +8,11 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'dashboard',
+        redirectTo: 'home',
         pathMatch: 'full',
       },
       {
-        path: 'dashboard',
+        path: 'home',
         loadComponent: () => import('./features/dashboard/dashboard.component').then((c) => c.DashboardComponent),
       },
       // *** LIBRARIES ***
@@ -87,7 +87,7 @@ export const routes: Routes = [
       // *** WILDCARD ***
       {
         path: '**',
-        redirectTo: 'dashboard',
+        redirectTo: 'home',
         pathMatch: 'full',
       },
     ],

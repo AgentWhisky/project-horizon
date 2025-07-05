@@ -1,11 +1,21 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
+import { ContentTileConfig } from './content-tile';
+import { RouterModule } from '@angular/router';
+import { ThemeService } from '../../../core/services/theme.service';
 
 @Component({
   selector: 'hz-content-tile',
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './content-tile.component.html',
-  styleUrl: './content-tile.component.scss'
+  styleUrl: './content-tile.component.scss',
 })
 export class ContentTileComponent {
-  readonly content = input.required()
+  readonly themeService = inject(ThemeService);
+
+  readonly contentTileConfig = input.required<ContentTileConfig>();
+  readonly tileClicked = output<number>();
+
+  onClickTile() {
+    this.tileClicked.emit(this.contentTileConfig().id);
+  }
 }

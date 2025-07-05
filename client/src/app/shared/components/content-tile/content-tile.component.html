@@ -1,3 +1,19 @@
-<div>
-    
+@if(contentTileConfig().routerLink) {
+<a class="content-tile-container" [routerLink]="contentTileConfig().routerLink" (click)="onClickTile()">
+  <img [src]="contentTileConfig().src" [alt]="'Navigate to ' + contentTileConfig().title" class="content-img" width="460" height="215" />
+
+  <div class="content-text-container">
+    <span class="content-title">{{ contentTileConfig().title }}</span>
+    <span class="content-description">{{ contentTileConfig().description }}</span>
+  </div>
+</a>
+} @else {
+<div class="content-tile-container" (click)="onClickTile()">
+  <img [src]="contentTileConfig().src" [alt]="'Navigate to ' + contentTileConfig().title" class="content-img" width="460" height="215" />
+
+  <div class="content-text-container">
+    <span class="content-title">{{ contentTileConfig().title }}</span>
+    <span class="content-description">{{ contentTileConfig().description }}</span>
+  </div>
 </div>
+}

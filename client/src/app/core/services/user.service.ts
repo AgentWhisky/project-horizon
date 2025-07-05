@@ -84,7 +84,7 @@ export class UserService {
 
       this.snackbar.open('Successfully logged out', 'Close', { duration: 3000 });
     } finally {
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/home']);
       this.clearUserInfo();
     }
   }

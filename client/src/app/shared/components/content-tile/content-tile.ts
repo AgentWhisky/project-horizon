@@ -1,12 +1,10 @@
 export interface ContentTileConfig {
-    title: string;
-    description: string;
+  id: number;
+  title: string;
+  description: string;
+  src: string;
+  alt: string;
 
-    headerImage: string;
-    imageName: string;
-    fallbackImg: string;
-    
-    navigation?: string;
-
-
+  routerLink?: string;
+  disabled?: boolean;
 }

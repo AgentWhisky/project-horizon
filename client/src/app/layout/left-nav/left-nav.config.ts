@@ -16,7 +16,7 @@ export interface NavItem {
 export const navSections: NavSection[] = [
   {
     title: '',
-    navItems: [{ routerLink: '/dashboard', name: 'Dashboard', icon: 'home' }],
+    navItems: [{ routerLink: '/home', name: 'Home', icon: 'home' }],
   },
   {
     title: 'Libraries',
