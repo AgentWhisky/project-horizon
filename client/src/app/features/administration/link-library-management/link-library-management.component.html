@@ -1,16 +1,4 @@
 <div class="flex flex-col">
-  <div class="flex flex-row justify-end gap-3 py-3">
-    <button mat-flat-button (click)="onExportLinkLibrary()">
-      <mat-icon>download</mat-icon>
-      Export Library
-    </button>
-    @if(hasImportLibraryRight()) {
-    <button mat-flat-button (click)="onImportLinkLibrary()">
-      <mat-icon>upload</mat-icon>
-      Import Library
-    </button>
-    }
-  </div>
   <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
     <!-- LINKS -->
     <mat-tab label="Links" class="flex flex-col">
@@ -88,59 +76,64 @@
       }
     </mat-tab>
 
-    <!-- CATEGORES -->
+    <!-- CATEGORIES -->
     <mat-tab label="Categories" class="flex flex-col">
-      <div class="flex justify-end mt-3">
-        <button mat-button (click)="onCreateCategory()" aria-label="Add Category">
+      <!-- CATEGORY FILTER -->
+      <div class="link-category-filter-container">
+        <mat-form-field class="page-search" subscriptSizing="dynamic">
+          <mat-label>Filter Categories</mat-label>
+          <input
+            matInput
+            #categoryFilterInput
+            [(ngModel)]="categoryFilter"
+            maxlength="1024"
+            aria-label="Link Category Filter"
+            (keydown.enter)="categoryFilterInput.blur()" />
+          @if(categoryFilterInput.value && categoryFilterInput.value !== '') {
+          <button class="mr-3" matSuffix mat-icon-button type="button" aria-label="Clear" (click)="onResetCategoryFilter()">
+            <mat-icon>close</mat-icon>
+          </button>
+          }
+        </mat-form-field>
+
+        <button mat-button type="button" aria-label="Add Category" (click)="onCreateCategory()">
           <mat-icon>add</mat-icon>
-          Add Category
+          Add New Category
         </button>
       </div>
 
-      @if(categoryDataSource.data.length > 0) {
-      <table mat-table [dataSource]="categoryDataSource" matSort #categorySort="matSort" class="mat-elevation-z8">
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by id">ID</th>
-          <td mat-cell *matCellDef="let element">{{ element.id }}</td>
-        </ng-container>
+      <!-- CATEGORY DISPLAY -->
+      <div class="link-category-container">
+        @for(category of filteredLinkCategories(); track category.id) {
+        <div class="link-category">
+          <div class="flex flex-col gap-1">
+            <span>{{ category.name }}</span>
+            <span class="text-xs line-clamp-3">{{ category.description }}</span>
+          </div>
 
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">Name</th>
-          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="description">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by description">Description</th>
-          <td mat-cell *matCellDef="let element">{{ element.description }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef aria-hidden="true"></th>
-          <td mat-cell class="min-w-16" *matCellDef="let element">
-            <div class="flex justify-end items-center">
-              <button mat-icon-button (click)="onEditCategory(element)" aria-label="Edit Category">
-                <mat-icon matTooltip="Edit Category">edit</mat-icon>
-              </button>
-              <button mat-icon-button (click)="onDeleteCategory(element)" aria-label="Delete Category" [disabled]="element.inUse">
-                <mat-icon matTooltip="Delete Category">delete</mat-icon>
-              </button>
-            </div>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="categoryDisplayedColumns"></tr>
-        <tr mat-row class="table-row" *matRowDef="let row; columns: categoryDisplayedColumns"></tr>
-      </table>
-
-      <mat-paginator
-        [pageSizeOptions]="[25, 50, 100]"
-        #categoryPaginator
-        showFirstLastButtons
-        aria-label="Category Paginator"></mat-paginator>
-
-      } @else {
-      <hz-message-card message="No categories found"></hz-message-card>
-      }
+          <div class="link-category-actions">
+            <button
+              class="icon-button"
+              mat-icon-button
+              type="button"
+              [attr.aria-label]="'Edit ' + category.name + ' Category'"
+              (click)="onEditCategory(category)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            @if(!category.inUse) {
+            <button
+              class="icon-button"
+              mat-icon-button
+              type="button"
+              [attr.aria-label]="'Remove ' + category.name + ' Category'"
+              (click)="onDeleteCategory(category)">
+              <mat-icon>delete</mat-icon>
+            </button>
+            }
+          </div>
+        </div>
+        }
+      </div>
     </mat-tab>
 
     <!-- TAGS -->
@@ -163,7 +156,7 @@
           }
         </mat-form-field>
 
-        <button mat-flat-button type="button" aria-label="Add Tag" (click)="onCreateTag()">
+        <button mat-button type="button" aria-label="Add Tag" (click)="onCreateTag()">
           <mat-icon>add</mat-icon>
           Add New Tag
         </button>
@@ -173,7 +166,7 @@
       <div class="link-tag-container">
         @for(tag of filteredLinkTags(); track tag.id) {
         <div class="link-tag">
-          <span class="link-tag-text">{{ tag.name }}</span>
+          <span>{{ tag.name }}</span>
           <div class="link-tag-actions">
             <button
               class="icon-button"
@@ -195,6 +188,21 @@
             }
           </div>
         </div>
+        }
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Import & Export" class="flex flex-col">
+      <div class="flex flex-row gap-3 py-3">
+        <button mat-flat-button (click)="onExportLinkLibrary()">
+          <mat-icon>download</mat-icon>
+          Export Library
+        </button>
+        @if(hasImportLibraryRight()) {
+        <button mat-flat-button (click)="onImportLinkLibrary()">
+          <mat-icon>upload</mat-icon>
+          Import Library
+        </button>
         }
       </div>
     </mat-tab>

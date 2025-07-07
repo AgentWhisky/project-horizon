@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { LinkCategoryEntity } from 'src/entities/link-categories.entity';
 import { LinkTagEntity } from 'src/entities/link-tags.entity';
 import { LinkEntity } from 'src/entities/link.entity';
-import { EntityManager, Repository } from 'typeorm';
+import { EntityManager, Not, Repository } from 'typeorm';
 import {
   Category,
   CategoryPayload,
@@ -189,13 +189,18 @@ export class LinkLibraryManagementService {
       .select(['tag.id AS id', 'tag.name AS name'])
       .addSelect('COUNT(link.id) > 0', 'inUse')
       .groupBy('tag.id')
-      .orderBy('tag.id', 'ASC')
+      .orderBy('tag.name', 'ASC')
       .getRawMany();
 
     return linkTags;
   }
 
   async addTag(tagPayload: TagPayload): Promise<Tag> {
+    const conflictTag = await this.linkTagRepository.findOne({ where: { name: tagPayload.name } });
+    if (conflictTag) {
+      throw new BadRequestException(`Tag with name '${tagPayload.name}' already exists.`);
+    }
+
     const newTag = await this.linkTagRepository.save({
       name: tagPayload.name,
     });
@@ -212,10 +217,15 @@ export class LinkLibraryManagementService {
   }
 
   async updateTag(id: number, tagPayload: TagPayload): Promise<Tag> {
+    const conflictTag = await this.linkTagRepository.findOne({ where: { name: tagPayload.name, id: Not(id) } });
+    if (conflictTag) {
+      throw new BadRequestException(`Tag with name '${tagPayload.name}' already exists.`);
+    }
+
     const existingTag = await this.linkTagRepository.findOne({ where: { id } });
 
     if (!existingTag) {
-      throw new NotFoundException(`Tag with ID: ${id} not found`);
+      throw new NotFoundException(`Tag with ID '${id}' not found`);
     }
 
     await this.linkTagRepository.save({
@@ -234,6 +244,17 @@ export class LinkLibraryManagementService {
   }
 
   async deleteTag(id: number): Promise<DeleteResponse> {
+    const { inUse } = await this.linkTagRepository
+      .createQueryBuilder('tag')
+      .leftJoin('tag.links', 'link')
+      .where('tag.id = :id', { id })
+      .select('COUNT(link.id) > 0', 'inUse')
+      .getRawOne<{ inUse: boolean }>();
+
+    if (inUse) {
+      throw new BadRequestException(`Tag with ID '${id}' is in use and cannot be deleted.`);
+    }
+
     const deleteResult = await this.linkTagRepository.delete(id);
 
     return {

@@ -8,22 +8,23 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatChipsModule } from '@angular/material/chips';
-
 import { MatDialog } from '@angular/material/dialog';
-import { LinkLibraryManagementDialogComponent } from './link-library-management-dialog/link-library-management-dialog.component';
-import { filter, tap } from 'rxjs';
-import { LinkCategoryDialogComponent } from './link-category-dialog/link-category-dialog.component';
-import { LinkTagDialogComponent } from './link-tag-dialog/link-tag-dialog.component';
-import { LinkLibraryManagementService } from './link-library-management.service';
-import { Category, Link, Tag } from './link-library-management';
-import { MessageCardComponent } from '../../../shared/components/message-card/message-card.component';
-import { LinkLibraryImportDialogComponent } from './link-library-import-dialog/link-library-import-dialog.component';
-import { UserService } from '../../../core/services/user.service';
-import { RemoveConfirmComponent } from '../../../shared/dialogs/remove-confirm/remove-confirm.component';
-import { USER_RIGHTS } from '../../../core/constants/user-rights.constant';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
+import { filter, tap } from 'rxjs';
+
+import { UserService } from '../../../core/services/user.service';
+import { MessageCardComponent } from '../../../shared/components/message-card/message-card.component';
+import { RemoveConfirmComponent } from '../../../shared/dialogs/remove-confirm/remove-confirm.component';
 import { ConfirmDialogComponent } from '../../../shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { USER_RIGHTS } from '../../../core/constants/user-rights.constant';
+
+import { LinkLibraryManagementService } from './link-library-management.service';
+import { LinkLibraryManagementDialogComponent } from './link-library-management-dialog/link-library-management-dialog.component';
+import { LinkCategoryDialogComponent } from './link-category-dialog/link-category-dialog.component';
+import { LinkTagDialogComponent } from './link-tag-dialog/link-tag-dialog.component';
+import { LinkLibraryImportDialogComponent } from './link-library-import-dialog/link-library-import-dialog.component';
+import { Category, Link, Tag } from './link-library-management';
 
 @Component({
   selector: 'hz-link-library-management',
@@ -61,6 +62,11 @@ export class LinkLibraryManagementComponent implements OnInit {
   readonly categoryPaginator = viewChild<MatPaginator>('categoryPaginator');
   readonly categoryDisplayedColumns: string[] = ['id', 'name', 'description', 'actions'];
   readonly categoryDataSource = new MatTableDataSource<Category>();
+
+  // Categories
+  readonly linkCategories = this.linkLibraryManagementService.linkCategories;
+  readonly categoryFilter = model<string>('');
+  readonly filteredLinkCategories = computed(() => this.filterLinkCategories(this.linkCategories()));
 
   // Tags
   readonly linkTags = this.linkLibraryManagementService.linkTags;
@@ -142,11 +148,32 @@ export class LinkLibraryManagementComponent implements OnInit {
   }
 
   // *** Categories ***
+  onResetCategoryFilter() {
+    this.categoryFilter.set('');
+  }
+
+  filterLinkCategories(categories: Category[]) {
+    const categoryFilter = this.categoryFilter();
+
+    if (!categoryFilter) {
+      return categories;
+    }
+
+    const keywords = categoryFilter
+      .toLowerCase()
+      .split(' ')
+      .map((word) => word.trim())
+      .filter(Boolean);
+
+    return categories.filter((category) =>
+      keywords.every((keyword) => [category.name, category.description].some((field) => field.toLowerCase().includes(keyword)))
+    );
+  }
+
   onCreateCategory() {
     this.dialog
       .open(LinkCategoryDialogComponent, {
         data: { type: 'create' },
-        height: '440px',
         width: '560px',
         panelClass: 'hz-dialog-container',
       })
@@ -162,7 +189,6 @@ export class LinkLibraryManagementComponent implements OnInit {
     this.dialog
       .open(LinkCategoryDialogComponent, {
         data: { type: 'update', category },
-        height: '440px',
         width: '560px',
         panelClass: 'hz-dialog-container',
       })
@@ -180,10 +206,11 @@ export class LinkLibraryManagementComponent implements OnInit {
   }
 
   onDeleteCategory(category: Category) {
+    const title = 'Remove Category';
     const message = 'Are you sure you want to remove this category?';
 
     this.dialog
-      .open(RemoveConfirmComponent, { data: { message }, panelClass: 'hz-dialog-container' })
+      .open(ConfirmDialogComponent, { data: { title, message }, panelClass: 'hz-dialog-container' })
       .afterClosed()
       .pipe(
         filter((result) => result),
@@ -192,7 +219,7 @@ export class LinkLibraryManagementComponent implements OnInit {
       .subscribe();
   }
 
-  // *** TAGS ***
+  // *** LINK TAGS ***
   onResetTagFilter() {
     this.tagFilter.set('');
   }
@@ -210,19 +237,18 @@ export class LinkLibraryManagementComponent implements OnInit {
       .map((word) => word.trim())
       .filter(Boolean);
 
-    return tags.filter((tag) => keywords.some((keyword) => tag.name.toLowerCase().includes(keyword)));
+    return tags.filter((tag) => keywords.every((keyword) => tag.name.toLowerCase().includes(keyword)));
   }
 
   onCreateTag() {
     this.dialog
       .open(LinkTagDialogComponent, {
         data: { type: 'create' },
-        width: '560px',
         panelClass: 'hz-dialog-container',
       })
       .afterClosed()
       .pipe(
-        filter((result) => result && result.status === true),
+        filter((result) => result && result.status),
         tap((result) => this.linkLibraryManagementService.addTag(result.tag))
       )
       .subscribe();
@@ -232,12 +258,11 @@ export class LinkLibraryManagementComponent implements OnInit {
     this.dialog
       .open(LinkTagDialogComponent, {
         data: { type: 'update', tag },
-        width: '560px',
         panelClass: 'hz-dialog-container',
       })
       .afterClosed()
       .pipe(
-        filter((result) => result && result.status === true),
+        filter((result) => result && result.status),
         tap((result) => this.linkLibraryManagementService.updateTag(tag.id, result.tag))
       )
       .subscribe();
@@ -257,6 +282,7 @@ export class LinkLibraryManagementComponent implements OnInit {
       .subscribe();
   }
 
+  // *** IMPORT/EXPORT FUNCTIONS ***
   onImportLinkLibrary() {
     this.dialog
       .open(LinkLibraryImportDialogComponent, {

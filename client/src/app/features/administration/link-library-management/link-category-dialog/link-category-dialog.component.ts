@@ -9,6 +9,7 @@ import { Category, CategoryPayload } from '../link-library-management';
 import { LinkLibraryManagementService } from '../link-library-management.service';
 import { uniqueText } from '../../../../core/validators/unique-text.validator';
 import { ValidatorMessagePipe } from '../../../../core/pipes/validator-message.pipe';
+import { MatDividerModule } from '@angular/material/divider';
 
 interface DialogData {
   type: 'create' | 'update';
@@ -22,7 +23,7 @@ interface DialogResult {
 
 @Component({
   selector: 'hz-link-category-dialog',
-  imports: [MatButtonModule, MatInputModule, MatDialogModule, ReactiveFormsModule, ValidatorMessagePipe],
+  imports: [MatButtonModule, MatInputModule, MatDialogModule, MatDividerModule, ReactiveFormsModule, ValidatorMessagePipe],
   templateUrl: './link-category-dialog.component.html',
   styleUrl: './link-category-dialog.component.scss',
 })
@@ -60,21 +61,39 @@ export class LinkCategoryDialogComponent implements OnInit {
     });
   }
 
-  onClose() {
+  onCancel() {
     this.dialogRef.close({
       status: false,
     });
   }
 
-  onSubmit() {
-    const dialogResult: DialogResult = {
-      status: true,
-      category: {
-        name: this.categoryForm.value.name ?? '',
-        description: this.categoryForm.value.description ?? '',
-      },
-    };
+  onConfirm() {
+    if (this.categoryForm.invalid || !this.categoryForm.dirty) {
+      return;
+    }
 
-    this.dialogRef.close(dialogResult);
+    const name = this.categoryForm.value.name ?? '';
+    const description = this.categoryForm.value.description ?? '';
+
+    // Check for any changes
+    const existingName = this.data.category?.name ?? '';
+    const existingDescription = this.data.category?.description ?? '';
+    const noChanges = name === existingName && description === existingDescription;
+
+    if (existingName && existingDescription && noChanges) {
+      this.dialogRef.close({
+        status: false,
+      });
+    } else {
+      const dialogResult: DialogResult = {
+        status: true,
+        category: {
+          name,
+          description,
+        },
+      };
+
+      this.dialogRef.close(dialogResult);
+    }
   }
 }

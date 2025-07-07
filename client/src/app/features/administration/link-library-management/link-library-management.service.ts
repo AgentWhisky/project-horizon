@@ -135,6 +135,7 @@ export class LinkLibraryManagementService {
       const linkTags = await this.getTags();
       this._linkTags.set(linkTags);
     } catch (error) {
+      this.snackbar.open('Failed to fetch tags', 'Close', { duration: 3000 });
       console.error(`Error fetching tags: ${error}`);
     }
   }
@@ -143,10 +144,10 @@ export class LinkLibraryManagementService {
     try {
       const linkTag = await this.postTag(tagPayload);
       this._linkTags.set([...this._linkTags(), linkTag]);
-      this.snackbar.open('Successfully added tag', 'Close', { duration: 3000 });
+      this.snackbar.open('Successfully added new tag', 'Close', { duration: 3000 });
     } catch (error) {
       this.snackbar.open('Failed to add tag', 'Close', { duration: 3000 });
-      console.error(`Error Creating Tag: ${error}`);
+      console.error(`Error adding tag: ${error}`);
     }
   }
 
@@ -248,27 +249,28 @@ export class LinkLibraryManagementService {
     return firstValueFrom(deleteResponse$);
   }
 
-  // *** TAG ***
-  private async getTags() {
+  // *** LINK TAG ***
+  private async getTags(): Promise<Tag[]> {
     const linkTags$ = this.tokenService.getWithTokenRefresh<Tag[]>('/link-library-management/tags');
     return firstValueFrom(linkTags$);
   }
 
-  private async postTag(tagPayload: TagPayload) {
+  private async postTag(tagPayload: TagPayload): Promise<Tag> {
     const link$ = this.tokenService.postWithTokenRefresh<Tag>('/link-library-management/tags', tagPayload);
     return firstValueFrom(link$);
   }
 
-  private async putTag(id: number, tagPayload: TagPayload) {
+  private async putTag(id: number, tagPayload: TagPayload): Promise<Tag> {
     const link$ = this.tokenService.putWithTokenRefresh<Tag>(`/link-library-management/tags/${id}`, tagPayload);
     return firstValueFrom(link$);
   }
 
-  private async deleteTag(id: number) {
+  private async deleteTag(id: number): Promise<DeleteResponse> {
     const deleteResponse$ = this.tokenService.deleteWithTokenRefresh<DeleteResponse>(`/link-library-management/tags/${id}`);
     return firstValueFrom(deleteResponse$);
   }
 
+  // *** LIBRARY IMPORT/EXPORT ***
   private async postLinkLibraryImport(file: File) {
     const formData = new FormData();
     formData.append('file', file);
