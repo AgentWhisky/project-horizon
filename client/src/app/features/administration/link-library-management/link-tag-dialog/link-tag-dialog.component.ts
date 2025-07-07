@@ -9,6 +9,7 @@ import { uniqueText } from '../../../../core/validators/unique-text.validator';
 import { Tag, TagPayload } from '../link-library-management';
 import { LinkLibraryManagementService } from '../link-library-management.service';
 import { ValidatorMessagePipe } from '../../../../core/pipes/validator-message.pipe';
+import { MatDividerModule } from '@angular/material/divider';
 
 interface DialogData {
   type: 'create' | 'update';
@@ -22,7 +23,7 @@ interface DialogResult {
 
 @Component({
   selector: 'hz-link-tag-dialog',
-  imports: [MatButtonModule, MatInputModule, MatDialogModule, ReactiveFormsModule, ValidatorMessagePipe],
+  imports: [MatButtonModule, MatInputModule, MatDialogModule, MatDividerModule, ReactiveFormsModule, ValidatorMessagePipe],
   templateUrl: './link-tag-dialog.component.html',
   styleUrl: './link-tag-dialog.component.scss',
 })
@@ -57,20 +58,30 @@ export class LinkTagDialogComponent implements OnInit {
     });
   }
 
-  onClose() {
+  onCancel() {
     this.dialogRef.close({
       status: false,
     });
   }
 
-  onSubmit() {
-    const dialogResult: DialogResult = {
-      status: true,
-      tag: {
-        name: this.tagForm.value.name ?? '',
-      },
-    };
+  onConfirm() {
+    const name = this.tagForm.value.name ?? '';
+    const existingName = this.data.tag?.name ?? '';
 
-    this.dialogRef.close(dialogResult);
+    // Ignore matching name
+    if (existingName && name === existingName) {
+      this.dialogRef.close({
+        status: false,
+      });
+    } else {
+      const dialogResult: DialogResult = {
+        status: true,
+        tag: {
+          name,
+        },
+      };
+
+      this.dialogRef.close(dialogResult);
+    }
   }
 }

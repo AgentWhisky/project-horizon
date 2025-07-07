@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit, signal, viewChild } from '@angular/core';
+import { Component, computed, effect, inject, model, OnInit, signal, viewChild } from '@angular/core';
 
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -21,10 +21,14 @@ import { LinkLibraryImportDialogComponent } from './link-library-import-dialog/l
 import { UserService } from '../../../core/services/user.service';
 import { RemoveConfirmComponent } from '../../../shared/dialogs/remove-confirm/remove-confirm.component';
 import { USER_RIGHTS } from '../../../core/constants/user-rights.constant';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { ConfirmDialogComponent } from '../../../shared/dialogs/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'hz-link-library-management',
   imports: [
+    MatInputModule,
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
@@ -33,6 +37,7 @@ import { USER_RIGHTS } from '../../../core/constants/user-rights.constant';
     MatTooltipModule,
     MatTabsModule,
     MatChipsModule,
+    FormsModule,
     MessageCardComponent,
   ],
   templateUrl: './link-library-management.component.html',
@@ -57,11 +62,10 @@ export class LinkLibraryManagementComponent implements OnInit {
   readonly categoryDisplayedColumns: string[] = ['id', 'name', 'description', 'actions'];
   readonly categoryDataSource = new MatTableDataSource<Category>();
 
-  // Tags Table
-  readonly tagSort = viewChild<MatSort>('tagSort');
-  readonly tagPaginator = viewChild<MatPaginator>('tagPaginator');
-  readonly tagDisplayedColumns: string[] = ['id', 'name', 'actions'];
-  readonly tagDataSource = new MatTableDataSource<Tag>();
+  // Tags
+  readonly linkTags = this.linkLibraryManagementService.linkTags;
+  readonly tagFilter = model<string>('');
+  readonly filteredLinkTags = computed(() => this.filterLinkTags(this.linkTags()));
 
   constructor() {
     // Link Table
@@ -84,16 +88,6 @@ export class LinkLibraryManagementComponent implements OnInit {
     effect(() => {
       this.categoryDataSource.sort = this.categorySort() ?? null;
       this.categoryDataSource.paginator = this.categoryPaginator() ?? null;
-    });
-
-    // Tags Table
-    effect(() => {
-      this.tagDataSource.data = this.linkLibraryManagementService.linkTags();
-    });
-
-    effect(() => {
-      this.tagDataSource.sort = this.tagSort() ?? null;
-      this.tagDataSource.paginator = this.tagPaginator() ?? null;
     });
   }
 
@@ -198,12 +192,31 @@ export class LinkLibraryManagementComponent implements OnInit {
       .subscribe();
   }
 
-  // *** Tags ***
+  // *** TAGS ***
+  onResetTagFilter() {
+    this.tagFilter.set('');
+  }
+
+  filterLinkTags(tags: Tag[]) {
+    const tagFilter = this.tagFilter();
+
+    if (!tagFilter) {
+      return tags;
+    }
+
+    const keywords = tagFilter
+      .toLowerCase()
+      .split(' ')
+      .map((word) => word.trim())
+      .filter(Boolean);
+
+    return tags.filter((tag) => keywords.some((keyword) => tag.name.toLowerCase().includes(keyword)));
+  }
+
   onCreateTag() {
     this.dialog
       .open(LinkTagDialogComponent, {
         data: { type: 'create' },
-        height: '220px',
         width: '560px',
         panelClass: 'hz-dialog-container',
       })
@@ -219,7 +232,6 @@ export class LinkLibraryManagementComponent implements OnInit {
     this.dialog
       .open(LinkTagDialogComponent, {
         data: { type: 'update', tag },
-        height: '220px',
         width: '560px',
         panelClass: 'hz-dialog-container',
       })
@@ -232,10 +244,11 @@ export class LinkLibraryManagementComponent implements OnInit {
   }
 
   onDeleteTag(tag: Tag) {
+    const title = 'Remove Tag';
     const message = 'Are you sure you want to remove this tag?';
 
     this.dialog
-      .open(RemoveConfirmComponent, { data: { message }, panelClass: 'hz-dialog-container' })
+      .open(ConfirmDialogComponent, { data: { title, message }, panelClass: 'hz-dialog-container' })
       .afterClosed()
       .pipe(
         filter((result) => result),

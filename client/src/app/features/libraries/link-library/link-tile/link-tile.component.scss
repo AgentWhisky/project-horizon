@@ -1,7 +1,39 @@
-.link-icon {
-  @apply flex justify-center items-center ml-3;
-}
-
 .link-container {
   @apply flex flex-col w-full overflow-hidden;
+}
+
+.link-button {
+  @apply items-center gap-3 px-4 py-2 text-sm font-medium shadow-sm;
+
+  width: 100%;
+  display: inline-flex;
+
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-extra-small);
+}
+
+.link-button:hover {
+  background-color: var(--mat-sys-surface-container-high);
+}
+
+.link-button:active {
+  background-color: var(--mat-sys-surface-container-highest);
+}
+
+.link-icon-container {
+  @apply bg-slate-500;
+
+  width: 24px;
+  height: 24px;
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: var(--mat-sys-corner-extra-small);
+  //background-color: var(--mat-sys-surface-container-highest);
+}
+
+.link-icon {
+  @apply flex justify-center items-center ml-3;
 }
