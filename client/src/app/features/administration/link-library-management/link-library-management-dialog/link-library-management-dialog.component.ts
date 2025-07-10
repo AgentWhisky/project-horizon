@@ -54,7 +54,7 @@ export class LinkLibraryManagementDialogComponent implements OnInit {
         name: link.name,
         description: link.description,
         url: link.url,
-        category: link.category.id,
+        category: link.category?.id,
         tags: link.tags?.map((tag) => tag.id) ?? [],
       });
     }

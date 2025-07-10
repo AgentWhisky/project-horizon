@@ -3,7 +3,7 @@ export interface LinkPayload {
   url: string;
   name: string;
   description: string;
-  category: number;
+  category: number | null;
   tags: number[];
   sortKey: string;
 }
@@ -13,7 +13,7 @@ export interface Link {
   url: string;
   name: string;
   description: string;
-  category: LinkCategory;
+  category: LinkCategory | null;
   tags: LinkTag[];
   sortKey: string;
 }

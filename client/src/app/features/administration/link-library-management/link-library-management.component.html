@@ -2,6 +2,27 @@
   <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
     <!-- LINKS -->
     <mat-tab label="Links" class="flex flex-col">
+      <div cdkDropListGroup class="w-full flex flex-row flex-wrap gap-3 p-3 justify-center">
+        @for(category of linkCategories(); track category.id) {
+        <div
+          class="drag-list w-full max-w-96"
+          cdkDropList
+          [cdkDropListData]="linkCategoryMap()[category.id]"
+          (cdkDropListDropped)="onDrop($event, category.id)">
+          <span>{{ category.name }}</span>
+          <mat-divider></mat-divider>
+          <div class="link-container">
+            @for (link of linkCategoryMap()[category.id]; track link.id) {
+            <div cdkDrag class="drag-box link-tile">
+              {{ link.name }}
+            </div>
+
+            }
+          </div>
+        </div>
+        }
+      </div>
+
       <div class="flex justify-end mt-3">
         <button mat-button (click)="onCreateLink()" aria-label="Add Link">
           <mat-icon>add</mat-icon>

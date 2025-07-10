@@ -9,7 +9,30 @@ table {
   }
 }
 
-// *** CATEGORIES
+// *** LINKS ***
+.link-container {
+  @apply w-full gap-3 p-3;
+
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.link-tile {
+  @apply font-medium max-w-72 p-3 gap-3;
+
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  break-inside: avoid;
+
+  background-color: var(--mat-sys-surface-container-low);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-extra-small);
+}
+
+// *** CATEGORIES ***
 .link-category-filter-container {
   @apply px-3 pt-3 gap-3;
 

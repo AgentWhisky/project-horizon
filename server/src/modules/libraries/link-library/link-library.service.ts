@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LinkEntity } from 'src/entities/link.entity';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { Link } from './link-library.model';
 
 @Injectable()
@@ -22,7 +22,7 @@ export class LinkLibraryService {
         category: { id: true, name: true, description: true },
         sortKey: true,
       },
-      where: { status: 'A' },
+      where: { status: true, category: Not(IsNull()) },
       relations: { tags: true, category: true },
       order: { id: 'ASC' },
     });

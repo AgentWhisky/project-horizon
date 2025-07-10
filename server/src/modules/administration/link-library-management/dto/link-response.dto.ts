@@ -42,8 +42,12 @@ export class LinkResponseDto {
   @IsString()
   description: string;
 
-  @ApiProperty({ description: 'The category of the link', type: LinkCategoryDto })
-  category: LinkCategoryDto;
+  @ApiProperty({
+    description: 'The category of the link',
+    type: LinkCategoryDto,
+    nullable: true,
+  })
+  category: LinkCategoryDto | null;
 
   @ApiProperty({ description: 'The tags associated with the link', type: [LinkTagDto] })
   @IsArray()

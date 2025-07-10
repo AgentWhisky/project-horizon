@@ -17,11 +17,11 @@ export class LinkEntity {
   @Column({ name: 'url', type: 'varchar', length: 2048, unique: true })
   url: string;
 
-  @ManyToOne(() => LinkCategoryEntity, (category) => category.links)
+  @ManyToOne(() => LinkCategoryEntity, (category) => category.links, { nullable: true })
   category: LinkCategoryEntity;
 
-  @Column({ name: 'status', type: 'enum', enum: ['A', 'I'], default: 'A' })
-  status: 'A' | 'I';
+  @Column({ name: 'status', type: 'boolean', default: true })
+  status: boolean;
 
   @ManyToMany(() => LinkTagEntity, (tag) => tag.links, { cascade: true })
   @JoinTable({ name: 'link_library_tags' })

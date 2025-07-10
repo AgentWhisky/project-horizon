@@ -32,8 +32,12 @@ export class LinkResponseDto {
   @ApiProperty({ example: 'This is a useful link.', description: 'A short description of the link' })
   description: string;
 
-  @ApiProperty({ type: LinkCategoryResponseDto, description: 'The category this link belongs to' })
-  category: LinkCategoryResponseDto;
+  @ApiProperty({
+    type: LinkCategoryResponseDto,
+    description: 'The category this link belongs to or null for unassigned',
+    nullable: true,
+  })
+  category: LinkCategoryResponseDto | null;
 
   @ApiProperty({ type: [LinkTagResponseDto], description: 'Tags associated with this link' })
   tags: LinkTagResponseDto[];

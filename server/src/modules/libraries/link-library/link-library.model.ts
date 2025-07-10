@@ -3,7 +3,7 @@ export interface Link {
   url: string;
   name: string;
   description: string;
-  category: LinkCategory;
+  category: LinkCategory | null;
   tags: LinkTag[];
   sortKey: string;
 }

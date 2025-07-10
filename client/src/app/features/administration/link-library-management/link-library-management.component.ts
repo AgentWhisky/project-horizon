@@ -25,6 +25,8 @@ import { LinkCategoryDialogComponent } from './link-category-dialog/link-categor
 import { LinkTagDialogComponent } from './link-tag-dialog/link-tag-dialog.component';
 import { LinkLibraryImportDialogComponent } from './link-library-import-dialog/link-library-import-dialog.component';
 import { Category, Link, Tag } from './link-library-management';
+import { MatDividerModule } from '@angular/material/divider';
+import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'hz-link-library-management',
@@ -38,6 +40,10 @@ import { Category, Link, Tag } from './link-library-management';
     MatTooltipModule,
     MatTabsModule,
     MatChipsModule,
+    MatDividerModule,
+    CdkDropList,
+    CdkDrag,
+    CdkDropListGroup,
     FormsModule,
     MessageCardComponent,
   ],
@@ -57,45 +63,24 @@ export class LinkLibraryManagementComponent implements OnInit {
   readonly linkDisplayedColumns: string[] = ['id', 'name', 'category', 'description', 'url', 'sortKey', 'tags', 'actions'];
   readonly linkDataSource = new MatTableDataSource<Link>();
 
-  // Category Table
-  readonly categorySort = viewChild<MatSort>('categorySort');
-  readonly categoryPaginator = viewChild<MatPaginator>('categoryPaginator');
-  readonly categoryDisplayedColumns: string[] = ['id', 'name', 'description', 'actions'];
-  readonly categoryDataSource = new MatTableDataSource<Category>();
+  // Link Information
+  readonly links = this.linkLibraryManagementService.links;
+  readonly linkCategories = this.linkLibraryManagementService.linkCategories;
+  readonly linkTags = this.linkLibraryManagementService.linkTags;
+
+  // Links
+  readonly linkCategoryMap = computed(() => this.getLinkCategoryMap(this.links(), this.linkCategories()));
+  readonly unassignedLinks = computed(() => this.getUnassignedLinks(this.links()));
 
   // Categories
-  readonly linkCategories = this.linkLibraryManagementService.linkCategories;
   readonly categoryFilter = model<string>('');
   readonly filteredLinkCategories = computed(() => this.filterLinkCategories(this.linkCategories()));
 
   // Tags
-  readonly linkTags = this.linkLibraryManagementService.linkTags;
   readonly tagFilter = model<string>('');
   readonly filteredLinkTags = computed(() => this.filterLinkTags(this.linkTags()));
 
-  constructor() {
-    // Link Table
-    effect(() => {
-      this.linkDataSource.data = this.linkLibraryManagementService.links();
-    });
-
-    effect(() => {
-      this.linkDataSource.sort = this.linkSort() ?? null;
-      this.linkDataSource.paginator = this.linkPaginator() ?? null;
-      this.linkDataSource.sortingDataAccessor = (item, property) =>
-        property === 'category' ? item.category.name : (item as any)[property];
-    });
-
-    // Category Table
-    effect(() => {
-      this.categoryDataSource.data = this.linkLibraryManagementService.linkCategories();
-    });
-
-    effect(() => {
-      this.categoryDataSource.sort = this.categorySort() ?? null;
-      this.categoryDataSource.paginator = this.categoryPaginator() ?? null;
-    });
-  }
+  constructor() {}
 
   ngOnInit() {
     this.linkLibraryManagementService.loadLinks();
@@ -104,6 +89,22 @@ export class LinkLibraryManagementComponent implements OnInit {
   }
 
   // *** Links ***
+  getLinkCategoryMap(links: Link[], categories: Category[]) {
+    const categoryMap: { [categoryId: number]: Link[] } = {};
+
+    for (const category of categories) {
+      const sortedLinks = links.filter((link) => link.category?.id === category.id).sort((a, b) => a.sortKey.localeCompare(b.sortKey));
+
+      categoryMap[category.id] = sortedLinks;
+    }
+
+    return categoryMap;
+  }
+
+  getUnassignedLinks(links: Link[]) {
+    return links.filter((link) => link.category?.id === null);
+  }
+
   onCreateLink() {
     this.dialog
       .open(LinkLibraryManagementDialogComponent, {
@@ -300,4 +301,7 @@ export class LinkLibraryManagementComponent implements OnInit {
   onExportLinkLibrary() {
     this.linkLibraryManagementService.exportLinkLibrary();
   }
+
+  // *** CDK DRAG & DROP ***
+  onDrop(event: CdkDragDrop<Link[]>, targetCategoryId: number | null) {}
 }

@@ -35,9 +35,11 @@ export class LinkDto {
   @ApiProperty({
     description: 'The ID of the category the link belongs to',
     example: 1,
+    nullable: true,
   })
+  @IsOptional()
   @IsInt()
-  category: number;
+  category: number | null;
 
   @ApiProperty({
     description: 'An array of tag IDs associated with the link',
