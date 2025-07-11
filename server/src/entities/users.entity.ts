@@ -23,13 +23,23 @@ export class UserEntity {
   name: string;
 
   @ManyToMany(() => RoleEntity)
-  @JoinTable({ name: 'user_roles' })
+  @JoinTable({
+    name: 'user_roles',
+    joinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'role_id',
+      referencedColumnName: 'id',
+    },
+  })
   roles: RoleEntity[];
 
   @Column({ name: 'active', type: 'boolean', default: true })
   active: boolean;
 
-  @Column({ name: 'lastLogin', type: 'timestamp', nullable: true })
+  @Column({ name: 'last_login', type: 'timestamp', nullable: true })
   lastLogin: Date;
 
   // *** CREDENTIALS ***
@@ -49,9 +59,9 @@ export class UserEntity {
   refreshTokens: RefreshTokenEntity[];
 
   // *** AUDIT FIELDS ***
-  @CreateDateColumn({ name: 'createdDate', type: 'timestamp' })
+  @CreateDateColumn({ name: 'created_date', type: 'timestamptz' })
   createdDate: Date;
 
-  @UpdateDateColumn({ name: 'updatedDate', type: 'timestamp' })
+  @UpdateDateColumn({ name: 'updated_date', type: 'timestamptz' })
   updatedDate: Date;
 }

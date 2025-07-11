@@ -2,27 +2,6 @@
   <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
     <!-- LINKS -->
     <mat-tab label="Links" class="flex flex-col">
-      <div cdkDropListGroup class="w-full flex flex-row flex-wrap gap-3 p-3 justify-center">
-        @for(category of linkCategories(); track category.id) {
-        <div
-          class="drag-list w-full max-w-96"
-          cdkDropList
-          [cdkDropListData]="linkCategoryMap()[category.id]"
-          (cdkDropListDropped)="onDrop($event, category.id)">
-          <span>{{ category.name }}</span>
-          <mat-divider></mat-divider>
-          <div class="link-container">
-            @for (link of linkCategoryMap()[category.id]; track link.id) {
-            <div cdkDrag class="drag-box link-tile">
-              {{ link.name }}
-            </div>
-
-            }
-          </div>
-        </div>
-        }
-      </div>
-
       <div class="flex justify-end mt-3">
         <button mat-button (click)="onCreateLink()" aria-label="Add Link">
           <mat-icon>add</mat-icon>
@@ -30,71 +9,47 @@
         </button>
       </div>
 
-      @if(linkDataSource.data.length > 0) {
-      <table mat-table [dataSource]="linkDataSource" matSort #linkSort="matSort" class="mat-elevation-z8">
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by id">ID</th>
-          <td mat-cell *matCellDef="let element">{{ element.id }}</td>
-        </ng-container>
+      <div cdkDropListGroup class="link-category-drag-container">
+        @for(category of linkCategories(); track category.id) {
+        <div
+          class="drag-list link-drag-container"
+          cdkDropList
+          [id]="'category-drop-' + category.id"
+          [cdkDropListData]="linkCategoryMap()[category.id]"
+          (cdkDropListDropped)="onDrop($event, category.id)">
+          <span class="font-medium">{{ category.name }} - {{ category.id }}</span>
+          <mat-divider></mat-divider>
+          <div class="link-container">
+            @for (link of linkCategoryMap()[category.id]; track link.id) {
+            <div cdkDrag class="drag-box link-tile">
+              {{ link.name }}
 
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">Name</th>
-          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
-        </ng-container>
+              <div class="link-actions">
+                <button
+                  class="icon-button"
+                  mat-icon-button
+                  type="button"
+                  [attr.aria-label]="'Edit ' + link.name + ' Link'"
+                  (click)="onEditLink(link)">
+                  <mat-icon>edit</mat-icon>
+                </button>
 
-        <ng-container matColumnDef="category">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by category">Category</th>
-          <td mat-cell *matCellDef="let element">{{ element.category?.name }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="description">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by description">Description</th>
-          <td mat-cell *matCellDef="let element">{{ element.description }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="sortKey">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by sort key">Sort Key</th>
-          <td mat-cell *matCellDef="let element">{{ element.sortKey }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="url">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by url">Url</th>
-          <td mat-cell *matCellDef="let element">{{ element.url }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="tags">
-          <th mat-header-cell *matHeaderCellDef>Tags</th>
-          <td mat-cell *matCellDef="let element">
-            <mat-chip-set>
-              @for(tag of element.tags; track tag.id) {
-              <mat-chip>{{ tag.name }}</mat-chip>
-              }
-            </mat-chip-set>
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef aria-hidden="true"></th>
-          <td mat-cell class="min-w-16" *matCellDef="let element">
-            <div class="flex justify-end items-center">
-              <button mat-icon-button (click)="onEditLink(element)" aria-label="Edit Link">
-                <mat-icon matTooltip="Edit Link">edit</mat-icon>
-              </button>
-              <button mat-icon-button (click)="onDeleteLink(element)" aria-label="Delete Link">
-                <mat-icon matTooltip="Delete Link">delete</mat-icon>
-              </button>
+                <button
+                  class="icon-button"
+                  mat-icon-button
+                  type="button"
+                  [attr.aria-label]="'Remove ' + link.name + ' Link'"
+                  (click)="onDeleteLink(link)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
             </div>
-          </td>
-        </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="linkDisplayedColumns"></tr>
-        <tr mat-row class="table-row" *matRowDef="let row; columns: linkDisplayedColumns"></tr>
-      </table>
-
-      <mat-paginator [pageSizeOptions]="[25, 50, 100]" #linkPaginator showFirstLastButtons aria-label="Link Paginator"></mat-paginator>
-      } @else {
-      <hz-message-card message="No links found"></hz-message-card>
-      }
+            }
+          </div>
+        </div>
+        }
+      </div>
     </mat-tab>
 
     <!-- CATEGORIES -->

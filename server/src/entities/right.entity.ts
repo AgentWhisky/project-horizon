@@ -9,7 +9,7 @@ export class RightEntity {
   @Column({ name: 'name', type: 'varchar', length: 30, unique: true })
   name: string;
 
-  @Column({ name: 'internalName', type: 'varchar', length: 30, unique: true, update: false })
+  @Column({ name: 'internal_name', type: 'varchar', length: 30, unique: true, update: false })
   internalName: string;
 
   @Column({ name: 'description', type: 'text' })
@@ -19,9 +19,9 @@ export class RightEntity {
   roles: RoleEntity[];
 
   // *** AUDIT FIELDS ***
-  @CreateDateColumn({ name: 'createdDate', type: 'timestamp' })
+  @CreateDateColumn({ name: 'created_date', type: 'timestamptz' })
   createdDate: Date;
 
-  @UpdateDateColumn({ name: 'updatedDate', type: 'timestamp' })
+  @UpdateDateColumn({ name: 'updated_date', type: 'timestamptz' })
   updatedDate: Date;
 }

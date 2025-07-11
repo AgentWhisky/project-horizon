@@ -13,9 +13,9 @@ export class LinkTagEntity {
   links: LinkEntity[];
 
   // *** AUDIT FIELDS ***
-  @CreateDateColumn({ name: 'createdDate', type: 'timestamp' })
+  @CreateDateColumn({ name: 'created_date', type: 'timestamptz' })
   createdDate: Date;
 
-  @UpdateDateColumn({ name: 'updatedDate', type: 'timestamp' })
+  @UpdateDateColumn({ name: 'updated_date', type: 'timestamptz' })
   updatedDate: Date;
 }

@@ -27,6 +27,7 @@ import { LinkLibraryImportDialogComponent } from './link-library-import-dialog/l
 import { Category, Link, Tag } from './link-library-management';
 import { MatDividerModule } from '@angular/material/divider';
 import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup } from '@angular/cdk/drag-drop';
+import { generateSortKeyBetween } from '../../../core/utilities/lexo-rank.util';
 
 @Component({
   selector: 'hz-link-library-management',
@@ -45,7 +46,6 @@ import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup } from '@angular/cd
     CdkDrag,
     CdkDropListGroup,
     FormsModule,
-    MessageCardComponent,
   ],
   templateUrl: './link-library-management.component.html',
   styleUrl: './link-library-management.component.scss',
@@ -303,5 +303,26 @@ export class LinkLibraryManagementComponent implements OnInit {
   }
 
   // *** CDK DRAG & DROP ***
-  onDrop(event: CdkDragDrop<Link[]>, targetCategoryId: number | null) {}
+  onDrop(event: CdkDragDrop<Link[]>, targetCategoryId: number | null) {
+    const prevContainer = event.previousContainer;
+    const prevIndex = event.previousIndex;
+    const curContainer = event.container;
+    const curIndex = event.currentIndex;
+
+    const prevCategoryId = parseInt(prevContainer.id.replace('category-drop-', ''));
+    const curCategoryId = parseInt(curContainer.id.replace('category-drop-', ''));
+
+    const links = this.linkCategoryMap()[curCategoryId];
+
+    console.log(links);
+
+    const prevKey = links[curIndex - 1]?.sortKey ?? null;
+    const nextKey = links[curIndex]?.sortKey ?? null;
+
+    console.log(curIndex, prevKey, nextKey);
+
+    const newSortKey = generateSortKeyBetween(prevKey, nextKey);
+
+    console.log(newSortKey);
+  }
 }

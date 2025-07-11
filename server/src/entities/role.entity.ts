@@ -13,13 +13,23 @@ export class RoleEntity {
   description: string;
 
   @ManyToMany(() => RightEntity, (right) => right.roles, { cascade: true })
-  @JoinTable({ name: 'role_rights' })
+  @JoinTable({
+    name: 'role_rights',
+    joinColumn: {
+      name: 'role_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'right_id',
+      referencedColumnName: 'id',
+    },
+  })
   rights: RightEntity[];
 
   // *** AUDIT FIELDS ***
-  @CreateDateColumn({ name: 'createdDate', type: 'timestamp' })
+  @CreateDateColumn({ name: 'created_date', type: 'timestamptz' })
   createdDate: Date;
 
-  @UpdateDateColumn({ name: 'updatedDate', type: 'timestamp' })
+  @UpdateDateColumn({ name: 'updated_date', type: 'timestamptz' })
   updatedDate: Date;
 }

@@ -122,7 +122,7 @@ export class LinkLibraryManagementService {
   async getCategories(): Promise<Category[]> {
     const linkCategories: Category[] = await this.linkCategoryRepository
       .createQueryBuilder('category')
-      .leftJoin(LinkEntity, 'link', 'link.categoryId = category.id')
+      .leftJoin(LinkEntity, 'link', 'link.category_id = category.id')
       .select(['category.id AS id', 'category.name AS name', 'category.description AS description'])
       .addSelect('COUNT(link.id) > 0', 'inUse')
       .groupBy('category.id')
@@ -164,7 +164,7 @@ export class LinkLibraryManagementService {
 
     return await this.linkCategoryRepository
       .createQueryBuilder('category')
-      .leftJoin(LinkEntity, 'link', 'link.categoryId = category.id')
+      .leftJoin(LinkEntity, 'link', 'link.category_id = category.id')
       .select(['category.id AS id', 'category.name AS name', 'category.description AS description'])
       .where('category.id = :id', { id })
       .addSelect('COUNT(link.id) > 0', 'inUse')

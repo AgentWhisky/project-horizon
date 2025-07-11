@@ -1,7 +1,16 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, JoinTable, ManyToMany, ManyToOne, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  UpdateDateColumn,
+  JoinColumn,
+} from 'typeorm';
 import { LinkTagEntity } from './link-tags.entity';
 import { LinkCategoryEntity } from './link-categories.entity';
-import { MAX_SORT_STR_LENGTH } from 'src/common/constants/validation.constants';
 
 @Entity('links')
 export class LinkEntity {
@@ -18,31 +27,33 @@ export class LinkEntity {
   url: string;
 
   @ManyToOne(() => LinkCategoryEntity, (category) => category.links, { nullable: true })
+  @JoinColumn({ name: 'category_id' })
   category: LinkCategoryEntity;
 
   @Column({ name: 'status', type: 'boolean', default: true })
   status: boolean;
 
   @ManyToMany(() => LinkTagEntity, (tag) => tag.links, { cascade: true })
-  @JoinTable({ name: 'link_library_tags' })
-  tags: LinkTagEntity[];
-
-  @Column({
-    name: 'sortKey',
-    type: 'varchar',
-    length: MAX_SORT_STR_LENGTH,
-    default: 'zzz',
-    transformer: {
-      to: (value: string) => value?.toLowerCase() ?? '',
-      from: (value: string) => value,
+  @JoinTable({
+    name: 'link_library_tags',
+    joinColumn: {
+      name: 'link_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'tag_id',
+      referencedColumnName: 'id',
     },
   })
+  tags: LinkTagEntity[];
+
+  @Column({ name: 'sort_key', type: 'text', default: '' })
   sortKey: string;
 
   // *** AUDIT FIELDS ***
-  @CreateDateColumn({ name: 'createdDate', type: 'timestamp' })
+  @CreateDateColumn({ name: 'created_date', type: 'timestamptz' })
   createdDate: Date;
 
-  @UpdateDateColumn({ name: 'updatedDate', type: 'timestamp' })
+  @UpdateDateColumn({ name: 'updated_date', type: 'timestamptz' })
   updatedDate: Date;
 }
