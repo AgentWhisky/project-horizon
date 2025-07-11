@@ -1,8 +1,8 @@
 import { Component, computed, effect, inject, model, OnInit, signal, viewChild } from '@angular/core';
 
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -27,7 +27,8 @@ import { LinkLibraryImportDialogComponent } from './link-library-import-dialog/l
 import { Category, Link, Tag } from './link-library-management';
 import { MatDividerModule } from '@angular/material/divider';
 import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup } from '@angular/cdk/drag-drop';
-import { generateSortKeyBetween } from '../../../core/utilities/lexo-rank.util';
+import { generateSortKey } from '../../../core/utilities/lexo-rank.util';
+import { REBASE_REQUIRED } from '../../../core/constants/lexo-rank.constant';
 
 @Component({
   selector: 'hz-link-library-management',
@@ -56,12 +57,6 @@ export class LinkLibraryManagementComponent implements OnInit {
   private dialog = inject(MatDialog);
 
   readonly hasImportLibraryRight = signal<boolean>(this.userService.hasRights([USER_RIGHTS.IMPORT_LINK_LIBRARY]));
-
-  // Link Table
-  readonly linkSort = viewChild<MatSort>('linkSort');
-  readonly linkPaginator = viewChild<MatPaginator>('linkPaginator');
-  readonly linkDisplayedColumns: string[] = ['id', 'name', 'category', 'description', 'url', 'sortKey', 'tags', 'actions'];
-  readonly linkDataSource = new MatTableDataSource<Link>();
 
   // Link Information
   readonly links = this.linkLibraryManagementService.links;
@@ -309,20 +304,33 @@ export class LinkLibraryManagementComponent implements OnInit {
     const curContainer = event.container;
     const curIndex = event.currentIndex;
 
+    // Ignore drag to same position
+    if (prevContainer.id === curContainer.id && prevIndex === curIndex) {
+      return;
+    }
+
     const prevCategoryId = parseInt(prevContainer.id.replace('category-drop-', ''));
     const curCategoryId = parseInt(curContainer.id.replace('category-drop-', ''));
 
-    const links = this.linkCategoryMap()[curCategoryId];
+    let links = [...this.linkCategoryMap()[curCategoryId]];
+    const curLink = links[prevIndex];
 
-    console.log(links);
+    if (prevCategoryId === curCategoryId) {
+      links = links.filter((link) => link.id !== curLink.id);
+    }
 
     const prevKey = links[curIndex - 1]?.sortKey ?? null;
     const nextKey = links[curIndex]?.sortKey ?? null;
 
-    console.log(curIndex, prevKey, nextKey);
+    let newSortKey = generateSortKey(prevKey, nextKey, curCategoryId.toString());
 
-    const newSortKey = generateSortKeyBetween(prevKey, nextKey);
+    // Check if rebase is required
+    if (newSortKey === REBASE_REQUIRED) {
+      // Trigger Rebase
 
-    console.log(newSortKey);
+      newSortKey = generateSortKey(prevKey, nextKey, curCategoryId.toString());
+    }
+
+    console.log(prevKey, nextKey, newSortKey);
   }
 }

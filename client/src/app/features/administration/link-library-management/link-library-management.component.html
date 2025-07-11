@@ -22,7 +22,7 @@
           <div class="link-container">
             @for (link of linkCategoryMap()[category.id]; track link.id) {
             <div cdkDrag class="drag-box link-tile">
-              {{ link.name }}
+              {{ link.name }} - {{ link.sortKey }}
 
               <div class="link-actions">
                 <button
