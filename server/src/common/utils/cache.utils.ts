@@ -15,12 +15,6 @@ export class CacheUtils {
   }
 
   // Links
-  async clearLinkCache() {
-    await this.cacheManager.del(CACHE_KEY.LINK_LIBRARY_EXPORT);
-    await this.cacheManager.del(CACHE_KEY.LINK_LIBRARY);
-    await this.cacheManager.del(CACHE_KEY.LINK_LIBRARY_MANAGEMENT);
-  }
-
   async clearLinkCategoryCache() {
     await this.cacheManager.del(CACHE_KEY.LINK_LIBRARY_EXPORT);
     await this.cacheManager.del(CACHE_KEY.LINK_LIBRARY);

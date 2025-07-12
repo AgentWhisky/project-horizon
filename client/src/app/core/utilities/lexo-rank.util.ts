@@ -1,7 +1,5 @@
 import { MINOR_BASE, MINOR_LENGTH, MINOR_MAX, MINOR_MIN, MINOR_STEP, REBASE_REQUIRED } from '../constants/lexo-rank.constant';
 
-const MAX_MINOR = parseInt('ZZZZZZ', 36);
-
 function base36ToInt(value: string): number {
   return parseInt(value, 36);
 }

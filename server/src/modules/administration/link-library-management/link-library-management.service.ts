@@ -1,9 +1,9 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { InjectDataSource, InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { LinkCategoryEntity } from 'src/entities/link-categories.entity';
 import { LinkTagEntity } from 'src/entities/link-tags.entity';
 import { LinkEntity } from 'src/entities/link.entity';
-import { EntityManager, Not, Repository } from 'typeorm';
+import { DataSource, EntityManager, Not, Repository } from 'typeorm';
 import {
   Category,
   CategoryPayload,
@@ -16,6 +16,8 @@ import {
   TagPayload,
 } from './link-library-management.model';
 import { DeleteResponse } from 'src/common/model/delete-response.model';
+import { OperationResult } from 'src/common/model/operation-result.model';
+import { MINOR_BASE, MINOR_LENGTH, MINOR_STEP } from 'src/common/constants/lexo-rank.constants';
 
 @Injectable()
 export class LinkLibraryManagementService {
@@ -30,7 +32,10 @@ export class LinkLibraryManagementService {
     private readonly linkTagRepository: Repository<LinkTagEntity>,
 
     @InjectEntityManager()
-    private readonly entityManager: EntityManager
+    private readonly entityManager: EntityManager,
+
+    @InjectDataSource()
+    private dataSource: DataSource
   ) {}
 
   // *** LINK FUNCTIONS ***
@@ -116,6 +121,64 @@ export class LinkLibraryManagementService {
       success: deleteResult.affected === 1,
       id,
     };
+  }
+
+  async rebaseLinks(): Promise<OperationResult> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const links = await queryRunner.manager.find(LinkEntity, {
+        select: {
+          id: true,
+          name: true,
+          sortKey: true,
+          category: { id: true },
+        },
+        relations: {
+          category: true,
+        },
+        order: {
+          category: { id: 'ASC' },
+          sortKey: 'ASC',
+        },
+      });
+
+      let affectedRows = 0;
+      let currentCategory = 0;
+      let currentMinor = parseInt(MINOR_BASE, 36);
+
+      for (const link of links) {
+        // Update current category and reset minor
+        if (link.category.id !== currentCategory) {
+          currentCategory = link.category.id;
+          currentMinor = parseInt(MINOR_BASE, 36);
+        }
+
+        // Generate new sort key
+        const major = link.category.id.toString().padStart(6, '0');
+        const minor = currentMinor.toString(36).toUpperCase().padStart(MINOR_LENGTH, '0');
+        const sortKey = `${major}:${minor}`;
+
+        await queryRunner.manager.update(LinkEntity, link.id, { sortKey });
+
+        currentMinor += MINOR_STEP;
+        affectedRows++;
+      }
+
+      await queryRunner.commitTransaction();
+
+      return {
+        success: true,
+        affectedRows,
+      };
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw new InternalServerErrorException(`Failed to rebase links: ${error.message}`);
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   // *** CATEGORY FUNCTIONS ***

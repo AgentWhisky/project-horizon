@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { DeleteResponse } from '../../../core/types/delete-response';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DownloadService } from '../../../core/services/download.service';
+import { OperationResult } from '../../../core/types/operation-result';
 
 @Injectable({
   providedIn: 'root',
@@ -74,6 +75,47 @@ export class LinkLibraryManagementService {
     } catch (error) {
       this.snackbar.open('Failed to delete link', 'Close', { duration: 3000 });
       console.error(`Error removing link: ${error}`);
+    }
+  }
+
+  async updateLinkSort(id: number, categoryId: number, sortKey: string) {
+    const oldLinks = structuredClone(this._links());
+
+    try {
+      const updatedIndex = this._links().findIndex((item) => item.id === id);
+      const updatedLink = this._links()[updatedIndex];
+
+      const category = this._linkCategories().find((category) => category.id === categoryId);
+
+      updatedLink.sortKey = sortKey;
+      updatedLink.category = category ? { id: category.id, name: category.name, description: category.description } : null;
+
+      const updatedLinks: Link[] = [...this._links().filter((item) => item.id !== id)];
+      updatedLinks.splice(updatedIndex, 0, updatedLink);
+
+      this._links.set(updatedLinks);
+
+      const linkPayload = {
+        ...updatedLink,
+        tags: updatedLink.tags.map((tag) => tag.id),
+        category: updatedLink.category?.id ?? null,
+      };
+
+      await this.putLink(id, linkPayload);
+    } catch (error) {
+      this.snackbar.open('Failed to update link', 'Close', { duration: 3000 });
+      console.error(`Error updating link: ${error}`);
+
+      this._links.set(oldLinks);
+    }
+  }
+
+  async rebaseLinks() {
+    try {
+      const operationResult = await this.postRebaseLinks();
+    } catch (error) {
+      this.snackbar.open('Failed to rebase links', 'Close', { duration: 3000 });
+      console.error(`Error rebasing links: ${error}`);
     }
   }
 
@@ -226,6 +268,11 @@ export class LinkLibraryManagementService {
   private async deleteLink(id: number) {
     const deleteResponse$ = this.tokenService.deleteWithTokenRefresh<DeleteResponse>(`/link-library-management/links/${id}`);
     return firstValueFrom(deleteResponse$);
+  }
+
+  private async postRebaseLinks() {
+    const operationResult$ = this.tokenService.postWithTokenRefresh<OperationResult>(`/link-library-management/links/rebase`, {});
+    return firstValueFrom(operationResult$);
   }
 
   // *** CATEGORY ***

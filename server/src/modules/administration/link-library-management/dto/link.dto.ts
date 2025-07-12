@@ -56,6 +56,5 @@ export class LinkDto {
     example: 'ABC',
   })
   @IsString()
-  @MaxLength(MAX_SORT_STR_LENGTH)
   sortKey?: string;
 }

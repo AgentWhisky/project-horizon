@@ -10,17 +10,17 @@
       </div>
 
       <div cdkDropListGroup class="link-category-drag-container">
-        @for(category of linkCategories(); track category.id) {
+        <!-- UNASSINED LINK CONTAINER -->
         <div
           class="drag-list link-drag-container"
           cdkDropList
-          [id]="'category-drop-' + category.id"
-          [cdkDropListData]="linkCategoryMap()[category.id]"
-          (cdkDropListDropped)="onDrop($event, category.id)">
-          <span class="font-medium">{{ category.name }} - {{ category.id }}</span>
+          [id]="'category-drop-0'"
+          [cdkDropListData]="unassignedLinks()"
+          (cdkDropListDropped)="onDrop($event)">
+          <span class="font-medium">Unassigned Links</span>
           <mat-divider></mat-divider>
           <div class="link-container">
-            @for (link of linkCategoryMap()[category.id]; track link.id) {
+            @for (link of unassignedLinks(); track link.id) {
             <div cdkDrag class="drag-box link-tile">
               {{ link.name }} - {{ link.sortKey }}
 
@@ -44,7 +44,45 @@
                 </button>
               </div>
             </div>
+            }
+          </div>
+        </div>
 
+        <!-- LINK CATEGORY CONTAINERS-->
+        @for(category of linkCategories(); track category.id) {
+        <div
+          class="drag-list link-drag-container"
+          cdkDropList
+          [id]="'category-drop-' + category.id"
+          [cdkDropListData]="linkCategoryMap()[category.id]"
+          (cdkDropListDropped)="onDrop($event)">
+          <span class="font-medium">{{ category.name }} - {{ category.id }}</span>
+          <mat-divider></mat-divider>
+          <div class="link-container">
+            @for (link of linkCategoryMap()[category.id]; track link.id) {
+            <div cdkDrag class="drag-box link-tile">
+              {{ link.name }}
+
+              <div class="link-actions">
+                <button
+                  class="icon-button"
+                  mat-icon-button
+                  type="button"
+                  [attr.aria-label]="'Edit ' + link.name + ' Link'"
+                  (click)="onEditLink(link)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+
+                <button
+                  class="icon-button"
+                  mat-icon-button
+                  type="button"
+                  [attr.aria-label]="'Remove ' + link.name + ' Link'"
+                  (click)="onDeleteLink(link)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
             }
           </div>
         </div>

@@ -97,7 +97,7 @@ export class LinkLibraryManagementComponent implements OnInit {
   }
 
   getUnassignedLinks(links: Link[]) {
-    return links.filter((link) => link.category?.id === null);
+    return links.filter((link) => link.category === null);
   }
 
   onCreateLink() {
@@ -298,7 +298,7 @@ export class LinkLibraryManagementComponent implements OnInit {
   }
 
   // *** CDK DRAG & DROP ***
-  onDrop(event: CdkDragDrop<Link[]>, targetCategoryId: number | null) {
+  onDrop(event: CdkDragDrop<Link[]>) {
     const prevContainer = event.previousContainer;
     const prevIndex = event.previousIndex;
     const curContainer = event.container;
@@ -312,8 +312,8 @@ export class LinkLibraryManagementComponent implements OnInit {
     const prevCategoryId = parseInt(prevContainer.id.replace('category-drop-', ''));
     const curCategoryId = parseInt(curContainer.id.replace('category-drop-', ''));
 
-    let links = [...this.linkCategoryMap()[curCategoryId]];
-    const curLink = links[prevIndex];
+    let links = curCategoryId === 0 ? this.unassignedLinks() : this.linkCategoryMap()[curCategoryId];
+    const curLink = prevCategoryId === 0 ? this.unassignedLinks()[prevIndex] : this.linkCategoryMap()[prevCategoryId][prevIndex];
 
     if (prevCategoryId === curCategoryId) {
       links = links.filter((link) => link.id !== curLink.id);
@@ -324,13 +324,15 @@ export class LinkLibraryManagementComponent implements OnInit {
 
     let newSortKey = generateSortKey(prevKey, nextKey, curCategoryId.toString());
 
-    // Check if rebase is required
+    // Check if rebase is required and run if necessary
     if (newSortKey === REBASE_REQUIRED) {
-      // Trigger Rebase
+      this.linkLibraryManagementService.rebaseLinks();
 
       newSortKey = generateSortKey(prevKey, nextKey, curCategoryId.toString());
     }
 
-    console.log(prevKey, nextKey, newSortKey);
+    console.log(newSortKey);
+
+    this.linkLibraryManagementService.updateLinkSort(curLink.id, curCategoryId, newSortKey);
   }
 }
