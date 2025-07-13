@@ -26,6 +26,9 @@ export class LinkEntity {
   @Column({ name: 'url', type: 'varchar', length: 2048, unique: true })
   url: string;
 
+  @Column({ name: 'icon', type: 'varchar', length: 2048, default: '' })
+  icon: string;
+
   @ManyToOne(() => LinkCategoryEntity, (category) => category.links, { nullable: true })
   @JoinColumn({ name: 'category_id' })
   category: LinkCategoryEntity;

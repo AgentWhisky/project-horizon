@@ -14,13 +14,19 @@
     </mat-form-field>
 
     <mat-form-field class="w-full">
-      <mat-label>Category</mat-label>
-      <mat-select formControlName="category">
-        @for(category of linkCategories(); track category.id) {
-        <mat-option [value]="category.id">{{ category.name }}</mat-option>
-        }
-      </mat-select>
-      <mat-error>{{ linkForm.get('category')?.errors | validatorMessage }}</mat-error>
+      <mat-label>Icon</mat-label>
+      <input matInput formControlName="icon" />
+      <mat-error>{{ linkForm.get('icon')?.errors | validatorMessage : { pattern: 'Invalid URL format' } }}</mat-error>
+      <button
+        class="mr-3"
+        matSuffix
+        mat-icon-button
+        type="button"
+        aria-label="Search for icon"
+        (click)="onSearchIcon()"
+        [disabled]="!linkForm.get('url')?.valid">
+        <mat-icon>image_search</mat-icon>
+      </button>
     </mat-form-field>
 
     <mat-form-field class="w-full">
@@ -31,12 +37,6 @@
         }
       </mat-select>
       <mat-error>{{ linkForm.get('tags')?.errors | validatorMessage }}</mat-error>
-    </mat-form-field>
-
-    <mat-form-field class="w-full">
-      <mat-label>Sort Key</mat-label>
-      <input matInput formControlName="sortKey" lowercase />
-      <mat-error>{{ linkForm.get('sortKey')?.errors | validatorMessage }}</mat-error>
     </mat-form-field>
 
     <mat-form-field class="w-full">

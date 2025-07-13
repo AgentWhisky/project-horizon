@@ -29,6 +29,7 @@ import { CategoryDto } from './dto/category.dto';
 import { TagDto } from './dto/tag.dto';
 import { LinkResponseDto } from './dto/link-response.dto';
 import { LinkLibrary } from './link-library-management.model';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('link-library-management')
 @UseInterceptors(CacheInterceptor)
@@ -47,6 +48,7 @@ export class LinkLibraryManagementController {
   }
 
   @Post('links')
+  @Throttle({ default: { limit: 50, ttl: 60000 } })
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
   async addLink(@Body() linkDto: LinkDto): Promise<LinkResponseDto> {
     const link = await this.linkLibraryManagementService.addLink(linkDto);
@@ -55,6 +57,7 @@ export class LinkLibraryManagementController {
   }
 
   @Put('links/:id')
+  @Throttle({ default: { limit: 50, ttl: 60000 } })
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
   async updateLink(@Param('id', ParseIntPipe) id: number, @Body() linkDto: LinkDto): Promise<LinkResponseDto> {
     const link = await this.linkLibraryManagementService.updateLink(id, linkDto);
@@ -63,6 +66,7 @@ export class LinkLibraryManagementController {
   }
 
   @Delete('links/:id')
+  @Throttle({ default: { limit: 50, ttl: 60000 } })
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
   async deleteLink(@Param('id', ParseIntPipe) id: number): Promise<DeleteResponse> {
     const deleteResponse = this.linkLibraryManagementService.deleteLink(id);
@@ -71,6 +75,7 @@ export class LinkLibraryManagementController {
   }
 
   @Post('links/rebase')
+  @Throttle({ default: { limit: 50, ttl: 60000 } })
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
   async rebaseLinks() {
     const operationResult = await this.linkLibraryManagementService.rebaseLinks();

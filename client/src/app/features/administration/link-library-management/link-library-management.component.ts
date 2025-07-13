@@ -64,8 +64,10 @@ export class LinkLibraryManagementComponent implements OnInit {
   readonly linkTags = this.linkLibraryManagementService.linkTags;
 
   // Links
+  readonly linkFilter = model<string>('');
   readonly linkCategoryMap = computed(() => this.getLinkCategoryMap(this.links(), this.linkCategories()));
   readonly unassignedLinks = computed(() => this.getUnassignedLinks(this.links()));
+  readonly linkFilteredIds = computed(() => this.getLinkFilteredSet(this.links(), this.linkFilter()));
 
   // Categories
   readonly categoryFilter = model<string>('');
@@ -84,6 +86,34 @@ export class LinkLibraryManagementComponent implements OnInit {
   }
 
   // *** Links ***
+  onResetLinkFilter() {
+    this.linkFilter.set('');
+  }
+
+  getLinkFilteredSet(links: Link[], linkFilter: string) {
+    const filteredIds = new Set<number>();
+
+    if (linkFilter) {
+      const keywords = linkFilter
+
+        .toLowerCase()
+        .split(' ')
+        .map((word) => word.trim())
+        .filter(Boolean);
+
+      for (const link of links) {
+        const fields = [link.name, link.description];
+        const matches = keywords.every((keyword) => fields.some((field) => field.toLowerCase().includes(keyword)));
+
+        if (matches) {
+          filteredIds.add(link.id);
+        }
+      }
+    }
+
+    return filteredIds;
+  }
+
   getLinkCategoryMap(links: Link[], categories: Category[]) {
     const categoryMap: { [categoryId: number]: Link[] } = {};
 
@@ -97,7 +127,7 @@ export class LinkLibraryManagementComponent implements OnInit {
   }
 
   getUnassignedLinks(links: Link[]) {
-    return links.filter((link) => link.category === null);
+    return links.filter((link) => link.category === null).sort((a, b) => a.sortKey.localeCompare(b.sortKey));
   }
 
   onCreateLink() {
@@ -131,10 +161,11 @@ export class LinkLibraryManagementComponent implements OnInit {
   }
 
   onDeleteLink(link: Link) {
+    const title = 'Remove Link';
     const message = 'Are you sure you want to remove this link?';
 
     this.dialog
-      .open(RemoveConfirmComponent, { data: { message }, panelClass: 'hz-dialog-container' })
+      .open(ConfirmDialogComponent, { data: { title, message }, panelClass: 'hz-dialog-container' })
       .afterClosed()
       .pipe(
         filter((result) => result),
@@ -330,8 +361,6 @@ export class LinkLibraryManagementComponent implements OnInit {
 
       newSortKey = generateSortKey(prevKey, nextKey, curCategoryId.toString());
     }
-
-    console.log(newSortKey);
 
     this.linkLibraryManagementService.updateLinkSort(curLink.id, curCategoryId, newSortKey);
   }

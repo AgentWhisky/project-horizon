@@ -1,8 +1,9 @@
 // *** LINKS ***
 export interface LinkPayload {
-  url: string;
   name: string;
   description: string;
+  url: string;
+  icon: string;
   category: number | null;
   tags: number[];
   sortKey: string;
@@ -10,9 +11,10 @@ export interface LinkPayload {
 
 export interface Link {
   id: number;
-  url: string;
   name: string;
   description: string;
+  url: string;
+  icon: string;
   category: LinkCategory | null;
   tags: LinkTag[];
   sortKey: string;

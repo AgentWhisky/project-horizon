@@ -2,10 +2,35 @@
   <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
     <!-- LINKS -->
     <mat-tab label="Links" class="flex flex-col">
-      <div class="flex justify-end mt-3">
-        <button mat-button (click)="onCreateLink()" aria-label="Add Link">
+      <!-- LINK FILTER -->
+      <div class="filter-container">
+        <mat-form-field class="page-search" subscriptSizing="dynamic">
+          <mat-label>Filter Links</mat-label>
+          <input
+            matInput
+            #linkFilterInput
+            [(ngModel)]="linkFilter"
+            maxlength="1024"
+            aria-label="Link Filter"
+            (keydown.enter)="linkFilterInput.blur()" />
+          @if(linkFilterInput.value && linkFilterInput.value !== '') {
+          <button class="mr-3" matSuffix mat-icon-button type="button" aria-label="Clear" (click)="onResetLinkFilter()">
+            <mat-icon>close</mat-icon>
+          </button>
+          } @if(linkFilterInput.value && linkFilterInput.value !== '') {
+          <mat-hint>
+            {{
+              linkFilteredIds().size === 0
+                ? 'No links found'
+                : 'Found ' + linkFilteredIds().size + ' link' + (linkFilteredIds().size > 1 ? 's' : '')
+            }}
+          </mat-hint>
+          }
+        </mat-form-field>
+
+        <button mat-button type="button" aria-label="Add Link" (click)="onCreateLink()">
           <mat-icon>add</mat-icon>
-          Add Link
+          Add New Link
         </button>
       </div>
 
@@ -18,11 +43,11 @@
           [cdkDropListData]="unassignedLinks()"
           (cdkDropListDropped)="onDrop($event)">
           <span class="font-medium">Unassigned Links</span>
-          <mat-divider></mat-divider>
+
           <div class="link-container">
             @for (link of unassignedLinks(); track link.id) {
-            <div cdkDrag class="drag-box link-tile">
-              {{ link.name }} - {{ link.sortKey }}
+            <div cdkDrag class="drag-box link-tile" [class.link-tile-filtered]="linkFilteredIds().has(link.id)">
+              {{ link.name }}
 
               <div class="link-actions">
                 <button
@@ -56,12 +81,17 @@
           [id]="'category-drop-' + category.id"
           [cdkDropListData]="linkCategoryMap()[category.id]"
           (cdkDropListDropped)="onDrop($event)">
-          <span class="font-medium">{{ category.name }} - {{ category.id }}</span>
-          <mat-divider></mat-divider>
+          <span class="font-medium">{{ category.name }}</span>
+
           <div class="link-container">
             @for (link of linkCategoryMap()[category.id]; track link.id) {
-            <div cdkDrag class="drag-box link-tile">
-              {{ link.name }}
+            <div cdkDrag class="drag-box link-tile" [class.link-tile-filtered]="linkFilteredIds().has(link.id)">
+              <div class="flex items-center gap-2">
+                <span>{{ link.name }}</span>
+                @if (link.icon) {
+                <img [src]="link.icon" alt="favicon" class="w-4 h-4" />
+                }
+              </div>
 
               <div class="link-actions">
                 <button

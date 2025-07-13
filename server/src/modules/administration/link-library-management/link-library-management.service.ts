@@ -43,9 +43,10 @@ export class LinkLibraryManagementService {
     const libaryLinks: Link[] = await this.libraryLinkRepository.find({
       select: {
         id: true,
-        url: true,
         name: true,
         description: true,
+        url: true,
+        icon: true,
         category: { id: true, name: true, description: true },
         tags: { id: true, name: true },
         sortKey: true,
@@ -62,6 +63,7 @@ export class LinkLibraryManagementService {
       name: linkPayload.name,
       description: linkPayload.description,
       url: linkPayload.url,
+      icon: linkPayload.icon,
       category: { id: linkPayload.category },
       tags: linkPayload.tags.map((tagId) => ({ id: tagId })),
       sortKey: linkPayload.sortKey || 'zzz',
@@ -70,9 +72,10 @@ export class LinkLibraryManagementService {
     return await this.libraryLinkRepository.findOne({
       select: {
         id: true,
-        url: true,
         name: true,
         description: true,
+        url: true,
+        icon: true,
         category: { id: true, name: true, description: true },
         tags: { id: true, name: true },
         sortKey: true,
@@ -94,6 +97,7 @@ export class LinkLibraryManagementService {
       name: linkPayload.name,
       description: linkPayload.description,
       url: linkPayload.url,
+      icon: linkPayload.icon,
       category: { id: linkPayload.category },
       tags: linkPayload.tags.map((tagId) => ({ id: tagId })),
       sortKey: linkPayload.sortKey || 'zzz',
@@ -102,9 +106,10 @@ export class LinkLibraryManagementService {
     return await this.libraryLinkRepository.findOne({
       select: {
         id: true,
-        url: true,
         name: true,
         description: true,
+        url: true,
+        icon: true,
         category: { id: true, name: true, description: true },
         tags: { id: true, name: true },
         sortKey: true,
@@ -189,7 +194,7 @@ export class LinkLibraryManagementService {
       .select(['category.id AS id', 'category.name AS name', 'category.description AS description'])
       .addSelect('COUNT(link.id) > 0', 'inUse')
       .groupBy('category.id')
-      .orderBy('category.id', 'ASC')
+      .orderBy('category.name', 'ASC')
       .getRawMany();
 
     return linkCategories;
@@ -198,6 +203,7 @@ export class LinkLibraryManagementService {
   async addCategory(categoryPayload: CategoryPayload): Promise<Category> {
     const newCategory = await this.linkCategoryRepository.save({
       name: categoryPayload.name,
+
       description: categoryPayload.description,
     });
 

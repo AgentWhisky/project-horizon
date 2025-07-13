@@ -15,9 +15,10 @@ export class LinkLibraryService {
     const links: Link[] = await this.libraryLinkRepository.find({
       select: {
         id: true,
-        url: true,
         name: true,
         description: true,
+        url: true,
+        icon: true,
         tags: { id: true, name: true },
         category: { id: true, name: true, description: true },
         sortKey: true,

@@ -1,8 +1,9 @@
 export interface Link {
   id: number;
-  url: string;
   name: string;
   description: string;
+  url: string;
+  icon: string;
   category: LinkCategory;
   tags: LinkTag[];
   sortKey: string;

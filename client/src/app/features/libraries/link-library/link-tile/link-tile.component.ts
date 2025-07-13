@@ -38,24 +38,8 @@ export class LinkTileComponent {
     this.isOpen.set(false);
   }
 
-  getFavicon(url: string, stage: number): string {
-    const domain = new URL(url).hostname;
-
-    switch (stage) {
-      case 0:
-        return `${new URL(url).origin}/favicon.ico`;
-      case 1:
-        return `https://www.google.com/s2/favicons?domain=${domain}`;
-      case 2:
-        return `https://icons.duckduckgo.com/ip3/${domain}.ico`;
-      default:
-        return 'assets/favicon.png';
-    }
-  }
-
-  onFaviconError(url: string): void {
-    if (this.faviconStage() < 2) {
-      this.faviconStage.set(this.faviconStage() + 1);
-    }
+  onFaviconError(event: Event) {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = 'assets/favicon.png';
   }
 }

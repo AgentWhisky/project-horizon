@@ -22,6 +22,10 @@ export class LinkDto {
   @MaxLength(2048)
   url: string;
 
+  @IsString()
+  @MaxLength(2048)
+  icon: string;
+
   @ApiProperty({
     description: 'A brief description of the link',
     maxLength: LINK_DESC_MAX_LENGTH,

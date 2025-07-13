@@ -9,6 +9,16 @@ table {
   }
 }
 
+.filter-container {
+  @apply px-3 pt-3 gap-3;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
 // *** LINKS ***
 .link-category-drag-container {
   @apply w-full flex flex-row flex-wrap gap-3 p-3 justify-center;
@@ -40,11 +50,20 @@ table {
   align-items: center;
   justify-content: space-between;
   break-inside: avoid;
-  cursor: pointer;
+  cursor: grab;
 
   background-color: var(--mat-sys-surface-container-low);
   border: 1px solid var(--mat-sys-outline-variant);
   border-radius: var(--mat-sys-corner-extra-small);
+}
+
+.link-tile-filtered {
+  background-color: var(--mat-sys-surface-container-high);
+  border: 1px solid var(--mat-sys-primary);
+}
+
+.link-tile:active {
+  cursor: grabbing;
 }
 
 .link-actions {

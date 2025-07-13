@@ -8,8 +8,10 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { Link, LinkPayload } from '../link-library-management';
 import { LinkLibraryManagementService } from '../link-library-management.service';
 import { ValidatorMessagePipe } from '../../../../core/pipes/validator-message.pipe';
-import { LowercaseDirective } from '../../../../core/directives/lowercase.directive';
 import { REGEX } from '../../../../core/constants/regex.constant';
+import { MatIconModule } from '@angular/material/icon';
+import { checkFaviconExists } from '../../../../core/utilities/favicon.util';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface DialogData {
   type: 'create' | 'update';
@@ -23,20 +25,13 @@ interface DialogResult {
 
 @Component({
   selector: 'hz-link-library-management-dialog',
-  imports: [
-    MatButtonModule,
-    MatInputModule,
-    MatSelectModule,
-    MatDialogModule,
-    ReactiveFormsModule,
-    ValidatorMessagePipe,
-    LowercaseDirective,
-  ],
+  imports: [MatButtonModule, MatInputModule, MatIconModule, MatSelectModule, MatDialogModule, ReactiveFormsModule, ValidatorMessagePipe],
   templateUrl: './link-library-management-dialog.component.html',
   styleUrl: './link-library-management-dialog.component.scss',
 })
 export class LinkLibraryManagementDialogComponent implements OnInit {
   private fb = inject(FormBuilder);
+  private snackbar = inject(MatSnackBar);
   private linkLibraryManagementService = inject(LinkLibraryManagementService);
   private dialogRef = inject(MatDialogRef<LinkLibraryManagementDialogComponent>);
   readonly data = inject<DialogData>(MAT_DIALOG_DATA);
@@ -54,7 +49,7 @@ export class LinkLibraryManagementDialogComponent implements OnInit {
         name: link.name,
         description: link.description,
         url: link.url,
-        category: link.category?.id,
+        icon: link.icon,
         tags: link.tags?.map((tag) => tag.id) ?? [],
       });
     }
@@ -65,9 +60,8 @@ export class LinkLibraryManagementDialogComponent implements OnInit {
       name: ['', [Validators.required, Validators.maxLength(30)]],
       description: ['', [Validators.required, Validators.maxLength(250)]],
       url: ['', [Validators.required, Validators.maxLength(2048), Validators.pattern(REGEX.URL)]],
-      category: this.fb.control<number | null>(null, [Validators.required]),
+      icon: ['', [Validators.maxLength(2048), Validators.pattern(REGEX.URL)]],
       tags: [[] as number[]],
-      sortKey: ['', [Validators.maxLength(12)]],
     });
   }
 
@@ -82,14 +76,32 @@ export class LinkLibraryManagementDialogComponent implements OnInit {
       status: true,
       linkData: {
         name: this.linkForm.value.name ?? '',
-        url: this.linkForm.value.url ?? '',
         description: this.linkForm.value.description ?? '',
-        category: this.linkForm.value.category ?? 0,
+        url: this.linkForm.value.url ?? '',
+        icon: this.linkForm.value.icon ?? '',
+        category: this.data.link?.category?.id ?? null,
         tags: this.linkForm.value.tags ?? [],
-        sortKey: this.linkForm.value.sortKey ?? '',
+        sortKey: this.data.link?.sortKey ?? '',
       },
     };
 
     this.dialogRef.close(dialogResult);
+  }
+
+  async onSearchIcon() {
+    const url = this.linkForm.value.url ?? '';
+    const faviconUrl = new URL('/favicon.ico', url).href;
+
+    const exists = await checkFaviconExists(faviconUrl);
+
+    if (exists) {
+      this.linkForm.get('icon')?.setValue(faviconUrl);
+      this.linkForm.get('icon')?.markAsDirty();
+      this.snackbar.open('Successfully found favicon', 'Close', { duration: 3000 });
+    } else {
+      console.error('Favicon not found at', faviconUrl);
+      this.linkForm.get('icon')?.reset();
+      this.snackbar.open('Failed to find favicon', 'Close', { duration: 3000 });
+    }
   }
 }
