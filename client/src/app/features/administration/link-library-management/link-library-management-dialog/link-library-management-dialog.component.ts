@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { Link, LinkPayload } from '../link-library-management';
@@ -12,6 +12,7 @@ import { REGEX } from '../../../../core/constants/regex.constant';
 import { MatIconModule } from '@angular/material/icon';
 import { checkFaviconExists } from '../../../../core/utilities/favicon.util';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDividerModule } from '@angular/material/divider';
 
 interface DialogData {
   type: 'create' | 'update';
@@ -25,7 +26,16 @@ interface DialogResult {
 
 @Component({
   selector: 'hz-link-library-management-dialog',
-  imports: [MatButtonModule, MatInputModule, MatIconModule, MatSelectModule, MatDialogModule, ReactiveFormsModule, ValidatorMessagePipe],
+  imports: [
+    MatButtonModule,
+    MatInputModule,
+    MatIconModule,
+    MatSelectModule,
+    MatDividerModule,
+    MatDialogModule,
+    ReactiveFormsModule,
+    ValidatorMessagePipe,
+  ],
   templateUrl: './link-library-management-dialog.component.html',
   styleUrl: './link-library-management-dialog.component.scss',
 })
