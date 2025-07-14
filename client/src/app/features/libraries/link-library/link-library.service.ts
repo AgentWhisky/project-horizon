@@ -24,7 +24,7 @@ export class LinkLibraryService {
 
   // *** Private Link Functions ***
   private async getLibraryLinks() {
-    const links$ = this.tokenService.getWithTokenRefresh<Link[]>('/link-library');
+    const links$ = this.tokenService.getWithTokenRefresh<Link[]>('/link-library/links');
     return firstValueFrom(links$);
   }
 

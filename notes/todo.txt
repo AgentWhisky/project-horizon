@@ -1,9 +1,8 @@
 Bugs
 ------------------------
 Smooth transition between light and dark mode
-Fix inUse if not refersh (Administration)
 Validate all mat inputs are not cutoff as outline appearance
-Sort Key is empty in PROD
+Allow closing mat dialogs with android back
 
 Navigation
   > Add 404 page instead of redirecting back to dashboard

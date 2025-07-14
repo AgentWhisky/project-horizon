@@ -117,7 +117,6 @@ export class LinkLibraryManagementComponent implements OnInit {
         data: { type: 'create' },
         width: '560px',
         panelClass: 'hz-dialog-container',
-        closeOnNavigation: true,
       })
       .afterClosed()
       .pipe(

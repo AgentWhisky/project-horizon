@@ -3,12 +3,13 @@ import { Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
-import { LinkLibraryManagementService } from '../link-library-management.service';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+
 import { ValidatorMessagePipe } from '../../../../core/pipes/validator-message.pipe';
 import { uniqueText } from '../../../../core/validators/unique-text.validator';
+import { LinkLibraryManagementService } from '../link-library-management.service';
 import { Tag, TagPayload } from '../link-library-management';
 
 interface DialogData {

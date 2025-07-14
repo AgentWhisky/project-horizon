@@ -1,21 +1,30 @@
-import { Controller, Get, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
 import { LinkLibraryService } from './link-library.service';
-import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
-import { CACHE_KEY } from 'src/common/constants/cache-keys.constants';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { LinkResponseDto } from './dto/link.dto';
+import { LinkCategoryResponseDto, LinkResponseDto, LinkTagResponseDto } from './dto/link.dto';
 
 @ApiTags('Link Library')
 @Controller('link-library')
-@UseInterceptors(CacheInterceptor)
 export class LinkLibraryController {
   constructor(private readonly linkLibraryService: LinkLibraryService) {}
 
-  @Get()
-  @ApiOperation({ summary: 'Retrieve all library links', description: 'Returns a list of library links from the database.' })
-  @ApiOkResponse({ description: 'Successfully retrieved list of links.', type: [LinkResponseDto] })
-  @CacheKey(CACHE_KEY.LINK_LIBRARY)
-  async getLinks(): Promise<LinkResponseDto[]> {
-    return this.linkLibraryService.getLibraryLinks();
+  @Get('/links')
+  async getLinks(
+    @Query('search') search?: string,
+    @Query('category') category?: string,
+    @Query('tags') tags?: string
+  ): Promise<LinkResponseDto[]> {
+    return this.linkLibraryService.getLinks(search, category, tags);
+  }
+
+  @Get('/categories')
+  async getCategories(): Promise<LinkCategoryResponseDto[]> {
+    return this.linkLibraryService.getCategories();
+  }
+
+  @Get('/tags')
+  async getTags(): Promise<LinkTagResponseDto[]> {
+    return this.linkLibraryService.getTags();
   }
 }

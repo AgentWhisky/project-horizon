@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class LinkCategoryResponseDto {
   @ApiProperty({ example: 1, description: 'Unique identifier for the category' })

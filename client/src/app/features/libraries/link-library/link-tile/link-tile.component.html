@@ -1,12 +1,12 @@
 <div class="link-container">
-  <div class="flex flex-row">
+  <div class="flex flex-row items-center justify-center">
     <a [href]="link().url" target="_blank" [attr.aria-label]="'Open ' + link().name + ' in a new tab'" class="link-button">
       @if(link().icon) {
       <img [src]="link().icon" (error)="onFaviconError($event)" alt="favicon" class="w-4 h-4" />
       } @else {
       <img src="assets/icons/default-favicon.ico" alt="favicon" class="w-4 h-4" />
       }
-      <span class="truncate">{{ link().name }}</span>
+      <span class="line-clamp-1">{{ link().name }}</span>
     </a>
     <button mat-icon-button class="link-icon" (click)="onToggleView()" aria-label="Toggle link information">
       <mat-icon>{{ isOpen() ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
