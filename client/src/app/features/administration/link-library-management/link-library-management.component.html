@@ -4,7 +4,7 @@
     <mat-tab label="Links" class="flex flex-col">
       <!-- LINK FILTER -->
       <div class="filter-container">
-        <mat-form-field class="page-search" subscriptSizing="dynamic">
+        <mat-form-field class="search-form-field" subscriptSizing="dynamic">
           <mat-label>Filter Links</mat-label>
           <input
             matInput
@@ -14,7 +14,7 @@
             aria-label="Link Filter"
             (keydown.enter)="linkFilterInput.blur()" />
           @if(linkFilterInput.value && linkFilterInput.value !== '') {
-          <button class="mr-3" matSuffix mat-icon-button type="button" aria-label="Clear" (click)="onResetLinkFilter()">
+          <button class="clear-icon-button" matSuffix mat-icon-button type="button" aria-label="Clear" (click)="onResetLinkFilter()">
             <mat-icon>close</mat-icon>
           </button>
           } @if(linkFilterInput.value && linkFilterInput.value !== '') {
@@ -34,6 +34,7 @@
         </button>
       </div>
 
+      <!-- LINK DRAG CONTAINER -->
       <div cdkDropListGroup class="link-category-drag-container">
         <!-- UNASSINED LINK CONTAINER -->
         <div
@@ -47,7 +48,12 @@
           <div class="link-container">
             @for (link of unassignedLinks(); track link.id) {
             <div cdkDrag class="drag-box link-tile" [class.link-tile-filtered]="linkFilteredIds().has(link.id)">
-              {{ link.name }}
+              <div class="flex items-center gap-3">
+                @if (link.icon) {
+                <img [src]="link.icon" alt="favicon" class="w-4 h-4" />
+                }
+                <span>{{ link.name }}</span>
+              </div>
 
               <div class="link-actions">
                 <button
@@ -86,11 +92,11 @@
           <div class="link-container">
             @for (link of linkCategoryMap()[category.id]; track link.id) {
             <div cdkDrag class="drag-box link-tile" [class.link-tile-filtered]="linkFilteredIds().has(link.id)">
-              <div class="flex items-center gap-2">
-                <span>{{ link.name }}</span>
+              <div class="flex items-center gap-3">
                 @if (link.icon) {
                 <img [src]="link.icon" alt="favicon" class="w-4 h-4" />
                 }
+                <span>{{ link.name }}</span>
               </div>
 
               <div class="link-actions">
@@ -124,7 +130,7 @@
     <mat-tab label="Categories" class="flex flex-col">
       <!-- CATEGORY FILTER -->
       <div class="link-category-filter-container">
-        <mat-form-field class="page-search" subscriptSizing="dynamic">
+        <mat-form-field class="search-form-field" subscriptSizing="dynamic">
           <mat-label>Filter Categories</mat-label>
           <input
             matInput
@@ -134,9 +140,17 @@
             aria-label="Link Category Filter"
             (keydown.enter)="categoryFilterInput.blur()" />
           @if(categoryFilterInput.value && categoryFilterInput.value !== '') {
-          <button class="mr-3" matSuffix mat-icon-button type="button" aria-label="Clear" (click)="onResetCategoryFilter()">
+          <button class="clear-icon-button" matSuffix mat-icon-button type="button" aria-label="Clear" (click)="onResetCategoryFilter()">
             <mat-icon>close</mat-icon>
           </button>
+          } @if(categoryFilterInput.value && categoryFilterInput.value !== '') {
+          <mat-hint>
+            {{
+              filteredLinkCategories().length === 0
+                ? 'No categories found'
+                : 'Found ' + filteredLinkCategories().length + ' categor' + (filteredLinkCategories().length === 1 ? 'y' : 'ies')
+            }}
+          </mat-hint>
           }
         </mat-form-field>
 
@@ -184,7 +198,7 @@
     <mat-tab label="Tags" class="flex flex-col">
       <!-- TAG FILTER -->
       <div class="link-tag-filter-container">
-        <mat-form-field class="page-search" subscriptSizing="dynamic">
+        <mat-form-field class="search-form-field" subscriptSizing="dynamic">
           <mat-label>Filter Tags</mat-label>
           <input
             matInput
@@ -194,9 +208,17 @@
             aria-label="Link Tag Filter"
             (keydown.enter)="tagFilterInput.blur()" />
           @if(tagFilterInput.value && tagFilterInput.value !== '') {
-          <button class="mr-3" matSuffix mat-icon-button type="button" aria-label="Clear" (click)="onResetTagFilter()">
+          <button class="clear-icon-button" matSuffix mat-icon-button type="button" aria-label="Clear" (click)="onResetTagFilter()">
             <mat-icon>close</mat-icon>
           </button>
+          } @if(tagFilterInput.value && tagFilterInput.value !== '') {
+          <mat-hint>
+            {{
+              filteredLinkTags().length === 0
+                ? 'No tags found'
+                : 'Found ' + filteredLinkTags().length + ' tag' + (filteredLinkTags().length === 1 ? '' : 's')
+            }}
+          </mat-hint>
           }
         </mat-form-field>
 
@@ -237,7 +259,7 @@
     </mat-tab>
 
     <mat-tab label="Import & Export" class="flex flex-col">
-      <div class="flex flex-row gap-3 py-3">
+      <div class="import-export-container">
         <button mat-flat-button (click)="onExportLinkLibrary()">
           <mat-icon>download</mat-icon>
           Export Library

@@ -1,11 +1,13 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { TokenService } from '../../../core/services/token.service';
-import { Category, CategoryPayload, Link, LinkPayload, Tag, TagPayload } from './link-library-management';
+
 import { firstValueFrom } from 'rxjs';
-import { DeleteResponse } from '../../../core/types/delete-response';
 import { MatSnackBar } from '@angular/material/snack-bar';
+
+import { TokenService } from '../../../core/services/token.service';
 import { DownloadService } from '../../../core/services/download.service';
+import { Category, CategoryPayload, Link, LinkPayload, Tag, TagPayload } from './link-library-management';
 import { OperationResult } from '../../../core/types/operation-result';
+import { DeleteResponse } from '../../../core/types/delete-response';
 
 @Injectable({
   providedIn: 'root',
@@ -25,6 +27,9 @@ export class LinkLibraryManagementService {
   private _linkTags = signal<Tag[]>([]);
   readonly linkTags = this._linkTags.asReadonly();
   readonly linkTagList = computed(() => this._linkTags().map((item) => item.name));
+
+  readonly linkCategoryMap = computed(() => this.getLinkCategoryMap(this._links(), this._linkCategories()));
+  readonly unassignedLinks = computed(() => this.getUnassignedLinks(this._links()));
 
   // *** LINK FUNCTIONS ***
   async loadLinks() {
@@ -250,6 +255,22 @@ export class LinkLibraryManagementService {
 
   // *** PRIVATE FUNCTIONS ***
   // *** LINK ***
+  private getLinkCategoryMap(links: Link[], categories: Category[]) {
+    const categoryMap: { [categoryId: number]: Link[] } = {};
+
+    for (const category of categories) {
+      const sortedLinks = links.filter((link) => link.category?.id === category.id).sort((a, b) => a.sortKey.localeCompare(b.sortKey));
+
+      categoryMap[category.id] = sortedLinks;
+    }
+
+    return categoryMap;
+  }
+
+  private getUnassignedLinks(links: Link[]) {
+    return links.filter((link) => link.category === null).sort((a, b) => a.sortKey.localeCompare(b.sortKey));
+  }
+
   private async getLinks() {
     const links$ = this.tokenService.getWithTokenRefresh<Link[]>('/link-library-management/links');
     return firstValueFrom(links$);

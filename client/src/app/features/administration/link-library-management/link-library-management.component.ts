@@ -1,34 +1,32 @@
-import { Component, computed, effect, inject, model, OnInit, signal, viewChild } from '@angular/core';
+import { Component, computed, inject, model, OnInit, signal } from '@angular/core';
 
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatTabsModule } from '@angular/material/tabs';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
+import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup } from '@angular/cdk/drag-drop';
 import { filter, tap } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 import { UserService } from '../../../core/services/user.service';
-import { MessageCardComponent } from '../../../shared/components/message-card/message-card.component';
-import { RemoveConfirmComponent } from '../../../shared/dialogs/remove-confirm/remove-confirm.component';
-import { ConfirmDialogComponent } from '../../../shared/dialogs/confirm-dialog/confirm-dialog.component';
-import { USER_RIGHTS } from '../../../core/constants/user-rights.constant';
-
 import { LinkLibraryManagementService } from './link-library-management.service';
-import { LinkLibraryManagementDialogComponent } from './link-library-management-dialog/link-library-management-dialog.component';
+import { ConfirmDialogComponent } from '../../../shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { LinkCategoryDialogComponent } from './link-category-dialog/link-category-dialog.component';
-import { LinkTagDialogComponent } from './link-tag-dialog/link-tag-dialog.component';
+import { LinkLibraryManagementDialogComponent } from './link-library-management-dialog/link-library-management-dialog.component';
 import { LinkLibraryImportDialogComponent } from './link-library-import-dialog/link-library-import-dialog.component';
+import { LinkTagDialogComponent } from './link-tag-dialog/link-tag-dialog.component';
 import { Category, Link, Tag } from './link-library-management';
-import { MatDividerModule } from '@angular/material/divider';
-import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup } from '@angular/cdk/drag-drop';
-import { generateSortKey } from '../../../core/utilities/lexo-rank.util';
+import { USER_RIGHTS } from '../../../core/constants/user-rights.constant';
 import { REBASE_REQUIRED } from '../../../core/constants/lexo-rank.constant';
+import { generateSortKey } from '../../../core/utilities/lexo-rank.util';
 
 @Component({
   selector: 'hz-link-library-management',
@@ -63,10 +61,11 @@ export class LinkLibraryManagementComponent implements OnInit {
   readonly linkCategories = this.linkLibraryManagementService.linkCategories;
   readonly linkTags = this.linkLibraryManagementService.linkTags;
 
+  readonly linkCategoryMap = this.linkLibraryManagementService.linkCategoryMap;
+  readonly unassignedLinks = this.linkLibraryManagementService.unassignedLinks;
+
   // Links
   readonly linkFilter = model<string>('');
-  readonly linkCategoryMap = computed(() => this.getLinkCategoryMap(this.links(), this.linkCategories()));
-  readonly unassignedLinks = computed(() => this.getUnassignedLinks(this.links()));
   readonly linkFilteredIds = computed(() => this.getLinkFilteredSet(this.links(), this.linkFilter()));
 
   // Categories
@@ -76,8 +75,6 @@ export class LinkLibraryManagementComponent implements OnInit {
   // Tags
   readonly tagFilter = model<string>('');
   readonly filteredLinkTags = computed(() => this.filterLinkTags(this.linkTags()));
-
-  constructor() {}
 
   ngOnInit() {
     this.linkLibraryManagementService.loadLinks();
@@ -112,22 +109,6 @@ export class LinkLibraryManagementComponent implements OnInit {
     }
 
     return filteredIds;
-  }
-
-  getLinkCategoryMap(links: Link[], categories: Category[]) {
-    const categoryMap: { [categoryId: number]: Link[] } = {};
-
-    for (const category of categories) {
-      const sortedLinks = links.filter((link) => link.category?.id === category.id).sort((a, b) => a.sortKey.localeCompare(b.sortKey));
-
-      categoryMap[category.id] = sortedLinks;
-    }
-
-    return categoryMap;
-  }
-
-  getUnassignedLinks(links: Link[]) {
-    return links.filter((link) => link.category === null).sort((a, b) => a.sortKey.localeCompare(b.sortKey));
   }
 
   onCreateLink() {
@@ -346,6 +327,7 @@ export class LinkLibraryManagementComponent implements OnInit {
     let links = curCategoryId === 0 ? this.unassignedLinks() : this.linkCategoryMap()[curCategoryId];
     const curLink = prevCategoryId === 0 ? this.unassignedLinks()[prevIndex] : this.linkCategoryMap()[prevCategoryId][prevIndex];
 
+    // Filter link out if moved within same category
     if (prevCategoryId === curCategoryId) {
       links = links.filter((link) => link.id !== curLink.id);
     }

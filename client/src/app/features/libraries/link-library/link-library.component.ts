@@ -13,7 +13,16 @@ import { StatusBannerComponent } from '../../../shared/components/status-banner/
 
 @Component({
   selector: 'hz-link-library',
-  imports: [MatButtonModule, MatInputModule, MatIconModule, MatCardModule, MatAutocompleteModule, FormsModule, LinkTileComponent, StatusBannerComponent],
+  imports: [
+    MatButtonModule,
+    MatInputModule,
+    MatIconModule,
+    MatCardModule,
+    MatAutocompleteModule,
+    FormsModule,
+    LinkTileComponent,
+    StatusBannerComponent,
+  ],
   templateUrl: './link-library.component.html',
   styleUrl: './link-library.component.scss',
 })

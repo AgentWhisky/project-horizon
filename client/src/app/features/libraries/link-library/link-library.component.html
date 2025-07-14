@@ -17,13 +17,6 @@
       }
       <mat-error>Invalid Search Filter</mat-error>
     </mat-form-field>
-
-    @if(linksByCategory().length){
-    <div class="page-search justify-start flex flex-row gap-3 mt-0 mb-3">
-      <button mat-button (click)="onExapndAll()">Expand All</button>
-      <button mat-button (click)="onCollapseAll()">Collapse All</button>
-    </div>
-    }
   </div>
 
   @if(!linksByCategory().length && linkLibrarySearch.value.length) {
@@ -31,20 +24,16 @@
   } @else {
   <div class="link-card-container">
     @for(category of linksByCategory(); track category.id) {
+    <div class="category-container">
+      <span class="font-medium text-lg line-clamp-1">{{ category.name }}</span>
+      <span class="text-sm line-clamp-3">{{ category.description }}</span>
+      <div class="flex flex-col gap-3 pt-3">
+        @for(link of category.links; track link.id) {
+        <hz-link-tile [link]="link" class="w-full"></hz-link-tile>
+        }
+      </div>
+    </div>
 
-    <mat-card class="link-card w-full max-w-96">
-      <mat-card-header>
-        <mat-card-title>{{ category.name }}</mat-card-title>
-        <mat-card-subtitle>{{ category.description }}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="flex flex-col justify-center items-center py-3 gap-3">
-          @for(link of category.links; track link.id) {
-          <hz-link-tile [link]="link" class="w-full"></hz-link-tile>
-          }
-        </div>
-      </mat-card-content>
-    </mat-card>
     }
   </div>
   }

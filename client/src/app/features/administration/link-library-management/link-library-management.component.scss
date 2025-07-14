@@ -2,13 +2,7 @@
   width: 100%;
 }
 
-table {
-  th,
-  td {
-    @apply text-left py-3;
-  }
-}
-
+// *** SEARCH FILTER ***
 .filter-container {
   @apply px-3 pt-3 gap-3;
 
@@ -19,16 +13,33 @@ table {
   align-items: center;
 }
 
+.search-form-field {
+  @apply max-w-96 sm:max-w-lg md:max-w-xl lg:max-w-3xl xl:max-w-4xl;
+
+  width: 100%;
+}
+
+.clear-icon-button {
+  @apply mr-3;
+}
+
 // *** LINKS ***
 .link-category-drag-container {
-  @apply w-full flex flex-row flex-wrap gap-3 p-3 justify-center;
+  @apply gap-3 p-3;
+
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .link-drag-container {
-  @apply w-full flex flex-col max-w-96 p-3 gap-3 py-3;
+  @apply max-w-96 p-3 gap-3;
 
-  transition: max-height 0.3s ease, padding 0.3s ease;
-  overflow: hidden;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 
   border: 1px solid var(--mat-sys-outline-variant);
   border-radius: var(--mat-sys-corner-extra-small);
@@ -43,7 +54,7 @@ table {
 }
 
 .link-tile {
-  @apply font-medium p-3 gap-3;
+  @apply font-medium px-3 py-1 gap-3;
 
   width: 100%;
   display: flex;
@@ -55,6 +66,14 @@ table {
   background-color: var(--mat-sys-surface-container-low);
   border: 1px solid var(--mat-sys-outline-variant);
   border-radius: var(--mat-sys-corner-extra-small);
+}
+
+.link-tile:hover {
+  background-color: var(--mat-sys-surface-container-high);
+}
+
+.link-tile:active {
+  background-color: var(--mat-sys-surface-container-highest);
 }
 
 .link-tile-filtered {
@@ -157,4 +176,12 @@ table {
 .link-tag-actions {
   display: flex;
   align-items: center;
+}
+
+// *** IMPORT & EXPORT ***
+.import-export-container {
+  @apply py-3 gap-3;
+
+  display: flex;
+  flex-direction: row;
 }

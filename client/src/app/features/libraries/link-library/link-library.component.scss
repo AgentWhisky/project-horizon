@@ -4,6 +4,14 @@
   width: 100%;
 }
 
+// *** CATEGORY ***
+.category-container {
+  @apply flex flex-col w-full max-w-96 p-3 self-start;
+
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-extra-small);
+}
+
 .link-button {
   @apply w-full items-center text-center;
 
