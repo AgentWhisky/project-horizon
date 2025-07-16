@@ -11,8 +11,9 @@ export async function getLinks(category?: string | null, search?: string | null)
   if (search) {
     params.append('search', search);
   }
+  const linkUrl = params.toString() ? `${apiUrl}?${params.toString()}` : apiUrl;
 
-  const res = await fetch(`${apiUrl}?${params.toString()}`);
+  const res = await fetch(linkUrl);
 
   if (!res.ok) {
     throw new Error(`Failed to fetch Horizon links: ${res.status}`);

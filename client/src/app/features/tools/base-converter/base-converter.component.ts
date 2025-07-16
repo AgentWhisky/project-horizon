@@ -12,7 +12,7 @@ import { filter, tap } from 'rxjs';
 import { BaseConvertTileDialogComponent } from './base-convert-tile-dialog/base-convert-tile-dialog.component';
 import { BaseConvertConversionDialogComponent } from './base-convert-conversion-dialog/base-convert-conversion-dialog.component';
 import { MessageCardComponent } from '../../../shared/components/message-card/message-card.component';
-import { RemoveConfirmComponent } from '../../../shared/dialogs/remove-confirm/remove-confirm.component';
+import { ConfirmDialogComponent } from '../../../shared/dialogs/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'hz-base-converter',
@@ -39,10 +39,11 @@ export class BaseConverterComponent {
   }
 
   onRemoveBase(base: number) {
+    const title = 'Remove Tile';
     const message = `Are you sure you want to remove the Base ${base} tile?`;
 
     this.dialog
-      .open(RemoveConfirmComponent, { data: { message }, panelClass: 'hz-dialog-container' })
+      .open(ConfirmDialogComponent, { data: { title, message }, panelClass: 'hz-dialog-container' })
       .afterClosed()
       .pipe(
         filter((result) => result),
@@ -52,10 +53,11 @@ export class BaseConverterComponent {
   }
 
   onRemoveAllBases() {
+    const title = 'Remove All Tiles';
     const message = `Are you sure you want to remove all base tiles?`;
 
     this.dialog
-      .open(RemoveConfirmComponent, { data: { message }, panelClass: 'hz-dialog-container' })
+      .open(ConfirmDialogComponent, { data: { title, message }, panelClass: 'hz-dialog-container' })
       .afterClosed()
       .pipe(
         filter((result) => result),

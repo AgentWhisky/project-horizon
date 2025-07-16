@@ -8,7 +8,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-
 import { PasswordMatchErrorStateMatcher } from './password-matcher';
 import { UppercaseDirective } from '../../../core/directives/uppercase.directive';
 import { ValidatorMessagePipe } from '../../../core/pipes/validator-message.pipe';

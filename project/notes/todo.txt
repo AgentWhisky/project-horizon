@@ -1,26 +1,16 @@
 Bugs
 ------------------------
-Smooth transition between light and dark mode
-Validate all mat inputs are not cutoff as outline appearance
-Allow closing mat dialogs with android back
+  Application
+    Smooth transition between light and dark mode
+    Base converter dialog mat-input text cutoff
 
-Navigation
-  > Add 404 page instead of redirecting back to dashboard
-
-Link Library
-  > Make category titles more noticable
-
-Steam Insight
-  > Search
-    - Show page count & Jump to page
-    - Fix page incrementing on rate limited
-    - Chip opens game directly
-
-    - Search Tile
-      :Set max size for tile
-
-  > Details
-
+Updates
+------------------------
+  Application
+    Update index.html to better serve SEO and professional formatting
+    Allow closing mat dialogs with android back
+    Add 404 page instead of redirecting back to dashboard
+    Make link library category titles more noticable
 
 New Functionality
 ------------------------

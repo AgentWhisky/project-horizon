@@ -6,10 +6,10 @@
       } @else {
       <img src="assets/icons/default-favicon.ico" alt="favicon" class="w-4 h-4" />
       }
-      <span class="line-clamp-1">{{ link().name }}</span>
+      <span class="w-full line-clamp-1">{{ link().name }}</span>
     </a>
     <button mat-icon-button class="link-icon" (click)="onToggleView()" aria-label="Toggle link information">
-      <mat-icon>{{ isOpen() ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
+      <mat-icon class="icon-rotate-vertical" [class.open]="isOpen()">keyboard_arrow_down</mat-icon>
     </button>
   </div>
 

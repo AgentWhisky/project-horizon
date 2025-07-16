@@ -90,6 +90,14 @@ body {
   align-items: center !important;
 }
 
+.icon-rotate-vertical {
+  transition: transform 0.3s ease;
+}
+
+.icon-rotate-vertical.open {
+  transform: rotate(180deg);
+}
+
 // *** CARDS ***
 .hz-card {
   background-color: var(--mat-sys-surface-container-low) !important;

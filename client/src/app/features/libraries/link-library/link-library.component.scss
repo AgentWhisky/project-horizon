@@ -12,6 +12,17 @@
   border-radius: var(--mat-sys-corner-extra-small);
 }
 
+.category-title {
+  @apply font-semibold text-2xl line-clamp-1;
+
+  color: var(--mat-sys-primary);
+}
+
+.category-description {
+  @apply text-sm italic line-clamp-3;
+  
+}
+
 .link-button {
   @apply w-full items-center text-center;
 
