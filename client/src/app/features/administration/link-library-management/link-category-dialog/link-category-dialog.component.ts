@@ -2,14 +2,15 @@ import { Component, inject, OnInit } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatDividerModule } from '@angular/material/divider';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
-import { Category, CategoryPayload } from '../link-library-management';
-import { LinkLibraryManagementService } from '../link-library-management.service';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+
 import { uniqueText } from '../../../../core/validators/unique-text.validator';
 import { ValidatorMessagePipe } from '../../../../core/pipes/validator-message.pipe';
-import { MatDividerModule } from '@angular/material/divider';
+import { LinkLibraryManagementService } from '../link-library-management.service';
+import { Category, CategoryPayload } from '../link-library-management';
 
 interface DialogData {
   type: 'create' | 'update';
@@ -78,9 +79,11 @@ export class LinkCategoryDialogComponent implements OnInit {
     // Check for any changes
     const existingName = this.data.category?.name ?? '';
     const existingDescription = this.data.category?.description ?? '';
+
+    const existingData = !!(existingName || existingName);
     const noChanges = name === existingName && description === existingDescription;
 
-    if (existingName && existingDescription && noChanges) {
+    if (existingData && noChanges) {
       this.dialogRef.close({
         status: false,
       });

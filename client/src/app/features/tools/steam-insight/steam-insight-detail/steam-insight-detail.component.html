@@ -242,7 +242,7 @@
             #dlcPaginator
             showFirstLastButtons
             hidePageSize
-            [pageSize]="30"
+            [pageSize]="dlcPageSize()"
             [length]="appDetails().dlc.length"
             (page)="onDlcPageChange($event)"></mat-paginator>
           }

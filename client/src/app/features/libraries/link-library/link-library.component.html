@@ -25,7 +25,7 @@
   <div class="link-card-container">
     @for(category of linksByCategory(); track category.id) {
     <div class="category-container">
-      <span class="font-medium text-lg line-clamp-1">{{ category.name }}</span>
+      <span class="font-medium text-xl line-clamp-1">{{ category.name }}</span>
       <span class="text-sm line-clamp-3">{{ category.description }}</span>
       <div class="flex flex-col gap-3 pt-3">
         @for(link of category.links; track link.id) {

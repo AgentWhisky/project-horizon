@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LessThan, Repository } from 'typeorm';
 import { Cron, CronExpression } from '@nestjs/schedule';
@@ -6,6 +6,8 @@ import { RefreshTokenEntity } from 'src/entities/refresh-token.entity';
 
 @Injectable()
 export class RefreshTokenCleanupService implements OnModuleInit {
+  private readonly logger = new Logger(RefreshTokenCleanupService.name);
+
   constructor(
     @InjectRepository(RefreshTokenEntity)
     private readonly refreshTokenRepository: Repository<RefreshTokenEntity>
@@ -13,8 +15,8 @@ export class RefreshTokenCleanupService implements OnModuleInit {
 
   // Function cleans up tokens on init
   async onModuleInit() {
-    console.log('Cleaning expired refresh tokens...');
-    this.cleanupTokens();
+    this.logger.log('Cleaning expired refresh tokens...');
+    await this.cleanupTokens();
   }
 
   // Function that cleans up tokens at midnight daily

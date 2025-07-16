@@ -1,55 +1,58 @@
-<h2 mat-dialog-title>{{ this.data.type === 'create' ? 'Create Link' : 'Edit Link' }}</h2>
 <mat-dialog-content>
-  <form class="flex flex-col gap-3 py-1" [formGroup]="linkForm">
-    <mat-form-field class="w-full">
-      <mat-label>Name</mat-label>
-      <input matInput formControlName="name" />
-      <mat-error>{{ linkForm.get('name')?.errors | validatorMessage }}</mat-error>
-    </mat-form-field>
+  <div class="flex flex-col gap-3">
+    <h2 class="dialog-title">{{ this.data.type === 'create' ? 'Create New Link' : 'Edit Link' }}</h2>
+    <mat-divider></mat-divider>
+    <form class="flex flex-col gap-3 py-1" [formGroup]="linkForm">
+      <mat-form-field class="w-full">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" />
+        <mat-error>{{ linkForm.get('name')?.errors | validatorMessage }}</mat-error>
+      </mat-form-field>
 
-    <mat-form-field class="w-full">
-      <mat-label>Url</mat-label>
-      <input matInput formControlName="url" />
-      <mat-error>{{ linkForm.get('url')?.errors | validatorMessage : { pattern: 'Invalid URL format' } }}</mat-error>
-    </mat-form-field>
+      <mat-form-field class="w-full">
+        <mat-label>Url</mat-label>
+        <input matInput formControlName="url" />
+        <mat-error>{{ linkForm.get('url')?.errors | validatorMessage : { pattern: 'Invalid URL format' } }}</mat-error>
+      </mat-form-field>
 
-    <mat-form-field class="w-full">
-      <mat-label>Icon</mat-label>
-      <input matInput formControlName="icon" />
-      <mat-error>{{ linkForm.get('icon')?.errors | validatorMessage : { pattern: 'Invalid URL format' } }}</mat-error>
-      <button
-        class="mr-3"
-        matSuffix
-        mat-icon-button
-        type="button"
-        aria-label="Search for icon"
-        (click)="onSearchIcon()"
-        [disabled]="!linkForm.get('url')?.valid">
-        <mat-icon>image_search</mat-icon>
-      </button>
-    </mat-form-field>
+      <mat-form-field class="w-full">
+        <mat-label>Icon</mat-label>
+        <input matInput formControlName="icon" />
+        <mat-error>{{ linkForm.get('icon')?.errors | validatorMessage : { pattern: 'Invalid URL format' } }}</mat-error>
+        <button
+          class="mr-3"
+          matSuffix
+          mat-icon-button
+          type="button"
+          aria-label="Search for icon"
+          (click)="onSearchIcon()"
+          [disabled]="!linkForm.get('url')?.valid">
+          <mat-icon>image_search</mat-icon>
+        </button>
+      </mat-form-field>
 
-    <mat-form-field class="w-full">
-      <mat-label>Tags</mat-label>
-      <mat-select formControlName="tags" multiple>
-        @for(tags of linkTags(); track tags.id) {
-        <mat-option [value]="tags.id">{{ tags.name }}</mat-option>
-        }
-      </mat-select>
-      <mat-error>{{ linkForm.get('tags')?.errors | validatorMessage }}</mat-error>
-    </mat-form-field>
+      <mat-form-field class="w-full">
+        <mat-label>Tags</mat-label>
+        <mat-select formControlName="tags" multiple>
+          @for(tags of linkTags(); track tags.id) {
+          <mat-option [value]="tags.id">{{ tags.name }}</mat-option>
+          }
+        </mat-select>
+        <mat-error>{{ linkForm.get('tags')?.errors | validatorMessage }}</mat-error>
+      </mat-form-field>
 
-    <mat-form-field class="w-full">
-      <mat-label>Description</mat-label>
-      <textarea matInput #linkDescription formControlName="description" rows="6"></textarea>
-      <mat-hint align="end">{{ linkDescription.value.length }}/250</mat-hint>
-      <mat-error>{{ linkForm.get('description')?.errors | validatorMessage }}</mat-error>
-    </mat-form-field>
-  </form>
+      <mat-form-field class="w-full">
+        <mat-label>Description</mat-label>
+        <textarea matInput #linkDescription formControlName="description" rows="6"></textarea>
+        <mat-hint align="end">{{ linkDescription.value.length }}/250</mat-hint>
+        <mat-error>{{ linkForm.get('description')?.errors | validatorMessage }}</mat-error>
+      </mat-form-field>
+    </form>
+  </div>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button (click)="onClose()">Cancel</button>
-  <button mat-flat-button (click)="onSubmit()" [disabled]="!linkForm.valid || !linkForm.dirty">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-flat-button (click)="onConfirm()" [disabled]="!linkForm.valid || !linkForm.dirty">
     {{ this.data.type === 'create' ? 'Create' : 'Update' }}
   </button>
 </mat-dialog-actions>

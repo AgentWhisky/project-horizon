@@ -1,17 +1,20 @@
 import { Component, inject, OnInit } from '@angular/core';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDividerModule } from '@angular/material/divider';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { Link, LinkPayload } from '../link-library-management';
-import { LinkLibraryManagementService } from '../link-library-management.service';
+
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+
 import { ValidatorMessagePipe } from '../../../../core/pipes/validator-message.pipe';
 import { REGEX } from '../../../../core/constants/regex.constant';
-import { MatIconModule } from '@angular/material/icon';
 import { checkFaviconExists } from '../../../../core/utilities/favicon.util';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { LinkLibraryManagementService } from '../link-library-management.service';
+import { Link, LinkPayload } from '../link-library-management';
 
 interface DialogData {
   type: 'create' | 'update';
@@ -25,7 +28,16 @@ interface DialogResult {
 
 @Component({
   selector: 'hz-link-library-management-dialog',
-  imports: [MatButtonModule, MatInputModule, MatIconModule, MatSelectModule, MatDialogModule, ReactiveFormsModule, ValidatorMessagePipe],
+  imports: [
+    MatButtonModule,
+    MatInputModule,
+    MatIconModule,
+    MatSelectModule,
+    MatDividerModule,
+    MatDialogModule,
+    ReactiveFormsModule,
+    ValidatorMessagePipe,
+  ],
   templateUrl: './link-library-management-dialog.component.html',
   styleUrl: './link-library-management-dialog.component.scss',
 })
@@ -33,6 +45,7 @@ export class LinkLibraryManagementDialogComponent implements OnInit {
   private fb = inject(FormBuilder);
   private snackbar = inject(MatSnackBar);
   private linkLibraryManagementService = inject(LinkLibraryManagementService);
+
   private dialogRef = inject(MatDialogRef<LinkLibraryManagementDialogComponent>);
   readonly data = inject<DialogData>(MAT_DIALOG_DATA);
 
@@ -65,13 +78,17 @@ export class LinkLibraryManagementDialogComponent implements OnInit {
     });
   }
 
-  onClose() {
+  onCancel() {
     this.dialogRef.close({
       status: false,
     });
   }
 
-  onSubmit() {
+  onConfirm() {
+    if (this.linkForm.invalid || !this.linkForm.dirty) {
+      return;
+    }
+
     const dialogResult: DialogResult = {
       status: true,
       linkData: {
@@ -97,11 +114,11 @@ export class LinkLibraryManagementDialogComponent implements OnInit {
     if (exists) {
       this.linkForm.get('icon')?.setValue(faviconUrl);
       this.linkForm.get('icon')?.markAsDirty();
-      this.snackbar.open('Successfully found favicon', 'Close', { duration: 3000 });
+      this.snackbar.open('Successfully found favicon at url', 'Close', { duration: 3000 });
     } else {
       console.error('Favicon not found at', faviconUrl);
       this.linkForm.get('icon')?.reset();
-      this.snackbar.open('Failed to find favicon', 'Close', { duration: 3000 });
+      this.snackbar.open('Failed to find favicon at url', 'Close', { duration: 3000 });
     }
   }
 }

@@ -12,7 +12,6 @@ export class DownloadService {
     a.download = fileName;
     a.click();
 
-    document.body.removeChild(a);
     URL.revokeObjectURL(objectUrl);
   }
 }

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { InjectDataSource, InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { LinkCategoryEntity } from 'src/entities/link-categories.entity';
 import { LinkTagEntity } from 'src/entities/link-tags.entity';
@@ -20,7 +20,9 @@ import { OperationResult } from 'src/common/model/operation-result.model';
 import { MINOR_BASE, MINOR_LENGTH, MINOR_STEP } from 'src/common/constants/lexo-rank.constants';
 
 @Injectable()
-export class LinkLibraryManagementService {
+export class LinkLibraryManagementService implements OnModuleInit {
+  private readonly logger = new Logger(LinkLibraryManagementService.name);
+
   constructor(
     @InjectRepository(LinkEntity)
     private readonly libraryLinkRepository: Repository<LinkEntity>,
@@ -37,6 +39,11 @@ export class LinkLibraryManagementService {
     @InjectDataSource()
     private dataSource: DataSource
   ) {}
+
+  async onModuleInit() {
+    this.logger.log('Rebasing Link Library sort keys...');
+    await this.rebaseLinks();
+  }
 
   // *** LINK FUNCTIONS ***
   async getLinks(): Promise<Link[]> {

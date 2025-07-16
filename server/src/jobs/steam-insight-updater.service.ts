@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { stat } from 'fs';
@@ -18,6 +18,7 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class SteamInsightUpdaterService implements OnModuleInit {
   private updateInProgress = false;
+  private readonly logger = new Logger(SteamInsightUpdaterService.name);
 
   constructor(
     @InjectRepository(SteamAppEntity)
@@ -28,34 +29,32 @@ export class SteamInsightUpdaterService implements OnModuleInit {
     private readonly cacheUtils: CacheUtils
   ) {}
 
-  onModuleInit() {
-    // Update Steam Apps if enabled
+  async onModuleInit() {
     if (process.env.STEAM_UPDATE_ENABLE === 'true') {
-      console.log('[INITIAL] Updating Steam Apps...');
-      // Run Initial Update
-      this.updateSteamApps()
-        .then(() => {
-          console.log('[INITIAL] Steam App update complete');
-        })
-        .catch((error) => {
-          console.error('[INITIAL] Steam app update failed:', error);
-        });
+      this.logger.log('[INITIAL] Updating Steam Apps...');
+
+      try {
+        await this.updateSteamApps();
+        this.logger.log('[INITIAL] Steam App update complete');
+      } catch (error) {
+        this.logger.error('[INITIAL] Steam app update failed', error.stack || error);
+      }
     } else {
-      console.warn('Updating Steam Apps is disabled in server config.');
+      this.logger.warn('[INITIAL] Updating Steam Apps is disabled in server config.');
     }
   }
 
   @Cron(CronExpression.EVERY_HOUR)
-  updateSteamAppsJob() {
+  async updateSteamAppsJob() {
     if (process.env.STEAM_UPDATE_ENABLE === 'true') {
-      console.log('[CRON] Updating Steam Apps...');
-      this.updateSteamApps()
-        .then(() => {
-          console.log('[CRON] Steam App update complete');
-        })
-        .catch((error) => {
-          console.error('[CRON] Steam app update failed:', error);
-        });
+      this.logger.log('[CRON] Updating Steam Apps...');
+
+      try {
+        await this.updateSteamApps();
+        this.logger.log('[CRON] Steam App update complete');
+      } catch (error) {
+        this.logger.error('[CRON] Steam app update failed', error.stack || error);
+      }
     }
   }
 
