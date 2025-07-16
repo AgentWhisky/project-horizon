@@ -8,6 +8,9 @@ Sort Key is empty in PROD
 Navigation
   > Add 404 page instead of redirecting back to dashboard
 
+Link Library
+  > Make category titles more noticable
+
 Steam Insight
   > Search
     - Show page count & Jump to page
