@@ -3,7 +3,7 @@ import { Client, Events, GatewayIntentBits } from 'discord.js';
 import { config } from './config';
 import { deployCommands } from './deploy-commands';
 import { handleInteractions } from './handle-interactions';
-import { logInfo } from './utils/logger.utils';
+import { logInfo } from './core/utils/logger.utils';
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessages],

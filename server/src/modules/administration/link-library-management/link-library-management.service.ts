@@ -162,14 +162,16 @@ export class LinkLibraryManagementService implements OnModuleInit {
       let currentMinor = parseInt(MINOR_BASE, 36);
 
       for (const link of links) {
+        const categoryId = link.category?.id ?? 0;
+
         // Update current category and reset minor
-        if (link.category.id !== currentCategory) {
-          currentCategory = link.category.id;
+        if (categoryId !== currentCategory) {
+          currentCategory = categoryId;
           currentMinor = parseInt(MINOR_BASE, 36);
         }
 
         // Generate new sort key
-        const major = link.category.id.toString().padStart(6, '0');
+        const major = categoryId.toString().padStart(6, '0');
         const minor = currentMinor.toString(36).toUpperCase().padStart(MINOR_LENGTH, '0');
         const sortKey = `${major}:${minor}`;
 

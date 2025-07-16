@@ -10,12 +10,8 @@ export class LinkLibraryController {
   constructor(private readonly linkLibraryService: LinkLibraryService) {}
 
   @Get('/links')
-  async getLinks(
-    @Query('search') search?: string,
-    @Query('category') category?: string,
-    @Query('tags') tags?: string
-  ): Promise<LinkResponseDto[]> {
-    return this.linkLibraryService.getLinks(search, category, tags);
+  async getLinks(@Query('search') search?: string, @Query('category') category?: string): Promise<LinkResponseDto[]> {
+    return this.linkLibraryService.getLinks(search, category);
   }
 
   @Get('/categories')

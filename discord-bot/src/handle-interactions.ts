@@ -1,6 +1,6 @@
 import { CacheType, Interaction } from 'discord.js';
 import { commands } from './commands';
-import { logInfo } from './utils/logger.utils';
+import { logInfo } from './core/utils/logger.utils';
 
 export async function handleInteractions(interaction: Interaction<CacheType>) {
   if (!interaction.isChatInputCommand()) {

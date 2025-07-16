@@ -19,8 +19,8 @@ export class LinkLibraryService {
     private readonly tagRepository: Repository<LinkTagEntity>
   ) {}
 
-  async getLinks(search: string, category: string, tags: string): Promise<Link[]> {
-    const links: Link[] = await this.linkRepository.find({
+  async getLinks(search: string, category: string): Promise<Link[]> {
+    let links: Link[] = await this.linkRepository.find({
       select: {
         id: true,
         name: true,
@@ -42,15 +42,21 @@ export class LinkLibraryService {
         .map((kw) => kw.trim().toLowerCase())
         .filter(Boolean);
 
-      // Filter by name and description
+      links = links.filter((link) =>
+        keywords.some((keyword) => {
+          return (
+            link.name.toLowerCase().includes(keyword) ||
+            link.description?.toLowerCase().includes(keyword) ||
+            link.category.name.toLowerCase().includes(keyword) ||
+            link.category.description?.toLowerCase().includes(keyword) ||
+            link.tags.some((tag) => tag.name.toLowerCase().includes(keyword))
+          );
+        })
+      );
     }
 
     if (category) {
-      // Filter by category
-    }
-
-    if (tags) {
-      // Filter by tags
+      links = links.filter((link) => link.category?.name.toLowerCase().includes(category.toLowerCase()));
     }
 
     return links;
