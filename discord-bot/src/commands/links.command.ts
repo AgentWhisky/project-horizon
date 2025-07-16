@@ -20,7 +20,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
     const links = await getLinks(category, search);
 
-    //const title = links.length === 1 ? "Here's a link I found for you" : `Here are ${Math.min(links.length, MAX_LINKS)} links I found for you`;
+    //const title = links.length === 1 ? "Here's a link I found for you" : `Here are ${Math.min(links.length, MAX_LINKS)} links I found for you`; -
 
     let title = '';
 
