@@ -4,6 +4,9 @@ Bugs
     Smooth transition between light and dark mode
     Base converter dialog mat-input text cutoff
 
+  Ensure CORS settings are configured correctly
+  Include Content-Security-Policy header NGINX
+
 Updates
 ------------------------
   Application
@@ -20,3 +23,5 @@ New Functionality
 ------------------------
 Tools
   Latex Renderer
+
+Setup PROD DB Backups
