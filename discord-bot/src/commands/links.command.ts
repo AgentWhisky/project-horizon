@@ -57,7 +57,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
       embed.addFields({
         name: link.name,
-        value: `${hyperlink}\n${link.description})`,
+        value: `${hyperlink}\n${link.description}`,
         inline: false,
       });
     }
