@@ -37,7 +37,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     } else if (links.length === 1) {
       title = "Here's a link I found for you";
     } else {
-      title = `Here are ${links.length} links I found for you`;
+      title = `Here are ${Math.min(links.length, MAX_LINKS)} links I found for you`;
     }
 
     const embed = new EmbedBuilder()
