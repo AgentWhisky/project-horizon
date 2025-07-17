@@ -43,6 +43,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     const embed = new EmbedBuilder()
       .setColor(0x4e4fb8)
       .setTitle(title)
+      .setDescription(title)
       .setAuthor({ name: 'HorizonBot', iconURL: config.HORIZON_ICON_URL, url: config.HORIZON_APP_URL })
       .setTimestamp()
       .setFooter({ text: 'Made by AgentWhisky', iconURL: config.DEVELOPER_ICON_URL });

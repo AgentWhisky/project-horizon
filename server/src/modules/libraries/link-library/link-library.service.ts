@@ -43,7 +43,7 @@ export class LinkLibraryService {
         .filter(Boolean);
 
       links = links.filter((link) =>
-        keywords.some((keyword) => {
+        keywords.every((keyword) => {
           return (
             link.name.toLowerCase().includes(keyword) ||
             link.description?.toLowerCase().includes(keyword) ||

@@ -1,0 +1,4 @@
+Deploying on Heroku
+---------------------
+Check heroku-deploy github readme for useful options
+  > https://github.com/AkhileshNS/heroku-deploy

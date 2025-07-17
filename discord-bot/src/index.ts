@@ -18,14 +18,14 @@ client.once(Events.ClientReady, () => {
 
   client.guilds.cache.forEach(async (guild) => {
     logInfo(`- ${guild.name} (ID: ${guild.id})`);
-    await deployCommands({ guildId: guild.id });
+    await deployCommands(guild);
   });
   console.log('\n');
 });
 
 // ON SERVER CONNECTION
 client.on(Events.GuildCreate, async (guild) => {
-  await deployCommands({ guildId: guild.id });
+  await deployCommands(guild);
 });
 
 // ON INTERACTION
