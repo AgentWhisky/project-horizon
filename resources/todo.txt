@@ -4,6 +4,9 @@ Bugs
     Smooth transition between light and dark mode
     Base converter dialog mat-input text cutoff
 
+  Ensure CORS settings are configured correctly
+  Include Content-Security-Policy header NGINX
+
 Updates
 ------------------------
   Application
@@ -21,8 +24,12 @@ New Functionality
 Tools
   Latex Renderer
 
+<<<<<<< HEAD:project/notes/todo.txt
 
 Documentation
 ------------------------
 Update Readme to current Functionality
 Create system architecture diagram
+=======
+Setup PROD DB Backups
+>>>>>>> 5bb2579a87c9616ef3a0b78e031127ca6d8f18cb:resources/todo.txt
