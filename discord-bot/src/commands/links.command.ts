@@ -2,6 +2,8 @@ import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from '
 import { getLinks } from '../core/utils/links.utils';
 import { config } from '../config';
 import { MAX_LINKS } from '../core/constants/links.constant';
+import { deleteAfter } from '../core/utils/delete-after.util';
+import { EMBED_COLOR } from '../core/constants/embed.constants';
 
 export const data = new SlashCommandBuilder()
   .setName('links')
@@ -10,8 +12,6 @@ export const data = new SlashCommandBuilder()
   .addStringOption((option) => option.setName('search').setDescription('Search term').setRequired(false));
 
 export async function execute(interaction: ChatInputCommandInteraction) {
-  //console.log(interaction);
-
   try {
     await interaction.deferReply();
 
@@ -20,30 +20,32 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
     const links = await getLinks(category, search);
 
-    //const title = links.length === 1 ? "Here's a link I found for you" : `Here are ${Math.min(links.length, MAX_LINKS)} links I found for you`; -
-
     let title = '';
 
     if (links.length === 0) {
-      if (search && !category) {
-        title = `No links found matching your search: "${search}"`;
-      } else if (!search && category) {
-        title = `No links found under the category: "${category}"`;
-      } else if (!search && !category) {
-        title = "I couldn't find any links to show you";
-      } else {
+      if (search && category) {
         title = `No links found for "${search}" in category "${category}"`;
+      } else if (search) {
+        title = `No links found matching your search: "${search}"`;
+      } else if (category) {
+        title = `No links found under the category: "${category}"`;
+      } else {
+        title = 'No links found';
       }
-    } else if (links.length === 1) {
-      title = "Here's a link I found for you";
     } else {
-      title = `Here are ${Math.min(links.length, MAX_LINKS)} links I found for you`;
+      const base =
+        links.length === 1 ? "Here's a link I found for you" : `Here are __${Math.min(links.length, MAX_LINKS)}__ links I found for you`;
+
+      const contextParts = [];
+      if (search) contextParts.push(`your search "${search}"`);
+      if (category) contextParts.push(`category "${category}"`);
+
+      title = contextParts.length ? `${base} for ${contextParts.join(' in ')}` : base;
     }
 
     const embed = new EmbedBuilder()
-      .setColor(0x4e4fb8)
-      .setTitle(title)
-      .setDescription(title)
+      .setColor(EMBED_COLOR)
+      .setTitle(`${title}`)
       .setAuthor({ name: 'HorizonBot', iconURL: config.HORIZON_ICON_URL, url: config.HORIZON_APP_URL })
       .setTimestamp()
       .setFooter({ text: 'Made by AgentWhisky', iconURL: config.DEVELOPER_ICON_URL });
@@ -51,7 +53,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     const selectedLinks = links.slice(0, MAX_LINKS);
 
     for (const link of selectedLinks) {
-      const hyperlink = `[Navigate](<${link.url}>)`;
+      const hyperlink = `[Go to ${link.name}](<${link.url}>)`;
 
       embed.addFields({
         name: link.name,
@@ -60,7 +62,9 @@ export async function execute(interaction: ChatInputCommandInteraction) {
       });
     }
 
-    const sent = await interaction.editReply({ embeds: [embed] });
+    const reply = await interaction.editReply({ embeds: [embed] });
+
+    deleteAfter(reply);
   } catch (error) {
     console.error('Fetch error:', error);
     await interaction.editReply('There was an error fetching your links.');
