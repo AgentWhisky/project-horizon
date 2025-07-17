@@ -12,6 +12,10 @@ Updates
     Add 404 page instead of redirecting back to dashboard
     Make link library category titles more noticable
 
+  Discord-Bot
+    Add autocomplete to category & search
+    Cleanup code
+
 New Functionality
 ------------------------
 Tools
