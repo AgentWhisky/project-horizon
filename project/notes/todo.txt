@@ -20,3 +20,9 @@ New Functionality
 ------------------------
 Tools
   Latex Renderer
+
+
+Documentation
+------------------------
+Update Readme to current Functionality
+Create system architecture diagram
