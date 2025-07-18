@@ -19,7 +19,7 @@ export class LinkLibraryService {
     private readonly tagRepository: Repository<LinkTagEntity>
   ) {}
 
-  async getLinks(search: string, category: string): Promise<Link[]> {
+  async getLinks(search?: string, name?: string, category?: string): Promise<Link[]> {
     let links: Link[] = await this.linkRepository.find({
       select: {
         id: true,
@@ -36,6 +36,7 @@ export class LinkLibraryService {
       order: { name: 'ASC' },
     });
 
+    // Filter by search keywords
     if (search) {
       const keywords = search
         .split(/[\s,]+/)
@@ -55,6 +56,12 @@ export class LinkLibraryService {
       );
     }
 
+    // Filter by name
+    if (name) {
+      links = links.filter((link) => link.name.toLowerCase().includes(name.toLowerCase()));
+    }
+
+    // Filter by category
     if (category) {
       links = links.filter((link) => link.category?.name.toLowerCase().includes(category.toLowerCase()));
     }
@@ -62,8 +69,8 @@ export class LinkLibraryService {
     return links;
   }
 
-  async getCategories(): Promise<LinkCategory[]> {
-    const categories: LinkCategory[] = await this.categoryRepository.find({
+  async getCategories(name: string): Promise<LinkCategory[]> {
+    let categories: LinkCategory[] = await this.categoryRepository.find({
       select: {
         id: true,
         name: true,
@@ -71,6 +78,11 @@ export class LinkLibraryService {
       },
       order: { name: 'ASC' },
     });
+
+    // Filter by name
+    if (name) {
+      categories = categories.filter((category) => category.name.toLowerCase().includes(name.toLowerCase()));
+    }
 
     return categories;
   }

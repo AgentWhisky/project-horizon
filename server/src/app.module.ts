@@ -28,7 +28,7 @@ import { SteamInsightModule } from './modules/tools/steam-insight/steam-insight.
       throttlers: [
         {
           ttl: 60000,
-          limit: 10,
+          limit: 60,
         },
       ],
     }),

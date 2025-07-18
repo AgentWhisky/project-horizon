@@ -1,6 +1,11 @@
 import { Message } from 'discord.js';
 import { DEFAULT_DELETE_TIME_MS } from '../constants/deleteAfter.constants';
 
+/**
+ * Delete a message after a specified delay in milliseconds
+ * @param message The given discord message to delete
+ * @param delayMs The delay in milliseconds until the message is deleted
+ */
 export function deleteAfter(message: Message, delayMs = DEFAULT_DELETE_TIME_MS) {
   setTimeout(() => {
     message.delete().catch((err) => {
