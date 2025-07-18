@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { AutocompleteInteraction, ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { getLinks } from '../core/utils/links.utils';
 import { config } from '../config';
 import { MAX_LINKS } from '../core/constants/links.constant';
@@ -8,8 +8,8 @@ import { EMBED_COLOR } from '../core/constants/embed.constants';
 export const data = new SlashCommandBuilder()
   .setName('links')
   .setDescription('Get useful links from Horizon')
-  .addStringOption((option) => option.setName('category').setDescription('Filter by category').setRequired(false))
-  .addStringOption((option) => option.setName('search').setDescription('Search term').setRequired(false));
+  .addStringOption((option) => option.setName('category').setDescription('Filter by category').setRequired(false).setAutocomplete(true))
+  .addStringOption((option) => option.setName('search').setDescription('Search term').setRequired(false).setAutocomplete(true));
 
 export async function execute(interaction: ChatInputCommandInteraction) {
   try {
@@ -69,4 +69,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     console.error('Fetch error:', error);
     await interaction.editReply('There was an error fetching your links.');
   }
+}
+
+export async function autocomplete(interaction: AutocompleteInteraction) {
+  
 }
