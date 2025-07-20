@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { DEFAULT_DELETE_TIME_MS } from '../constants/deleteAfter.constants';
+import { DEFAULT_DELETE_TIME_MS } from '../constants/delete-after.constants';
 
 /**
  * Delete a message after a specified delay in milliseconds

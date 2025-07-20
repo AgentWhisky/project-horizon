@@ -8,7 +8,6 @@ export async function handleInteractions(interaction: Interaction<CacheType>) {
     logInfo(`Command [${interaction.commandName}] fired by [${interaction.user.globalName}] from ${interaction.guild?.name}`);
 
     const command = commands[interaction.commandName as keyof typeof commands];
-
     if (command && typeof command.execute === 'function') {
       return command.execute(interaction);
     }
@@ -16,8 +15,6 @@ export async function handleInteractions(interaction: Interaction<CacheType>) {
 
   // Handle Autocomplete
   if (interaction.isAutocomplete()) {
-    logInfo(`Autocomplete [${interaction.commandName}] fired by [${interaction.user.globalName}] from ${interaction.guild?.name}`);
-
     const command = commands[interaction.commandName as keyof typeof commands];
     if (command && typeof command.autocomplete === 'function') {
       return command.autocomplete(interaction);

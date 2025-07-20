@@ -5,23 +5,23 @@ import { deleteAfter } from '../../core/utils/delete-after.util';
 import { generateEmbed } from '../../core/utils/embed.util';
 
 import { getCategories, getLinks } from './links.utils';
-import { LINKS_CONFIG } from './links.constant';
 import { MAX_AUTOCOMPLETE_OPTIONS } from '../../core/constants/limits.constants';
+import { links_config } from './links.config';
 
 export const data = new SlashCommandBuilder()
-  .setName(LINKS_CONFIG.COMMAND.NAME)
-  .setDescription(LINKS_CONFIG.COMMAND.DESCRIPTION)
+  .setName(links_config.command.name)
+  .setDescription(links_config.command.description)
   .addStringOption((option) =>
     option
-      .setName(LINKS_CONFIG.OPTIONS.CATEGORY.NAME)
-      .setDescription(LINKS_CONFIG.OPTIONS.CATEGORY.DESCRIPTION)
+      .setName(links_config.options.category.name)
+      .setDescription(links_config.options.category.description)
       .setRequired(false)
       .setAutocomplete(true)
   )
   .addStringOption((option) =>
     option
-      .setName(LINKS_CONFIG.OPTIONS.SEARCH.NAME)
-      .setDescription(LINKS_CONFIG.OPTIONS.SEARCH.DESCRIPTION)
+      .setName(links_config.options.search.name)
+      .setDescription(links_config.options.search.description)
       .setRequired(false)
       .setAutocomplete(true)
   );
@@ -30,34 +30,36 @@ export async function execute(interaction: ChatInputCommandInteraction) {
   try {
     await interaction.deferReply();
 
-    const category = interaction.options.getString(LINKS_CONFIG.OPTIONS.CATEGORY.NAME);
-    const search = interaction.options.getString(LINKS_CONFIG.OPTIONS.SEARCH.NAME);
+    const category = interaction.options.getString(links_config.options.category.name);
+    const search = interaction.options.getString(links_config.options.search.name);
 
     const links = await getLinks(category, search);
-    const trimmedLinks = links.slice(0, LINKS_CONFIG.LIMITS.MAX_LINKS);
+    const trimmedLinks = links.slice(0, links_config.constraints.maxLinks);
     const linkCount = trimmedLinks.length;
 
     // Get Link Reponse Message
     let title = '';
     if (linkCount === 0) {
       if (search && category) {
-        title = LINKS_CONFIG.MESSAGES.EMPTY_BOTH.replace('[SEARCH]', search).replace('[CATEGORY]', category);
+        title = links_config.text.emptyBoth.replace('[SEARCH]', search).replace('[CATEGORY]', category);
       } else if (search) {
-        title = LINKS_CONFIG.MESSAGES.EMPTY_SEARCH.replace('[SEARCH]', search);
+        title = links_config.text.emptySearch.replace('[SEARCH]', search);
       } else if (category) {
-        title = LINKS_CONFIG.MESSAGES.EMPTY_CATEGORY.replace('[CATEGORY]', category);
+        title = links_config.text.emptyCategory.replace('[CATEGORY]', category);
       } else {
-        title = LINKS_CONFIG.MESSAGES.EMPTY;
+        title = links_config.text.empty;
       }
     } else {
-      title = linkCount === 1 ? LINKS_CONFIG.MESSAGES.SINGLE : LINKS_CONFIG.MESSAGES.MULTI.replace('[LINK COUNT]', linkCount.toString());
+      title = linkCount === 1 ? links_config.text.single : links_config.text.multi.replace('[LINK COUNT]', linkCount.toString());
     }
 
     // Build Message Embed
     const embed = generateEmbed();
 
+    embed.setTitle(title);
+
     trimmedLinks.forEach((link) => {
-      const hyperlink = `[${LINKS_CONFIG.HYPERLINK_MESSAGE}](<${link.url}>)`;
+      const hyperlink = `[${links_config.hyperlinkText.link}](<${link.url}>)`;
 
       embed.addFields({
         name: link.name,
@@ -71,7 +73,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     deleteAfter(message);
   } catch (error) {
     logError('Failed to fetch links', error);
-    await interaction.editReply(LINKS_CONFIG.ERRORS.FETCH_FAILURE);
+    await interaction.editReply(links_config.errors.fetchFailure);
   }
 }
 
@@ -79,7 +81,7 @@ export async function autocomplete(interaction: AutocompleteInteraction) {
   const focusedOption = interaction.options.getFocused(true);
   const focusedValue = focusedOption.value.toLowerCase();
 
-  if (focusedOption.name === LINKS_CONFIG.OPTIONS.CATEGORY.NAME) {
+  if (focusedOption.name === links_config.options.category.name) {
     try {
       const categories = await getCategories(focusedValue);
       await interaction.respond(categories.slice(0, MAX_AUTOCOMPLETE_OPTIONS).map((item) => ({ name: item.name, value: item.name })));
@@ -87,7 +89,7 @@ export async function autocomplete(interaction: AutocompleteInteraction) {
       logError('Failed to fetch category autocomplete options', error);
       await interaction.respond([]);
     }
-  } else if (focusedOption.name === LINKS_CONFIG.OPTIONS.SEARCH.NAME) {
+  } else if (focusedOption.name === links_config.options.search.name) {
     try {
       const links = await getLinks(null, focusedValue);
 

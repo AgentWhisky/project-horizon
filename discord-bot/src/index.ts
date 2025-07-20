@@ -11,6 +11,7 @@ const client = new Client({
 
 // ON CLIENT READY
 client.once(Events.ClientReady, () => {
+  logInfo('-'.repeat(100));
   logInfo('HorizonBot is online and ready.');
   logInfo(`Logged in as ${client.user?.tag}`);
   logInfo(`Using Horizon API: ${config.HORIZON_API_URL}\n`);
@@ -20,7 +21,7 @@ client.once(Events.ClientReady, () => {
     logInfo(`- ${guild.name} (ID: ${guild.id})`);
     await deployCommands(guild);
   });
-  console.log('\n');
+  logInfo('-'.repeat(100) + '\n');
 });
 
 // ON SERVER CONNECTION
