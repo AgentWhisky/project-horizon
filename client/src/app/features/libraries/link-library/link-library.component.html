@@ -1,30 +1,34 @@
 <div class="flex flex-col justify-center items-center gap-3">
   <div class="flex flex-col justify-center items-center w-full">
     <mat-form-field class="page-search" subscriptSizing="dynamic">
-      <mat-label>Search Links</mat-label>
+      <mat-label>Filter Links</mat-label>
       <input
         matInput
         #linkLibrarySearch
         [(ngModel)]="linkFilter"
         placeholder="Ex. Discord"
         maxlength="1024"
-        aria-label="Link library search"
+        aria-label="Filter link library"
         (keydown.enter)="linkLibrarySearch.blur()" />
       @if(linkLibrarySearch.value && linkLibrarySearch.value !== '') {
       <button matSuffix class="mr-3" mat-icon-button aria-label="Clear" (click)="onResetFilter()">
         <mat-icon>close</mat-icon>
       </button>
       }
-      <mat-error>Invalid Search Filter</mat-error>
     </mat-form-field>
   </div>
 
   @if(!linksByCategory().length && linkLibrarySearch.value.length) {
-  <hz-status-banner class="page-banner" message="No links found. Please refine your search." align="center" type="info"></hz-status-banner>
+  <hz-status-banner
+    class="page-banner"
+    message="No links found. Please refine your search."
+    align="center"
+    type="info"
+    @cardAnimation></hz-status-banner>
   } @else {
   <div class="link-card-container">
     @for(category of linksByCategory(); track category.id) {
-    <div class="category-container">
+    <div class="category-container" @cardAnimation>
       <span class="category-title">{{ category.name }}</span>
       <span class="category-description">{{ category.description }}</span>
       <div class="flex flex-col gap-3 pt-3">

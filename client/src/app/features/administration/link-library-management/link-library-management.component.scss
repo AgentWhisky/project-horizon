@@ -34,6 +34,16 @@
   justify-content: center;
 }
 
+.link-category-title {
+  @apply font-medium;
+
+  color: var(--mat-sys-primary);
+}
+
+.link-category-icon {
+  color: var(--mat-sys-primary);
+}
+
 .link-drag-container {
   @apply max-w-96 p-3 gap-3;
 

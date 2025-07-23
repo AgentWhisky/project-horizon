@@ -43,7 +43,10 @@
           [id]="'category-drop-0'"
           [cdkDropListData]="unassignedLinks()"
           (cdkDropListDropped)="onDrop($event)">
-          <span class="font-medium">Unassigned Links</span>
+          <div class="flex flex-row gap-1 items-center">
+            <mat-icon class="link-category-icon">block</mat-icon>
+            <span class="link-category-title">Unassigned Links</span>
+          </div>
 
           <div class="link-container">
             @for (link of unassignedLinks(); track link.id) {
@@ -87,7 +90,10 @@
           [id]="'category-drop-' + category.id"
           [cdkDropListData]="linkCategoryMap()[category.id]"
           (cdkDropListDropped)="onDrop($event)">
-          <span class="font-medium">{{ category.name }}</span>
+          <div class="flex flex-row gap-1 items-center">
+            <mat-icon class="link-category-icon">category</mat-icon>
+            <span class="link-category-title">{{ category.name }}</span>
+          </div>
 
           <div class="link-container">
             @for (link of linkCategoryMap()[category.id]; track link.id) {
