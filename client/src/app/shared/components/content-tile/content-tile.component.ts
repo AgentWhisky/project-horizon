@@ -18,4 +18,8 @@ export class ContentTileComponent {
   onClickTile() {
     this.tileClicked.emit(this.contentTileConfig().id);
   }
+
+  onImgError() {
+    return 'assets/images/horizon-placeholder.png';
+  }
 }

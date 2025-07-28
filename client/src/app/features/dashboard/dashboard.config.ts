@@ -9,7 +9,7 @@ export const dashboardSections: DashboardSection[] = [
         title: 'Link Library',
         description: 'Library of Useful Links',
         routerLink: '/link-library',
-        src: 'assets/images/horizon-placeholder.png',
+        src: 'assets/images/dashboard/link-library-header-image.png',
         alt: 'Link Library Header Image',
       },
     ],
