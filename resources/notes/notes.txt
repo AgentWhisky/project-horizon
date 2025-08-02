@@ -1,3 +1,10 @@
+Setup Heroku Docker Container
+-----------------------------
+heroku login # Make sure to install heroku cli first
+docker ps  # Make sure to have docker installed and running locally
+heroku container:login  
+heroku stack:set container --app heroku-app-name
+
 Deploying on Heroku
 ---------------------
 Check heroku-deploy github readme for useful options

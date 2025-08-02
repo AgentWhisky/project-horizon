@@ -1,25 +1,29 @@
 <div class="flex flex-col justify-start gap-1">
-  @for(navSection of navSections; track navSection.title) { 
-  
-  @if(showSection(navSection)) {
-    @if(navSection.title) {
+  @for(navSection of navSections; track navSection.title; let index = $index) { 
+    @if(showSection(navSection)) {
+      <!-- DIVIDER -->
+      @if(index > 0) {
       <mat-divider class="nav-divider"></mat-divider>
-      <h3 class="nav-section-header">{{ navSection.title }}</h3>
-    }
-
-    @for(navItem of navSection.navItems; track navItem.name) {
-      @if(!navItem.requiredRights|| (navItem.requiredRights && hasRights(navItem.requiredRights))) {
-      <a matRipple [routerLink]="navItem.routerLink" class="nav-item" routerLinkActive="active">
-        @if(navItem.svgIcon) {
-          <mat-icon [svgIcon]="navItem.svgIcon"></mat-icon>
-        }
-        @else {
-          <mat-icon>{{ navItem.icon }}</mat-icon>
-        }
-        {{ navItem.name }}
-      </a>
       }
-    }
+      <!-- HEADER -->
+      @if(navSection.title) {
+      <h3 class="nav-section-header">{{ navSection.title }}</h3>
+      }
+      <!-- NAV ITEMS -->
+      @for(navItem of navSection.navItems; track navItem.name) { 
+        @if(!navItem.requiredRights || hasRights(navItem.requiredRights)) {
+          <a matRipple [routerLink]="navItem.routerLink" class="nav-item" routerLinkActive="active">
+            <!-- NAV ICON -->
+            @if(navItem.svgIcon) {
+            <mat-icon [svgIcon]="navItem.svgIcon"></mat-icon>
+            } 
+            @else {
+            <mat-icon>{{ navItem.icon }}</mat-icon>
+            }
+            {{ navItem.name }}
+          </a>
+        } 
+      } 
+    } 
   }
-}
 </div>

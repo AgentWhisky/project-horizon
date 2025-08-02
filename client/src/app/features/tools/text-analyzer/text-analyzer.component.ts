@@ -15,6 +15,7 @@ import { TextAnalyzerService } from './text-analyzer.service';
 import { CharacterBreakdown, WordBreakdown } from './text-analyzer';
 import { CommonModule } from '@angular/common';
 import { DurationPipe } from '../../../core/pipes/duration.pipe';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'hz-text-analyzer',
@@ -28,6 +29,7 @@ import { DurationPipe } from '../../../core/pipes/duration.pipe';
     MatSortModule,
     MatSlideToggleModule,
     MatDividerModule,
+    MatPaginatorModule,
     ReactiveFormsModule,
     FormsModule,
     DurationPipe,
@@ -49,11 +51,13 @@ export class TextAnalyzerComponent {
 
   // Character Table
   readonly charBreakdownSort = viewChild<MatSort>('charBreakdownSort');
+  readonly charBreakdownPaginator = viewChild<MatPaginator>('charBreakdownPaginator');
   readonly charBreakdownDisplayedColumns: string[] = ['character', 'count', 'percent'];
   readonly charBreakdownDataSource = new MatTableDataSource<CharacterBreakdown>();
 
   // Word Table
   readonly wordBreakdownSort = viewChild<MatSort>('wordBreakdownSort');
+  readonly wordBreakdownPaginator = viewChild<MatPaginator>('wordBreakdownPaginator');
   readonly wordBreakdownDisplayedColumns: string[] = ['word', 'count', 'percent'];
   readonly wordBreakdownDataSource = new MatTableDataSource<WordBreakdown>();
 
@@ -64,6 +68,7 @@ export class TextAnalyzerComponent {
 
     effect(() => {
       this.charBreakdownDataSource.sort = this.charBreakdownSort() ?? null;
+      this.charBreakdownDataSource.paginator = this.charBreakdownPaginator() ?? null;
     });
 
     effect(() => {
@@ -72,6 +77,7 @@ export class TextAnalyzerComponent {
 
     effect(() => {
       this.wordBreakdownDataSource.sort = this.wordBreakdownSort() ?? null;
+      this.wordBreakdownDataSource.paginator = this.wordBreakdownPaginator() ?? null;
     });
   }
 

@@ -14,10 +14,10 @@ export interface NavItem {
 }
 
 export const navSections: NavSection[] = [
-  {
+  /*{
     title: '',
     navItems: [{ routerLink: '/home', name: 'Home', icon: 'home' }],
-  },
+  },*/
   {
     title: 'Libraries',
     navItems: [{ routerLink: '/link-library', name: 'Link Library', icon: 'link' }],

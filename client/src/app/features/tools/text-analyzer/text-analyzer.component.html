@@ -173,6 +173,11 @@
           <tr mat-header-row *matHeaderRowDef="charBreakdownDisplayedColumns"></tr>
           <tr mat-row class="table-row" *matRowDef="let row; columns: charBreakdownDisplayedColumns"></tr>
         </table>
+        <mat-paginator
+          #charBreakdownPaginator
+          showFirstLastButtons
+          [pageSizeOptions]="[25, 50, 100]"
+          aria-label="Select Character Breakdown Page"></mat-paginator>
       </mat-card-content>
     </mat-card>
 
@@ -200,6 +205,11 @@
           <tr mat-header-row *matHeaderRowDef="wordBreakdownDisplayedColumns"></tr>
           <tr mat-row class="table-row" *matRowDef="let row; columns: wordBreakdownDisplayedColumns"></tr>
         </table>
+        <mat-paginator
+          #wordBreakdownPaginator
+          showFirstLastButtons
+          [pageSizeOptions]="[25, 50, 100]"
+          aria-label="Select Word Breakdown Page"></mat-paginator>
       </mat-card-content>
     </mat-card>
   </div>
