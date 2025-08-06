@@ -6,15 +6,18 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ValidatorMessagePipe } from '../../../../core/pipes/validator-message.pipe';
 import { REGEX } from '../../../../core/constants/regex.constant';
 import { checkFaviconExists } from '../../../../core/utilities/favicon.util';
 import { LinkLibraryManagementService } from '../link-library-management.service';
 import { Link, LinkPayload } from '../link-library-management';
+import { CommonModule } from '@angular/common';
+import { ThemeService } from '../../../../core/services/theme.service';
 
 interface DialogData {
   type: 'create' | 'update';
@@ -35,6 +38,8 @@ interface DialogResult {
     MatSelectModule,
     MatDividerModule,
     MatDialogModule,
+    MatButtonToggleModule,
+    CommonModule,
     ReactiveFormsModule,
     ValidatorMessagePipe,
   ],
@@ -44,10 +49,13 @@ interface DialogResult {
 export class LinkLibraryManagementDialogComponent implements OnInit {
   private fb = inject(FormBuilder);
   private snackbar = inject(MatSnackBar);
+  private themeService = inject(ThemeService);
   private linkLibraryManagementService = inject(LinkLibraryManagementService);
 
   private dialogRef = inject(MatDialogRef<LinkLibraryManagementDialogComponent>);
   readonly data = inject<DialogData>(MAT_DIALOG_DATA);
+
+  readonly isDarkTheme = this.themeService.isDarkTheme;
 
   readonly linkCategories = this.linkLibraryManagementService.linkCategories;
   readonly linkTags = this.linkLibraryManagementService.linkTags;
@@ -74,6 +82,7 @@ export class LinkLibraryManagementDialogComponent implements OnInit {
       description: ['', [Validators.required, Validators.maxLength(250)]],
       url: ['', [Validators.required, Validators.maxLength(2048), Validators.pattern(REGEX.URL)]],
       icon: ['', [Validators.maxLength(2048), Validators.pattern(REGEX.URL)]],
+      iconBg: [0],
       tags: [[] as number[]],
     });
   }

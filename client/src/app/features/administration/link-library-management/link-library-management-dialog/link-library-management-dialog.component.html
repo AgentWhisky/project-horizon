@@ -15,9 +15,9 @@
         <mat-error>{{ linkForm.get('url')?.errors | validatorMessage : { pattern: 'Invalid URL format' } }}</mat-error>
       </mat-form-field>
 
-      <mat-form-field class="w-full">
+      <mat-form-field class="w-full" [subscriptSizing]="iconInput.value ? 'dynamic' : 'fixed'">
         <mat-label>Icon</mat-label>
-        <input matInput formControlName="icon" />
+        <input matInput formControlName="icon" #iconInput />
         <mat-error>{{ linkForm.get('icon')?.errors | validatorMessage : { pattern: 'Invalid URL format' } }}</mat-error>
         <button
           class="mr-3"
@@ -30,6 +30,25 @@
           <mat-icon>image_search</mat-icon>
         </button>
       </mat-form-field>
+
+      @if(iconInput.value) {
+      <div class="link-icon-container">
+        <img
+          [src]="iconInput.value"
+          alt="favicon"
+          class="w-8 h-8 p-1 rounded"
+          [ngClass]="{
+            'link-icon-bg-light': linkForm.get('iconBg')?.value === 1,
+            'link-icon-bg-dark': linkForm.get('iconBg')?.value === 2
+          }" />
+
+        <mat-button-toggle-group aria-label="Icon Background Toggle" formControlName="iconBg">
+          <mat-button-toggle [value]="0">None</mat-button-toggle>
+          <mat-button-toggle [value]="1">Light</mat-button-toggle>
+          <mat-button-toggle [value]="2">Dark</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      }
 
       <mat-form-field class="w-full">
         <mat-label>Tags</mat-label>

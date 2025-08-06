@@ -34,7 +34,7 @@ export class SteamInsightUpdaterService implements OnModuleInit {
       this.logger.log('[INITIAL] Updating Steam Apps...');
 
       try {
-        await this.updateSteamApps();
+        this.updateSteamApps(); // Temporarilly removed await so it will update PROD
         this.logger.log('[INITIAL] Steam App update complete');
       } catch (error) {
         this.logger.error('[INITIAL] Steam app update failed', error.stack || error);

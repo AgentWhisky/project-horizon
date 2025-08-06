@@ -1,0 +1,20 @@
+.link-icon-container {
+  @apply p-3 gap-3 mb-5;
+
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-extra-small);
+}
+
+.link-icon-bg-light {
+  background-color: var(--mat-sys-on-surface);
+}
+
+.link-icon-bg-dark {
+  background-color: var(--mat-sys-surface);
+}
