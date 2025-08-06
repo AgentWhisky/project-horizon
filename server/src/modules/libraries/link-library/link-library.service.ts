@@ -30,6 +30,7 @@ export class LinkLibraryService {
         tags: { id: true, name: true },
         category: { id: true, name: true, description: true },
         sortKey: true,
+        contrastBackground: true,
       },
       where: { status: true, category: Not(IsNull()) },
       relations: { tags: true, category: true },

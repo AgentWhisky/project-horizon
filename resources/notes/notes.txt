@@ -9,3 +9,8 @@ Deploying on Heroku
 ---------------------
 Check heroku-deploy github readme for useful options
   > https://github.com/AkhileshNS/heroku-deploy
+
+
+Generate 128-character hex string for AUTH
+--------------------
+node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"

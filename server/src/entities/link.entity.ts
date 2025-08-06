@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { LinkTagEntity } from './link-tags.entity';
 import { LinkCategoryEntity } from './link-categories.entity';
+import { ImageContrastBackground } from 'src/common/enums/link-library.enum';
 
 @Entity('links')
 export class LinkEntity {
@@ -52,6 +53,9 @@ export class LinkEntity {
 
   @Column({ name: 'sort_key', type: 'text', default: '' })
   sortKey: string;
+
+  @Column({ name: 'contrast_background', type: 'enum', enum: ImageContrastBackground, default: ImageContrastBackground.NONE })
+  contrastBackground: ImageContrastBackground;
 
   // *** AUDIT FIELDS ***
   @CreateDateColumn({ name: 'created_date', type: 'timestamptz' })

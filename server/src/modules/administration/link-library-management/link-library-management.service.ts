@@ -42,7 +42,9 @@ export class LinkLibraryManagementService implements OnModuleInit {
 
   async onModuleInit() {
     this.logger.log('Rebasing Link Library sort keys...');
-    await this.rebaseLinks();
+    this.rebaseLinks()
+      .then(() => this.logger.log('Completed rebasing links.'))
+      .catch((err) => this.logger.error('Failed to rebase links:', err));
   }
 
   // *** LINK FUNCTIONS ***
@@ -57,6 +59,7 @@ export class LinkLibraryManagementService implements OnModuleInit {
         category: { id: true, name: true, description: true },
         tags: { id: true, name: true },
         sortKey: true,
+        contrastBackground: true,
       },
       relations: { category: true, tags: true },
       order: { id: 'ASC' },
@@ -73,7 +76,7 @@ export class LinkLibraryManagementService implements OnModuleInit {
       icon: linkPayload.icon,
       category: { id: linkPayload.category },
       tags: linkPayload.tags.map((tagId) => ({ id: tagId })),
-      sortKey: linkPayload.sortKey || 'zzz',
+      sortKey: linkPayload.sortKey || '',
     });
 
     return await this.libraryLinkRepository.findOne({
@@ -86,6 +89,7 @@ export class LinkLibraryManagementService implements OnModuleInit {
         category: { id: true, name: true, description: true },
         tags: { id: true, name: true },
         sortKey: true,
+        contrastBackground: true,
       },
       where: { id: newLink.id },
       relations: { category: true, tags: true },
@@ -120,6 +124,7 @@ export class LinkLibraryManagementService implements OnModuleInit {
         category: { id: true, name: true, description: true },
         tags: { id: true, name: true },
         sortKey: true,
+        contrastBackground: true,
       },
       where: { id },
       relations: { category: true, tags: true },
@@ -189,7 +194,7 @@ export class LinkLibraryManagementService implements OnModuleInit {
       };
     } catch (error) {
       await queryRunner.rollbackTransaction();
-      throw new InternalServerErrorException(`Failed to rebase links: ${error.message}`);
+      throw new InternalServerErrorException('Failed to rebase links');
     } finally {
       await queryRunner.release();
     }
@@ -212,7 +217,6 @@ export class LinkLibraryManagementService implements OnModuleInit {
   async addCategory(categoryPayload: CategoryPayload): Promise<Category> {
     const newCategory = await this.linkCategoryRepository.save({
       name: categoryPayload.name,
-
       description: categoryPayload.description,
     });
 
@@ -251,6 +255,17 @@ export class LinkLibraryManagementService implements OnModuleInit {
   }
 
   async deleteCategory(id: number): Promise<DeleteResponse> {
+    const { inUse } = await this.linkCategoryRepository
+      .createQueryBuilder('category')
+      .leftJoin('category.links', 'link')
+      .where('category.id = :id', { id })
+      .select('COUNT(link.id) > 0', 'inUse')
+      .getRawOne<{ inUse: boolean }>();
+
+    if (inUse) {
+      throw new BadRequestException(`Category with ID '${id}' is in use and cannot be deleted.`);
+    }
+
     const deleteResult = await this.linkCategoryRepository.delete(id);
 
     return {

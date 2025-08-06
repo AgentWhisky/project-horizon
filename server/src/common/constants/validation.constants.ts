@@ -25,12 +25,17 @@ export const ROLE_DESC_LENGTH = {
   MAX: 250,
 };
 
-// Link Library
-export const LINK_NAME_MAX_LENGTH = 30;
-export const LINK_DESC_MAX_LENGTH = 250;
-export const CATEGORY_NAME_MAX_LENGTH = 30;
-export const CATEGORY_DESC_MAX_LENGTH = 250;
-export const TAG_MAX_LENGTH = 30;
+// *** Link Library ***
+export const LINK_CONFIG = {
+  NAME_MAX_LENGTH: 30,
+  DESC_MAX_LENGTH: 250,
+} as const;
 
+export const LINK_CATEGORY_CONFIG = {
+  NAME_MAX_LENGTH: 30,
+  DESC_MAX_LENGTH: 250,
+} as const;
 
-export const MAX_SORT_STR_LENGTH = 12;
+export const LINK_TAG_CONFIG = {
+  NAME_MAX_LENGTH: 30,
+};

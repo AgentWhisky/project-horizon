@@ -14,19 +14,17 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-
 import { Response } from 'express';
 
-import { RequireRight } from 'src/common/decorators/require-right.decorator';
 import { USER_RIGHTS } from 'src/common/constants/user-rights.constants';
-import { DeleteResponse } from 'src/common/model/delete-response.model';
+import { RequireRight } from 'src/common/decorators/require-right.decorator';
 
 import { LinkLibraryManagementService } from './link-library-management.service';
-import { LinkLibrary } from './link-library-management.model';
+import { Link, LinkLibrary } from './link-library-management.model';
+import { DeleteResponse } from 'src/common/model/delete-response.model';
 import { LinkDto } from './dto/link.dto';
 import { CategoryDto } from './dto/category.dto';
 import { TagDto } from './dto/tag.dto';
-import { LinkResponseDto } from './dto/link-response.dto';
 
 @Controller('link-library-management')
 export class LinkLibraryManagementController {
@@ -35,20 +33,20 @@ export class LinkLibraryManagementController {
   // *** LINKS ***
   @Get('links')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
-  async getLinks(): Promise<LinkResponseDto[]> {
+  async getLinks(): Promise<Link[]> {
     return this.linkLibraryManagementService.getLinks();
   }
 
   @Post('links')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
-  async addLink(@Body() linkDto: LinkDto): Promise<LinkResponseDto> {
+  async addLink(@Body() linkDto: LinkDto): Promise<Link> {
     const link = await this.linkLibraryManagementService.addLink(linkDto);
     return link;
   }
 
   @Put('links/:id')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
-  async updateLink(@Param('id', ParseIntPipe) id: number, @Body() linkDto: LinkDto): Promise<LinkResponseDto> {
+  async updateLink(@Param('id', ParseIntPipe) id: number, @Body() linkDto: LinkDto): Promise<Link> {
     const link = await this.linkLibraryManagementService.updateLink(id, linkDto);
     return link;
   }
