@@ -1,25 +1,27 @@
-<h2 mat-dialog-title>Create Base Tile</h2>
 <mat-dialog-content>
-  <form class="flex flex-col gap-3 py-1" [formGroup]="baseForm">
-    <mat-form-field class="w-full">
-      <mat-label>Base</mat-label>
-      <mat-select formControlName="base">
-        @for (base of primaryBases(); track base) {
-        <mat-option [value]="base">Base {{ base }}{{ baseNames[base] ? ' (' + baseNames[base] + ')' : '' }}</mat-option>
-        }
-      </mat-select>
-      <mat-error>{{ baseForm.get('base')?.errors | validatorMessage }}</mat-error>
-    </mat-form-field>
+  <div class="flex flex-col gap-3">
+    <h2 class="dialog-title">Create Base Tile</h2>
+    <form class="flex flex-col gap-3 py-1" [formGroup]="baseForm">
+      <mat-form-field class="w-full">
+        <mat-label>Base</mat-label>
+        <mat-select formControlName="base">
+          @for (base of primaryBases(); track base) {
+          <mat-option [value]="base">Base {{ base }}{{ baseNames[base] ? ' (' + baseNames[base] + ')' : '' }}</mat-option>
+          }
+        </mat-select>
+        <mat-error>{{ baseForm.get('base')?.errors | validatorMessage }}</mat-error>
+      </mat-form-field>
 
-    <mat-form-field>
-      <mat-label>Conversions</mat-label>
-      <mat-select multiple formControlName="conversions">
-        @for (base of conversionBases(); track base) {
-        <mat-option [value]="base">Base {{ base }}{{ baseNames[base] ? ' (' + baseNames[base] + ')' : '' }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-  </form>
+      <mat-form-field class="w-full" subscriptSizing="dynamic">
+        <mat-label>Conversions</mat-label>
+        <mat-select multiple formControlName="conversions">
+          @for (base of conversionBases(); track base) {
+          <mat-option [value]="base">Base {{ base }}{{ baseNames[base] ? ' (' + baseNames[base] + ')' : '' }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </form>
+  </div>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button (click)="onClose()">Cancel</button>

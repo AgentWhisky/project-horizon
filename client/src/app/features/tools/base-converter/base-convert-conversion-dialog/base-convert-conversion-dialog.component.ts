@@ -48,13 +48,13 @@ export class BaseConvertConversionDialogComponent implements OnInit {
     });
   }
 
-  onClose() {
+  onCancel() {
     this.dialogRef.close({
       status: false,
     });
   }
 
-  onSubmit() {
+  onConfirm() {
     const dialogResult: DialogResult = {
       status: true,
       conversions: this.conversionForm.value.conversions ?? [],

@@ -75,7 +75,6 @@ export class BaseConverterComponent {
     this.dialog
       .open(BaseConvertConversionDialogComponent, {
         data: { base, existingConversions: convertBase.conversions },
-        height: '220px',
         width: '560px',
         panelClass: 'hz-dialog-container',
       })

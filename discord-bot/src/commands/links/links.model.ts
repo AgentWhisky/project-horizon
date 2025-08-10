@@ -6,6 +6,7 @@ export interface Link {
   category: LinkCategory | null;
   tags: LinkTag[];
   sortKey: string;
+  contrastBackground: number;
 }
 
 export interface LinkCategory {
