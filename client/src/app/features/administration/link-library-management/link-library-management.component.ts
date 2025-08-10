@@ -27,6 +27,9 @@ import { Category, Link, Tag } from './link-library-management';
 import { USER_RIGHTS } from '../../../core/constants/user-rights.constant';
 import { REBASE_REQUIRED } from '../../../core/constants/lexo-rank.constant';
 import { generateSortKey } from '../../../core/utilities/lexo-rank.util';
+import { CommonModule } from '@angular/common';
+import { ThemeService } from '../../../core/services/theme.service';
+import { ImageFallbackDirective } from '../../../core/directives/image-fallback.directive';
 
 @Component({
   selector: 'hz-link-library-management',
@@ -44,13 +47,16 @@ import { generateSortKey } from '../../../core/utilities/lexo-rank.util';
     CdkDropList,
     CdkDrag,
     CdkDropListGroup,
+    CommonModule,
     FormsModule,
+    ImageFallbackDirective,
   ],
   templateUrl: './link-library-management.component.html',
   styleUrl: './link-library-management.component.scss',
 })
 export class LinkLibraryManagementComponent implements OnInit {
   private userService = inject(UserService);
+  private themeService = inject(ThemeService);
   private linkLibraryManagementService = inject(LinkLibraryManagementService);
   private dialog = inject(MatDialog);
 
@@ -75,6 +81,8 @@ export class LinkLibraryManagementComponent implements OnInit {
   // Tags
   readonly tagFilter = model<string>('');
   readonly filteredLinkTags = computed(() => this.filterLinkTags(this.linkTags()));
+
+  readonly isDarkTheme = this.themeService.isDarkTheme;
 
   ngOnInit() {
     this.linkLibraryManagementService.loadLinks();

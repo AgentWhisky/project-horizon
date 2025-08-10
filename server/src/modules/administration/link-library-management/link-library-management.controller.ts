@@ -20,7 +20,7 @@ import { USER_RIGHTS } from 'src/common/constants/user-rights.constants';
 import { RequireRight } from 'src/common/decorators/require-right.decorator';
 
 import { LinkLibraryManagementService } from './link-library-management.service';
-import { Link, LinkLibrary } from './link-library-management.model';
+import { Link, LinkCategory, LinkLibrary, LinkTag } from './link-library-management.model';
 import { DeleteResponse } from 'src/common/model/delete-response.model';
 import { LinkDto } from './dto/link.dto';
 import { CategoryDto } from './dto/category.dto';
@@ -68,27 +68,27 @@ export class LinkLibraryManagementController {
   // *** CATEGORY ***
   @Get('categories')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
-  async getCategories() {
+  async getCategories(): Promise<LinkCategory[]> {
     return this.linkLibraryManagementService.getCategories();
   }
 
   @Post('categories')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
-  async addLinkCategory(@Body() categoryDto: CategoryDto) {
+  async addLinkCategory(@Body() categoryDto: CategoryDto): Promise<LinkCategory> {
     const category = await this.linkLibraryManagementService.addCategory(categoryDto);
     return category;
   }
 
   @Put('categories/:id')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
-  async updateLinkCategory(@Param('id', ParseIntPipe) id: number, @Body() categoryDto: CategoryDto) {
+  async updateLinkCategory(@Param('id', ParseIntPipe) id: number, @Body() categoryDto: CategoryDto): Promise<LinkCategory> {
     const category = await this.linkLibraryManagementService.updateCategory(id, categoryDto);
     return category;
   }
 
   @Delete('categories/:id')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
-  async deleteLinkCategory(@Param('id', ParseIntPipe) id: number) {
+  async deleteLinkCategory(@Param('id', ParseIntPipe) id: number): Promise<DeleteResponse> {
     const deleteResponse = await this.linkLibraryManagementService.deleteCategory(id);
     return deleteResponse;
   }
@@ -96,27 +96,27 @@ export class LinkLibraryManagementController {
   // *** TAGS ***
   @Get('tags')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
-  async getTags() {
+  async getTags(): Promise<LinkTag[]> {
     return this.linkLibraryManagementService.getTags();
   }
 
   @Post('tags')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
-  async addLinkTag(@Body() tagDto: TagDto) {
+  async addLinkTag(@Body() tagDto: TagDto): Promise<LinkTag> {
     const tag = await this.linkLibraryManagementService.addTag(tagDto);
     return tag;
   }
 
   @Put('tags/:id')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
-  async updateLinkTag(@Param('id', ParseIntPipe) id: number, @Body() tagDto: TagDto) {
+  async updateLinkTag(@Param('id', ParseIntPipe) id: number, @Body() tagDto: TagDto): Promise<LinkTag> {
     const tag = await this.linkLibraryManagementService.updateTag(id, tagDto);
     return tag;
   }
 
   @Delete('tags/:id')
   @RequireRight(USER_RIGHTS.MANAGE_LINKS)
-  async deleteLinkTag(@Param('id', ParseIntPipe) id: number) {
+  async deleteLinkTag(@Param('id', ParseIntPipe) id: number): Promise<DeleteResponse> {
     const deleteResponse = await this.linkLibraryManagementService.deleteTag(id);
     return deleteResponse;
   }

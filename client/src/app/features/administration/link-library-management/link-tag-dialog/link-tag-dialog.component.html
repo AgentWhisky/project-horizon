@@ -1,7 +1,6 @@
 <mat-dialog-content>
   <div class="flex flex-col gap-3">
     <h2 class="dialog-title">{{ this.data.type === 'create' ? 'Create New Tag' : 'Edit Tag' }}</h2>
-    <mat-divider></mat-divider>
     <form class="flex flex-col gap-3 py-1" [formGroup]="tagForm">
       <mat-form-field class="w-full" cdkFocusInitial>
         <mat-label>Tag Name</mat-label>

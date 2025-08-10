@@ -77,6 +77,7 @@ export class LinkLibraryManagementService implements OnModuleInit {
       category: { id: linkPayload.category },
       tags: linkPayload.tags.map((tagId) => ({ id: tagId })),
       sortKey: linkPayload.sortKey || '',
+      contrastBackground: linkPayload.contrastBackground,
     });
 
     return await this.libraryLinkRepository.findOne({
@@ -111,7 +112,8 @@ export class LinkLibraryManagementService implements OnModuleInit {
       icon: linkPayload.icon,
       category: { id: linkPayload.category },
       tags: linkPayload.tags.map((tagId) => ({ id: tagId })),
-      sortKey: linkPayload.sortKey || 'zzz',
+      sortKey: linkPayload.sortKey || '',
+      contrastBackground: linkPayload.contrastBackground,
     });
 
     return await this.libraryLinkRepository.findOne({

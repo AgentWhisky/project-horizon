@@ -1,3 +1,9 @@
+export enum ImageContrastBackground {
+  NONE = 0,
+  LIGHT = 1,
+  DARK = 2,
+}
+
 // *** LINKS ***
 export interface LinkPayload {
   name: string;
@@ -7,6 +13,7 @@ export interface LinkPayload {
   category: number | null;
   tags: number[];
   sortKey: string;
+  contrastBackground: ImageContrastBackground;
 }
 
 export interface Link {
@@ -18,6 +25,7 @@ export interface Link {
   category: LinkCategory | null;
   tags: LinkTag[];
   sortKey: string;
+  contrastBackground: ImageContrastBackground;
 }
 
 export interface LinkCategory {

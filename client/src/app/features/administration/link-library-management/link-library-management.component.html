@@ -53,7 +53,15 @@
             <div cdkDrag class="drag-box link-tile" [class.link-tile-filtered]="linkFilteredIds().has(link.id)">
               <div class="flex items-center gap-3">
                 @if (link.icon) {
-                <img [src]="link.icon" alt="favicon" class="w-4 h-4" />
+                <img
+                  [src]="link.icon"
+                  fallbackSrc="assets/icons/default-favicon.ico"
+                  alt="favicon"
+                  class="w-5 h-5 p-[2px] rounded-full"
+                  [ngClass]="{
+                    'icon-bg-contrast':
+                      (link.contrastBackground === 1 && isDarkTheme()) || (link.contrastBackground === 2 && !isDarkTheme())
+                  }" />
                 }
                 <span>{{ link.name }}</span>
               </div>
@@ -100,7 +108,15 @@
             <div cdkDrag class="drag-box link-tile" [class.link-tile-filtered]="linkFilteredIds().has(link.id)">
               <div class="flex items-center gap-3">
                 @if (link.icon) {
-                <img [src]="link.icon" alt="favicon" class="w-4 h-4" />
+                <img
+                  [src]="link.icon"
+                  fallbackSrc="assets/icons/default-favicon.ico"
+                  alt="favicon"
+                  class="w-5 h-5 p-[2px] rounded-full"
+                  [ngClass]="{
+                    'icon-bg-contrast':
+                      (link.contrastBackground === 1 && isDarkTheme()) || (link.contrastBackground === 2 && !isDarkTheme())
+                  }" />
                 }
                 <span>{{ link.name }}</span>
               </div>

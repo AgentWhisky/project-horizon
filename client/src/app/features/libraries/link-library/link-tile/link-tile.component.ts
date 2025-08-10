@@ -1,4 +1,4 @@
-import { Component, input, signal } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -7,10 +7,12 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Link } from '../link-library';
 import { CommonModule } from '@angular/common';
+import { ThemeService } from '../../../../core/services/theme.service';
+import { ImageFallbackDirective } from '../../../../core/directives/image-fallback.directive';
 
 @Component({
   selector: 'hz-link-tile',
-  imports: [MatButtonModule, MatIconModule, MatChipsModule, MatTooltipModule, CommonModule],
+  imports: [MatButtonModule, MatIconModule, MatChipsModule, MatTooltipModule, CommonModule, ImageFallbackDirective],
   templateUrl: './link-tile.component.html',
   styleUrl: './link-tile.component.scss',
   animations: [
@@ -21,10 +23,14 @@ import { CommonModule } from '@angular/common';
   ],
 })
 export class LinkTileComponent {
+  readonly themeService = inject(ThemeService);
+
   readonly link = input.required<Link>();
   readonly isOpen = signal(false);
 
   readonly faviconStage = signal<number>(0);
+
+  readonly isDarkTheme = this.themeService.isDarkTheme;
 
   onToggleView() {
     this.isOpen.set(!this.isOpen());
@@ -36,10 +42,5 @@ export class LinkTileComponent {
 
   onCloseView() {
     this.isOpen.set(false);
-  }
-
-  onFaviconError(event: Event) {
-    const imgElement = event.target as HTMLImageElement;
-    imgElement.src = 'assets/favicon.png';
   }
 }

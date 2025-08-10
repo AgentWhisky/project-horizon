@@ -2,7 +2,14 @@
   <div class="flex flex-row items-center justify-center">
     <a [href]="link().url" target="_blank" [attr.aria-label]="'Open ' + link().name + ' in a new tab'" class="link-button">
       @if(link().icon) {
-      <img [src]="link().icon" (error)="onFaviconError($event)" alt="favicon" class="w-4 h-4" />
+      <img
+        [src]="link().icon"
+        fallbackSrc="/assets/icons/default-favicon.ico"
+        alt="favicon"
+        class="w-5 h-5 p-[2px] rounded-full"
+        [ngClass]="{
+          'icon-bg-contrast': (link().contrastBackground === 1 && isDarkTheme()) || (link().contrastBackground === 2 && !isDarkTheme())
+        }" />
       } @else {
       <img src="assets/icons/default-favicon.ico" alt="favicon" class="w-4 h-4" />
       }

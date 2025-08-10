@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -18,6 +18,9 @@ import { LinkLibraryManagementService } from '../link-library-management.service
 import { Link, LinkPayload } from '../link-library-management';
 import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../../../core/services/theme.service';
+import { tap } from 'rxjs';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ImageFallbackDirective } from '../../../../core/directives/image-fallback.directive';
 
 interface DialogData {
   type: 'create' | 'update';
@@ -39,9 +42,11 @@ interface DialogResult {
     MatDividerModule,
     MatDialogModule,
     MatButtonToggleModule,
+    MatTooltipModule,
     CommonModule,
     ReactiveFormsModule,
     ValidatorMessagePipe,
+    ImageFallbackDirective,
   ],
   templateUrl: './link-library-management-dialog.component.html',
   styleUrl: './link-library-management-dialog.component.scss',
@@ -62,7 +67,23 @@ export class LinkLibraryManagementDialogComponent implements OnInit {
 
   readonly linkForm = this.getNewLinkForm();
 
+  readonly showIconDisplay = signal<boolean>(false);
+  readonly showIconContrastBackground = signal<boolean>(false);
+
   ngOnInit() {
+    /** Only show Mat Form Field subscript section when text is empty */
+    this.linkForm
+      .get('icon')!
+      .valueChanges.pipe(tap((value) => this.showIconDisplay.set(REGEX.URL.test(value ?? ''))))
+      .subscribe();
+
+    this.linkForm
+      .get('contrastBackground')!
+      .valueChanges.pipe(
+        tap((value) => this.showIconContrastBackground.set((value === 1 && this.isDarkTheme()) || (value === 2 && !this.isDarkTheme())))
+      )
+      .subscribe();
+
     if (this.data.type === 'update' && this.data.link) {
       const link = this.data.link;
 
@@ -72,6 +93,7 @@ export class LinkLibraryManagementDialogComponent implements OnInit {
         url: link.url,
         icon: link.icon,
         tags: link.tags?.map((tag) => tag.id) ?? [],
+        contrastBackground: link.contrastBackground,
       });
     }
   }
@@ -82,8 +104,8 @@ export class LinkLibraryManagementDialogComponent implements OnInit {
       description: ['', [Validators.required, Validators.maxLength(250)]],
       url: ['', [Validators.required, Validators.maxLength(2048), Validators.pattern(REGEX.URL)]],
       icon: ['', [Validators.maxLength(2048), Validators.pattern(REGEX.URL)]],
-      iconBg: [0],
       tags: [[] as number[]],
+      contrastBackground: [0, Validators.required],
     });
   }
 
@@ -108,6 +130,7 @@ export class LinkLibraryManagementDialogComponent implements OnInit {
         category: this.data.link?.category?.id ?? null,
         tags: this.linkForm.value.tags ?? [],
         sortKey: this.data.link?.sortKey ?? '',
+        contrastBackground: this.linkForm.value.contrastBackground ?? 0,
       },
     };
 

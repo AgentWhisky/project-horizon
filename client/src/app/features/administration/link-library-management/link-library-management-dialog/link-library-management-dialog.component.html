@@ -1,7 +1,6 @@
 <mat-dialog-content>
   <div class="flex flex-col gap-3">
     <h2 class="dialog-title">{{ this.data.type === 'create' ? 'Create New Link' : 'Edit Link' }}</h2>
-    <mat-divider></mat-divider>
     <form class="flex flex-col gap-3 py-1" [formGroup]="linkForm">
       <mat-form-field class="w-full">
         <mat-label>Name</mat-label>
@@ -15,7 +14,7 @@
         <mat-error>{{ linkForm.get('url')?.errors | validatorMessage : { pattern: 'Invalid URL format' } }}</mat-error>
       </mat-form-field>
 
-      <mat-form-field class="w-full" [subscriptSizing]="iconInput.value ? 'dynamic' : 'fixed'">
+      <mat-form-field class="w-full" [subscriptSizing]="showIconDisplay() ? 'dynamic' : 'fixed'">
         <mat-label>Icon</mat-label>
         <input matInput formControlName="icon" #iconInput />
         <mat-error>{{ linkForm.get('icon')?.errors | validatorMessage : { pattern: 'Invalid URL format' } }}</mat-error>
@@ -31,21 +30,21 @@
         </button>
       </mat-form-field>
 
-      @if(iconInput.value) {
+      @if(showIconDisplay()) {
       <div class="link-icon-container">
         <img
           [src]="iconInput.value"
+          fallbackSrc="assets/icons/default-favicon.ico"
           alt="favicon"
-          class="w-8 h-8 p-1 rounded"
+          class="w-8 h-8 p-1 rounded-full"
           [ngClass]="{
-            'link-icon-bg-light': linkForm.get('iconBg')?.value === 1,
-            'link-icon-bg-dark': linkForm.get('iconBg')?.value === 2
+            'icon-bg-contrast': showIconContrastBackground()
           }" />
 
-        <mat-button-toggle-group aria-label="Icon Background Toggle" formControlName="iconBg">
+        <mat-button-toggle-group aria-label="Icon Background Toggle" formControlName="contrastBackground">
           <mat-button-toggle [value]="0">None</mat-button-toggle>
-          <mat-button-toggle [value]="1">Light</mat-button-toggle>
-          <mat-button-toggle [value]="2">Dark</mat-button-toggle>
+          <mat-button-toggle [value]="1" matTooltip="Add a light contrast background">Light</mat-button-toggle>
+          <mat-button-toggle [value]="2" matTooltip="Add a dark contrast background">Dark</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
       }
