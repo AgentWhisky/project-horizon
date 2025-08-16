@@ -28,8 +28,11 @@ html {
 }
 
 body {
-  background: var(--mat-sys-surface);
+  color-scheme: light;
+
+  background: var(--mat-sys-surface-container-lowest);
   color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
 
   // Mat Table
   @include mat.table-overrides(
@@ -52,6 +55,11 @@ body {
       container-shape: var(--mat-sys-corner-extra-small),
     )
   );
+}
+
+html,
+body {
+  height: 100%;
 }
 
 // *** MATERIAL OVERRIDES ***

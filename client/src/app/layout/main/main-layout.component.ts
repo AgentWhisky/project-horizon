@@ -13,11 +13,12 @@ import { NavigationService } from '../../core/services/navigation.service';
 import { UserService } from '../../core/services/user.service';
 import { ThemeService } from '../../core/services/theme.service';
 import { LeftNavComponent } from '../left-nav/left-nav.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @Component({
-  selector: 'hz-main',
-  templateUrl: './main.component.html',
-  styleUrl: './main.component.scss',
+  selector: 'hz-main-layout',
+  templateUrl: './main-layout.component.html',
+  styleUrl: './main-layout.component.scss',
   imports: [
     RouterModule,
     MatToolbarModule,
@@ -27,6 +28,7 @@ import { LeftNavComponent } from '../left-nav/left-nav.component';
     MatTooltipModule,
     MatMenuModule,
     LeftNavComponent,
+    ScrollingModule,
   ],
 })
 export class MainComponent {

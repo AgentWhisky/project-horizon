@@ -8,10 +8,11 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatRippleModule } from '@angular/material/core';
 import { UserService } from '../../core/services/user.service';
 import { NavSection, navSections } from './left-nav.config';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'hz-left-nav',
-  imports: [RouterModule, MatButtonModule, MatIconModule, MatDividerModule, MatRippleModule],
+  imports: [RouterModule, MatButtonModule, MatIconModule, MatDividerModule, MatRippleModule, ScrollingModule],
   templateUrl: './left-nav.component.html',
   styleUrl: './left-nav.component.scss',
 })

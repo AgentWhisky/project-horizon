@@ -1,0 +1,84 @@
+<div class="main-layout-container">
+  <div class="main-layout-toolbar">
+    <div class="main-layout-toolbar-section">
+      <button mat-icon-button (click)="onToggleLeftNav()" aria-label="Toggle Left Navigation">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <a [routerLink]="['/home']" class="main-layout-toolbar-title-container">
+        <img src="assets/icons/default-favicon.ico" alt="Horizon Logo" class="main-layout-toolbar-logo" />
+        <span>Horizon</span>
+      </a>
+    </div>
+
+    <div class="main-layout-toolbar-section">
+      <!-- Toggle Theme Icon -->
+      <button
+        mat-icon-button
+        (click)="onToggleTheme()"
+        [matTooltip]="isDarkmode() ? 'Switch to light mode' : 'Switch to dark mode'"
+        [attr.aria-label]="isDarkmode() ? 'Switch to light mode' : 'Switch to dark mode'">
+        <mat-icon>{{ isDarkmode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
+
+      <!-- Login/Account Icons -->
+      @if(!isLoggedIn()) {
+      <button mat-icon-button (click)="onLogin()" matTooltip="Sign In" aria-label="Sign In">
+        <mat-icon>person</mat-icon>
+      </button>
+      } @else {
+      <button mat-icon-button [matMenuTriggerFor]="userMenu" matTooltip="Account" aria-label="Account">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item (click)="onLogout()">
+          <mat-icon>logout</mat-icon>
+          <span>Sign Out</span>
+        </button>
+      </mat-menu>
+      }
+    </div>
+  </div>
+
+  <mat-drawer-container class="main-layout-app-drawer">
+    <!-- Left Nav -->
+    <mat-drawer
+      [opened]="isLeftNavOpen()"
+      [mode]="isSmallScreen() ? 'over' : 'side'"
+      class="main-layout-left-nav-container"
+      (closed)="onCloseLeftNav()">
+      <hz-left-nav></hz-left-nav>
+      <div class="main-layout-left-nav-footer">
+        <span>Footer Text</span>
+      </div>
+    </mat-drawer>
+
+    <!-- Main Content -->
+    <mat-drawer-content cdkScrollable class="main-layout-drawer-content-container">
+      <router-outlet />
+
+      <footer class="main-layout-footer-container">
+        <div class="main-layout-footer-content">
+          @if(!isMobileScreen()) {
+          <span>© 2025 Horizon · A project by AgentWhisky</span>
+          } @else {
+          <span>© 2025 Horizon</span>
+
+          } @if(!isMobileScreen()) {
+          <span>Built with Angular, NestJS, and PostgreSQL</span>
+          }
+
+          <!-- Social Links -->
+          <div class="main-layout-footer-social-icons">
+            <a href="https://github.com/AgentWhisky" target="_blank" rel="noopener" aria-label="GitHub">
+              <mat-icon svgIcon="github"></mat-icon>
+            </a>
+            <a href="https://www.linkedin.com/in/tyler-harris-495112181" target="_blank" rel="noopener" aria-label="LinkedIn">
+              <mat-icon svgIcon="linkedin"></mat-icon>
+            </a>
+          </div>
+        </div>
+      </footer>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>

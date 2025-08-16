@@ -2,6 +2,7 @@
 
 :host {
   width: 100%;
+  padding: 0.75rem;
 }
 
 // *** CATEGORY ***
@@ -20,7 +21,6 @@
 
 .category-description {
   @apply text-sm line-clamp-3;
-  
 }
 
 .link-button {
