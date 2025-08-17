@@ -62,6 +62,12 @@ body {
   height: 100%;
 }
 
+/** SCROLL BAR */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--mat-sys-outline-variant) var(--mat-sys-surface-container);
+}
+
 // *** MATERIAL OVERRIDES ***
 .mdc-notched-outline__notch {
   border-right: none !important;

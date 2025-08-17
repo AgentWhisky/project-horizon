@@ -2,9 +2,7 @@ Bugs
 ------------------------
   Application
     Smooth transition between light and dark mode
-    Base converter dialog mat-input text cutoff
 
-  Ensure CORS settings are configured correctly
   Include Content-Security-Policy header NGINX
 
 Updates
@@ -13,15 +11,16 @@ Updates
     Update index.html to better serve SEO and professional formatting
     Allow closing mat dialogs with android back
     Add 404 page instead of redirecting back to dashboard
-    Make link library category titles more noticable
 
   Discord-Bot
-    Add autocomplete to category & search
     Cleanup code
 
 New Functionality
 ------------------------
+  Text Analyzer
+    Generate lorem-ipsum
 
+  Complete LaTeX Editor Functionality
 
 
 To Do

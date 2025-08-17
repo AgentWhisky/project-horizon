@@ -1,8 +1,11 @@
 <div class="main-layout-container">
   <div class="main-layout-toolbar">
     <div class="main-layout-toolbar-section">
-      <button mat-icon-button (click)="onToggleLeftNav()" aria-label="Toggle Left Navigation">
-        <mat-icon>menu</mat-icon>
+      <button
+        mat-icon-button
+        (click)="onToggleLeftNav()"
+        [attr.aria-label]="isLeftNavOpen() ? 'Close left navigation' : 'Open left navigation'">
+        <mat-icon fontSet="material-symbols-outlined">{{ isLeftNavOpen() ? 'left_panel_close' : 'left_panel_open' }}</mat-icon>
       </button>
 
       <a [routerLink]="['/home']" class="main-layout-toolbar-title-container">
@@ -41,19 +44,21 @@
   </div>
 
   <mat-drawer-container class="main-layout-app-drawer">
-    <!-- Left Nav -->
+    <!-- LEFT NAV DRAWER -->
     <mat-drawer
       [opened]="isLeftNavOpen()"
       [mode]="isSmallScreen() ? 'over' : 'side'"
       class="main-layout-left-nav-container"
       (closed)="onCloseLeftNav()">
       <hz-left-nav></hz-left-nav>
+
+      <!-- LEFT NAV FOOTER -->
       <div class="main-layout-left-nav-footer">
         <span>Footer Text</span>
       </div>
     </mat-drawer>
 
-    <!-- Main Content -->
+    <!-- MAIN CONTENT -->
     <mat-drawer-content cdkScrollable class="main-layout-drawer-content-container">
       <router-outlet />
 
