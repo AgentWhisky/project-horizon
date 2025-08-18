@@ -1,6 +1,5 @@
 <div cdkScrollable class="left-nav-container">
-  @for(navSection of navSections; track navSection.title; let index = $index) { 
-  @if(showSection(navSection)) {
+  @for(navSection of navSections; track navSection.title; let index = $index) { @if(showSection(navSection)) {
   <!-- DIVIDER -->
   @if(index > 0) {
   <mat-divider class="left-nav-section-divider"></mat-divider>

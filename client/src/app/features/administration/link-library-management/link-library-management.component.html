@@ -67,21 +67,11 @@
               </div>
 
               <div class="link-actions">
-                <button
-                  class="icon-button"
-                  mat-icon-button
-                  type="button"
-                  [attr.aria-label]="'Edit ' + link.name + ' Link'"
-                  (click)="onEditLink(link)">
+                <button mat-icon-button type="button" [attr.aria-label]="'Edit ' + link.name + ' Link'" (click)="onEditLink(link)">
                   <mat-icon>edit</mat-icon>
                 </button>
 
-                <button
-                  class="icon-button"
-                  mat-icon-button
-                  type="button"
-                  [attr.aria-label]="'Remove ' + link.name + ' Link'"
-                  (click)="onDeleteLink(link)">
+                <button mat-icon-button type="button" [attr.aria-label]="'Remove ' + link.name + ' Link'" (click)="onDeleteLink(link)">
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>
@@ -122,21 +112,11 @@
               </div>
 
               <div class="link-actions">
-                <button
-                  class="icon-button"
-                  mat-icon-button
-                  type="button"
-                  [attr.aria-label]="'Edit ' + link.name + ' Link'"
-                  (click)="onEditLink(link)">
+                <button mat-icon-button type="button" [attr.aria-label]="'Edit ' + link.name + ' Link'" (click)="onEditLink(link)">
                   <mat-icon>edit</mat-icon>
                 </button>
 
-                <button
-                  class="icon-button"
-                  mat-icon-button
-                  type="button"
-                  [attr.aria-label]="'Remove ' + link.name + ' Link'"
-                  (click)="onDeleteLink(link)">
+                <button mat-icon-button type="button" [attr.aria-label]="'Remove ' + link.name + ' Link'" (click)="onDeleteLink(link)">
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>
@@ -193,7 +173,6 @@
 
           <div class="link-category-actions">
             <button
-              class="icon-button"
               mat-icon-button
               type="button"
               [attr.aria-label]="'Edit ' + category.name + ' Category'"
@@ -202,7 +181,6 @@
             </button>
             @if(!category.inUse) {
             <button
-              class="icon-button"
               mat-icon-button
               type="button"
               [attr.aria-label]="'Remove ' + category.name + ' Category'"
@@ -256,21 +234,11 @@
         <div class="link-tag">
           <span>{{ tag.name }}</span>
           <div class="link-tag-actions">
-            <button
-              class="icon-button"
-              mat-icon-button
-              type="button"
-              [attr.aria-label]="'Edit ' + tag.name + ' Tag'"
-              (click)="onEditTag(tag)">
+            <button mat-icon-button type="button" [attr.aria-label]="'Edit ' + tag.name + ' Tag'" (click)="onEditTag(tag)">
               <mat-icon>edit</mat-icon>
             </button>
             @if(!tag.inUse) {
-            <button
-              class="icon-button"
-              mat-icon-button
-              type="button"
-              [attr.aria-label]="'Remove ' + tag.name + ' Tag'"
-              (click)="onDeleteTag(tag)">
+            <button mat-icon-button type="button" [attr.aria-label]="'Remove ' + tag.name + ' Tag'" (click)="onDeleteTag(tag)">
               <mat-icon>delete</mat-icon>
             </button>
             }

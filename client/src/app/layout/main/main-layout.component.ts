@@ -14,6 +14,8 @@ import { UserService } from '../../core/services/user.service';
 import { ThemeService } from '../../core/services/theme.service';
 import { LeftNavComponent } from '../left-nav/left-nav.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { environment } from '../../../environments/environment';
+import { APP_URLS } from '../../core/constants/url.constant';
 
 @Component({
   selector: 'hz-main-layout',
@@ -45,6 +47,13 @@ export class MainComponent {
   readonly isLoggedIn = this.userService.isLoggedIn;
   readonly isDarkmode = this.themeService.isDarkTheme;
 
+  readonly appVersion = environment.version;
+  readonly envName = environment.envName;
+
+  readonly githubUrl = APP_URLS.github;
+  readonly githubRepoUrl = APP_URLS.githubRepo;
+  readonly linkedInUrl = APP_URLS.linkedIn;
+
   onToggleLeftNav() {
     this.navigationService.toggleLeftNav();
   }
@@ -67,5 +76,9 @@ export class MainComponent {
 
   onOpenInNewTab(url: string) {
     window.open(url, '_blank', 'noopener');
+  }
+
+  onOpenVersionHistory() {
+    console.log('VERSION HISTORY OPEN');
   }
 }

@@ -50,11 +50,15 @@
       [mode]="isSmallScreen() ? 'over' : 'side'"
       class="main-layout-left-nav-container"
       (closed)="onCloseLeftNav()">
-      <hz-left-nav></hz-left-nav>
+      <div class="left-nav-wrapper">
+        <hz-left-nav></hz-left-nav>
 
-      <!-- LEFT NAV FOOTER -->
-      <div class="main-layout-left-nav-footer">
-        <span>Footer Text</span>
+        <!-- LEFT NAV FOOTER -->
+        <div class="main-layout-left-nav-footer">
+          <a class="main-layout-left-nav-footer-pill-link" [href]="githubRepoUrl" target="_blank" rel="noopener">
+            Horizon v{{ appVersion }} · {{ envName }}
+          </a>
+        </div>
       </div>
     </mat-drawer>
 
@@ -65,9 +69,9 @@
       <footer class="main-layout-footer-container">
         <div class="main-layout-footer-content">
           @if(!isMobileScreen()) {
-          <span>© 2025 Horizon · A project by AgentWhisky</span>
+          <span>© 2025 AgentWhisky · Horizon Project</span>
           } @else {
-          <span>© 2025 Horizon</span>
+          <span>© 2025 AgentWhisky</span>
 
           } @if(!isMobileScreen()) {
           <span>Built with Angular, NestJS, and PostgreSQL</span>
@@ -75,10 +79,10 @@
 
           <!-- Social Links -->
           <div class="main-layout-footer-social-icons">
-            <a href="https://github.com/AgentWhisky" target="_blank" rel="noopener" aria-label="GitHub">
+            <a [href]="githubUrl" target="_blank" rel="noopener" aria-label="GitHub">
               <mat-icon svgIcon="github"></mat-icon>
             </a>
-            <a href="https://www.linkedin.com/in/tyler-harris-495112181" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <a [href]="linkedInUrl" target="_blank" rel="noopener" aria-label="LinkedIn">
               <mat-icon svgIcon="linkedin"></mat-icon>
             </a>
           </div>

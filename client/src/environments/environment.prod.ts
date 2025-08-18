@@ -1,4 +1,8 @@
+import { appVersion } from './version';
+
 export const environment = {
-    production: true,
-    apiUrl: 'https://api.aw-horizon.com/api'
-}
+  production: true,
+  version: appVersion,
+  envName: 'PROD',
+  apiUrl: 'https://api.aw-horizon.com/api',
+};

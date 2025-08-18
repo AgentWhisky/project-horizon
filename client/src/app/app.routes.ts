@@ -11,10 +11,7 @@ export const routes: Routes = [
         redirectTo: 'link-library',
         pathMatch: 'full',
       },
-      /*{
-        path: 'home',
-        loadComponent: () => import('./features/dashboard/dashboard.component').then((c) => c.DashboardComponent),
-      },*/
+
       // *** LIBRARIES ***
       {
         path: 'link-library',
@@ -24,6 +21,7 @@ export const routes: Routes = [
         path: 'book-library',
         loadComponent: () => import('./features/libraries/book-library/book-library.component').then((c) => c.BookLibraryComponent),
       },
+
       // *** TOOLS ***
       {
         path: 'text-analyzer',
@@ -60,28 +58,44 @@ export const routes: Routes = [
         path: 'pathfinder',
         loadComponent: () => import('./features/tools/pathfinder/pathfinder.component').then((c) => c.PathfinderComponent),
       },
+
       // *** ADMINISTRATION ***
       {
         path: 'administration',
-        loadComponent: () =>
-          import('./features/administration/admin-dashboard/admin-dashboard.component').then((c) => c.AdminDashboardComponent),
-        canActivate: [AuthGuard],
-        data: { requiredRights: ['VIEW_DASHBOARD'] },
-      },
-      {
-        path: 'link-library-management',
-        loadComponent: () =>
-          import('./features/administration/link-library-management/link-library-management.component').then(
-            (c) => c.LinkLibraryManagementComponent
-          ),
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'account-management',
-        loadComponent: () =>
-          import('./features/administration/account-management/account-management.component').then((c) => c.AccountManagementComponent),
-        canActivate: [AuthGuard],
-        data: { requiredRights: ['MANAGE_USERS', 'MANAGE_ROLES'] },
+        canActivateChild: [AuthGuard],
+        children: [
+          {
+            path: 'dashboard',
+            loadComponent: () =>
+              import('./features/administration/admin-dashboard/admin-dashboard.component').then((c) => c.AdminDashboardComponent),
+            data: { requiredRights: ['VIEW_DASHBOARD'] },
+          },
+          {
+            path: 'account-management',
+            loadComponent: () =>
+              import('./features/administration/account-management/account-management.component').then((c) => c.AccountManagementComponent),
+            data: { requiredRights: ['MANAGE_USERS', 'MANAGE_ROLES'] },
+          },
+          {
+            path: 'link-library-management',
+            loadComponent: () =>
+              import('./features/administration/link-library-management/link-library-management.component').then(
+                (c) => c.LinkLibraryManagementComponent
+              ),
+          },
+          {
+            path: 'steam-insight-management',
+            loadComponent: () =>
+              import('./features/administration/steam-insight-management/steam-insight-management.component').then(
+                (c) => c.SteamInsightManagementComponent
+              ),
+          },
+          {
+            path: '',
+            redirectTo: 'dashboard',
+            pathMatch: 'full',
+          },
+        ],
       },
 
       // *** WILDCARD ***

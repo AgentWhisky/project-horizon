@@ -32,7 +32,6 @@ body {
 
   background: var(--mat-sys-surface-container-lowest);
   color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
 
   // Mat Table
   @include mat.table-overrides(
@@ -114,6 +113,16 @@ body {
 
 .icon-bg-contrast {
   background-color: var(--mat-sys-on-surface);
+}
+
+.mat-mdc-button,
+.mat-mdc-icon-button,
+.mat-mdc-form-field,
+.mat-mdc-select,
+.mat-mdc-option,
+.mat-mdc-chip,
+mat-icon {
+  font: var(--mat-sys-body-medium); // Add material font for all mat-icons to ensure correct presentation (vertical alignment)
 }
 
 // *** CARDS ***
