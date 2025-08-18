@@ -53,7 +53,12 @@ export const navSections: NavSection[] = [
         icon: 'add_link',
         requiredRights: [USER_RIGHTS.MANAGE_LINKS],
       },
-      { routerLink: '/administration/steam-insight-management', name: 'Steam Insight', svgIcon: 'steam' },
+      {
+        routerLink: '/administration/steam-insight-management',
+        name: 'Steam Insight',
+        svgIcon: 'steam',
+        requiredRights: [USER_RIGHTS.MANAGE_STEAM_INSIGHT],
+      },
     ],
   },
 ];

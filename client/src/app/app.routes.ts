@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
+import { USER_RIGHTS } from './core/constants/user-rights.constant';
 
 export const routes: Routes = [
   {
@@ -68,13 +69,13 @@ export const routes: Routes = [
             path: 'dashboard',
             loadComponent: () =>
               import('./features/administration/admin-dashboard/admin-dashboard.component').then((c) => c.AdminDashboardComponent),
-            data: { requiredRights: ['VIEW_DASHBOARD'] },
+            data: { requiredRights: [USER_RIGHTS.VIEW_DASHBOARD] },
           },
           {
             path: 'account-management',
             loadComponent: () =>
               import('./features/administration/account-management/account-management.component').then((c) => c.AccountManagementComponent),
-            data: { requiredRights: ['MANAGE_USERS', 'MANAGE_ROLES'] },
+            data: { requiredRights: [USER_RIGHTS.MANAGE_USERS, USER_RIGHTS.MANAGE_ROLES] },
           },
           {
             path: 'link-library-management',
@@ -82,6 +83,7 @@ export const routes: Routes = [
               import('./features/administration/link-library-management/link-library-management.component').then(
                 (c) => c.LinkLibraryManagementComponent
               ),
+            data: { requiredRights: [USER_RIGHTS.MANAGE_LINKS] },
           },
           {
             path: 'steam-insight-management',
@@ -89,6 +91,7 @@ export const routes: Routes = [
               import('./features/administration/steam-insight-management/steam-insight-management.component').then(
                 (c) => c.SteamInsightManagementComponent
               ),
+            data: { requiredRights: [USER_RIGHTS.MANAGE_STEAM_INSIGHT] },
           },
           {
             path: '',

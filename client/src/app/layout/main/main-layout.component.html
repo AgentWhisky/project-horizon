@@ -55,9 +55,9 @@
 
         <!-- LEFT NAV FOOTER -->
         <div class="main-layout-left-nav-footer">
-          <a class="main-layout-left-nav-footer-pill-link" [href]="githubRepoUrl" target="_blank" rel="noopener">
+          <button type="button" class="main-layout-left-nav-footer-pill-link" (click)="onOpenVersionHistory()">
             Horizon v{{ appVersion }} · {{ envName }}
-          </a>
+          </button>
         </div>
       </div>
     </mat-drawer>

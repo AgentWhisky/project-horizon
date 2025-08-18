@@ -16,6 +16,8 @@ import { LeftNavComponent } from '../left-nav/left-nav.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { environment } from '../../../environments/environment';
 import { APP_URLS } from '../../core/constants/url.constant';
+import { AppVersionDialogComponent } from '../app-version-dialog/app-version-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'hz-main-layout',
@@ -38,6 +40,7 @@ export class MainComponent {
   private navigationService = inject(NavigationService);
   private userService = inject(UserService);
   private themeService = inject(ThemeService);
+  private dialog = inject(MatDialog);
 
   readonly isSmallScreen = this.screenService.isSmallScreen;
   readonly isMobileScreen = this.screenService.isMobileScreen;
@@ -79,6 +82,6 @@ export class MainComponent {
   }
 
   onOpenVersionHistory() {
-    console.log('VERSION HISTORY OPEN');
+    this.dialog.open(AppVersionDialogComponent, { width: '560px', panelClass: 'hz-dialog-container' });
   }
 }
