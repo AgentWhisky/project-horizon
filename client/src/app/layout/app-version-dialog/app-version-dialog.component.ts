@@ -1,26 +1,25 @@
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
+import { APP_URLS } from '../../core/constants/url.constant';
+import { VersionHistoryService } from '../../core/services/version-history.service';
 
 @Component({
   selector: 'hz-app-version-dialog',
-  imports: [MatDialogModule, MatButtonModule, MatIconModule, DatePipe],
+  imports: [MatDialogModule, MatButtonModule, MatIconModule, CommonModule, RouterModule, DatePipe],
   templateUrl: './app-version-dialog.component.html',
   styleUrl: './app-version-dialog.component.scss',
 })
 export class AppVersionDialogComponent {
   readonly dialogRef = inject(MatDialogRef<AppVersionDialogComponent>);
+  readonly githubRepoUrl = APP_URLS.githubRepo;
 
-  readonly tempData = [
-    { version: '1.5.0', date: '2025-07-23', description: 'Lorem ipsum description' },
-    { version: '1.4.0', date: '2025-05-01', description: 'Lorem ipsum description' },
-    { version: '1.3.0', date: '2025-04-12', description: 'Lorem ipsum description' },
-    { version: '1.2.0', date: '2025-04-08', description: 'Lorem ipsum description' },
-    { version: '1.1.0', date: '2025-03-19', description: 'Lorem ipsum description' },
-    { version: '1.0.0', date: '2025-01-31', description: 'Lorem ipsum description' },
-  ];
+  private versionHistoryService = inject(VersionHistoryService);
+
+  readonly versionHistory = this.versionHistoryService.versionHistory;
 
   onClose() {
     this.dialogRef.close();

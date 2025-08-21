@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, inject, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, withComponentInputBinding, withViewTransitions } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
@@ -6,6 +6,10 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
 import { routes } from './app.routes';
 import { tokenInterceptor } from './core/interceptors/token.interceptor';
+import { VersionHistoryService } from './core/services/version-history.service';
+import { TitleService } from './core/services/title.service';
+import { TokenService } from './core/services/token.service';
+import { IconService } from './core/services/icon.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,5 +18,17 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideHttpClient(withInterceptors([tokenInterceptor])),
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } }, // Set all mat-form-fields to outline appearance
+    provideAppInitializer(async () => {
+      const titleService = inject(TitleService);
+      const tokenService = inject(TokenService);
+      const iconService = inject(IconService);
+      const versionHistoryService = inject(VersionHistoryService);
+
+      iconService.registerIcons();
+      titleService.resetTitle();
+      versionHistoryService.loadVersionHistory();
+
+      await tokenService.onInitUser();
+    }),
   ],
 };

@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { AuthInfo, AuthInfoPayload } from '../types/auth';
+import { AuthInfo, AuthInfoPayload } from '../models/auth';
 import { firstValueFrom, from, mergeMap, of, retry, throwError } from 'rxjs';
 import { UserService } from './user.service';
 import { jwtDecode } from 'jwt-decode';

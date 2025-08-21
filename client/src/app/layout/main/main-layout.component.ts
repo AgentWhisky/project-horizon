@@ -18,6 +18,7 @@ import { environment } from '../../../environments/environment';
 import { APP_URLS } from '../../core/constants/url.constant';
 import { AppVersionDialogComponent } from '../app-version-dialog/app-version-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { VersionHistoryService } from '../../core/services/version-history.service';
 
 @Component({
   selector: 'hz-main-layout',
@@ -40,6 +41,8 @@ export class MainComponent {
   private navigationService = inject(NavigationService);
   private userService = inject(UserService);
   private themeService = inject(ThemeService);
+  private versionHistoryService = inject(VersionHistoryService);
+
   private dialog = inject(MatDialog);
 
   readonly isSmallScreen = this.screenService.isSmallScreen;
@@ -50,7 +53,7 @@ export class MainComponent {
   readonly isLoggedIn = this.userService.isLoggedIn;
   readonly isDarkmode = this.themeService.isDarkTheme;
 
-  readonly appVersion = environment.version;
+  readonly currentVersionInfo = this.versionHistoryService.currentVersionInfo;
   readonly envName = environment.envName;
 
   readonly githubUrl = APP_URLS.github;

@@ -1,16 +1,16 @@
 <span class="dialog-header">Horizon Version History</span>
 <mat-dialog-content>
   <div class="timeline-container">
-    @for (item of tempData; track item.version; let i = $index) {
-    <div class="timeline-item">
-      <div class="timeline-marker" [class.timeline-marker-latest]="i === 0"></div>
+    @for (entry of versionHistory(); track entry.version; let i = $index) {
+    <div class="timeline-entry">
+      <div [ngClass]="{ 'timeline-marker': true, 'timeline-marker-latest': i === 0 }"></div>
       <div class="timeline-content">
         <div class="timeline-header">
-          <span class="timeline-version">v{{ item.version }}</span>
-          <span class="timeline-date">{{ item.date | date : 'longDate' }}</span>
+          <span class="timeline-version">v{{ entry.version }}</span>
+          <span class="timeline-date">{{ entry.date | date : 'longDate' }}</span>
         </div>
         <div class="timeline-description">
-          {{ item.description }}
+          {{ entry.description }}
         </div>
       </div>
     </div>
@@ -19,5 +19,9 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-flat-button (click)="onClose()">Close</button>
+  <button mat-stroked-button (click)="onClose()" cdkFocusInitial>Close</button>
+  <a mat-flat-button color="primary" [href]="githubRepoUrl" target="_blank" rel="noopener">
+    <mat-icon svgIcon="github"></mat-icon>
+    Open on GitHub
+  </a>
 </mat-dialog-actions>

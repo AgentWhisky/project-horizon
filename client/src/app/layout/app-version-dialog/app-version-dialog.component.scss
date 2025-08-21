@@ -12,12 +12,12 @@
   gap: 0.75rem;
 }
 
-.timeline-item {
+.timeline-entry {
   margin-bottom: 2rem;
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .timeline-marker {
@@ -33,7 +33,7 @@
   width: 20px;
   height: 20px;
   background-color: var(--mat-sys-primary);
-  box-shadow: 0 0 0 4px var(--mat-sys-primary-container);
+  box-shadow: 0 0 0 4px var(--mat-sys-primary);
   border: 3px solid var(--mat-sys-surface);
 }
 

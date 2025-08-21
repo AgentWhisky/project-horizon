@@ -13,7 +13,7 @@ import { UppercaseDirective } from '../../../core/directives/uppercase.directive
 import { ValidatorMessagePipe } from '../../../core/pipes/validator-message.pipe';
 import { UserService } from '../../../core/services/user.service';
 import { confirmPasswordValidator } from '../../../core/validators/confirm-password.validator';
-import { NewAccountCredentials } from '../../../core/types/login-credentials';
+import { NewAccountCredentials } from '../../../core/models/login-credentials';
 
 @Component({
   selector: 'hz-login-dialog',

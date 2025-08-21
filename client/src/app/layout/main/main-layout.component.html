@@ -56,7 +56,7 @@
         <!-- LEFT NAV FOOTER -->
         <div class="main-layout-left-nav-footer">
           <button type="button" class="main-layout-left-nav-footer-pill-link" (click)="onOpenVersionHistory()">
-            Horizon v{{ appVersion }} · {{ envName }}
+            Horizon v{{ currentVersionInfo()?.version }} · {{ envName }}
           </button>
         </div>
       </div>

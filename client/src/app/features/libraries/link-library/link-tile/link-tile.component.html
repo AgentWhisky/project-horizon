@@ -5,8 +5,11 @@
       <img
         [src]="link().icon"
         fallbackSrc="/assets/icons/default-favicon.ico"
+        loading="lazy"
         alt="favicon"
-        class="w-5 h-5 p-[2px] rounded-full"
+        width="20"
+        height="20"
+        class="p-[2px] rounded-full"
         [ngClass]="{
           'icon-bg-contrast': (link().contrastBackground === 1 && isDarkTheme()) || (link().contrastBackground === 2 && !isDarkTheme())
         }" />

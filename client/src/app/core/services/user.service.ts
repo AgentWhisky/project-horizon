@@ -1,9 +1,9 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { AuthInfo, AuthInfoPayload, UserInfo } from '../types/auth';
+import { AuthInfo, AuthInfoPayload, UserInfo } from '../models/auth';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { LoginCredentials, NewAccountCredentials } from '../types/login-credentials';
+import { LoginCredentials, NewAccountCredentials } from '../models/login-credentials';
 import { jwtDecode } from 'jwt-decode';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';

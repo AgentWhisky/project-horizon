@@ -1,0 +1,37 @@
+[
+    {
+        "version": "1.2.0",
+        "date": "2025-08-18",
+        "description": "Redesigned app layout including toolbar and left navigation look and feel and updated app content to scroll"
+    },
+    {
+        "version": "1.1.0",
+        "date": "2025-07-14",
+        "description": "Redesigned Link Library with better formatting and design, including link icons and animations"
+    },
+    {
+        "version": "1.0.4",
+        "date": "2025-06-17",
+        "description": "Added new Steam Insight tool for users to search through Steam's catalogue and view information related to that Game and its DLC"
+    },
+    {
+        "version": "1.0.3",
+        "date": "2025-04-24",
+        "description": "Added new Text Analysis tool to display breakdowns of character and words, as well as readablity statistics"
+    },
+    {
+        "version": "1.0.2",
+        "date": "2025-03-20",
+        "description": "Added new Base Conversion tool for users to easily convert between number bases"
+    },
+    {
+        "version": "1.0.1",
+        "date": "2025-02-03",
+        "description": "Implemented account creation and login for Admin Users to maintain the app"
+    },
+    {
+        "version": "1.0.0",
+        "date": "2025-01-16",
+        "description": "Link Library available for users"
+    }
+]

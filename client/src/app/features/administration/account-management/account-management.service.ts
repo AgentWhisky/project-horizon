@@ -12,7 +12,7 @@ import {
   UserPayload,
 } from './account-management';
 import { firstValueFrom } from 'rxjs';
-import { DeleteResponse } from '../../../core/types/delete-response';
+import { DeleteResponse } from '../../../core/models/delete-response';
 
 @Injectable({
   providedIn: 'root',
