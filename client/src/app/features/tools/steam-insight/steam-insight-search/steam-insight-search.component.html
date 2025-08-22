@@ -31,10 +31,10 @@
 
     <!-- SEARCH HISTORY CHIPS -->
     <mat-chip-set aria-label="Search History">
-      <div class="search-chip-container" [@chipSetAnimation]>
+      <div class="search-chip-container">
         @for (app of steamGameHistory(); track app.appid) {
         <ng-container>
-          <mat-chip [@chipAnimation] [routerLink]="['/steam-insight', app.appid]" class="!cursor-pointer overflow-hidden">
+          <mat-chip [routerLink]="['/steam-insight', app.appid]" class="!cursor-pointer overflow-hidden">
             <span class="search-history-chip">{{ app.name }}</span>
             <button matChipRemove (click)="onRemoveAppFromHistory(app); $event.stopPropagation()" [attr.aria-label]="'Remove ' + app.name">
               <mat-icon>cancel</mat-icon>

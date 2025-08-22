@@ -11,7 +11,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { SteamGameHistoryEntry } from '../steam-insight';
 import { SteamInsightHistoryService } from '../steam-insight-history.service';
-import { chipAnimation, chipSetAnimation } from '../../../../core/animations/chip.animation';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { KeywordPipe } from '../../../../core/pipes/keyword.pipe';
 
@@ -32,7 +31,6 @@ import { KeywordPipe } from '../../../../core/pipes/keyword.pipe';
   ],
   templateUrl: './steam-insight-search.component.html',
   styleUrl: './steam-insight-search.component.scss',
-  animations: [chipAnimation, chipSetAnimation],
 })
 export class SteamInsightSearchComponent implements OnInit {
   private steamInsightService = inject(SteamInsightSearchService);

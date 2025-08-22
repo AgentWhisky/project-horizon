@@ -10,7 +10,6 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { LinkTileComponent } from './link-tile/link-tile.component';
 import { FormsModule } from '@angular/forms';
 import { StatusBannerComponent } from '../../../shared/components/status-banner/status-banner.component';
-import { cardAnimation } from '../../../core/animations/card.animation';
 
 @Component({
   selector: 'hz-link-library',
@@ -26,7 +25,6 @@ import { cardAnimation } from '../../../core/animations/card.animation';
   ],
   templateUrl: './link-library.component.html',
   styleUrl: './link-library.component.scss',
-  animations: [cardAnimation],
 })
 export class LinkLibraryComponent implements OnInit {
   private linkLibraryService = inject(LinkLibraryService);

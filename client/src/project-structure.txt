@@ -1,0 +1,407 @@
+Folder PATH listing
+Volume serial number is 94CA-A398
+C:.
+¦   index.html
+¦   main.ts
+¦   project-structure.txt
+¦   styles.scss
+¦   
++---app
+¦   ¦   app.component.html
+¦   ¦   app.component.scss
+¦   ¦   app.component.spec.ts
+¦   ¦   app.component.ts
+¦   ¦   app.config.ts
+¦   ¦   app.routes.ts
+¦   ¦   
+¦   +---core
+¦   ¦   +---constants
+¦   ¦   ¦       average-action-time.constant.ts
+¦   ¦   ¦       lexo-rank.constant.ts
+¦   ¦   ¦       loading-status.constants.ts
+¦   ¦   ¦       regex.constant.ts
+¦   ¦   ¦       screen-values.constant.ts
+¦   ¦   ¦       steam-insight.constant.ts
+¦   ¦   ¦       storage-keys.constant.ts
+¦   ¦   ¦       text.constants.ts
+¦   ¦   ¦       theme.constant.ts
+¦   ¦   ¦       title.constants.ts
+¦   ¦   ¦       url.constant.ts
+¦   ¦   ¦       user-rights.constant.ts
+¦   ¦   ¦       version-history.constant.ts
+¦   ¦   ¦       
+¦   ¦   +---directives
+¦   ¦   ¦       character-restrict.directive.ts
+¦   ¦   ¦       image-fallback.directive.ts
+¦   ¦   ¦       lowercase.directive.ts
+¦   ¦   ¦       uppercase.directive.ts
+¦   ¦   ¦       
+¦   ¦   +---guards
+¦   ¦   ¦       auth.guard.ts
+¦   ¦   ¦       
+¦   ¦   +---interceptors
+¦   ¦   ¦       token.interceptor.ts
+¦   ¦   ¦       
+¦   ¦   +---models
+¦   ¦   ¦       auth.ts
+¦   ¦   ¦       delete-response.ts
+¦   ¦   ¦       login-credentials.ts
+¦   ¦   ¦       operation-result.ts
+¦   ¦   ¦       text.type.ts
+¦   ¦   ¦       version-history.model.ts
+¦   ¦   ¦       
+¦   ¦   +---pipes
+¦   ¦   ¦       decode-html.pipe.ts
+¦   ¦   ¦       duration.pipe.ts
+¦   ¦   ¦       keyword.pipe.ts
+¦   ¦   ¦       secure-url.pipe.ts
+¦   ¦   ¦       validator-message.pipe.ts
+¦   ¦   ¦       
+¦   ¦   +---services
+¦   ¦   ¦       download.service.ts
+¦   ¦   ¦       icon.service.ts
+¦   ¦   ¦       navigation.service.ts
+¦   ¦   ¦       screen.service.ts
+¦   ¦   ¦       theme.service.ts
+¦   ¦   ¦       title.service.ts
+¦   ¦   ¦       token.service.ts
+¦   ¦   ¦       user.service.ts
+¦   ¦   ¦       version-history.service.ts
+¦   ¦   ¦       
+¦   ¦   +---utilities
+¦   ¦   ¦       base-conversion.util.ts
+¦   ¦   ¦       clean-object.util.ts
+¦   ¦   ¦       favicon.util.ts
+¦   ¦   ¦       lexo-rank.util.ts
+¦   ¦   ¦       text.util.ts
+¦   ¦   ¦       
+¦   ¦   +---validators
+¦   ¦           confirm-password.validator.ts
+¦   ¦           password-match.validator.ts
+¦   ¦           unique-text.validator.ts
+¦   ¦           
+¦   +---features
+¦   ¦   +---administration
+¦   ¦   ¦   +---account-management
+¦   ¦   ¦   ¦   ¦   account-management.component.html
+¦   ¦   ¦   ¦   ¦   account-management.component.scss
+¦   ¦   ¦   ¦   ¦   account-management.component.spec.ts
+¦   ¦   ¦   ¦   ¦   account-management.component.ts
+¦   ¦   ¦   ¦   ¦   account-management.service.ts
+¦   ¦   ¦   ¦   ¦   account-management.ts
+¦   ¦   ¦   ¦   ¦   
+¦   ¦   ¦   ¦   +---role-dialog
+¦   ¦   ¦   ¦   ¦       role-dialog.component.html
+¦   ¦   ¦   ¦   ¦       role-dialog.component.scss
+¦   ¦   ¦   ¦   ¦       role-dialog.component.spec.ts
+¦   ¦   ¦   ¦   ¦       role-dialog.component.ts
+¦   ¦   ¦   ¦   ¦       
+¦   ¦   ¦   ¦   +---user-dialog
+¦   ¦   ¦   ¦           user-dialog.component.html
+¦   ¦   ¦   ¦           user-dialog.component.scss
+¦   ¦   ¦   ¦           user-dialog.component.spec.ts
+¦   ¦   ¦   ¦           user-dialog.component.ts
+¦   ¦   ¦   ¦           
+¦   ¦   ¦   +---admin-dashboard
+¦   ¦   ¦   ¦       admin-dashboard.component.html
+¦   ¦   ¦   ¦       admin-dashboard.component.scss
+¦   ¦   ¦   ¦       admin-dashboard.component.spec.ts
+¦   ¦   ¦   ¦       admin-dashboard.component.ts
+¦   ¦   ¦   ¦       admin-dashboard.service.ts
+¦   ¦   ¦   ¦       admin-dashboard.ts
+¦   ¦   ¦   ¦       
+¦   ¦   ¦   +---link-library-management
+¦   ¦   ¦   ¦   ¦   link-library-management.component.html
+¦   ¦   ¦   ¦   ¦   link-library-management.component.scss
+¦   ¦   ¦   ¦   ¦   link-library-management.component.spec.ts
+¦   ¦   ¦   ¦   ¦   link-library-management.component.ts
+¦   ¦   ¦   ¦   ¦   link-library-management.service.ts
+¦   ¦   ¦   ¦   ¦   link-library-management.ts
+¦   ¦   ¦   ¦   ¦   
+¦   ¦   ¦   ¦   +---link-category-dialog
+¦   ¦   ¦   ¦   ¦       link-category-dialog.component.html
+¦   ¦   ¦   ¦   ¦       link-category-dialog.component.scss
+¦   ¦   ¦   ¦   ¦       link-category-dialog.component.spec.ts
+¦   ¦   ¦   ¦   ¦       link-category-dialog.component.ts
+¦   ¦   ¦   ¦   ¦       
+¦   ¦   ¦   ¦   +---link-library-import-dialog
+¦   ¦   ¦   ¦   ¦       link-library-import-dialog.component.html
+¦   ¦   ¦   ¦   ¦       link-library-import-dialog.component.scss
+¦   ¦   ¦   ¦   ¦       link-library-import-dialog.component.spec.ts
+¦   ¦   ¦   ¦   ¦       link-library-import-dialog.component.ts
+¦   ¦   ¦   ¦   ¦       
+¦   ¦   ¦   ¦   +---link-library-management-dialog
+¦   ¦   ¦   ¦   ¦       link-library-management-dialog.component.html
+¦   ¦   ¦   ¦   ¦       link-library-management-dialog.component.scss
+¦   ¦   ¦   ¦   ¦       link-library-management-dialog.component.spec.ts
+¦   ¦   ¦   ¦   ¦       link-library-management-dialog.component.ts
+¦   ¦   ¦   ¦   ¦       
+¦   ¦   ¦   ¦   +---link-tag-dialog
+¦   ¦   ¦   ¦           link-tag-dialog.component.html
+¦   ¦   ¦   ¦           link-tag-dialog.component.scss
+¦   ¦   ¦   ¦           link-tag-dialog.component.spec.ts
+¦   ¦   ¦   ¦           link-tag-dialog.component.ts
+¦   ¦   ¦   ¦           
+¦   ¦   ¦   +---steam-insight-management
+¦   ¦   ¦           steam-insight-management.component.html
+¦   ¦   ¦           steam-insight-management.component.scss
+¦   ¦   ¦           steam-insight-management.component.spec.ts
+¦   ¦   ¦           steam-insight-management.component.ts
+¦   ¦   ¦           
+¦   ¦   +---dashboard
+¦   ¦   ¦       dashboard.component.html
+¦   ¦   ¦       dashboard.component.scss
+¦   ¦   ¦       dashboard.component.spec.ts
+¦   ¦   ¦       dashboard.component.ts
+¦   ¦   ¦       dashboard.config.ts
+¦   ¦   ¦       dashboard.ts
+¦   ¦   ¦       
+¦   ¦   +---libraries
+¦   ¦   ¦   +---book-library
+¦   ¦   ¦   ¦       book-library.component.html
+¦   ¦   ¦   ¦       book-library.component.scss
+¦   ¦   ¦   ¦       book-library.component.spec.ts
+¦   ¦   ¦   ¦       book-library.component.ts
+¦   ¦   ¦   ¦       
+¦   ¦   ¦   +---link-library
+¦   ¦   ¦       ¦   link-library.component.html
+¦   ¦   ¦       ¦   link-library.component.scss
+¦   ¦   ¦       ¦   link-library.component.spec.ts
+¦   ¦   ¦       ¦   link-library.component.ts
+¦   ¦   ¦       ¦   link-library.service.ts
+¦   ¦   ¦       ¦   link-library.ts
+¦   ¦   ¦       ¦   
+¦   ¦   ¦       +---link-tile
+¦   ¦   ¦               link-tile.component.html
+¦   ¦   ¦               link-tile.component.scss
+¦   ¦   ¦               link-tile.component.spec.ts
+¦   ¦   ¦               link-tile.component.ts
+¦   ¦   ¦               
+¦   ¦   +---testing
+¦   ¦   ¦   +---testing-1
+¦   ¦   +---tools
+¦   ¦       +---base-converter
+¦   ¦       ¦   ¦   base-converter.component.html
+¦   ¦       ¦   ¦   base-converter.component.scss
+¦   ¦       ¦   ¦   base-converter.component.spec.ts
+¦   ¦       ¦   ¦   base-converter.component.ts
+¦   ¦       ¦   ¦   base-converter.config.ts
+¦   ¦       ¦   ¦   base-converter.service.ts
+¦   ¦       ¦   ¦   base-converter.ts
+¦   ¦       ¦   ¦   
+¦   ¦       ¦   +---base-convert-conversion-dialog
+¦   ¦       ¦   ¦       base-convert-conversion-dialog.component.html
+¦   ¦       ¦   ¦       base-convert-conversion-dialog.component.scss
+¦   ¦       ¦   ¦       base-convert-conversion-dialog.component.spec.ts
+¦   ¦       ¦   ¦       base-convert-conversion-dialog.component.ts
+¦   ¦       ¦   ¦       
+¦   ¦       ¦   +---base-convert-tile
+¦   ¦       ¦   ¦       base-convert-tile.component.html
+¦   ¦       ¦   ¦       base-convert-tile.component.scss
+¦   ¦       ¦   ¦       base-convert-tile.component.spec.ts
+¦   ¦       ¦   ¦       base-convert-tile.component.ts
+¦   ¦       ¦   ¦       
+¦   ¦       ¦   +---base-convert-tile-dialog
+¦   ¦       ¦           base-convert-tile-dialog.component.html
+¦   ¦       ¦           base-convert-tile-dialog.component.scss
+¦   ¦       ¦           base-convert-tile-dialog.component.spec.ts
+¦   ¦       ¦           base-convert-tile-dialog.component.ts
+¦   ¦       ¦           
+¦   ¦       +---latex-editor
+¦   ¦       ¦       latex-editor.component.html
+¦   ¦       ¦       latex-editor.component.scss
+¦   ¦       ¦       latex-editor.component.spec.ts
+¦   ¦       ¦       latex-editor.component.ts
+¦   ¦       ¦       latex-editor.service.ts
+¦   ¦       ¦       latex-editor.ts
+¦   ¦       ¦       
+¦   ¦       +---pathfinder
+¦   ¦       ¦   ¦   pathfinder.component.html
+¦   ¦       ¦   ¦   pathfinder.component.scss
+¦   ¦       ¦   ¦   pathfinder.component.spec.ts
+¦   ¦       ¦   ¦   pathfinder.component.ts
+¦   ¦       ¦   ¦   pathfinder.service.ts
+¦   ¦       ¦   ¦   pathfinder.ts
+¦   ¦       ¦   ¦   
+¦   ¦       ¦   +---pathfinder-create-dialog
+¦   ¦       ¦   ¦       pathfinder-create-dialog.component.html
+¦   ¦       ¦   ¦       pathfinder-create-dialog.component.scss
+¦   ¦       ¦   ¦       pathfinder-create-dialog.component.spec.ts
+¦   ¦       ¦   ¦       pathfinder-create-dialog.component.ts
+¦   ¦       ¦   ¦       
+¦   ¦       ¦   +---pathfinder-tile
+¦   ¦       ¦           pathfinder-tile.component.html
+¦   ¦       ¦           pathfinder-tile.component.scss
+¦   ¦       ¦           pathfinder-tile.component.spec.ts
+¦   ¦       ¦           pathfinder-tile.component.ts
+¦   ¦       ¦           
+¦   ¦       +---steam-insight
+¦   ¦       ¦   ¦   steam-insight-history.service.ts
+¦   ¦       ¦   ¦   steam-insight.ts
+¦   ¦       ¦   ¦   
+¦   ¦       ¦   +---steam-insight-detail
+¦   ¦       ¦   ¦   ¦   steam-insight-detail.component.html
+¦   ¦       ¦   ¦   ¦   steam-insight-detail.component.scss
+¦   ¦       ¦   ¦   ¦   steam-insight-detail.component.spec.ts
+¦   ¦       ¦   ¦   ¦   steam-insight-detail.component.ts
+¦   ¦       ¦   ¦   ¦   steam-insight-detail.service.ts
+¦   ¦       ¦   ¦   ¦   steam-insight-detail.ts
+¦   ¦       ¦   ¦   ¦   
+¦   ¦       ¦   ¦   +---steam-dlc-tile
+¦   ¦       ¦   ¦           steam-dlc-tile.component.html
+¦   ¦       ¦   ¦           steam-dlc-tile.component.scss
+¦   ¦       ¦   ¦           steam-dlc-tile.component.spec.ts
+¦   ¦       ¦   ¦           steam-dlc-tile.component.ts
+¦   ¦       ¦   ¦           
+¦   ¦       ¦   +---steam-insight-search
+¦   ¦       ¦       ¦   steam-insight-search.component.html
+¦   ¦       ¦       ¦   steam-insight-search.component.scss
+¦   ¦       ¦       ¦   steam-insight-search.component.spec.ts
+¦   ¦       ¦       ¦   steam-insight-search.component.ts
+¦   ¦       ¦       ¦   steam-insight-search.service.ts
+¦   ¦       ¦       ¦   steam-insight-search.ts
+¦   ¦       ¦       ¦   
+¦   ¦       ¦       +---steam-game-tile
+¦   ¦       ¦               steam-game-tile.component.html
+¦   ¦       ¦               steam-game-tile.component.scss
+¦   ¦       ¦               steam-game-tile.component.spec.ts
+¦   ¦       ¦               steam-game-tile.component.ts
+¦   ¦       ¦               
+¦   ¦       +---text-analyzer
+¦   ¦               text-analyzer.component.html
+¦   ¦               text-analyzer.component.scss
+¦   ¦               text-analyzer.component.spec.ts
+¦   ¦               text-analyzer.component.ts
+¦   ¦               text-analyzer.service.ts
+¦   ¦               text-analyzer.ts
+¦   ¦               text-analyzer.utils.ts
+¦   ¦               
+¦   +---layout
+¦   ¦   +---app-version-dialog
+¦   ¦   ¦       app-version-dialog.component.html
+¦   ¦   ¦       app-version-dialog.component.scss
+¦   ¦   ¦       app-version-dialog.component.spec.ts
+¦   ¦   ¦       app-version-dialog.component.ts
+¦   ¦   ¦       
+¦   ¦   +---left-nav
+¦   ¦   ¦       left-nav.component.html
+¦   ¦   ¦       left-nav.component.scss
+¦   ¦   ¦       left-nav.component.spec.ts
+¦   ¦   ¦       left-nav.component.ts
+¦   ¦   ¦       left-nav.config.ts
+¦   ¦   ¦       
+¦   ¦   +---main
+¦   ¦           main-layout.component.html
+¦   ¦           main-layout.component.scss
+¦   ¦           main-layout.component.spec.ts
+¦   ¦           main-layout.component.ts
+¦   ¦           
+¦   +---shared
+¦   ¦   +---components
+¦   ¦   ¦   +---content-tile
+¦   ¦   ¦   ¦       content-tile.component.html
+¦   ¦   ¦   ¦       content-tile.component.scss
+¦   ¦   ¦   ¦       content-tile.component.spec.ts
+¦   ¦   ¦   ¦       content-tile.component.ts
+¦   ¦   ¦   ¦       content-tile.ts
+¦   ¦   ¦   ¦       
+¦   ¦   ¦   +---file-input
+¦   ¦   ¦   ¦       file-input.component.html
+¦   ¦   ¦   ¦       file-input.component.scss
+¦   ¦   ¦   ¦       file-input.component.spec.ts
+¦   ¦   ¦   ¦       file-input.component.ts
+¦   ¦   ¦   ¦       
+¦   ¦   ¦   +---hz-timeline
+¦   ¦   ¦   ¦   ¦   hz-timeline.module.ts
+¦   ¦   ¦   ¦   ¦   index.ts
+¦   ¦   ¦   ¦   ¦   
+¦   ¦   ¦   ¦   +---hz-timeline
+¦   ¦   ¦   ¦   ¦       hz-timeline.component.html
+¦   ¦   ¦   ¦   ¦       hz-timeline.component.scss
+¦   ¦   ¦   ¦   ¦       hz-timeline.component.spec.ts
+¦   ¦   ¦   ¦   ¦       hz-timeline.component.ts
+¦   ¦   ¦   ¦   ¦       
+¦   ¦   ¦   ¦   +---hz-timeline-body
+¦   ¦   ¦   ¦   ¦       hz-timeline-body.component.html
+¦   ¦   ¦   ¦   ¦       hz-timeline-body.component.scss
+¦   ¦   ¦   ¦   ¦       hz-timeline-body.component.spec.ts
+¦   ¦   ¦   ¦   ¦       hz-timeline-body.component.ts
+¦   ¦   ¦   ¦   ¦       
+¦   ¦   ¦   ¦   +---hz-timeline-header
+¦   ¦   ¦   ¦   ¦       hz-timeline-header.component.html
+¦   ¦   ¦   ¦   ¦       hz-timeline-header.component.scss
+¦   ¦   ¦   ¦   ¦       hz-timeline-header.component.spec.ts
+¦   ¦   ¦   ¦   ¦       hz-timeline-header.component.ts
+¦   ¦   ¦   ¦   ¦       
+¦   ¦   ¦   ¦   +---hz-timeline-item
+¦   ¦   ¦   ¦   ¦       hz-timeline-item.component.html
+¦   ¦   ¦   ¦   ¦       hz-timeline-item.component.scss
+¦   ¦   ¦   ¦   ¦       hz-timeline-item.component.spec.ts
+¦   ¦   ¦   ¦   ¦       hz-timeline-item.component.ts
+¦   ¦   ¦   ¦   ¦       
+¦   ¦   ¦   ¦   +---hz-timeline-meta
+¦   ¦   ¦   ¦           hz-timeline-meta.component.html
+¦   ¦   ¦   ¦           hz-timeline-meta.component.scss
+¦   ¦   ¦   ¦           hz-timeline-meta.component.spec.ts
+¦   ¦   ¦   ¦           hz-timeline-meta.component.ts
+¦   ¦   ¦   ¦           
+¦   ¦   ¦   +---message-card
+¦   ¦   ¦   ¦       message-card.component.html
+¦   ¦   ¦   ¦       message-card.component.scss
+¦   ¦   ¦   ¦       message-card.component.spec.ts
+¦   ¦   ¦   ¦       message-card.component.ts
+¦   ¦   ¦   ¦       
+¦   ¦   ¦   +---status-banner
+¦   ¦   ¦           status-banner.component.html
+¦   ¦   ¦           status-banner.component.scss
+¦   ¦   ¦           status-banner.component.spec.ts
+¦   ¦   ¦           status-banner.component.ts
+¦   ¦   ¦           status-banner.ts
+¦   ¦   ¦           
+¦   ¦   +---dialogs
+¦   ¦   ¦   +---confirm-dialog
+¦   ¦   ¦   ¦       confirm-dialog.component.html
+¦   ¦   ¦   ¦       confirm-dialog.component.scss
+¦   ¦   ¦   ¦       confirm-dialog.component.spec.ts
+¦   ¦   ¦   ¦       confirm-dialog.component.ts
+¦   ¦   ¦   ¦       
+¦   ¦   ¦   +---login-dialog
+¦   ¦   ¦           login-dialog.component.html
+¦   ¦   ¦           login-dialog.component.scss
+¦   ¦   ¦           login-dialog.component.spec.ts
+¦   ¦   ¦           login-dialog.component.ts
+¦   ¦   ¦           password-matcher.ts
+¦   ¦   ¦           
+¦   ¦   +---hz-components
+¦   ¦       +---hz-confirm-dialog
+¦   +---themes
+¦           hz-dark.scss
+¦           hz-light.scss
+¦           
++---assets
+¦   ¦   version-history.json
+¦   ¦   
+¦   +---icons
+¦   ¦       default-favicon.ico
+¦   ¦       github-brands.svg
+¦   ¦       linkedin-brands.svg
+¦   ¦       steam-brands.svg
+¦   ¦       timeline-marker-latest.svg
+¦   ¦       timeline-marker.svg
+¦   ¦       
+¦   +---images
+¦       ¦   horizon-placeholder.png
+¦       ¦   steam-app-placeholder.jpg
+¦       ¦   
+¦       +---dashboard
+¦               base-converter-header-image.png
+¦               latex-editor-header-image.png
+¦               link-library-header-image.png
+¦               steam-insight-header-image.png
+¦               text-analyzer-header-image.png
+¦               
++---environments
+        environment.prod.ts
+        environment.stage.ts
+        environment.ts
+        
