@@ -1,0 +1,47 @@
+@use '@angular/material' as mat;
+
+.hz-timeline-item {
+  display: flex;
+  flex-direction: row;
+  gap: 0.75rem;
+
+  justify-items: center;
+  align-items: center;
+}
+
+.hz-timeline-marker-container {
+  display: flex;
+
+  @include mat.icon-overrides(
+    (
+      color: var(--mat-sys-primary),
+    )
+  );
+}
+
+.hz-timeline-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  padding: 0.75rem;
+  gap: 0.25rem;
+
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-small);
+}
+
+.hz-timeline-content:hover {
+  background-color: var(--mat-sys-surface-container-high);
+}
+
+.hz-timeline-content.latest {
+  border: 2px solid var(--mat-sys-primary);
+}
+
+.hz-timeline-content-title-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}

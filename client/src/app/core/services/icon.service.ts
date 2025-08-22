@@ -13,6 +13,8 @@ export class IconService {
     github: 'assets/icons/github-brands.svg',
     linkedin: 'assets/icons/linkedin-brands.svg',
     steam: 'assets/icons/steam-brands.svg',
+    'timeline-marker': 'assets/icons/timeline-marker.svg',
+    'timeline-marker-latest': 'assets/icons/timeline-marker-latest.svg',
   };
 
   registerIcons(): void {

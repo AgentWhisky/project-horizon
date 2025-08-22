@@ -1,0 +1,17 @@
+<div class="hz-timeline-item">
+  <div class="hz-timeline-marker-container">
+    @if(latest()) {
+    <mat-icon svgIcon="timeline-marker-latest"></mat-icon>
+    } @else {
+    <mat-icon svgIcon="timeline-marker"></mat-icon>
+    }
+  </div>
+
+  <div class="hz-timeline-content" [class.latest]="latest()">
+    <div class="hz-timeline-content-title-container">
+      <ng-content select="hz-timeline-header"></ng-content>
+      <ng-content select="hz-timeline-meta"></ng-content>
+    </div>
+    <ng-content select="hz-timeline-body"></ng-content>
+  </div>
+</div>

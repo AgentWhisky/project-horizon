@@ -1,20 +1,15 @@
-<span class="dialog-header">Horizon Version History</span>
+<span mat-dialog-title class="dialog-header">Horizon Version History</span>
 <mat-dialog-content>
   <div class="timeline-container">
-    @for (entry of versionHistory(); track entry.version; let i = $index) {
-    <div class="timeline-entry">
-      <div [ngClass]="{ 'timeline-marker': true, 'timeline-marker-latest': i === 0 }"></div>
-      <div class="timeline-content">
-        <div class="timeline-header">
-          <span class="timeline-version">v{{ entry.version }}</span>
-          <span class="timeline-date">{{ entry.date | date : 'longDate' }}</span>
-        </div>
-        <div class="timeline-description">
-          {{ entry.description }}
-        </div>
-      </div>
-    </div>
-    }
+    <hz-timeline>
+      @for (entry of versionHistory(); track entry.version; let i = $index) {
+      <hz-timeline-item [latest]="i === 0">
+        <hz-timeline-header>v{{ entry.version }}</hz-timeline-header>
+        <hz-timeline-meta>{{ entry.date | date : 'longDate' }}</hz-timeline-meta>
+        <hz-timeline-body>{{ entry.description }}</hz-timeline-body>
+      </hz-timeline-item>
+      }
+    </hz-timeline>
   </div>
 </mat-dialog-content>
 
