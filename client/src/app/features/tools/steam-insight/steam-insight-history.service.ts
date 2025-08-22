@@ -1,7 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { SteamGameHistoryEntry } from './steam-insight';
-import { STEAM_INSIGHT_HISTORY } from '../../../core/constants/storage-keys.constant';
-import { MAX_SEARCH_HISTORY } from '../../../core/constants/steam-insight.constant';
+import { STEAM_INSIGHT_SEARCH, STORAGE_KEYS } from '@hz/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +16,7 @@ export class SteamInsightHistoryService {
   addApp(app: SteamGameHistoryEntry) {
     const existingSearch = this._steamGameHistory()
       .filter((item) => item.appid !== app.appid)
-      .slice(0, MAX_SEARCH_HISTORY - 1);
+      .slice(0, STEAM_INSIGHT_SEARCH.MAX_HISTORY - 1);
     const newHistory = [app, ...existingSearch];
 
     this._steamGameHistory.set(newHistory);
@@ -33,22 +32,22 @@ export class SteamInsightHistoryService {
   }
 
   clearHistory() {
-    localStorage.removeItem(STEAM_INSIGHT_HISTORY);
+    localStorage.removeItem(STORAGE_KEYS.STEAM_INSIGHT.HISTORY);
     this._steamGameHistory.set([]);
   }
 
   // *** PRIVATE FUNCTIONS ***
   private saveHistory(history: SteamGameHistoryEntry[]) {
-    localStorage.setItem(STEAM_INSIGHT_HISTORY, JSON.stringify(history));
+    localStorage.setItem(STORAGE_KEYS.STEAM_INSIGHT.HISTORY, JSON.stringify(history));
   }
 
   private loadHistory(): SteamGameHistoryEntry[] {
-    const historyString = localStorage.getItem(STEAM_INSIGHT_HISTORY);
+    const historyString = localStorage.getItem(STORAGE_KEYS.STEAM_INSIGHT.HISTORY);
     return historyString ? JSON.parse(historyString) : [];
   }
 
   private handleHistoryUpdate(event: StorageEvent) {
-    if (event.key === STEAM_INSIGHT_HISTORY) {
+    if (event.key === STORAGE_KEYS.STEAM_INSIGHT.HISTORY) {
       const newHistory = event.newValue ? JSON.parse(event.newValue) : [];
       this._steamGameHistory.set(newHistory);
     }

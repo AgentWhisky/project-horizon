@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { VersionEntry, VersionEntryRaw } from '../models/version-history.model';
-import { VERSION_HISTORY_ASSET_URL } from '../constants/version-history.constant';
 import { firstValueFrom } from 'rxjs';
+import { ASSET_URLS } from '@hz/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -34,7 +34,7 @@ export class VersionHistoryService {
   }
 
   private async getVersionHistory() {
-    const versionHistoryRaw$ = this.http.get<VersionEntryRaw[]>(VERSION_HISTORY_ASSET_URL);
+    const versionHistoryRaw$ = this.http.get<VersionEntryRaw[]>(ASSET_URLS.VERSION_HISTORY);
 
     return firstValueFrom(versionHistoryRaw$);
   }

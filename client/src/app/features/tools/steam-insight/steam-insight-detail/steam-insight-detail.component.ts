@@ -24,7 +24,7 @@ import { SteamDlcTileComponent } from './steam-dlc-tile/steam-dlc-tile.component
 import { DecodeHtmlPipe } from '../../../../core/pipes/decode-html.pipe';
 import { SecureUrlPipe } from '../../../../core/pipes/secure-url.pipe';
 import { Achievement, DlcDetails } from './steam-insight-detail';
-import { DLC_PAGE_SIZE, DLC_PAGE_SIZE_MOBILE } from '../../../../core/constants/steam-insight.constant';
+import { STEAM_INSIGHT_DLC } from '@hz/constants';
 
 @Component({
   selector: 'hz-steam-insight-detail',
@@ -77,7 +77,7 @@ export class SteamInsightDetailComponent implements OnDestroy {
   // DLC Display
   @ViewChild('dlcPaginator') dlcPaginator!: MatPaginator;
   readonly dlcPageIndex = signal<number>(0);
-  readonly dlcPageSize = computed(() => (this.isMobileScreen() ? DLC_PAGE_SIZE_MOBILE : DLC_PAGE_SIZE));
+  readonly dlcPageSize = computed(() => (this.isMobileScreen() ? STEAM_INSIGHT_DLC.PAGE_SIZE_MOBILE : STEAM_INSIGHT_DLC.PAGE_SIZE));
   readonly dlcPage = computed(() => this.getDlcPage(this.dlcPageIndex()));
   readonly showDlcPaginator = computed(() => this.appDetails().dlc.length > this.dlcPageSize());
 

@@ -7,7 +7,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/** THEMEING */
 html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--mat-sys-outline-variant) var(--mat-sys-surface-container);
+
   @include mat.theme(
     (
       color: mat.$violet-palette,
@@ -29,10 +33,10 @@ html {
 }
 
 body {
-  color-scheme: light;
-
   background: var(--mat-sys-surface-container-lowest);
   color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-large);
+  color-scheme: light;
 
   // Mat Table
   @include mat.table-overrides(
@@ -52,20 +56,9 @@ body {
   @include mat.expansion-overrides(
     (
       container-background-color: transparent,
-      container-shape: var(--mat-sys-corner-extra-small),
+      container-shape: var(--mat-sys-corner-small),
     )
   );
-}
-
-html,
-body {
-  height: 100%;
-}
-
-/** SCROLL BAR */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--mat-sys-outline-variant) var(--mat-sys-surface-container);
 }
 
 // *** MATERIAL OVERRIDES ***
@@ -91,24 +84,12 @@ body {
   border-radius: 0.5rem !important;
 }
 
-// *** CONTAINER CSS ***
-.panel-container {
-  @apply w-full drop-shadow-lg rounded-md;
-}
-
 // *** ICONS ***
-.icon-button {
-  // To Fix vertical alignment bug
-  display: inline-flex !important;
-  vertical-align: middle !important;
-  align-items: center !important;
-}
-
-.icon-rotate-vertical {
+.icon-rotate-flip {
   transition: transform 0.3s ease;
 }
 
-.icon-rotate-vertical.open {
+.icon-rotate-flip.open {
   transform: rotate(180deg);
 }
 
@@ -116,34 +97,18 @@ body {
   background-color: var(--mat-sys-on-surface);
 }
 
-.mat-mdc-button,
-.mat-mdc-icon-button,
-.mat-mdc-form-field,
-.mat-mdc-select,
-.mat-mdc-option,
-.mat-mdc-chip,
-mat-icon {
-  font: var(--mat-sys-body-medium); // Add material font for all mat-icons to ensure correct presentation (vertical alignment)
-}
-
 // *** CARDS ***
 .hz-card {
   background-color: var(--mat-sys-surface-container-low) !important;
   border: 1px solid var(--mat-sys-outline-variant) !important;
-  border-radius: var(--mat-sys-corner-extra-small) !important;
-}
-
-.hz-card-light {
-  background-color: var(--mat-sys-surface-container-high) !important;
-  border: 1px solid var(--mat-sys-outline-variant) !important;
-  border-radius: var(--mat-sys-corner-extra-small) !important;
+  border-radius: var(--mat-sys-corner-small) !important;
 }
 
 // *** DIALOG ***
 .hz-dialog-container {
   background-color: var(--mat-sys-surface-container-low);
   border: 1px solid var(--mat-sys-outline-variant);
-  border-radius: var(--mat-sys-corner-extra-small);
+  border-radius: var(--mat-sys-corner-small);
 
   @include mat.dialog-overrides(
     (
@@ -153,13 +118,13 @@ mat-icon {
 }
 
 .dialog-title {
-  @apply text-xl font-medium;
+  font: var(--mat-sys-title-large);
 
   text-align: left;
 }
 
 .dialog-message {
-  @apply text-base;
+  font: var(--mat-sys-body-large);
 
   text-align: center;
 }

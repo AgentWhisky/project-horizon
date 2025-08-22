@@ -3,12 +3,12 @@ import { provideRouter, withComponentInputBinding, withViewTransitions } from '@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
-import { routes } from './app.routes';
 import { tokenInterceptor } from './core/interceptors/token.interceptor';
-import { VersionHistoryService } from './core/services/version-history.service';
 import { TitleService } from './core/services/title.service';
 import { TokenService } from './core/services/token.service';
 import { IconService } from './core/services/icon.service';
+import { VersionHistoryService } from './core/services/version-history.service';
+import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [

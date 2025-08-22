@@ -24,12 +24,11 @@ import { LinkLibraryManagementDialogComponent } from './link-library-management-
 import { LinkLibraryImportDialogComponent } from './link-library-import-dialog/link-library-import-dialog.component';
 import { LinkTagDialogComponent } from './link-tag-dialog/link-tag-dialog.component';
 import { Category, Link, Tag } from './link-library-management';
-import { USER_RIGHTS } from '../../../core/constants/user-rights.constant';
-import { REBASE_REQUIRED } from '../../../core/constants/lexo-rank.constant';
 import { generateSortKey } from '../../../core/utilities/lexo-rank.util';
 import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../../core/services/theme.service';
 import { ImageFallbackDirective } from '../../../core/directives/image-fallback.directive';
+import { REBASE_REQUIRED, USER_RIGHTS } from '@hz/constants';
 
 @Component({
   selector: 'hz-link-library-management',

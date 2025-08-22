@@ -6,7 +6,8 @@ import { HttpParams } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TokenService } from '../../../../core/services/token.service';
 import { cleanObject } from '../../../../core/utilities/clean-object.util';
-import { LOADING_STATUS } from '../../../../core/constants/loading-status.constants';
+import { LOADING_STATUS } from '@hz/constants';
+
 @Injectable({
   providedIn: 'root',
 })

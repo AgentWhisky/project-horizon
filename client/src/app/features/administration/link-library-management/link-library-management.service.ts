@@ -6,8 +6,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TokenService } from '../../../core/services/token.service';
 import { DownloadService } from '../../../core/services/download.service';
 import { Category, CategoryPayload, Link, LinkPayload, Tag, TagPayload } from './link-library-management';
-import { OperationResult } from '../../../core/models/operation-result';
-import { DeleteResponse } from '../../../core/models/delete-response';
+import { OperationResult } from '../../../core/models/operation-result.model';
+import { DeleteResponse } from '../../../core/models/delete-response.model';
 
 @Injectable({
   providedIn: 'root',

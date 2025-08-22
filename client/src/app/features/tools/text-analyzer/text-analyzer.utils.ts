@@ -1,9 +1,4 @@
-import {
-  AVERAGE_READ_WORD_PER_MINUTE,
-  AVERAGE_SPEAK_WORD_PER_MINUTE,
-  AVERAGE_TYPING_WORD_PER_MINUTE,
-} from '../../../core/constants/average-action-time.constant';
-import { CHAR_LABELS } from '../../../core/constants/text.constants';
+import { AVERAGE_WPM, CHAR_LABELS } from '@hz/constants';
 import { countSyllables } from '../../../core/utilities/text.util';
 import { AnalyzeTextOptions, CharacterBreakdown, ReadabilityStats, TextBreakdown, WordBreakdown } from './text-analyzer';
 
@@ -36,9 +31,9 @@ export function analyzeText(text: string, options?: AnalyzeTextOptions): TextBre
     const totalWordLength = words.reduce((sum, word) => sum + word.length, 0);
 
     textBreakdown.averageWordLength = totalWordLength / words.length;
-    textBreakdown.averageReadTimeSeconds = (words.length / AVERAGE_READ_WORD_PER_MINUTE) * 60;
-    textBreakdown.averageSpeakingTimeSeconds = (words.length / AVERAGE_SPEAK_WORD_PER_MINUTE) * 60;
-    textBreakdown.averageTypingTimeSeconds = (words.length / AVERAGE_TYPING_WORD_PER_MINUTE) * 60;
+    textBreakdown.averageReadTimeSeconds = (words.length / AVERAGE_WPM.READ) * 60;
+    textBreakdown.averageSpeakingTimeSeconds = (words.length / AVERAGE_WPM.SPEAK) * 60;
+    textBreakdown.averageTypingTimeSeconds = (words.length / AVERAGE_WPM.TYPE) * 60;
   }
 
   // Content Quality Analytics

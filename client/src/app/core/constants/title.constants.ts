@@ -1,1 +1,1 @@
-export const DEFAULT_TITLE = 'Horizon' as const;
+export const DEFAULT_APP_TITLE = 'Horizon' as const;

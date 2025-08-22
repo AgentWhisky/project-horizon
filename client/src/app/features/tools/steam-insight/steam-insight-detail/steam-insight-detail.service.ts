@@ -3,9 +3,8 @@ import { firstValueFrom } from 'rxjs';
 
 import { TokenService } from '../../../../core/services/token.service';
 import { SteamInsightHistoryService } from '../steam-insight-history.service';
-import { STEAM_INSIGHT_SHOW_ACHIEVEMENTS } from '../../../../core/constants/storage-keys.constant';
 import { SteamAppDetails, EMPTY_STEAM_APP_DETAILS } from './steam-insight-detail';
-import { LOADING_STATUS } from '../../../../core/constants/loading-status.constants';
+import { LOADING_STATUS, STORAGE_KEYS } from '@hz/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -65,10 +64,10 @@ export class SteamInsightDetailService {
   }
 
   private saveShowHiddenAchievements() {
-    localStorage.setItem(STEAM_INSIGHT_SHOW_ACHIEVEMENTS, JSON.stringify(this.showHiddenAchievements()));
+    localStorage.setItem(STORAGE_KEYS.STEAM_INSIGHT.SHOW_ACHIEVEMENTS, JSON.stringify(this.showHiddenAchievements()));
   }
 
   private loadShowHiddenAchievements(): boolean {
-    return JSON.parse(localStorage.getItem(STEAM_INSIGHT_SHOW_ACHIEVEMENTS) || 'false');
+    return JSON.parse(localStorage.getItem(STORAGE_KEYS.STEAM_INSIGHT.SHOW_ACHIEVEMENTS) || 'false');
   }
 }

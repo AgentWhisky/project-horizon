@@ -18,8 +18,8 @@ import { DatePipe } from '@angular/common';
 import { RoleDialogComponent } from './role-dialog/role-dialog.component';
 import { UserService } from '../../../core/services/user.service';
 import { MessageCardComponent } from '../../../shared/components/message-card/message-card.component';
-import { USER_RIGHTS } from '../../../core/constants/user-rights.constant';
 import { ConfirmDialogComponent } from '../../../shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { USER_RIGHTS } from '@hz/constants';
 
 @Component({
   selector: 'hz-account-management',

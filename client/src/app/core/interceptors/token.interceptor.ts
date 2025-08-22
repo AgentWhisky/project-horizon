@@ -1,14 +1,12 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { ACCESS_TOKEN } from '../constants/storage-keys.constant';
+import { STORAGE_KEYS, TOKEN_EXCLUDED_ENDPOINTS } from '@hz/constants';
 
 export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
-  const excludedUrls = ['/api/login', '/api/refresh'];
-
-  if (excludedUrls.some((url) => req.url.includes(url))) {
+  if (TOKEN_EXCLUDED_ENDPOINTS.has(req.url)) {
     return next(req);
   }
 
-  const accessToken = localStorage.getItem(ACCESS_TOKEN);
+  const accessToken = localStorage.getItem(STORAGE_KEYS.AUTH.ACCESS_TOKEN);
 
   if (accessToken) {
     const authRequest = req.clone({

@@ -1,6 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { DARK_THEME } from '../constants/storage-keys.constant';
-import { DARK_MODE_CLASS_NAME } from '../constants/theme.constant';
+import { DARK_MODE_CLASS_NAME, STORAGE_KEYS } from '@hz/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -26,10 +25,10 @@ export class ThemeService {
   }
 
   private saveTheme(isDarkMode: boolean) {
-    localStorage.setItem(DARK_THEME, JSON.stringify(isDarkMode));
+    localStorage.setItem(STORAGE_KEYS.THEME.DARK_THEME, JSON.stringify(isDarkMode));
   }
 
   private loadTheme() {
-    return JSON.parse(localStorage.getItem(DARK_THEME) || 'false');
+    return JSON.parse(localStorage.getItem(STORAGE_KEYS.THEME.DARK_THEME) || 'false');
   }
 }

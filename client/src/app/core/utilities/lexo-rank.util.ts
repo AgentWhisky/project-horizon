@@ -1,4 +1,4 @@
-import { MINOR_BASE, MINOR_LENGTH, MINOR_MAX, MINOR_MIN, MINOR_STEP, REBASE_REQUIRED } from '../constants/lexo-rank.constant';
+import { LEXO_RANK_MINOR, REBASE_REQUIRED } from '@hz/constants';
 
 function base36ToInt(value: string): number {
   return parseInt(value, 36);
@@ -18,21 +18,21 @@ export function generateSortKey(prevKey?: string | null, nextKey?: string | null
 
   // Only Sort Key
   if (!prevKey && !nextKey) {
-    return `${newMajor}:${MINOR_BASE}`;
+    return `${newMajor}:${LEXO_RANK_MINOR.BASE}`;
   }
 
   // First Sort Key
   if (!prevKey && nextKey) {
     const { minor: nextMinor } = parseSortKey(nextKey);
     const nextVal = base36ToInt(nextMinor);
-    const prevVal = nextVal - MINOR_STEP;
+    const prevVal = nextVal - LEXO_RANK_MINOR.STEP;
 
-    if (prevVal < base36ToInt(MINOR_MIN)) {
+    if (prevVal < base36ToInt(LEXO_RANK_MINOR.MIN)) {
       console.warn(`New Minor is below MINOR MIN. Require rebasing.`);
       return REBASE_REQUIRED;
     }
 
-    const newMinor = intToBase36(prevVal, MINOR_LENGTH);
+    const newMinor = intToBase36(prevVal, LEXO_RANK_MINOR.LENGTH);
     return `${newMajor}:${newMinor}`;
   }
 
@@ -40,14 +40,14 @@ export function generateSortKey(prevKey?: string | null, nextKey?: string | null
   if (prevKey && !nextKey) {
     const { minor: prevMinor } = parseSortKey(prevKey);
     const prevVal = base36ToInt(prevMinor);
-    const nextVal = prevVal + MINOR_STEP;
+    const nextVal = prevVal + LEXO_RANK_MINOR.STEP;
 
-    if (nextVal > base36ToInt(MINOR_MAX)) {
+    if (nextVal > base36ToInt(LEXO_RANK_MINOR.MAX)) {
       console.warn(`New Minor exceeds MINOR MAX. Require rebasing.`);
       return REBASE_REQUIRED;
     }
 
-    const newMinor = intToBase36(nextVal, MINOR_LENGTH);
+    const newMinor = intToBase36(nextVal, LEXO_RANK_MINOR.LENGTH);
     return `${newMajor}:${newMinor}`;
   }
 
@@ -65,7 +65,7 @@ export function generateSortKey(prevKey?: string | null, nextKey?: string | null
     }
 
     const midVal = Math.floor((prevVal + nextVal) / 2);
-    const newMinor = intToBase36(midVal, MINOR_LENGTH);
+    const newMinor = intToBase36(midVal, LEXO_RANK_MINOR.LENGTH);
     return `${newMajor}:${newMinor}`;
   }
 

@@ -1,0 +1,13 @@
+styles.scss - Refactor .hz-card to move away from mat-cards
+index.html - Add meta data to better pass lighthouse
+
+
+
+Major Changes
+---------------------
+Updated all constants imports
+Added index barrel to constants folder 
+
+Fixed naming of constants files to .constants.ts
+Fixed naming of model files to .model.ts
+

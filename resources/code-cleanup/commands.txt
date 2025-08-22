@@ -1,0 +1,1 @@
+PS: tree /F > client-project-structure.txt

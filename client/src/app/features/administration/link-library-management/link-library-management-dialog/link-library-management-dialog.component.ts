@@ -12,7 +12,6 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ValidatorMessagePipe } from '../../../../core/pipes/validator-message.pipe';
-import { REGEX } from '../../../../core/constants/regex.constant';
 import { checkFaviconExists } from '../../../../core/utilities/favicon.util';
 import { LinkLibraryManagementService } from '../link-library-management.service';
 import { Link, LinkPayload } from '../link-library-management';
@@ -21,6 +20,7 @@ import { ThemeService } from '../../../../core/services/theme.service';
 import { tap } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ImageFallbackDirective } from '../../../../core/directives/image-fallback.directive';
+import { REGEX } from '@hz/constants';
 
 interface DialogData {
   type: 'create' | 'update';

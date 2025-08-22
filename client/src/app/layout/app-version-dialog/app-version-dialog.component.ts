@@ -4,9 +4,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
-import { APP_URLS } from '../../core/constants/url.constant';
 import { VersionHistoryService } from '../../core/services/version-history.service';
 import { HzTimelineModule } from '../../shared/components/hz-timeline';
+import { APP_URLS } from '@hz/constants';
 
 @Component({
   selector: 'hz-app-version-dialog',
@@ -16,7 +16,7 @@ import { HzTimelineModule } from '../../shared/components/hz-timeline';
 })
 export class AppVersionDialogComponent {
   readonly dialogRef = inject(MatDialogRef<AppVersionDialogComponent>);
-  readonly githubRepoUrl = APP_URLS.githubRepo;
+  readonly githubRepoUrl = APP_URLS.APP_GITHUB_REPOSITORY;
 
   private versionHistoryService = inject(VersionHistoryService);
 

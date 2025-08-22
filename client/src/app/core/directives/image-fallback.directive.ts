@@ -1,8 +1,9 @@
 import { Directive, HostListener, input, signal } from '@angular/core';
+import { ASSET_URLS } from '@hz/constants';
 
 @Directive({ selector: 'img[fallbackSrc]' })
 export class ImageFallbackDirective {
-  readonly fallbackSrc = input('assets/icons/default-favicon.ico');
+  readonly fallbackSrc = input(ASSET_URLS.DEFAULT_ICON);
   private fallbackApplied = signal<boolean>(false);
 
   @HostListener('error', ['$event'])

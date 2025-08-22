@@ -15,10 +15,10 @@ import { ThemeService } from '../../core/services/theme.service';
 import { LeftNavComponent } from '../left-nav/left-nav.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { environment } from '../../../environments/environment';
-import { APP_URLS } from '../../core/constants/url.constant';
 import { AppVersionDialogComponent } from '../app-version-dialog/app-version-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { VersionHistoryService } from '../../core/services/version-history.service';
+import { APP_URLS } from '@hz/constants';
 
 @Component({
   selector: 'hz-main-layout',
@@ -47,7 +47,6 @@ export class MainComponent {
 
   readonly isSmallScreen = this.screenService.isSmallScreen;
   readonly isMobileScreen = this.screenService.isMobileScreen;
-  readonly isScrolled = this.screenService.isScrolled;
 
   readonly isLeftNavOpen = this.navigationService.isLeftNavOpen;
   readonly isLoggedIn = this.userService.isLoggedIn;
@@ -56,9 +55,9 @@ export class MainComponent {
   readonly currentVersionInfo = this.versionHistoryService.currentVersionInfo;
   readonly envName = environment.envName;
 
-  readonly githubUrl = APP_URLS.github;
-  readonly githubRepoUrl = APP_URLS.githubRepo;
-  readonly linkedInUrl = APP_URLS.linkedIn;
+  readonly githubUrl = APP_URLS.DEVELPOER_GITHUB;
+  readonly githubRepoUrl = APP_URLS.APP_GITHUB_REPOSITORY;
+  readonly linkedInUrl = APP_URLS.LINKEDIN;
 
   onToggleLeftNav() {
     this.navigationService.toggleLeftNav();

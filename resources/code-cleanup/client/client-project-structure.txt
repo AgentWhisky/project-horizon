@@ -1,6 +1,7 @@
 Folder PATH listing
 Volume serial number is 94CA-A398
 C:.
+¦   client-project-structure.txt
 ¦   index.html
 ¦   main.ts
 ¦   project-structure.txt

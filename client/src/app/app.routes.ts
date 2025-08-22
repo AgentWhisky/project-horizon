@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
+
 import { AuthGuard } from './core/guards/auth.guard';
-import { USER_RIGHTS } from './core/constants/user-rights.constant';
+import { USER_RIGHTS } from '@hz/constants';
 
 export const routes: Routes = [
   {
@@ -100,13 +101,11 @@ export const routes: Routes = [
           },
         ],
       },
-
-      // *** WILDCARD ***
-      {
-        path: '**',
-        redirectTo: 'link-library',
-        pathMatch: 'full',
-      },
     ],
+  },
+  // *** WILDCARD ***
+  {
+    path: '**',
+    redirectTo: 'link-library',
   },
 ];
