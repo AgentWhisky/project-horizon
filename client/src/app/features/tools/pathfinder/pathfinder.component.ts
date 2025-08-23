@@ -10,8 +10,8 @@ import { filter, tap } from 'rxjs';
 import { PathfinderService } from './pathfinder.service';
 import { PathfinderTileComponent } from './pathfinder-tile/pathfinder-tile.component';
 import { Tile } from './pathfinder';
-import { MessageCardComponent } from '../../../shared/components/message-card/message-card.component';
-import { StatusBannerComponent } from '../../../shared/components/status-banner/status-banner.component';
+import { MessageCardComponent, StatusBannerComponent } from '@hz/shared/components';
+
 
 const minTileSize = 12;
 const maxTileSize = 32;

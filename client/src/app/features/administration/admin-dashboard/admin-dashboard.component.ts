@@ -13,10 +13,11 @@ import { SteamAppUpdateLogDisplay } from './admin-dashboard';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { DurationPipe } from '../../../core/pipes/duration.pipe';
-import { ScreenService } from '../../../core/services/screen.service';
+
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DurationPipe } from '@hz/core/pipes';
+import { ScreenService } from '@hz/core/services';
 
 @Component({
   selector: 'hz-admin-dashboard',

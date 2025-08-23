@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { VersionEntry, VersionEntryRaw } from '../models/version-history.model';
 import { firstValueFrom } from 'rxjs';
-import { ASSET_URLS } from '@hz/constants';
+import { ASSET_URLS } from '@hz/core/constants';
 
 @Injectable({
   providedIn: 'root',

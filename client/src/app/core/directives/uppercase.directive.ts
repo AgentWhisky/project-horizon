@@ -1,5 +1,9 @@
 import { Directive, HostListener } from '@angular/core';
 
+/**
+ * A directive to force input characters to uppercase
+ * -Example: `Hello World!` to `HELLO WORLD!`
+ */
 @Directive({
   selector: '[uppercase]',
 })

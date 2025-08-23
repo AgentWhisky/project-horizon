@@ -9,11 +9,14 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { PasswordMatchErrorStateMatcher } from './password-matcher';
-import { UppercaseDirective } from '../../../core/directives/uppercase.directive';
-import { ValidatorMessagePipe } from '../../../core/pipes/validator-message.pipe';
-import { UserService } from '../../../core/services/user.service';
-import { confirmPasswordValidator } from '../../../core/validators/confirm-password.validator';
-import { NewAccountCredentials } from '../../../core/models/login-credentials.model';
+
+
+
+import { UppercaseDirective } from '@hz/core/directives';
+import { NewAccountCredentials } from '@hz/core/models';
+import { ValidatorMessagePipe } from '@hz/core/pipes';
+import { UserService } from '@hz/core/services';
+import { confirmPasswordValidator } from '@hz/core/validators';
 
 @Component({
   selector: 'hz-login-dialog',

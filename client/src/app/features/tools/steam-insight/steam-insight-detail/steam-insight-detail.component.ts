@@ -17,14 +17,14 @@ import { CommonModule, TitleCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { ScreenService } from '../../../../core/services/screen.service';
-import { TitleService } from '../../../../core/services/title.service';
+
 import { SteamInsightDetailService } from './steam-insight-detail.service';
 import { SteamDlcTileComponent } from './steam-dlc-tile/steam-dlc-tile.component';
-import { DecodeHtmlPipe } from '../../../../core/pipes/decode-html.pipe';
-import { SecureUrlPipe } from '../../../../core/pipes/secure-url.pipe';
+
 import { Achievement, DlcDetails } from './steam-insight-detail';
-import { STEAM_INSIGHT_DLC } from '@hz/constants';
+import { STEAM_INSIGHT_DLC } from '@hz/core/constants';
+import { DecodeHtmlPipe, SecureUrlPipe } from '@hz/core/pipes';
+import { ScreenService, TitleService } from '@hz/core/services';
 
 @Component({
   selector: 'hz-steam-insight-detail',

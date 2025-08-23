@@ -1,13 +1,15 @@
 styles.scss - Refactor .hz-card to move away from mat-cards
 index.html - Add meta data to better pass lighthouse
-
-
+assets/ - Remove unused images and dashboard
+dashboard - Remove dashboard
+ScreenService - Check migration for zoneless with NgZone
 
 Major Changes
 ---------------------
-Updated all constants imports
-Added index barrel to constants folder 
+Updated all core imports
+index barrel to core 
+
+referenced with '@hz/core/constants'
 
 Fixed naming of constants files to .constants.ts
 Fixed naming of model files to .model.ts
-

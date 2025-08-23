@@ -11,8 +11,9 @@ import { BaseConverterService } from './base-converter.service';
 import { filter, tap } from 'rxjs';
 import { BaseConvertTileDialogComponent } from './base-convert-tile-dialog/base-convert-tile-dialog.component';
 import { BaseConvertConversionDialogComponent } from './base-convert-conversion-dialog/base-convert-conversion-dialog.component';
-import { MessageCardComponent } from '../../../shared/components/message-card/message-card.component';
-import { ConfirmDialogComponent } from '../../../shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { MessageCardComponent } from '@hz/shared/components';
+import { ConfirmDialogComponent } from '@hz/shared/dialogs';
+
 
 @Component({
   selector: 'hz-base-converter',

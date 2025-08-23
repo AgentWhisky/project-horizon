@@ -8,17 +8,15 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 
-import { ScreenService } from '../../core/services/screen.service';
-import { NavigationService } from '../../core/services/navigation.service';
-import { UserService } from '../../core/services/user.service';
-import { ThemeService } from '../../core/services/theme.service';
+
 import { LeftNavComponent } from '../left-nav/left-nav.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { environment } from '../../../environments/environment';
 import { AppVersionDialogComponent } from '../app-version-dialog/app-version-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { VersionHistoryService } from '../../core/services/version-history.service';
-import { APP_URLS } from '@hz/constants';
+
+import { APP_URLS } from '@hz/core/constants';
+import { NavigationService, ScreenService, ThemeService, UserService, VersionHistoryService } from '@hz/core/services';
 
 @Component({
   selector: 'hz-main-layout',

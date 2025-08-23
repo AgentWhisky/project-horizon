@@ -1,3 +1,8 @@
+/**
+ * Gives a rough estimate of the syllables in a given word
+ *
+ * @param word The given word to calculate syllables for
+ */
 export function countSyllables(word: string): number {
   if (word.length <= 3) return 1;
 

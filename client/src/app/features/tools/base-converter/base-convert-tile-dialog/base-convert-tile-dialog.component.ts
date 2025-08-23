@@ -4,10 +4,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { ValidatorMessagePipe } from '../../../../core/pipes/validator-message.pipe';
+
 import { MatSelectModule } from '@angular/material/select';
 import { tap } from 'rxjs';
 import { baseNames, defaultNumericBases } from '../base-converter.config';
+import { ValidatorMessagePipe } from '@hz/core/pipes';
 
 interface DialogData {
   existingBases: number[];

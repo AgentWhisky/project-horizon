@@ -4,9 +4,10 @@ import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { ContentTileComponent } from '../../shared/components/content-tile/content-tile.component';
+
 import { dashboardSections } from './dashboard.config';
 import { MatDividerModule } from '@angular/material/divider';
+import { ContentTileComponent } from '@hz/shared/components';
 
 @Component({
   selector: 'hz-dashboard',

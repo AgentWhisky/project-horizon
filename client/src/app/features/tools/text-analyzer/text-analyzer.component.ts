@@ -14,8 +14,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TextAnalyzerService } from './text-analyzer.service';
 import { CharacterBreakdown, WordBreakdown } from './text-analyzer';
 import { CommonModule } from '@angular/common';
-import { DurationPipe } from '../../../core/pipes/duration.pipe';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { DurationPipe } from '@hz/core/pipes';
 
 @Component({
   selector: 'hz-text-analyzer',

@@ -7,10 +7,11 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { ValidatorMessagePipe } from '../../../../core/pipes/validator-message.pipe';
-import { uniqueText } from '../../../../core/validators/unique-text.validator';
+
 import { LinkLibraryManagementService } from '../link-library-management.service';
 import { Tag, TagPayload } from '../link-library-management';
+import { ValidatorMessagePipe } from '@hz/core/pipes';
+import { uniqueText } from '@hz/core/validators';
 
 interface DialogData {
   type: 'create' | 'update';

@@ -4,7 +4,8 @@ import { BaseConvertConversionDialogComponent } from '../../base-converter/base-
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
-import { ValidatorMessagePipe } from '../../../../core/pipes/validator-message.pipe';
+import { ValidatorMessagePipe } from '@hz/core/pipes';
+
 
 interface DialogResult {
   status: boolean;

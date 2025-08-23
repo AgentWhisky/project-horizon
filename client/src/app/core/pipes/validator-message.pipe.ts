@@ -12,21 +12,19 @@ const DEFAULT_ERROR_MESSAGES: Record<string, (value?: any) => string> = {
   unknown: () => 'This field is invalid',
 };
 
+/**
+ * A pipe that transforms Angular form validation errors into user-friendly messages
+ *
+ * - `errors` is the validation errors array from a Form Control
+ * - `overrides` is an optional map of custom error messages. Overrides can be used in place of existing default error messages or used to set messages for custom errors
+ * - `default` can also be supplied for what to display if there are no errors
+ *
+ * - Example: `{{ linkForm.get('url')?.errors | validatorMessage : { pattern: 'Invalid URL format' } }}`
+ */
 @Pipe({
   name: 'validatorMessage',
 })
 export class ValidatorMessagePipe implements PipeTransform {
-  /**
-   * Transforms Angular form validation errors into user-friendly messages.
-   *
-   * @param errors - The ValidationErrors errors array from a Form Control.
-   * @param overrides - Optional map of custom error messages.
-   *   Overides can be used in place of existing default error messages or used to set custom error messages
-   *   You can also add a 'default' key for what to display if there are no errors
-   *
-   * Example:
-   *   {{ linkForm.get('url')?.errors | validatorMessage : { pattern: 'Invalid URL format' } }}
-   */
   transform(errors: ValidationErrors | null | undefined, overrides: Record<string, string> = {}): string {
     if (!errors) {
       return overrides['default'] || '';

@@ -1,4 +1,4 @@
-import { ContentTileConfig } from "../../shared/components/content-tile/content-tile";
+import { ContentTileConfig } from '@hz/shared/components';
 
 export interface DashboardSection {
   sectionTitle: string;

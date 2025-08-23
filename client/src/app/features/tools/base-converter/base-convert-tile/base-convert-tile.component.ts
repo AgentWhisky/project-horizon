@@ -9,11 +9,12 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
 import { ConvertBase, ReorderConversion } from '../base-converter';
-import { convertToBase } from '../../../../core/utilities/base-conversion.util';
-import { UppercaseDirective } from '../../../../core/directives/uppercase.directive';
-import { CharacterRestrictDirective } from '../../../../core/directives/character-restrict.directive';
-import { ScreenService } from '../../../../core/services/screen.service';
+
+
 import { BASE_CHAR_PATTERNS, baseNames } from '../base-converter.config';
+import { CharacterRestrictDirective, UppercaseDirective } from '@hz/core/directives';
+import { ScreenService } from '@hz/core/services';
+import { convertToBase } from '@hz/core/utilities';
 
 @Component({
   selector: 'hz-base-convert-tile',

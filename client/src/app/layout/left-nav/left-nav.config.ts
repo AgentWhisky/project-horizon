@@ -1,4 +1,4 @@
-import { USER_RIGHTS } from '@hz/constants';
+import { USER_RIGHTS } from '@hz/core/constants';
 
 export interface NavSection {
   title?: string;

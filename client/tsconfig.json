@@ -20,8 +20,8 @@
     "module": "ES2022",
     "baseUrl": "src",
     "paths": {
-      "@hz/*": ["app/core/*"],
-      "@hz": ["app/core/index.ts"]
+      "@hz/core/*": ["app/core/*"],
+      "@hz/shared/*": ["app/shared/*"]
     }
   },
   "angularCompilerOptions": {

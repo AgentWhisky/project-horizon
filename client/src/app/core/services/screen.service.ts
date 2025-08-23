@@ -1,5 +1,5 @@
 import { inject, Injectable, NgZone, OnDestroy, signal } from '@angular/core';
-import { SCREEN_BREAKPOINTS } from '@hz/constants';
+import { SCREEN_BREAKPOINTS } from '../constants';
 
 @Injectable({
   providedIn: 'root',

@@ -1,10 +1,16 @@
 import { Directive, HostListener, input } from '@angular/core';
 
+/**
+ * A directive to restrict entered characters to match a given regex pattern
+ * - `charRestrict` requires a regex pattern to match against
+ * - Matches input characters through keydown and paste events
+ *
+ */
 @Directive({
   selector: '[charRestrict]',
 })
 export class CharacterRestrictDirective {
-  readonly charRestrictPattern = input.required<RegExp>();
+  readonly charRestrict = input.required<RegExp>();
 
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
@@ -17,7 +23,7 @@ export class CharacterRestrictDirective {
       return;
     }
 
-    if (!this.charRestrictPattern().test(char)) {
+    if (!this.charRestrict().test(char)) {
       event.preventDefault();
     }
   }
@@ -27,7 +33,7 @@ export class CharacterRestrictDirective {
     const clipboardData = event.clipboardData;
     const pasteText = clipboardData?.getData('text').toUpperCase() ?? '';
 
-    if (!this.charRestrictPattern().test(pasteText)) {
+    if (!this.charRestrict().test(pasteText)) {
       event.preventDefault();
     }
   }

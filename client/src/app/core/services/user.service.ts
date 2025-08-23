@@ -1,14 +1,16 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { AuthInfo, AuthInfoPayload, UserInfo } from '../models/auth.model';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { LoginCredentials, NewAccountCredentials } from '../models/login-credentials.model';
+
 import { jwtDecode } from 'jwt-decode';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+
 import { environment } from '../../../environments/environment';
-import { LoginDialogComponent } from '../../shared/dialogs/login-dialog/login-dialog.component';
+import { AuthInfo, AuthInfoPayload, LoginCredentials, NewAccountCredentials, UserInfo } from '../models';
+import { LoginDialogComponent } from '@hz/shared/dialogs';
 
 @Injectable({
   providedIn: 'root',

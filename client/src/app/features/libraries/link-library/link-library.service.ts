@@ -1,7 +1,8 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { TokenService } from '../../../core/services/token.service';
+
 import { Link, LinksByCategory } from './link-library';
 import { firstValueFrom } from 'rxjs';
+import { TokenService } from '@hz/core/services';
 
 @Injectable({
   providedIn: 'root',

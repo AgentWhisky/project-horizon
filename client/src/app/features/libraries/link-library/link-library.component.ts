@@ -9,7 +9,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { LinkTileComponent } from './link-tile/link-tile.component';
 import { FormsModule } from '@angular/forms';
-import { StatusBannerComponent } from '../../../shared/components/status-banner/status-banner.component';
+import { StatusBannerComponent } from '@hz/shared/components';
+
 
 @Component({
   selector: 'hz-link-library',

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { MessageCardComponent } from '../../../shared/components/message-card/message-card.component';
+import { MessageCardComponent } from '@hz/shared/components';
+
 
 @Component({
   selector: 'hz-book-library',

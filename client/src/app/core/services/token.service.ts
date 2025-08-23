@@ -1,10 +1,12 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
-import { AuthInfo, AuthInfoPayload } from '../models/auth.model';
 import { firstValueFrom, from, mergeMap, of, retry, throwError } from 'rxjs';
-import { UserService } from './user.service';
+
 import { jwtDecode } from 'jwt-decode';
+
+import { environment } from '../../../environments/environment';
+import { AuthInfo, AuthInfoPayload } from '../models';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',

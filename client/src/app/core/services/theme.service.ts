@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { DARK_MODE_CLASS_NAME, STORAGE_KEYS } from '@hz/constants';
+import { DARK_MODE_CLASS_NAME, STORAGE_KEYS } from '../constants';
 
 @Injectable({
   providedIn: 'root',

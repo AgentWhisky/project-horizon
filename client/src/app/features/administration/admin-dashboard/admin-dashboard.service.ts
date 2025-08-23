@@ -1,8 +1,9 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { TokenService } from '../../../core/services/token.service';
+
 import { firstValueFrom } from 'rxjs';
 import { AdminDashboardInfo, CreationCodeRefresh } from './admin-dashboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TokenService } from '@hz/core/services';
 
 @Injectable({
   providedIn: 'root',

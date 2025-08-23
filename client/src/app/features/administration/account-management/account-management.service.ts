@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { TokenService } from '../../../core/services/token.service';
+
 import {
   RightCode,
   RightPayload,
@@ -12,7 +12,8 @@ import {
   UserPayload,
 } from './account-management';
 import { firstValueFrom } from 'rxjs';
-import { DeleteResponse } from '../../../core/models/delete-response.model';
+import { DeleteResponse } from '@hz/core/models';
+import { TokenService } from '@hz/core/services';
 
 @Injectable({
   providedIn: 'root',

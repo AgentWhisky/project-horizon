@@ -2,6 +2,8 @@ import { inject, Injectable } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 
+import { ASSET_URLS } from '../constants';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -10,11 +12,11 @@ export class IconService {
   private domSanitizer = inject(DomSanitizer);
 
   private readonly icons: Record<string, string> = {
-    github: 'assets/icons/github-brands.svg',
-    linkedin: 'assets/icons/linkedin-brands.svg',
-    steam: 'assets/icons/steam-brands.svg',
-    'timeline-marker': 'assets/icons/timeline-marker.svg',
-    'timeline-marker-latest': 'assets/icons/timeline-marker-latest.svg',
+    github: ASSET_URLS.ICONS.GITHUB,
+    linkedin: ASSET_URLS.ICONS.LINKEDIN,
+    steam: ASSET_URLS.ICONS.STEAM,
+    'timeline-marker': ASSET_URLS.ICONS.TIMELINE_MARKER,
+    'timeline-marker-latest': ASSET_URLS.ICONS.TIMELINE_MARKER_LATEST,
   };
 
   registerIcons(): void {

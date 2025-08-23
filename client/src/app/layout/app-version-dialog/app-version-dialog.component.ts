@@ -4,9 +4,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
-import { VersionHistoryService } from '../../core/services/version-history.service';
-import { HzTimelineModule } from '../../shared/components/hz-timeline';
-import { APP_URLS } from '@hz/constants';
+
+import { APP_URLS } from '@hz/core/constants';
+import { VersionHistoryService } from '@hz/core/services';
+import { HzTimelineModule } from '@hz/shared/components';
 
 @Component({
   selector: 'hz-app-version-dialog',

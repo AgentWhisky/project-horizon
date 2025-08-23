@@ -6,9 +6,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatRippleModule } from '@angular/material/core';
-import { UserService } from '../../core/services/user.service';
+
 import { NavSection, navSections } from './left-nav.config';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { UserService } from '@hz/core/services';
 
 @Component({
   selector: 'hz-left-nav',

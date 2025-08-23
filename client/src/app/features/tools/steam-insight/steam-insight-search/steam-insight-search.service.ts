@@ -4,9 +4,10 @@ import { SteamAppSearchInfo, SteamGameSearchOptions, SteamGameSummary } from './
 import { firstValueFrom } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TokenService } from '../../../../core/services/token.service';
-import { cleanObject } from '../../../../core/utilities/clean-object.util';
-import { LOADING_STATUS } from '@hz/constants';
+
+import { LOADING_STATUS } from '@hz/core/constants';
+import { TokenService } from '@hz/core/services';
+import { cleanObject } from '@hz/core/utilities';
 
 @Injectable({
   providedIn: 'root',

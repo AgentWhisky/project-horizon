@@ -12,7 +12,8 @@ import { RouterModule } from '@angular/router';
 import { SteamGameHistoryEntry } from '../steam-insight';
 import { SteamInsightHistoryService } from '../steam-insight-history.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { KeywordPipe } from '../../../../core/pipes/keyword.pipe';
+import { KeywordPipe } from '@hz/core/pipes';
+
 
 @Component({
   selector: 'hz-steam-insight-search',

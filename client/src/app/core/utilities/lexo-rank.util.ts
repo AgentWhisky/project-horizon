@@ -1,4 +1,4 @@
-import { LEXO_RANK_MINOR, REBASE_REQUIRED } from '@hz/constants';
+import { LEXO_RANK_MINOR, REBASE_REQUIRED } from '../constants';
 
 function base36ToInt(value: string): number {
   return parseInt(value, 36);
@@ -13,6 +13,13 @@ function parseSortKey(sortKey: string): { major: string; minor: string } {
   return { major, minor };
 }
 
+/**
+ * Generates a lexo-rank sort key given adjacent keys
+ * 
+ * @param prevKey The key prior to the key being generated
+ * @param nestKey The key after the key being generated
+ * @param major The major key to include as part of the generated key
+ */
 export function generateSortKey(prevKey?: string | null, nextKey?: string | null, major?: string): string {
   const newMajor = major ? major.padStart(6, '0') : '000000';
 

@@ -1,5 +1,14 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
+/**
+ * A pipe that returns a duration breakdown with a given value and time unit
+ * - `value` is the integer value of time elapsed
+ * - `unit` is the type of unit passed in (miliseconds or seconds)
+ *
+ * - Returns a formatted string of days, hours, minutes, and seconds
+ * - Does not include sections with 0 values other than seconds
+ *
+ */
 @Pipe({
   name: 'duration',
 })

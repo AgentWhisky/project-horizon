@@ -1,7 +1,8 @@
 import { Component, inject, input, output } from '@angular/core';
 import { ContentTileConfig } from './content-tile';
 import { RouterModule } from '@angular/router';
-import { ThemeService } from '../../../core/services/theme.service';
+import { ThemeService } from '@hz/core/services';
+
 
 @Component({
   selector: 'hz-content-tile',

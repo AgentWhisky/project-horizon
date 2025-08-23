@@ -1,13 +1,11 @@
 import { ApplicationConfig, inject, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, withComponentInputBinding, withViewTransitions } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
-import { tokenInterceptor } from './core/interceptors/token.interceptor';
-import { TitleService } from './core/services/title.service';
-import { TokenService } from './core/services/token.service';
-import { IconService } from './core/services/icon.service';
-import { VersionHistoryService } from './core/services/version-history.service';
+import { IconService, TitleService, TokenService, VersionHistoryService } from '@hz/core/services';
+import { tokenInterceptor } from '@hz/core/interceptors';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {

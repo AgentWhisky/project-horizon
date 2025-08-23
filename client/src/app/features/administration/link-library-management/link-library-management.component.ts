@@ -16,19 +16,22 @@ import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup } from '@angular/cd
 import { filter, tap } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 
-import { UserService } from '../../../core/services/user.service';
-import { LinkLibraryManagementService } from './link-library-management.service';
-import { ConfirmDialogComponent } from '../../../shared/dialogs/confirm-dialog/confirm-dialog.component';
+
+
 import { LinkCategoryDialogComponent } from './link-category-dialog/link-category-dialog.component';
 import { LinkLibraryManagementDialogComponent } from './link-library-management-dialog/link-library-management-dialog.component';
 import { LinkLibraryImportDialogComponent } from './link-library-import-dialog/link-library-import-dialog.component';
 import { LinkTagDialogComponent } from './link-tag-dialog/link-tag-dialog.component';
 import { Category, Link, Tag } from './link-library-management';
-import { generateSortKey } from '../../../core/utilities/lexo-rank.util';
+
 import { CommonModule } from '@angular/common';
-import { ThemeService } from '../../../core/services/theme.service';
-import { ImageFallbackDirective } from '../../../core/directives/image-fallback.directive';
-import { REBASE_REQUIRED, USER_RIGHTS } from '@hz/constants';
+
+import { REBASE_REQUIRED, USER_RIGHTS } from '@hz/core/constants';
+import { ImageFallbackDirective } from '@hz/core/directives';
+import { UserService, ThemeService } from '@hz/core/services';
+import { LinkLibraryManagementService } from './link-library-management.service';
+import { generateSortKey } from '@hz/core/utilities';
+import { ConfirmDialogComponent } from '@hz/shared/dialogs';
 
 @Component({
   selector: 'hz-link-library-management',

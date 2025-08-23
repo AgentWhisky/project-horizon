@@ -1,5 +1,9 @@
 import { Directive, HostListener } from '@angular/core';
 
+/**
+ * A directive to force input characters to lowercase
+ * -Example: `Hello World!` to `hello world!`
+ */
 @Directive({
   selector: '[lowercase]',
 })

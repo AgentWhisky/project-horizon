@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
-import { AuthGuard } from './core/guards/auth.guard';
-import { USER_RIGHTS } from '@hz/constants';
+import { USER_RIGHTS } from '@hz/core/constants';
+import { authGuard } from '@hz/core/guards';
 
 export const routes: Routes = [
   {
@@ -64,7 +64,7 @@ export const routes: Routes = [
       // *** ADMINISTRATION ***
       {
         path: 'administration',
-        canActivateChild: [AuthGuard],
+        canActivateChild: [authGuard],
         children: [
           {
             path: 'dashboard',

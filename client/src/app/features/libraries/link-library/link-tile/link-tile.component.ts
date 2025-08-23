@@ -7,8 +7,9 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Link } from '../link-library';
 import { CommonModule } from '@angular/common';
-import { ThemeService } from '../../../../core/services/theme.service';
-import { ImageFallbackDirective } from '../../../../core/directives/image-fallback.directive';
+
+import { ImageFallbackDirective } from '@hz/core/directives';
+import { ThemeService } from '@hz/core/services';
 
 @Component({
   selector: 'hz-link-tile',

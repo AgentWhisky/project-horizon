@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { DEFAULT_APP_TITLE } from '@hz/constants';
+import { DEFAULT_APP_TITLE } from '../constants';
 
 @Injectable({
   providedIn: 'root',
