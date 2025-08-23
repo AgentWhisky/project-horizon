@@ -11,6 +11,7 @@ import { jwtDecode } from 'jwt-decode';
 import { environment } from '../../../environments/environment';
 import { AuthInfo, AuthInfoPayload, LoginCredentials, NewAccountCredentials, UserInfo } from '../models';
 import { LoginDialogComponent } from '@hz/shared/dialogs';
+import { STORAGE_KEYS } from '../constants';
 
 @Injectable({
   providedIn: 'root',
@@ -56,8 +57,8 @@ export class UserService {
         return false;
       }
 
-      localStorage.setItem('accessToken', authInfo.accessToken);
-      localStorage.setItem('refreshToken', authInfo.refreshToken);
+      localStorage.setItem(STORAGE_KEYS.AUTH.ACCESS_TOKEN, authInfo.accessToken);
+      localStorage.setItem(STORAGE_KEYS.AUTH.REFRESH_TOKEN, authInfo.refreshToken);
 
       this.updateUserInfo(authInfo.accessToken);
       this.snackbar.open('Login successful', 'Close', { duration: 3000 });
@@ -100,8 +101,8 @@ export class UserService {
         return false;
       }
 
-      localStorage.setItem('accessToken', authInfo.accessToken);
-      localStorage.setItem('refreshToken', authInfo.refreshToken);
+      localStorage.setItem(STORAGE_KEYS.AUTH.ACCESS_TOKEN, authInfo.accessToken);
+      localStorage.setItem(STORAGE_KEYS.AUTH.REFRESH_TOKEN, authInfo.refreshToken);
       this.updateUserInfo(authInfo.accessToken);
 
       this.snackbar.open('Account registration successful', 'Close', { duration: 3000 });
@@ -129,8 +130,8 @@ export class UserService {
 
   clearUserInfo() {
     this._userInfo.set(null);
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    localStorage.removeItem(STORAGE_KEYS.AUTH.ACCESS_TOKEN);
+    localStorage.removeItem(STORAGE_KEYS.AUTH.REFRESH_TOKEN);
   }
 
   hasRights(rights: string[]) {

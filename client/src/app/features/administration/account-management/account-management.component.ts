@@ -1,4 +1,6 @@
 import { Component, effect, inject, OnInit, viewChild } from '@angular/core';
+import { filter, tap } from 'rxjs';
+import { DatePipe } from '@angular/common';
 
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -8,15 +10,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDialog } from '@angular/material/dialog';
 
 import { RightCode, RoleCode, UserCode } from './account-management';
 import { AccountManagementService } from './account-management.service';
-import { MatDialog } from '@angular/material/dialog';
-import { filter, tap } from 'rxjs';
 import { UserDialogComponent } from './user-dialog/user-dialog.component';
-import { DatePipe } from '@angular/common';
 import { RoleDialogComponent } from './role-dialog/role-dialog.component';
-
 
 import { USER_RIGHTS } from '@hz/core/constants';
 import { UserService } from '@hz/core/services';
@@ -34,8 +33,8 @@ import { ConfirmDialogComponent } from '@hz/shared/dialogs';
     MatTooltipModule,
     MatTabsModule,
     MatChipsModule,
-    MessageCardComponent,
     DatePipe,
+    MessageCardComponent,
   ],
   templateUrl: './account-management.component.html',
   styleUrl: './account-management.component.scss',
@@ -43,10 +42,11 @@ import { ConfirmDialogComponent } from '@hz/shared/dialogs';
 export class AccountManagementComponent implements OnInit {
   private accountManagementService = inject(AccountManagementService);
   private userService = inject(UserService);
+  private dialog = inject(MatDialog);
 
   readonly currentUser = this.userService.userInfo();
 
-  private dialog = inject(MatDialog);
+  readonly MANAGE_ROLES_RIGHT = USER_RIGHTS.MANAGE_ROLES;
 
   // Users Table
   readonly userSort = viewChild<MatSort>('userSort');

@@ -70,7 +70,7 @@
     </mat-tab>
 
     <mat-tab label="Roles" class="flex flex-col">
-      @if(hasRight([USER_RIGHTS.MANAGE_ROLES])) {
+      @if(hasRight([MANAGE_ROLES_RIGHT])) {
       <div class="flex justify-end mt-3">
         <button mat-button (click)="onCreateRole()" aria-label="Add Role">
           <mat-icon>add</mat-icon>

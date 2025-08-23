@@ -1,4 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 
 import {
   RightCode,
@@ -11,9 +12,9 @@ import {
   UserCode,
   UserPayload,
 } from './account-management';
-import { firstValueFrom } from 'rxjs';
-import { DeleteResponse } from '@hz/core/models';
+
 import { TokenService } from '@hz/core/services';
+import { DeleteResponse } from '@hz/core/models';
 
 @Injectable({
   providedIn: 'root',

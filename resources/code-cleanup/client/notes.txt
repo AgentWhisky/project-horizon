@@ -13,3 +13,21 @@ referenced with '@hz/core/constants'
 
 Fixed naming of constants files to .constants.ts
 Fixed naming of model files to .model.ts
+
+
+Future Features
+----------------------
+All searches have downloadable reports (PDF & EXCEL)
+
+
+Feature Notes
+----------------------
+Account Management
+  - Redesign account mangement to move away from tables
+  - Update dialogs to new format
+
+Link Library
+  - Remove animations module
+  - Expansion height auto issue
+  *
+

@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 import { RoleCode, RolePayload } from '../account-management';
@@ -28,6 +28,7 @@ interface DialogResult {
 export class RoleDialogComponent {
   private fb = inject(FormBuilder);
   private dialogRef = inject(MatDialogRef<RoleDialogComponent>);
+
   readonly data = inject<DialogData>(MAT_DIALOG_DATA);
   readonly accountManagementService = inject(AccountManagementService);
 

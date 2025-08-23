@@ -7,6 +7,7 @@ import { jwtDecode } from 'jwt-decode';
 import { environment } from '../../../environments/environment';
 import { AuthInfo, AuthInfoPayload } from '../models';
 import { UserService } from './user.service';
+import { STORAGE_KEYS } from '../constants';
 
 @Injectable({
   providedIn: 'root',
@@ -76,8 +77,8 @@ export class TokenService {
   }
 
   async onInitUser() {
-    const accessToken = localStorage.getItem('accessToken');
-    const refreshToken = localStorage.getItem('refreshToken');
+    const accessToken = localStorage.getItem(STORAGE_KEYS.AUTH.ACCESS_TOKEN);
+    const refreshToken = localStorage.getItem(STORAGE_KEYS.AUTH.REFRESH_TOKEN);
 
     if (!accessToken || !refreshToken) {
       this.userService.clearUserInfo();
@@ -120,8 +121,8 @@ export class TokenService {
           throw new Error('Refresh failed');
         }
 
-        localStorage.setItem('accessToken', authInfo.accessToken);
-        localStorage.setItem('refreshToken', authInfo.refreshToken);
+        localStorage.setItem(STORAGE_KEYS.AUTH.ACCESS_TOKEN, authInfo.accessToken);
+        localStorage.setItem(STORAGE_KEYS.AUTH.REFRESH_TOKEN, authInfo.refreshToken);
         this.userService.updateUserInfo(authInfo.accessToken);
 
         resolve(authInfo);
