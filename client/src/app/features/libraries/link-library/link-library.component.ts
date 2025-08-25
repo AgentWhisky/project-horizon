@@ -1,5 +1,5 @@
-import { Component, computed, effect, inject, model, OnInit, viewChildren } from '@angular/core';
-import { LinkLibraryService } from './link-library.service';
+import { Component, computed, inject, model, OnInit, viewChildren } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -7,10 +7,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
-import { LinkTileComponent } from './link-tile/link-tile.component';
-import { FormsModule } from '@angular/forms';
 import { StatusBannerComponent } from '@hz/shared/components';
 
+import { LinkTileComponent } from './link-tile/link-tile.component';
+import { LinkLibraryService } from './link-library.service';
 
 @Component({
   selector: 'hz-link-library',

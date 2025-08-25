@@ -29,5 +29,12 @@ Account Management
 Link Library
   - Remove animations module
   - Expansion height auto issue
-  *
+
+Admin Dashboard
+  - Refactor dashboard to show more information
+  - Left messy code in admin dashboard for future refactor
+
+Steam Insight 
+  - Refactor administration page to have its own section
+  - Update functionality
 

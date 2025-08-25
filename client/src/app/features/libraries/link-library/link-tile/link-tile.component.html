@@ -1,30 +1,33 @@
 <div class="link-container">
-  <div class="flex flex-row items-center justify-center">
+  <div class="link-tile-navigation-container">
     <a [href]="link().url" target="_blank" [attr.aria-label]="'Open ' + link().name + ' in a new tab'" class="link-button">
       @if(link().icon) {
       <img
         [src]="link().icon"
-        fallbackSrc="/assets/icons/default-favicon.ico"
+        [fallbackSrc]="fallbackIcon"
         loading="lazy"
         alt="favicon"
         width="20"
         height="20"
-        class="p-[2px] rounded-full"
+        class="link-button-icon"
         [ngClass]="{
           'icon-bg-contrast': (link().contrastBackground === 1 && isDarkTheme()) || (link().contrastBackground === 2 && !isDarkTheme())
         }" />
       } @else {
-      <img src="assets/icons/default-favicon.ico" alt="favicon" class="w-4 h-4" />
+      <img [src]="fallbackIcon" alt="favicon" class="w-4 h-4" />
       }
       <span class="w-full line-clamp-1">{{ link().name }}</span>
     </a>
-    <button mat-icon-button class="link-icon" (click)="onToggleView()" aria-label="Toggle link information">
+    <button mat-icon-button class="link-expansion-icon" (click)="onToggleView()" aria-label="Toggle link information">
       <mat-icon class="icon-rotate-flip" [class.open]="isOpen()">keyboard_arrow_down</mat-icon>
     </button>
   </div>
 
-  @if(isOpen()) {
-  <div class="flex flex-col mt-1" @expand>
+  <!-- 
+    Uses Animation Directive for Auto Height
+    Will try to move to @if() to prevent components from loading in the future
+  -->
+  <div class="link-tile-details-container" [hzExpand]="isOpen()">
     <mat-chip-set>
       @for(tag of link().tags; track tag.id) {
       <mat-chip>{{ tag.name }}</mat-chip>
@@ -32,5 +35,4 @@
     </mat-chip-set>
     <h3 class="px-1">{{ link().description }}</h3>
   </div>
-  }
 </div>

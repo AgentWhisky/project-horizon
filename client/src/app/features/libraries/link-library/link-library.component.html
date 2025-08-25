@@ -1,5 +1,5 @@
-<div class="flex flex-col justify-center items-center gap-3">
-  <div class="flex flex-col justify-center items-center w-full">
+<div class="link-library-container">
+  <div class="link-library-filter-container">
     <mat-form-field class="page-search" subscriptSizing="dynamic">
       <mat-label>Filter Links</mat-label>
       <input
@@ -21,12 +21,12 @@
   @if(!linksByCategory().length && linkLibrarySearch.value.length) {
   <hz-status-banner class="page-banner" message="No links found. Please refine your search." align="center" type="info"></hz-status-banner>
   } @else {
-  <div class="link-card-container">
+  <div class="link-library-results-container">
     @for(category of linksByCategory(); track category.id) {
-    <div class="category-container">
-      <span class="category-title">{{ category.name }}</span>
-      <span class="category-description">{{ category.description }}</span>
-      <div class="flex flex-col gap-3 pt-3">
+    <div class="link-library-category-container">
+      <span class="link-library-category-title">{{ category.name }}</span>
+      <span class="link-library-category-description">{{ category.description }}</span>
+      <div class="link-library-link-tile-container">
         @for(link of category.links; track link.id) {
         <hz-link-tile [link]="link" class="w-full"></hz-link-tile>
         }

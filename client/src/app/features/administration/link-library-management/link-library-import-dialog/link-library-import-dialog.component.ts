@@ -1,9 +1,10 @@
 import { Component, computed, inject, signal } from '@angular/core';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { FileInputComponent } from '@hz/shared/components';
 
+import { FileInputComponent } from '@hz/shared/components';
 
 interface DialogResult {
   status: boolean;

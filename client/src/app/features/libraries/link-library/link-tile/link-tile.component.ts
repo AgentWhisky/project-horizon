@@ -1,37 +1,34 @@
 import { Component, inject, input, signal } from '@angular/core';
-import { animate, style, transition, trigger } from '@angular/animations';
+import { CommonModule } from '@angular/common';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Link } from '../link-library';
-import { CommonModule } from '@angular/common';
 
+import { ASSET_URLS } from '@hz/core/constants';
 import { ImageFallbackDirective } from '@hz/core/directives';
 import { ThemeService } from '@hz/core/services';
+import { HzExpandDirective } from '@hz/shared/animations';
+
+import { Link } from '../link-library';
 
 @Component({
   selector: 'hz-link-tile',
-  imports: [MatButtonModule, MatIconModule, MatChipsModule, MatTooltipModule, CommonModule, ImageFallbackDirective],
+  imports: [MatButtonModule, MatIconModule, MatChipsModule, MatTooltipModule, CommonModule, ImageFallbackDirective, HzExpandDirective],
   templateUrl: './link-tile.component.html',
   styleUrl: './link-tile.component.scss',
-  animations: [
-    trigger('expand', [
-      transition(':enter', [style({ height: '0' }), animate('0.2s ease-out', style({ height: '*' }))]),
-      transition(':leave', [animate('0.2s ease-in', style({ height: '0' }))]),
-    ]),
-  ],
 })
 export class LinkTileComponent {
   readonly themeService = inject(ThemeService);
 
   readonly link = input.required<Link>();
   readonly isOpen = signal(false);
-
   readonly faviconStage = signal<number>(0);
 
   readonly isDarkTheme = this.themeService.isDarkTheme;
+
+  readonly fallbackIcon = ASSET_URLS.DEFAULT_ICON;
 
   onToggleView() {
     this.isOpen.set(!this.isOpen());

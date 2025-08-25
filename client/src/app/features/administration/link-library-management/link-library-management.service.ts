@@ -3,11 +3,9 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-
 import { Category, CategoryPayload, Link, LinkPayload, Tag, TagPayload } from './link-library-management';
 import { DeleteResponse, OperationResult } from '@hz/core/models';
 import { TokenService, DownloadService } from '@hz/core/services';
-
 
 @Injectable({
   providedIn: 'root',
@@ -117,7 +115,8 @@ export class LinkLibraryManagementService {
 
   async rebaseLinks() {
     try {
-      const operationResult = await this.postRebaseLinks();
+      await this.postRebaseLinks();
+      this.snackbar.open('Successfully rebased links', 'Close', { duration: 3000 });
     } catch (error) {
       this.snackbar.open('Failed to rebase links', 'Close', { duration: 3000 });
       console.error(`Error rebasing links: ${error}`);

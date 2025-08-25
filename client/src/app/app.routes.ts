@@ -19,10 +19,6 @@ export const routes: Routes = [
         path: 'link-library',
         loadComponent: () => import('./features/libraries/link-library/link-library.component').then((c) => c.LinkLibraryComponent),
       },
-      {
-        path: 'book-library',
-        loadComponent: () => import('./features/libraries/book-library/book-library.component').then((c) => c.BookLibraryComponent),
-      },
 
       // *** TOOLS ***
       {

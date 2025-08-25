@@ -1,4 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { tap } from 'rxjs';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -8,21 +11,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-
-import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-
-
-import { LinkLibraryManagementService } from '../link-library-management.service';
-import { Link, LinkPayload } from '../link-library-management';
-import { CommonModule } from '@angular/common';
-
-import { tap } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
+
 import { REGEX } from '@hz/core/constants';
 import { ImageFallbackDirective } from '@hz/core/directives';
 import { ValidatorMessagePipe } from '@hz/core/pipes';
 import { ThemeService } from '@hz/core/services';
 import { checkFaviconExists } from '@hz/core/utilities';
+
+import { LinkLibraryManagementService } from '../link-library-management.service';
+import { Link, LinkPayload } from '../link-library-management';
 
 interface DialogData {
   type: 'create' | 'update';

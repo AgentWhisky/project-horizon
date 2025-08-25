@@ -1,17 +1,16 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-
+import { ValidatorMessagePipe } from '@hz/core/pipes';
+import { uniqueText } from '@hz/core/validators';
 
 import { LinkLibraryManagementService } from '../link-library-management.service';
 import { Tag, TagPayload } from '../link-library-management';
-import { ValidatorMessagePipe } from '@hz/core/pipes';
-import { uniqueText } from '@hz/core/validators';
 
 interface DialogData {
   type: 'create' | 'update';

@@ -1,4 +1,7 @@
 import { Component, computed, inject, model, OnInit, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { filter, tap } from 'rxjs';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -13,10 +16,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup } from '@angular/cdk/drag-drop';
-import { filter, tap } from 'rxjs';
-import { FormsModule } from '@angular/forms';
-
-
 
 import { LinkCategoryDialogComponent } from './link-category-dialog/link-category-dialog.component';
 import { LinkLibraryManagementDialogComponent } from './link-library-management-dialog/link-library-management-dialog.component';
@@ -24,14 +23,13 @@ import { LinkLibraryImportDialogComponent } from './link-library-import-dialog/l
 import { LinkTagDialogComponent } from './link-tag-dialog/link-tag-dialog.component';
 import { Category, Link, Tag } from './link-library-management';
 
-import { CommonModule } from '@angular/common';
-
 import { REBASE_REQUIRED, USER_RIGHTS } from '@hz/core/constants';
 import { ImageFallbackDirective } from '@hz/core/directives';
 import { UserService, ThemeService } from '@hz/core/services';
-import { LinkLibraryManagementService } from './link-library-management.service';
 import { generateSortKey } from '@hz/core/utilities';
 import { ConfirmDialogComponent } from '@hz/shared/dialogs';
+
+import { LinkLibraryManagementService } from './link-library-management.service';
 
 @Component({
   selector: 'hz-link-library-management',
@@ -59,8 +57,8 @@ import { ConfirmDialogComponent } from '@hz/shared/dialogs';
 export class LinkLibraryManagementComponent implements OnInit {
   private userService = inject(UserService);
   private themeService = inject(ThemeService);
-  private linkLibraryManagementService = inject(LinkLibraryManagementService);
   private dialog = inject(MatDialog);
+  private linkLibraryManagementService = inject(LinkLibraryManagementService);
 
   readonly hasImportLibraryRight = signal<boolean>(this.userService.hasRights([USER_RIGHTS.IMPORT_LINK_LIBRARY]));
 
@@ -72,15 +70,12 @@ export class LinkLibraryManagementComponent implements OnInit {
   readonly linkCategoryMap = this.linkLibraryManagementService.linkCategoryMap;
   readonly unassignedLinks = this.linkLibraryManagementService.unassignedLinks;
 
-  // Links
   readonly linkFilter = model<string>('');
   readonly linkFilteredIds = computed(() => this.getLinkFilteredSet(this.links(), this.linkFilter()));
 
-  // Categories
   readonly categoryFilter = model<string>('');
   readonly filteredLinkCategories = computed(() => this.filterLinkCategories(this.linkCategories()));
 
-  // Tags
   readonly tagFilter = model<string>('');
   readonly filteredLinkTags = computed(() => this.filterLinkTags(this.linkTags()));
 
@@ -102,7 +97,6 @@ export class LinkLibraryManagementComponent implements OnInit {
 
     if (linkFilter) {
       const keywords = linkFilter
-
         .toLowerCase()
         .split(' ')
         .map((word) => word.trim())

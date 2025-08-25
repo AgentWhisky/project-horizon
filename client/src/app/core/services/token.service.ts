@@ -106,7 +106,7 @@ export class TokenService {
 
     this.refreshInProgress = new Promise(async (resolve, reject) => {
       try {
-        const refreshToken = localStorage.getItem('refreshToken');
+        const refreshToken = localStorage.getItem(STORAGE_KEYS.AUTH.REFRESH_TOKEN);
 
         if (!refreshToken) {
           this.userService.clearUserInfo();
@@ -127,7 +127,6 @@ export class TokenService {
 
         resolve(authInfo);
       } catch (error) {
-        console.log('ERROR');
         this.userService.clearUserInfo();
         reject(error);
       } finally {
