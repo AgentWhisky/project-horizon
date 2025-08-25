@@ -1,7 +1,7 @@
 import { AVERAGE_WPM, CHAR_LABELS } from '@hz/core/constants';
+import { countSyllables } from '@hz/core/utilities';
 
 import { AnalyzeTextOptions, CharacterBreakdown, ReadabilityStats, TextBreakdown, WordBreakdown } from './text-analyzer';
-import { countSyllables } from '@hz/core/utilities';
 
 export function analyzeText(text: string, options?: AnalyzeTextOptions): TextBreakdown {
   const textBreakdown = createEmptyTextBreakdown();

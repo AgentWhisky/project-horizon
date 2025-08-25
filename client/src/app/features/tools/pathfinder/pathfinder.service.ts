@@ -1,5 +1,6 @@
 import { computed, effect, Injectable, signal } from '@angular/core';
 import { Tile } from './pathfinder';
+import { STORAGE_KEYS } from '@hz/core/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -27,11 +28,11 @@ export class PathfinderService {
   }
 
   saveBoard() {
-    localStorage.setItem('pathfinderBoard', JSON.stringify(this._board()));
+    localStorage.setItem(STORAGE_KEYS.PATHFINDER.BOARD, JSON.stringify(this._board()));
   }
 
   loadBoard(): Tile[][] | null {
-    const board = localStorage.getItem('pathfinderBoard');
+    const board = localStorage.getItem(STORAGE_KEYS.PATHFINDER.BOARD);
     if (board) {
       const parsedBoard = JSON.parse(board);
       return parsedBoard as Tile[][];

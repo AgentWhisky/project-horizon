@@ -1,7 +1,7 @@
 <a class="dlc-tile block" [routerLink]="['/steam-insight', dlc().appid]" [attr.aria-label]="'View details for ' + dlc().name">
   <img
     loading="lazy"
-    [src]="dlc().headerImage || './assets/images/steam-app-placeholder.jpg'"
+    [src]="dlc().headerImage || headerImagePlaceholder"
     [alt]="dlc().name || 'DLC image'"
     class="dlc-header-img"
     width="460"

@@ -1,4 +1,7 @@
 import { Component, computed, effect, inject, input, OnDestroy, signal, ViewChild, viewChild } from '@angular/core';
+import { CommonModule, TitleCasePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,18 +16,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
-import { CommonModule, TitleCasePipe } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-
-
-import { SteamInsightDetailService } from './steam-insight-detail.service';
-import { SteamDlcTileComponent } from './steam-dlc-tile/steam-dlc-tile.component';
-
-import { Achievement, DlcDetails } from './steam-insight-detail';
 import { STEAM_INSIGHT_DLC } from '@hz/core/constants';
 import { DecodeHtmlPipe, SecureUrlPipe } from '@hz/core/pipes';
 import { ScreenService, TitleService } from '@hz/core/services';
+
+import { SteamInsightDetailService } from './steam-insight-detail.service';
+import { SteamDlcTileComponent } from './steam-dlc-tile/steam-dlc-tile.component';
+import { Achievement, DlcDetails } from './steam-insight-detail';
 
 @Component({
   selector: 'hz-steam-insight-detail',

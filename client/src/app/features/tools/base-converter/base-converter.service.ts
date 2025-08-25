@@ -1,7 +1,11 @@
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
-import { BasePreset, ConvertBase } from './base-converter';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { moveItemInArray } from '@angular/cdk/drag-drop';
+
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+import { STORAGE_KEYS } from '@hz/core/constants';
+
+import { ConvertBase } from './base-converter';
 
 @Injectable({
   providedIn: 'root',
@@ -20,11 +24,11 @@ export class BaseConverterService {
   }
 
   saveBaseConversions() {
-    localStorage.setItem('baseConversions', JSON.stringify(this._baseConversions()));
+    localStorage.setItem(STORAGE_KEYS.BASE_CONVERTER.CONVERSIONS, JSON.stringify(this._baseConversions()));
   }
 
   loadBaseConversions(): ConvertBase[] {
-    const baseConversions = localStorage.getItem('baseConversions');
+    const baseConversions = localStorage.getItem(STORAGE_KEYS.BASE_CONVERTER.CONVERSIONS);
     return baseConversions ? JSON.parse(baseConversions) : [];
   }
 

@@ -1,4 +1,6 @@
 import { Component, effect, inject, viewChild } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
@@ -9,13 +11,12 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+
+import { DurationPipe } from '@hz/core/pipes';
 
 import { TextAnalyzerService } from './text-analyzer.service';
 import { CharacterBreakdown, WordBreakdown } from './text-analyzer';
-import { CommonModule } from '@angular/common';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { DurationPipe } from '@hz/core/pipes';
 
 @Component({
   selector: 'hz-text-analyzer',

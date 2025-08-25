@@ -1,6 +1,8 @@
 import { Injectable, signal } from '@angular/core';
-import { SteamGameHistoryEntry } from './steam-insight';
+
 import { STEAM_INSIGHT_SEARCH, STORAGE_KEYS } from '@hz/core/constants';
+
+import { SteamGameHistoryEntry } from './steam-insight';
 
 @Injectable({
   providedIn: 'root',

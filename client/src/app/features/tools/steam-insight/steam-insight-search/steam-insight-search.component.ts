@@ -1,19 +1,21 @@
-import { Component, inject, model, OnInit, ViewChild } from '@angular/core';
-import { SteamInsightSearchService } from './steam-insight-search.service';
-import { SteamGameTileComponent } from './steam-game-tile/steam-game-tile.component';
-import { MatInputModule } from '@angular/material/input';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+
+import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { RouterModule } from '@angular/router';
-import { SteamGameHistoryEntry } from '../steam-insight';
-import { SteamInsightHistoryService } from '../steam-insight-history.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 import { KeywordPipe } from '@hz/core/pipes';
 
+import { SteamInsightSearchService } from './steam-insight-search.service';
+import { SteamGameTileComponent } from './steam-game-tile/steam-game-tile.component';
+import { SteamGameHistoryEntry } from '../steam-insight';
+import { SteamInsightHistoryService } from '../steam-insight-history.service';
 
 @Component({
   selector: 'hz-steam-insight-search',

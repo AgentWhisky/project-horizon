@@ -9,4 +9,7 @@ export const ASSET_URLS = {
     TIMELINE_MARKER: 'assets/icons/timeline-marker.svg',
     TIMELINE_MARKER_LATEST: 'assets/icons/timeline-marker-latest.svg',
   },
+  IMAGES: {
+    STEAM_HEADER_IMAGE_PLACEHOLDER: 'assets/images/steam-app-placeholder.jpg',
+  },
 } as const;

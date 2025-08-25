@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { BaseConvertTileComponent } from './base-convert-tile/base-convert-tile.component';
+import { filter, tap } from 'rxjs';
 
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,13 +7,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { BaseConverterService } from './base-converter.service';
-import { filter, tap } from 'rxjs';
-import { BaseConvertTileDialogComponent } from './base-convert-tile-dialog/base-convert-tile-dialog.component';
-import { BaseConvertConversionDialogComponent } from './base-convert-conversion-dialog/base-convert-conversion-dialog.component';
 import { MessageCardComponent } from '@hz/shared/components';
 import { ConfirmDialogComponent } from '@hz/shared/dialogs';
 
+import { BaseConvertTileComponent } from './base-convert-tile/base-convert-tile.component';
+import { BaseConvertTileDialogComponent } from './base-convert-tile-dialog/base-convert-tile-dialog.component';
+import { BaseConvertConversionDialogComponent } from './base-convert-conversion-dialog/base-convert-conversion-dialog.component';
+import { BaseConverterService } from './base-converter.service';
 
 @Component({
   selector: 'hz-base-converter',

@@ -1,5 +1,5 @@
-<div class="flex flex-col w-full gap-3">
-  <div class="text-input-tile">
+<div class="latex-editor-container">
+  <div class="latex-editor-input-tile">
     <div class="flex flex-row gap-3">
       <mat-form-field class="w-full" subscriptSizing="dynamic">
         <mat-label>LaTeX Input</mat-label>
@@ -15,12 +15,12 @@
   </div>
 
   @if(textInput()) {
-  <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
+  <mat-card class="hz-card" appearance="outlined">
     <mat-card-content>
-      <div class="flex flex-col justify-center items-center gap-3">
+      <div class="latex-editor-display">
         <div [innerHTML]="renderedLatex()" [style.fontSize.px]="renderSize()"></div>
 
-        <mat-slider class="flex flex-grow max-w-96" [min]="12" [max]="48" [step]="1" thumbLabel discrete showTickMarks>
+        <mat-slider class="w-full max-w-96" [min]="12" [max]="48" [step]="1" thumbLabel discrete showTickMarks>
           <input matSliderThumb [(ngModel)]="renderSize" #slider />
         </mat-slider>
       </div>

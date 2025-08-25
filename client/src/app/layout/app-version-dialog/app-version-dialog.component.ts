@@ -1,12 +1,14 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { RouterModule } from '@angular/router';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterModule } from '@angular/router';
 
 import { APP_URLS } from '@hz/core/constants';
 import { VersionHistoryService } from '@hz/core/services';
+
 import { HzTimelineModule } from '@hz/shared/components';
 
 @Component({

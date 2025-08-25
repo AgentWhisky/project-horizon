@@ -8,15 +8,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { PasswordMatchErrorStateMatcher } from './password-matcher';
-
-
-
 import { UppercaseDirective } from '@hz/core/directives';
 import { NewAccountCredentials } from '@hz/core/models';
 import { ValidatorMessagePipe } from '@hz/core/pipes';
 import { UserService } from '@hz/core/services';
 import { confirmPasswordValidator } from '@hz/core/validators';
+
+import { PasswordMatchErrorStateMatcher } from './password-matcher';
 
 @Component({
   selector: 'hz-login-dialog',

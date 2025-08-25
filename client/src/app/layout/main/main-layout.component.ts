@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,16 +8,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
-
-
-import { LeftNavComponent } from '../left-nav/left-nav.component';
-import { ScrollingModule } from '@angular/cdk/scrolling';
-import { environment } from '../../../environments/environment';
-import { AppVersionDialogComponent } from '../app-version-dialog/app-version-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 
-import { APP_URLS } from '@hz/core/constants';
+import { APP_URLS, ASSET_URLS } from '@hz/core/constants';
 import { NavigationService, ScreenService, ThemeService, UserService, VersionHistoryService } from '@hz/core/services';
+
+import { environment } from '../../../environments/environment';
+import { LeftNavComponent } from '../left-nav/left-nav.component';
+import { AppVersionDialogComponent } from '../app-version-dialog/app-version-dialog.component';
 
 @Component({
   selector: 'hz-main-layout',
@@ -40,7 +39,6 @@ export class MainComponent {
   private userService = inject(UserService);
   private themeService = inject(ThemeService);
   private versionHistoryService = inject(VersionHistoryService);
-
   private dialog = inject(MatDialog);
 
   readonly isSmallScreen = this.screenService.isSmallScreen;
@@ -56,6 +54,8 @@ export class MainComponent {
   readonly githubUrl = APP_URLS.DEVELPOER_GITHUB;
   readonly githubRepoUrl = APP_URLS.APP_GITHUB_REPOSITORY;
   readonly linkedInUrl = APP_URLS.LINKEDIN;
+
+  readonly appIcon = ASSET_URLS.DEFAULT_ICON;
 
   onToggleLeftNav() {
     this.navigationService.toggleLeftNav();

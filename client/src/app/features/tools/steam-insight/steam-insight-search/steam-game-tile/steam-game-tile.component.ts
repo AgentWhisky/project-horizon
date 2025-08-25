@@ -1,7 +1,11 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { RouterModule } from '@angular/router';
+
 import { MatChipsModule } from '@angular/material/chips';
+
+import { ASSET_URLS } from '@hz/core/constants';
+
 import { SteamGameSummary } from '../steam-insight-search';
-import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'hz-steam-game-tile',
@@ -11,4 +15,6 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class SteamGameTileComponent {
   readonly steamGame = input.required<SteamGameSummary>();
+
+  readonly headerImagePlaceholder = ASSET_URLS.IMAGES.STEAM_HEADER_IMAGE_PLACEHOLDER;
 }

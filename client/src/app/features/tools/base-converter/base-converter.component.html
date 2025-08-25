@@ -1,5 +1,5 @@
-<div class="flex flex-col">
-  <div class="flex flex-row justify-end gap-3 py-3">
+<div class="flex flex-col gap-3">
+  <div class="base-converter-actions-container">
     <button mat-flat-button (click)="onAddBase()">
       <mat-icon>add</mat-icon>
       Add Tile
@@ -13,10 +13,10 @@
   <hz-message-card message="No base tiles found"></hz-message-card>
 
   } @else {
-  <div class="base-container">
+  <div class="base-tile-container">
     @for(convertBase of baseConversions(); track convertBase.base) {
     <hz-base-convert-tile
-      class="w-full max-w-96 min-w-80"
+      class="base-converter-base-tile"
       [convertBase]="convertBase"
       (updateConversions)="onUpdateBaseConversions($event)"
       (removeTile)="onRemoveBase($event)"

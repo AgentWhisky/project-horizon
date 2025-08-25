@@ -3,6 +3,13 @@ index.html - Add meta data to better pass lighthouse
 assets/ - Remove unused images and dashboard
 dashboard - Remove dashboard
 ScreenService - Check migration for zoneless with NgZone
+Pathfinder - Ignore until development continued
+Themes - Come up with new custom theme
+
+Shared components - Merge status banner & message card
+Content-Tile - Refactor to use advanced formatting like hz-timeline
+
+Generate custom themes for Horizon instead of prebuilt
 
 Major Changes
 ---------------------

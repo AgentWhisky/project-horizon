@@ -1,10 +1,10 @@
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
-
-import { SteamAppDetails, EMPTY_STEAM_APP_DETAILS } from './steam-insight-detail';
 import { LOADING_STATUS, STORAGE_KEYS } from '@hz/core/constants';
 import { TokenService } from '@hz/core/services';
+
+import { SteamAppDetails, EMPTY_STEAM_APP_DETAILS } from './steam-insight-detail';
 import { SteamInsightHistoryService } from '../steam-insight-history.service';
 
 @Injectable({

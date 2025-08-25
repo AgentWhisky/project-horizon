@@ -1,6 +1,9 @@
 import { Component, input } from '@angular/core';
-import { DlcDetails } from '../steam-insight-detail';
 import { RouterModule } from '@angular/router';
+
+import { ASSET_URLS } from '@hz/core/constants';
+
+import { DlcDetails } from '../steam-insight-detail';
 
 @Component({
   selector: 'hz-steam-dlc-tile',
@@ -10,4 +13,6 @@ import { RouterModule } from '@angular/router';
 })
 export class SteamDlcTileComponent {
   readonly dlc = input.required<DlcDetails>();
+
+  readonly headerImagePlaceholder = ASSET_URLS.IMAGES.STEAM_HEADER_IMAGE_PLACEHOLDER;
 }

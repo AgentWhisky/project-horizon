@@ -1,5 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 
+import { STORAGE_KEYS } from '../constants';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -20,10 +22,10 @@ export class NavigationService {
   }
 
   private saveLeftNavState(isOpen: boolean) {
-    localStorage.setItem('leftNavState', JSON.stringify(isOpen));
+    localStorage.setItem(STORAGE_KEYS.LEFT_NAV.STATE, JSON.stringify(isOpen));
   }
 
   private loadLeftNavState() {
-    return JSON.parse(localStorage.getItem('leftNavState') || 'false');
+    return JSON.parse(localStorage.getItem(STORAGE_KEYS.LEFT_NAV.STATE) || 'false');
   }
 }

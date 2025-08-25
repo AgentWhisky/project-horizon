@@ -1,5 +1,5 @@
 <a class="steam-game-tile block" [routerLink]="['/steam-insight', steamGame().appid]" target="_self" rel="noopener noreferrer">
-  <img [src]="steamGame().headerImage || './assets/images/steam-app-placeholder.jpg'" [alt]="steamGame().name" class="steam-header-img" />
+  <img [src]="steamGame().headerImage || headerImagePlaceholder" [alt]="steamGame().name" class="steam-header-img" />
 
   <div class="steam-game-tile-content">
     <h2 class="steam-game-title">{{ steamGame().name }}</h2>

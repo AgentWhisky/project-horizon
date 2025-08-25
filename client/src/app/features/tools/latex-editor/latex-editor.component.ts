@@ -1,11 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { LatexEditorService } from './latex-editor.service';
 import { MatSliderModule } from '@angular/material/slider';
+
+import { LatexEditorService } from './latex-editor.service';
 
 @Component({
   selector: 'hz-latex-editor',

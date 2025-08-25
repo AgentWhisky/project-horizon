@@ -1,14 +1,14 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { tap } from 'rxjs';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
-import { MatSelectModule } from '@angular/material/select';
-import { tap } from 'rxjs';
-import { baseNames, defaultNumericBases } from '../base-converter.config';
 import { ValidatorMessagePipe } from '@hz/core/pipes';
+import { baseNames, defaultNumericBases } from '../base-converter.config';
 
 interface DialogData {
   existingBases: number[];

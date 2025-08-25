@@ -1,7 +1,9 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer } from '@angular/platform-browser';
+
 import katex from 'katex';
+
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +16,7 @@ export class LatexEditorService {
   readonly renderSize = signal<number>(20);
 
   readonly renderedLatex = computed(() =>
-    // Sanitise the rendered LaTex
+    // Register rendered LaTex HTML as safe
     this.sanitizer.bypassSecurityTrustHtml(katex.renderToString(this.textInput(), { throwOnError: false }))
   );
 

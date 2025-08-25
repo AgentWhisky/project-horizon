@@ -1,6 +1,8 @@
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
-import { analyzeText } from './text-analyzer.utils';
+import { computed, inject, Injectable, signal } from '@angular/core';
+
 import { MatSnackBar } from '@angular/material/snack-bar';
+
+import { analyzeText } from './text-analyzer.utils';
 
 @Injectable({
   providedIn: 'root',

@@ -20,14 +20,14 @@
   </div>
 
   @if(hasTextInput()) {
-  <div class="flex flex-col md:flex-row flex-wrap gap-3 justify-center">
+  <div class="text-analyzer-results-container">
     <!-- TEXT COUNT ANALYTICS -->
-    <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
+    <mat-card class="hz-card text-analyzer-results-card" appearance="outlined">
       <mat-card-header>
         <mat-card-title>Text Statistics</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <div class="flex flex-col space-y-1 text-sm pt-3">
+        <div class="text-analyzer-display-text-container">
           <div class="display-text">
             <span>Character Count:</span>
             <span class="text-right">{{ textBreakdown().characterCount }}</span>
@@ -54,12 +54,12 @@
 
     <!-- TIME ESTIMATE ANALYTICS -->
     @if(timeEstimateAnalytics()) {
-    <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
+    <mat-card class="hz-card text-analyzer-results-card" appearance="outlined">
       <mat-card-header>
         <mat-card-title>Time Estimates</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <div class="flex flex-col space-y-1 text-sm pt-3">
+        <div class="text-analyzer-display-text-container">
           <div class="display-text">
             <span>Average Word Length:</span>
             <span class="text-right">{{ textBreakdown().averageWordLength | number : '1.1-2' }} chars</span>
@@ -83,12 +83,12 @@
 
     <!-- CONTENT QUALITY ANALYTICS -->
     @if(contentQualityAnalytics()){
-    <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
+    <mat-card class="hz-card text-analyzer-results-card" appearance="outlined">
       <mat-card-header>
         <mat-card-title>Content Quality</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <div class="flex flex-col space-y-1 text-sm pt-3">
+        <div class="text-analyzer-display-text-container">
           <div class="display-text">
             <span>Longest Word:</span>
             <span class="text-right">{{ textBreakdown().longestWord }}</span>
@@ -112,12 +112,12 @@
 
     <!-- READABILITY ANALYTICS -->
     @if(readabilityAnalytics()) {
-    <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
+    <mat-card class="hz-card text-analyzer-results-card" appearance="outlined">
       <mat-card-header>
         <mat-card-title>Readability</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <div class="flex flex-col space-y-1 text-sm pt-3">
+        <div class="text-analyzer-display-text-container">
           <div class="display-text">
             <span>Flesch Reading Ease:</span>
             <span class="text-right">{{ textBreakdown().fleschReadingEaseScore | number : '1.1-2' }}</span>
@@ -148,7 +148,7 @@
     }
   </div>
 
-  <div class="flex flex-col md:flex-row flex-wrap gap-3 items-start">
+  <div class="text-analyzer-results-container items-start">
     <mat-card class="hz-card flex-1">
       <mat-card-header>
         <mat-card-title>Character Breakdown</mat-card-title>

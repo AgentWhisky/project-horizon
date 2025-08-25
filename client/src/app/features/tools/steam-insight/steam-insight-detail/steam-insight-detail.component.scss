@@ -109,9 +109,9 @@
   font-size: 0.875rem;
 
   background-color: none;
-  border-bottom: 1px solid var(--mat-sys-outline) !important;
-  border-top-left-radius: var(--mat-sys-corner-extra-small) !important;
-  border-top-right-radius: var(--mat-sys-corner-extra-small) !important;
+  border-bottom: 1px solid var(--mat-sys-outline);
+  border-top-left-radius: var(--mat-sys-corner-extra-small);
+  border-top-right-radius: var(--mat-sys-corner-extra-small);
 }
 
 .text-row:hover {
