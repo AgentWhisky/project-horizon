@@ -14,3 +14,8 @@ Check heroku-deploy github readme for useful options
 Generate 128-character hex string for AUTH
 --------------------
 node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+
+
+Generate file structure tree
+--------------------
+PS: tree /F > client-project-structure.txt

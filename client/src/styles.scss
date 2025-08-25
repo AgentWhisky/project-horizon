@@ -1,4 +1,5 @@
 @use '@angular/material' as mat;
+@use './app/themes/hz-theme-3.scss';
 
 @include mat.elevation-classes();
 @include mat.app-background();
@@ -14,9 +15,10 @@ html {
 
   @include mat.theme(
     (
-      color: mat.$violet-palette,
+      //color: mat.$violet-palette,
+      color: hz-theme-3.$primary-palette,
       typography: Roboto,
-      density: 0,
+      density: 0
     )
   );
 }
@@ -25,7 +27,8 @@ html {
   @include mat.theme(
     (
       color: (
-        primary: mat.$violet-palette,
+        //primary: mat.$violet-palette,
+        primary: hz-theme-3.$primary-palette,
         theme-type: dark,
       ),
     )
@@ -33,9 +36,9 @@ html {
 }
 
 body {
-  background: var(--mat-sys-surface-container-lowest);
   color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-large);
+  background: var(--mat-sys-surface-container-lowest);
+  font: var(--mat-sys-body-medium);
   color-scheme: light;
 
   // Mat Table
@@ -124,7 +127,7 @@ body {
 }
 
 .dialog-message {
-  font: var(--mat-sys-body-large);
+  font: var(--mat-sys-body-medium);
 
   text-align: center;
 }

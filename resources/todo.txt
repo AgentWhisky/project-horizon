@@ -1,44 +1,35 @@
-Bugs
-------------------------
-  Application
-    Smooth transition between light and dark mode
 
-  Include Content-Security-Policy header NGINX
+- Generate custom themes for App instead of prebuilt
+- Refactor content-tile to be advanced formatting like hz-timeline
+- Merge status banner & message card
 
-Updates
-------------------------
-  Application
-    Update index.html to better serve SEO and professional formatting
-    Allow closing mat dialogs with android back
-    Add 404 page instead of redirecting back to dashboard
+- Refactor Steam Insight server job and db tracking
+- Refactor Steam Insight client page (separate from dashboard)
 
-  Discord-Bot
-    Cleanup code
+- Refactor Admin Dashboard to show more information
 
-New Functionality
-------------------------
-  Text Analyzer
-    Generate lorem-ipsum
+- Refactor Account Management to move away from tables
+- Refactor Account Management dialogs to use new format
 
-  Complete LaTeX Editor Functionality
+- Update Link Library to complete refactor of auto height animation issue
 
 
-To Do
-------------------------
-Clean up App Tools
 
-Refactor Steam Insight Administration
-  > Update Admin section to own page
-  > Add new states about in-progress updates
-  > Allow triggering an update from any given date
-Refactor Steam Insight Jobs
-  > Ensure server startup is always within 60seconds
-  > Ensure error messages go out with 403 error
-
-
+Future development
+----------------------
+- Implement Pathfinder tool
+- Look into zoneless migration (ScreenService)
+- Add meta data to better pass lighthouse tool
+- Refactor .hz-card and move away from mat-cards
+- All searches have downloadable reports (PDF & EXCEL)
+- Smooth transition between light and dark mode
+- Allow closing mat dialogs with android back
+- Text Analyzer update to generate lorem-ipsum
+- Complete LaTeX Editor Functionality
+- Setup PROD DB Backups
 
 Documentation
-------------------------
-Update Readme to current Functionality
-Create system architecture diagram
-Setup PROD DB Backups
+----------------------
+- Update Readme to current Functionality
+- Create system architecture diagram
+
