@@ -15,6 +15,10 @@
     </div>
 
     <div class="main-layout-toolbar-section">
+      <!--<button mat-icon-button matTooltip="Notifications" aria-label="Notifications">
+        <mat-icon>notifications</mat-icon>
+      </button>-->
+
       <!-- Toggle Theme Icon -->
       <button
         mat-icon-button
@@ -23,6 +27,22 @@
         [attr.aria-label]="isDarkmode() ? 'Switch to light mode' : 'Switch to dark mode'">
         <mat-icon>{{ isDarkmode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
       </button>
+
+      <!-- Settings Menu 
+      <button mat-icon-button [matMenuTriggerFor]="settingsMenu">
+        <mat-icon>settings</mat-icon>
+      </button>
+
+      <mat-menu #settingsMenu="matMenu">
+        <ng-template matMenuContent>
+          <div class="main-layout-settings-menu-content" (click)="$event.stopPropagation()">
+            <h4>Quick Settings Quick Settings Quick Settings Quick Settings</h4>
+
+            <mat-slide-toggle>Dark Mode</mat-slide-toggle>
+            <mat-slide-toggle>Notifications</mat-slide-toggle>
+          </div>
+        </ng-template>
+      </mat-menu>-->
 
       <!-- Login/Account Icons -->
       @if(!isLoggedIn()) {

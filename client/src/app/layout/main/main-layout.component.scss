@@ -53,6 +53,16 @@
   border-radius: 4px;
 }
 
+/** TOOLBAR ICONS */
+
+
+.main-layout-settings-menu-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem;
+}
+
 /** DRAWER */
 .main-layout-app-drawer {
   display: flex;
