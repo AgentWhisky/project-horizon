@@ -38,6 +38,12 @@ export const navSections: NavSection[] = [
         requiredRights: [USER_RIGHTS.VIEW_DASHBOARD],
       },
       {
+        routerLink: '/administration/dev-portal',
+        name: 'Dev Portal',
+        icon: 'code',
+        requiredRights: [USER_RIGHTS.DEFAULT],
+      },
+      {
         routerLink: '/administration/account-management',
         name: 'Account Management',
         icon: 'manage_accounts',

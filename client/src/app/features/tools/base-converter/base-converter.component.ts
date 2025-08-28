@@ -7,8 +7,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { MessageCardComponent } from '@hz/shared/components';
 import { ConfirmDialogComponent } from '@hz/shared/dialogs';
+import { HzBannerModule } from '@hz/shared/components';
 
 import { BaseConvertTileComponent } from './base-convert-tile/base-convert-tile.component';
 import { BaseConvertTileDialogComponent } from './base-convert-tile-dialog/base-convert-tile-dialog.component';
@@ -17,7 +17,7 @@ import { BaseConverterService } from './base-converter.service';
 
 @Component({
   selector: 'hz-base-converter',
-  imports: [MatButtonModule, MatIconModule, MatTabsModule, MatTooltipModule, BaseConvertTileComponent, MessageCardComponent],
+  imports: [MatButtonModule, MatIconModule, MatTabsModule, MatTooltipModule, BaseConvertTileComponent, HzBannerModule],
   templateUrl: './base-converter.component.html',
   styleUrl: './base-converter.component.scss',
 })

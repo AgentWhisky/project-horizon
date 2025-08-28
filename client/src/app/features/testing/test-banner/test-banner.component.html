@@ -1,0 +1,61 @@
+<div class="flex flex-col gap-3">
+  @for(type of bannerTypes(); track type) {
+  <!-- Banner with header and body -->
+  <div class="flex flex-col gap-1">
+    <span class="test-banner-section-header">Banner with header and body</span>
+    <hz-banner [type]="type">
+      <hz-banner-header>Lorem ipsum dolor sit amet</hz-banner-header>
+      <hz-banner-body>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod lectus vel purus posuere, vitae tincidunt mi volutpat. Praesent
+        in magna leo.
+      </hz-banner-body>
+    </hz-banner>
+  </div>
+
+  <!-- Banner with only header -->
+  <div class="flex flex-col gap-1">
+    <span class="test-banner-section-header">Banner with only header</span>
+    <hz-banner [type]="type">
+      <hz-banner-header>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod lectus vel purus posuere, vitae tincidunt mi volutpat. Praesent
+        in magna leo.
+      </hz-banner-header>
+    </hz-banner>
+  </div>
+
+  <!-- Banner with only body -->
+  <div class="flex flex-col gap-1">
+    <span class="test-banner-section-header">Banner with only body</span>
+    <hz-banner [type]="type">
+      <hz-banner-body>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod lectus vel purus posuere, vitae tincidunt mi volutpat. Praesent
+        in magna leo.
+      </hz-banner-body>
+    </hz-banner>
+  </div>
+
+  <!-- Banner that is closeable -->
+  <div class="flex flex-col gap-1">
+    <span class="test-banner-section-header">Banner that is closeable</span>
+    <hz-banner [type]="type" closeable>
+      <hz-banner-header>Lorem ipsum dolor sit amet</hz-banner-header>
+      <hz-banner-body>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod lectus vel purus posuere, vitae tincidunt mi volutpat. Praesent
+        in magna leo.
+      </hz-banner-body>
+    </hz-banner>
+  </div>
+
+  <!-- Banner with custom icon -->
+  <div class="flex flex-col gap-1">
+    <span class="test-banner-section-header">Banner with custom icon</span>
+    <hz-banner [type]="type" displayIcon="auto_awesome">
+      <hz-banner-header>Lorem ipsum dolor sit amet</hz-banner-header>
+      <hz-banner-body>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod lectus vel purus posuere, vitae tincidunt mi volutpat. Praesent
+        in magna leo.
+      </hz-banner-body>
+    </hz-banner>
+  </div>
+  }
+</div>

@@ -10,7 +10,9 @@
     </button>
   </div>
   @if(!baseConversions().length) {
-  <hz-message-card message="No base tiles found"></hz-message-card>
+  <hz-banner>
+    <hz-banner-body>No base tiles found</hz-banner-body>
+  </hz-banner>
 
   } @else {
   <div class="base-tile-container">

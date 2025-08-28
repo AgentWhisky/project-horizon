@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
@@ -11,7 +11,7 @@ import { jwtDecode } from 'jwt-decode';
 import { environment } from '../../../environments/environment';
 import { AuthInfo, AuthInfoPayload, LoginCredentials, NewAccountCredentials, UserInfo } from '../models';
 import { LoginDialogComponent } from '@hz/shared/dialogs';
-import { STORAGE_KEYS } from '../constants';
+import { STORAGE_KEYS, USER_RIGHTS } from '../constants';
 
 @Injectable({
   providedIn: 'root',
@@ -27,7 +27,15 @@ export class UserService {
   private _userInfo = signal<UserInfo | null>(null);
   readonly userInfo = this._userInfo.asReadonly();
 
-  private _userRights = computed(() => new Set(this._userInfo()?.rights?.map((item) => item.internalName) || []));
+  private _userRights = computed(() => {
+    let newRights = this._userInfo()?.rights?.map((item) => item.internalName) || [];
+
+    if (newRights.length > 0) {
+      newRights = [...newRights, USER_RIGHTS.DEFAULT]; // Add DEFAULT right for all logged in users
+    }
+
+    return new Set(newRights);
+  });
 
   readonly isLoggedIn = computed(() => !!this._userInfo());
 

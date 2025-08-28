@@ -18,8 +18,17 @@
     </mat-form-field>
   </div>
 
+  <!-- EMPTY FILTER ERROR -->
   @if(!linksByCategory().length && linkLibrarySearch.value.length) {
-  <hz-status-banner class="page-banner" message="No links found. Please refine your search." align="center" type="info"></hz-status-banner>
+  <hz-banner class="page-search">
+    <hz-banner-header>No links found</hz-banner-header>
+    <hz-banner-body>Please refine your search</hz-banner-body>
+  </hz-banner>
+  } @else if(loadingStatus() === LOADING_STATUS.FAILED) {
+  <hz-banner class="page-search">
+    <hz-banner-header>Failed to load links</hz-banner-header>
+    <hz-banner-body>Please try again later</hz-banner-body>
+  </hz-banner>
   } @else {
   <div class="link-library-results-container">
     @for(category of linksByCategory(); track category.id) {

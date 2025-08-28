@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StatusBannerComponent } from './status-banner.component';
+import { HzBannerHeaderComponent } from './hz-banner-header.component';
 
-describe('StatusBannerComponent', () => {
-  let component: StatusBannerComponent;
-  let fixture: ComponentFixture<StatusBannerComponent>;
+describe('HzBannerHeaderComponent', () => {
+  let component: HzBannerHeaderComponent;
+  let fixture: ComponentFixture<HzBannerHeaderComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [StatusBannerComponent]
+      imports: [HzBannerHeaderComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(StatusBannerComponent);
+    fixture = TestBed.createComponent(HzBannerHeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

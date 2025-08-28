@@ -100,18 +100,7 @@ export class SteamAppEntity {
   movies: Movie[];
 
   @Column({ name: 'achievements', type: 'jsonb', nullable: true })
-  achievements: {
-    total: number;
-    data: {
-      name: string;
-      defaultvalue: number;
-      displayName: string;
-      hidden: number;
-      description: string;
-      icon: string;
-      icongray: string;
-    }[];
-  };
+  achievements: Achievements;
 
   @Column({ name: 'ratings', type: 'jsonb', nullable: true })
   ratings: {
@@ -127,25 +116,7 @@ export class SteamAppEntity {
   };
 
   @Column({ name: 'package_groups', type: 'jsonb', nullable: true })
-  packageGroups: {
-    name: string;
-    title: string;
-    description: string;
-    selection_text: string;
-    save_text: string;
-    display_type: number;
-    is_recurring_subscription: string;
-    subs: {
-      packageid: number;
-      percent_savings_text: string;
-      percent_savings: number;
-      option_text: string;
-      option_description: string;
-      can_get_free_license: string;
-      is_free_license: boolean;
-      price_in_cents_with_discount: number;
-    }[];
-  }[];
+  packageGroups: PackageGroups[];
 
   @Column({ name: 'demos', type: 'jsonb', nullable: true })
   demos: { appid: number; description: string }[];
@@ -231,12 +202,29 @@ export class SteamAppEntity {
   @PrimaryColumn({ name: 'is_adult', default: false })
   isAdult: boolean;
 
+  // *** VALIDATION ***
+  @Column({ name: 'validation_failed', type: 'boolean', default: false })
+  validationFailed: boolean;
+
   // *** AUDIT FIELDS ***
   @CreateDateColumn({ name: 'created_date', type: 'timestamptz' })
   createdDate: Date;
 
   @UpdateDateColumn({ name: 'updated_date', type: 'timestamptz' })
   updatedDate: Date;
+}
+
+interface Achievements {
+  total: number;
+  data: {
+    name: string;
+    defaultvalue: number;
+    displayName: string;
+    hidden: number;
+    description: string;
+    icon: string;
+    icongray: string;
+  }[];
 }
 
 interface RatingDetails {
@@ -260,4 +248,24 @@ interface Movie {
     max: string;
   };
   highlight: boolean;
+}
+
+interface PackageGroups {
+  name: string;
+  title: string;
+  description: string;
+  selection_text: string;
+  save_text: string;
+  display_type: number;
+  is_recurring_subscription: string;
+  subs: {
+    packageid: number;
+    percent_savings_text: string;
+    percent_savings: number;
+    option_text: string;
+    option_description: string;
+    can_get_free_license: string;
+    is_free_license: boolean;
+    price_in_cents_with_discount: number;
+  }[];
 }

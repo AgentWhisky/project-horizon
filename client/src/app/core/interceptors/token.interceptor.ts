@@ -1,5 +1,6 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { STORAGE_KEYS, TOKEN_EXCLUDED_ENDPOINTS } from '@hz/core/constants';
+import { environment } from 'environments/environment';
 
 /**
  * An interceptor that appends an authorization header to all http requests
@@ -8,7 +9,17 @@ import { STORAGE_KEYS, TOKEN_EXCLUDED_ENDPOINTS } from '@hz/core/constants';
  * - Excluded endpoints are set in core constants
  */
 export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
-  if (TOKEN_EXCLUDED_ENDPOINTS.has(req.url)) {
+  const apiUrl = environment.apiUrl;
+  const parsed = new URL(req.url, window.location.origin);
+
+  // Ignore non-api calls
+  if (!parsed.href.startsWith(apiUrl)) {
+    return next(req);
+  }
+
+  // Ignore specific endpoints
+  const path = parsed.pathname;
+  if (TOKEN_EXCLUDED_ENDPOINTS.has(path)) {
     return next(req);
   }
 

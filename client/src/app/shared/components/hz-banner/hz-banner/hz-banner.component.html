@@ -1,0 +1,11 @@
+<div class="hz-banner" [ngClass]="type()" [class.closed]="isClosed()">
+  <mat-icon class="hz-banner-display-icon">{{ icon() }}</mat-icon>
+  <div class="flex flex-col gap-1 w-full">
+    <ng-content></ng-content>
+  </div>
+  @if(closeable()) {
+  <button mat-icon-button aria-label="Close banner" (click)="onClose()" [disabled]="closeDisabled()">
+    <mat-icon>close</mat-icon>
+  </button>
+  }
+</div>

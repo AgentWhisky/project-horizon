@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { USER_RIGHTS } from '@hz/core/constants';
-import { authGuard } from '@hz/core/guards';
+import { authGuard } from './core/guards';
 
 export const routes: Routes = [
   {
@@ -67,6 +67,21 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./features/administration/admin-dashboard/admin-dashboard.component').then((c) => c.AdminDashboardComponent),
             data: { requiredRights: [USER_RIGHTS.VIEW_DASHBOARD] },
+          },
+          {
+            path: 'dev-portal',
+            children: [
+              {
+                path: '',
+                loadComponent: () => import('./features/administration/dev-portal/dev-portal.component').then((c) => c.DevPortalComponent),
+                data: { requiredRights: [USER_RIGHTS.DEFAULT] },
+              },
+              {
+                path: 'test-banner',
+                loadComponent: () => import('./features/testing/test-banner/test-banner.component').then((c) => c.TestBannerComponent),
+                data: { requiredRights: [USER_RIGHTS.DEFAULT] },
+              },
+            ],
           },
           {
             path: 'account-management',

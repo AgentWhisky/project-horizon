@@ -19,8 +19,8 @@ import { RoleDialogComponent } from './role-dialog/role-dialog.component';
 
 import { USER_RIGHTS } from '@hz/core/constants';
 import { UserService } from '@hz/core/services';
-import { MessageCardComponent } from '@hz/shared/components';
 import { ConfirmDialogComponent } from '@hz/shared/dialogs';
+import { HzBannerModule } from '@hz/shared/components';
 
 @Component({
   selector: 'hz-account-management',
@@ -34,7 +34,7 @@ import { ConfirmDialogComponent } from '@hz/shared/dialogs';
     MatTabsModule,
     MatChipsModule,
     DatePipe,
-    MessageCardComponent,
+    HzBannerModule,
   ],
   templateUrl: './account-management.component.html',
   styleUrl: './account-management.component.scss',

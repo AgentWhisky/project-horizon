@@ -7,7 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
-import { StatusBannerComponent } from '@hz/shared/components';
+import { LOADING_STATUS } from '@hz/core/constants';
+import { HzBannerModule } from '@hz/shared/components';
 
 import { LinkTileComponent } from './link-tile/link-tile.component';
 import { LinkLibraryService } from './link-library.service';
@@ -22,7 +23,7 @@ import { LinkLibraryService } from './link-library.service';
     MatAutocompleteModule,
     FormsModule,
     LinkTileComponent,
-    StatusBannerComponent,
+    HzBannerModule,
   ],
   templateUrl: './link-library.component.html',
   styleUrl: './link-library.component.scss',
@@ -34,6 +35,9 @@ export class LinkLibraryComponent implements OnInit {
   readonly linkFilter = model<string>('');
   readonly filteredLinks = computed(() => this.onFilterLinks());
   readonly linksByCategory = computed(() => this.linkLibraryService.getLinksByCategory(this.filteredLinks()));
+
+  readonly loadingStatus = this.linkLibraryService.loadingStatus;
+  readonly LOADING_STATUS = LOADING_STATUS;
 
   private linkTiles = viewChildren(LinkTileComponent);
 

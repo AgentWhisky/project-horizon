@@ -1,5 +1,7 @@
 <div class="flex flex-col">
-  <hz-status-banner message="This page is still under development and may not function correctly" type="info"></hz-status-banner>
+  <hz-banner type="warning">
+    <hz-banner-header>This page is still under development and may not function correctly</hz-banner-header>
+  </hz-banner>
 
   <div class="flex flex-row justify-end gap-3 py-3">
     <button mat-mini-fab (click)="onCreateBoard()" matTooltip="Create New Board" aria-label="Create new pathfinder board">
@@ -27,6 +29,9 @@
     </div>
   </div>
   } @else {
-  <hz-message-card message="No board found. Please create a board."></hz-message-card>
+
+  <hz-banner>
+    <hz-banner-body>No board found. Please create a board</hz-banner-body>
+  </hz-banner>
   }
 </div>

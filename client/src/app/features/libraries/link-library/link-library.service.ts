@@ -1,8 +1,10 @@
 import { inject, Injectable, signal } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+
+import { TokenService } from '@hz/core/services';
+import { LOADING_STATUS } from '@hz/core/constants';
 
 import { Link, LinksByCategory } from './link-library';
-import { firstValueFrom } from 'rxjs';
-import { TokenService } from '@hz/core/services';
 
 @Injectable({
   providedIn: 'root',
@@ -13,12 +15,18 @@ export class LinkLibraryService {
   private _links = signal<Link[]>([]);
   readonly links = this._links.asReadonly();
 
+  private _loadingStatus = signal<number>(LOADING_STATUS.NOT_LOADED);
+  readonly loadingStatus = this._loadingStatus.asReadonly();
+
   // *** Links ***
   async loadLibraryLinks() {
     try {
+      this._loadingStatus.set(LOADING_STATUS.IN_PROGRESS);
       const links = await this.getLibraryLinks();
       this._links.set(links);
+      this._loadingStatus.set(LOADING_STATUS.SUCCESS);
     } catch (error) {
+      this._loadingStatus.set(LOADING_STATUS.FAILED);
       console.error(`Error Fetching Links: ${error}`);
     }
   }

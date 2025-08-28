@@ -10,15 +10,14 @@ import { filter, tap } from 'rxjs';
 import { PathfinderService } from './pathfinder.service';
 import { PathfinderTileComponent } from './pathfinder-tile/pathfinder-tile.component';
 import { Tile } from './pathfinder';
-import { MessageCardComponent, StatusBannerComponent } from '@hz/shared/components';
-
+import { HzBannerModule } from '@hz/shared/components';
 
 const minTileSize = 12;
 const maxTileSize = 32;
 
 @Component({
   selector: 'hz-pathfinder',
-  imports: [MatButtonModule, MatIconModule, MatTooltipModule, PathfinderTileComponent, MessageCardComponent, StatusBannerComponent],
+  imports: [MatButtonModule, MatIconModule, MatTooltipModule, PathfinderTileComponent, HzBannerModule],
   templateUrl: './pathfinder.component.html',
   styleUrl: './pathfinder.component.scss',
   //changeDetection: ChangeDetectionStrategy.OnPush,
