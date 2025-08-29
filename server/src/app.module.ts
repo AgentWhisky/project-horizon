@@ -15,6 +15,7 @@ import { LinkLibraryModule } from './modules/libraries/link-library/link-library
 import { LinkLibraryManagementModule } from './modules/administration/link-library-management/link-library-management.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { SteamInsightModule } from './modules/tools/steam-insight/steam-insight.module';
+import { SteamInsightManagementModule } from './modules/administration/steam-insight-management/steam-insight-management.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { SteamInsightModule } from './modules/tools/steam-insight/steam-insight.
     AdminDashboardModule,
     AccountManagementModule,
     LinkLibraryManagementModule,
+    SteamInsightManagementModule,
     LinkLibraryModule,
     SteamInsightModule,
   ],

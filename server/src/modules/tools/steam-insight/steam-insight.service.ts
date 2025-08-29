@@ -3,7 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { SteamAppEntity } from 'src/entities/steam-app.entity';
 import { In, Repository } from 'typeorm';
 import { DlcDetails, SteamAppDetails, SteamAppSearchInfo, SteamAppSearchOptions } from './steam-insight.model';
-import { STEAM_INSIGHT_PAGE_SIZE } from 'src/common/constants/steam-api.constants';
+import { STEAM_INSIGHT_PAGE_SIZE } from 'src/common/constants/steam-insight.constants';
+
 
 @Injectable()
 export class SteamInsightService {

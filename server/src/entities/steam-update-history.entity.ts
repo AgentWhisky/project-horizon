@@ -1,17 +1,5 @@
+import { UpdateStatus, UpdateType } from 'src/common/constants/steam-insight.constants';
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
-
-enum UpdateType {
-  FULL = 'F',
-  INRECMENTAL = 'I',
-}
-
-export enum UpdateStatus {
-  PREPARING = 'P',
-  RUNNING = 'R',
-  COMPLETE = 'C',
-  FAILED = 'F',
-  CANCELED = 'X',
-}
 
 @Entity('steam_update_history')
 export class SteamUpdateHistoryEntity {
@@ -29,7 +17,7 @@ export class SteamUpdateHistoryEntity {
   @Column({ name: 'start_time', type: 'timestamptz' })
   startTime: Date;
 
-  @Column({ name: 'end_time', type: 'timestamptz' })
+  @Column({ name: 'end_time', type: 'timestamptz', nullable: true })
   endTime: Date;
 
   @Column({ name: 'inserts_game', type: 'int', default: 0 })
@@ -47,7 +35,7 @@ export class SteamUpdateHistoryEntity {
   @Column({ name: 'errors', type: 'int', default: 0 })
   errors: number;
 
-  @Column({ name: 'notes', type: 'text' })
+  @Column({ name: 'notes', type: 'text', nullable: true })
   notes: string;
 
   // *** AUDIT FIELDS ***

@@ -2,14 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
-import { stat } from 'fs';
 import { firstValueFrom } from 'rxjs';
-import {
-  MAX_STEAM_API_RETRIES,
-  STEAM_APP_INFO_URL,
-  STEAM_APP_LIST_URL,
-  STEAM_APP_SCHEMA_URL,
-} from 'src/common/constants/steam-api.constants';
 import { CacheUtils } from 'src/common/utils/cache.utils';
 import { SteamAppEntity } from 'src/entities/steam-app.entity';
 import { SteamUpdateLogEntity } from 'src/entities/steam-update-log.entity';
@@ -60,7 +53,7 @@ export class SteamInsightUpdaterService implements OnModuleInit {
 
   // *** PRIVATE FUNCTIONS ***
   private async updateSteamApps() {
-    if (this.updateInProgress) {
+    /*if (this.updateInProgress) {
       console.log('Steam App Update in Progress.');
       return;
     }
@@ -81,7 +74,7 @@ export class SteamInsightUpdaterService implements OnModuleInit {
         throw new Error(notes);
       }
 
-      const appList = await this.getAppUpdates(lastModified);
+      //const appList = await this.getAppUpdates(lastModified);
       if (!appList) {
         notes = 'Failed to retrieve app list from external API.';
         throw new Error(notes);
@@ -90,14 +83,14 @@ export class SteamInsightUpdaterService implements OnModuleInit {
       // Update App Info
       for (const app of appList) {
         try {
-          const appInfo = await this.getAppInfo(app.appid);
-          const appAchievements = await this.getAppAchievements(app.appid);
+          //const appInfo = await this.getAppInfo(app.appid);
+          //const appAchievements = await this.getAppAchievements(app.appid);
 
-          const appEntry = await this.saveAppInfo(app, appInfo, appAchievements);
+          //const appEntry = await this.saveAppInfo(app, appInfo, appAchievements);
 
-          updateSuccesses.push(appEntry);
+          //updateSuccesses.push(appEntry);
         } catch {
-          updateFailures.push(app.appid);
+          //updateFailures.push(app.appid);
         }
       }
     } catch (error) {
@@ -141,86 +134,13 @@ export class SteamInsightUpdaterService implements OnModuleInit {
       await this.steamAppRepository.query(`VACUUM (ANALYZE) steam_apps;`);
 
       this.updateInProgress = false;
-    }
+    }*/
   }
 
-  private async getAppUpdates(lastModified: Date): Promise<SteamListApp[]> {
-    const lastModifiedEpoch = lastModified.valueOf() / 1000;
 
-    const params = {
-      key: process.env.STEAM_API_KEY,
-      max_results: 50000,
-      include_games: 'True',
-      include_dlc: 'True',
-      if_modified_since: lastModifiedEpoch,
-    };
 
-    const response = await firstValueFrom(this.httpService.get(STEAM_APP_LIST_URL, { params }));
-    return response?.data?.response?.apps;
-  }
+  
 
-  private async getAppInfo(appid: number): Promise<SteamAppInfo> {
-    const params = {
-      appids: appid,
-    };
-
-    for (let attempt = 0; attempt < MAX_STEAM_API_RETRIES; attempt++) {
-      try {
-        const response = await firstValueFrom(this.httpService.get(STEAM_APP_INFO_URL, { params }));
-        return response?.data?.[String(appid)]?.data ?? null;
-      } catch (error) {
-        const status = error?.response?.status;
-
-        if (status === 429) {
-          console.warn(`[APP INFO] Recieved 429 Error from steam appid ${appid}. Waiting 5 minutes before retry...`);
-          await new Promise((res) => setTimeout(res, 5 * 60 * 1000)); // Wait 5 minutes
-        } else {
-          console.warn(`[APP INFO] Failed to retrieve app info for appid ${appid}. Retry [${attempt + 1}/${MAX_STEAM_API_RETRIES}]`);
-          await new Promise((res) => setTimeout(res, 1000)); // Wait 1 second
-        }
-      }
-    }
-    return null;
-  }
-
-  private async getAppAchievements(appid: number): Promise<SteamAppAchievements> {
-    const params = {
-      key: process.env.STEAM_API_KEY,
-      appid,
-    };
-
-    for (let attempt = 0; attempt < MAX_STEAM_API_RETRIES; attempt++) {
-      try {
-        const response = await firstValueFrom(this.httpService.get(STEAM_APP_SCHEMA_URL, { params }));
-        const achievements = response?.data?.game?.availableGameStats?.achievements;
-
-        if (!achievements) {
-          return null;
-        }
-
-        return {
-          total: achievements.length,
-          data: achievements,
-        };
-      } catch (error) {
-        const status = error?.response?.status;
-
-        if (status === 429) {
-          console.warn(`[ACHIEVEMENTS] Received 429 Error from Steam for appid ${appid}. Waiting 5 minutes before retry...`);
-          await new Promise((res) => setTimeout(res, 5 * 60 * 1000)); // Wait 5 minutes
-        } else if (status === 403) {
-          console.warn(`[ACHIEVEMENTS] Received 403 Error from Steam for appid ${appid}. Skipping...`);
-          break;
-        } else {
-          console.warn(
-            `[ACHIEVEMENTS] Failed to retrieve achievements for appid ${appid}. Retry [${attempt + 1}/${MAX_STEAM_API_RETRIES}]`
-          );
-          await new Promise((res) => setTimeout(res, 1000)); // Wait 1 second
-        }
-      }
-    }
-    return null;
-  }
 
   private async saveAppInfo(listApp: SteamListApp, appInfo: SteamAppInfo, appAchievements: SteamAppAchievements): Promise<SteamAppEntry> {
     const existing = await this.steamAppRepository.findOneBy({ appid: listApp.appid });
