@@ -12,6 +12,13 @@ export class SteamUpdateInProgressError extends Error {
   }
 }
 
+export class SteamUpdateCanceledError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'SteamUpdateCanceledError';
+  }
+}
+
 export class SteamAppInfoError extends Error {
   constructor(message: string, appid: number) {
     super(message);

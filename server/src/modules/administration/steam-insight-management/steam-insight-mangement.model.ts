@@ -137,3 +137,8 @@ export interface Movie {
   mp4: { '480': string; max: string };
   highlight: boolean;
 }
+
+export interface AppInfoResult {
+  appType: string;
+  saveType: string;
+}

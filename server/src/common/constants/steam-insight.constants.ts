@@ -71,7 +71,7 @@ const STEAM_API_GET_APPINFO_URL = 'https://store.steampowered.com/api/appdetails
  *   - appid (uint32): The App ID (game) to retrieve the schema for.
  *   - l (string)    : (Optional) Language code for localization (e.g., "english", "french").
  */
-const STEAM_API_GET_APPSCHEMA_URL = 'https://store.steampowered.com/api/appdetails' as const;
+const STEAM_API_GET_APPSCHEMA_URL = 'https://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2' as const;
 
 export const STEAM_API_URLS = {
   LIST: STEAM_API_GET_APPLIST_URL,

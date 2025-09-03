@@ -10,4 +10,10 @@ export class SteamInsightManagementController {
     console.log('steam-insight-management/test');
     return await this.steamInsightManagementService.startUpdate();
   }
+
+  @Get('test/stop')
+  async getLinksStop() {
+    console.log('steam-insight-management/test/stop');
+    return await this.steamInsightManagementService.stopUpdate();
+  }
 }

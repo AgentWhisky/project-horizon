@@ -11,7 +11,8 @@ export class SteamUpdateHistoryEntity {
   updateType: UpdateType;
 
   @Index()
-  @Column({ name: 'update_status', enum: UpdateStatus, default: 'P' })
+  @Index('steam_app_update_running_unique', { synchronize: false })
+  @Column({ name: 'update_status', enum: UpdateStatus, default: 'R' })
   updateStatus: UpdateStatus;
 
   @Column({ name: 'start_time', type: 'timestamptz' })
@@ -20,20 +21,23 @@ export class SteamUpdateHistoryEntity {
   @Column({ name: 'end_time', type: 'timestamptz', nullable: true })
   endTime: Date;
 
-  @Column({ name: 'inserts_game', type: 'int', default: 0 })
+  @Column({ name: 'inserts_game', type: 'int', nullable: true })
   insertsGame: number;
 
-  @Column({ name: 'updates_game', type: 'int', default: 0 })
+  @Column({ name: 'updates_game', type: 'int', nullable: true })
   updatesGame: number;
 
-  @Column({ name: 'inserts_dlc', type: 'int', default: 0 })
+  @Column({ name: 'inserts_dlc', type: 'int', nullable: true })
   insertsDlc: number;
 
-  @Column({ name: 'updates_dlc', type: 'int', default: 0 })
+  @Column({ name: 'updates_dlc', type: 'int', nullable: true })
   updatesDlc: number;
 
-  @Column({ name: 'errors', type: 'int', default: 0 })
+  @Column({ name: 'errors', type: 'int', nullable: true })
   errors: number;
+
+  @Column({ name: 'events', type: 'text', array: true, default: () => "'{}'" })
+  events: string[];
 
   @Column({ name: 'notes', type: 'text', nullable: true })
   notes: string;

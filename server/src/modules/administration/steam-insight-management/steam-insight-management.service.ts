@@ -1,5 +1,5 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { SteamAppAchievements, SteamAppInfo, SteamListApp } from './steam-insight-mangement.model';
+import { ConflictException, Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { AppInfoResult, SteamAppAchievements, SteamAppInfo, SteamListApp } from './steam-insight-mangement.model';
 
 import { firstValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
@@ -9,6 +9,7 @@ import {
   SteamApiKeyError,
   SteamApiMaxPageError,
   SteamAppInfoError,
+  SteamUpdateCanceledError,
   SteamUpdateDisabledError,
   SteamUpdateInProgressError,
 } from 'src/common/errors/steam-api-error';
@@ -23,80 +24,270 @@ import {
   UpdateType,
 } from 'src/common/constants/steam-insight.constants';
 import { InjectRepository } from '@nestjs/typeorm';
+import { generateEventAppend, generateEventMessage } from './steam-insight-management.utils';
+import { getErrorNameAndMessage } from 'src/common/utils/error.utils';
+import { AppInfoSaveType, SteamAppType } from './steam-insight-management.constants';
+import { SteamAppEntity } from 'src/entities/steam-app.entity';
+import { SteamAppAuditEntity } from 'src/entities/steam-app-audit.entity';
 
 @Injectable()
-export class SteamInsightManagementService {
+export class SteamInsightManagementService implements OnModuleInit {
   private readonly logger = new Logger(SteamInsightManagementService.name);
+
+  private updatePromise: Promise<void> | null = null;
+  private isCancelRequested = false;
 
   constructor(
     private readonly httpService: HttpService,
+
+    @InjectRepository(SteamAppEntity)
+    private readonly steamAppRepository: Repository<SteamAppEntity>,
+
+    @InjectRepository(SteamAppAuditEntity)
+    private readonly steamAppAuditRepository: Repository<SteamAppAuditEntity>,
 
     @InjectRepository(SteamUpdateHistoryEntity)
     private readonly steamUpdateHistoryRepository: Repository<SteamUpdateHistoryEntity>
   ) {}
 
-  async startUpdate() {
-    // Add Event History to Update History Record
-    // Remove Default numbers allow zero to counts
+  onModuleInit() {
+    this.cleanupHistory();
+  }
+
+  async startUpdate(isCron?: boolean) {
+    if (this.updatePromise) {
+      if (isCron) {
+        // CRON - Skip error with warning
+        this.logger.warn('[Cron] Steam update already in progress, skipping run');
+      } else {
+        // ENDPOINT - Throw HTTP Error
+        throw new ConflictException('Steam Update already in progress');
+      }
+    }
+    this.isCancelRequested = false;
+
+    // Clear updatePromise on completion to track in-progress updates
+    this.updatePromise = this.update().finally(() => {
+      this.updatePromise = null;
+    });
+  }
+
+  async stopUpdate() {
+    this.isCancelRequested = true;
+
+    if (this.updatePromise) {
+      return;
+    }
+
+    await this.cleanupHistory();
+  }
+
+  private async update(updateType: UpdateType = UpdateType.FULL) {
+    let updateId: number | null = null;
+    let insertsGame = 0;
+    let updatesGame = 0;
+    let insertsDlc = 0;
+    let updatesDlc = 0;
+    let errors = 0;
 
     try {
       if (process.env.STEAM_UPDATE_ENABLE !== 'true') {
         throw new SteamUpdateDisabledError('Steam updates are disabled by configuration');
       }
 
-      console.log('A');
-
       // Create Update History Record
-      const update = this.steamUpdateHistoryRepository.create({
+      const updateRecord = this.steamUpdateHistoryRepository.create({
         updateType: UpdateType.FULL,
         updateStatus: UpdateStatus.RUNNING,
         startTime: new Date(),
+        events: [generateEventMessage('Steam update started')],
       });
 
       let updateHistoryRecord: SteamUpdateHistoryEntity;
       try {
-        updateHistoryRecord = await this.steamUpdateHistoryRepository.save(update);
+        updateHistoryRecord = await this.steamUpdateHistoryRepository.save(updateRecord);
       } catch (error) {
-        if (error.code === '23505') {
-          // Postgres unique violation
+        // Postgres Integrity Constraint Violation - Unique Violation (Only allow one running update)
+        if (error?.code === '23505') {
+          updateHistoryRecord = await this.steamUpdateHistoryRepository.save({
+            updateType: UpdateType.FULL,
+            updateStatus: UpdateStatus.FAILED,
+            startTime: new Date(),
+            endTime: new Date(),
+            events: [generateEventMessage('Failed to start update - Another update is in progress')],
+            notes: 'Update rejected as another update is in progress',
+          });
+
           throw new SteamUpdateInProgressError('A Steam update is already in progress');
         }
         throw error;
       }
 
-      // Get Most Recent complete update start time
-      const lastCompleteRecord = await this.steamUpdateHistoryRepository.findOne({
-        where: { updateStatus: UpdateStatus.COMPLETE },
-        order: { startTime: 'DESC' },
-      });
-      const lastCompleteStartTime = lastCompleteRecord?.startTime ?? undefined;
+      updateId = updateHistoryRecord.id;
+      await this.checkForCancelation();
+
+      let lastCompleteStartTime: Date | null = null;
+      if (updateType !== UpdateType.FULL) {
+        // Get Most Recent complete update start time
+        const lastCompleteRecord = await this.steamUpdateHistoryRepository.findOne({
+          where: { updateStatus: UpdateStatus.COMPLETE },
+          order: { startTime: 'DESC' },
+        });
+        lastCompleteStartTime = lastCompleteRecord?.startTime ?? null;
+      }
+      await this.checkForCancelation();
 
       // Get steam update list of apps
       const appList = await this.getAppList(lastCompleteStartTime);
 
-      console.log(lastCompleteStartTime, appList.length);
-    } catch (error) {
-      console.error(error);
-    } finally {
-    }
+      if (lastCompleteStartTime) {
+        await this.appendEvent(
+          updateId,
+          `Retrieved steam app list [${appList.length}] updated after [${lastCompleteStartTime?.toISOString() ?? 'N/A'}]`
+        );
+      } else {
+        await this.appendEvent(updateId, `Retrieved steam app list [${appList.length}]`);
+      }
 
-    // Get the full steam update list - Throw error on failure
-    /**
-     * Enumerate steam app list one at a time
-     * - Track inserts, updates, and failures
-     * - Failures if they exist should be set as validation_failed
-     * - Every change to steam_apps table has a coresponding insert to the audit table with a given update history id
-     */
-    /**
-     * Finalize cleanup
-     * - Populate update history with stats
-     * - Set to completed status
-     */
+      await this.appendEvent(updateId, `Started updating steam apps`);
+      for (const app of appList) {
+        await this.checkForCancelation();
+        const appid = app.appid;
+
+        try {
+          const appInfo = await this.getAppInfo(appid);
+          const appAchievements = await this.getAppAchievements(appid);
+
+          const result = await this.saveAppInfo(app, appInfo, appAchievements);
+
+          if (result.appType === SteamAppType.GAME && result.saveType === AppInfoSaveType.INSERT) {
+            insertsGame++;
+          } else if (result.appType === SteamAppType.GAME && result.saveType === AppInfoSaveType.UPDATE) {
+            updatesGame++;
+          } else if (result.appType === SteamAppType.DLC && result.saveType === AppInfoSaveType.INSERT) {
+            insertsDlc++;
+          } else if (result.appType === SteamAppType.DLC && result.saveType === AppInfoSaveType.UPDATE) {
+            updatesDlc++;
+          }
+        } catch (error) {
+          // Failures if they exist should be set as validation_failed
+          errors++;
+        }
+      }
+      await this.appendEvent(updateId, `Finsihed updating steam apps`);
+
+      // Final cleanup and completion of update
+      /**
+       * Finalize cleanup
+       * - Populate update history with stats
+       * - Set to completed status
+       */
+      await this.steamUpdateHistoryRepository.update(
+        {
+          id: updateHistoryRecord.id,
+        },
+        {
+          updateStatus: UpdateStatus.COMPLETE,
+          endTime: new Date(),
+          insertsGame,
+          updatesGame,
+          insertsDlc,
+          updatesDlc,
+          errors,
+          events: generateEventAppend('Steam update complete'),
+        }
+      );
+    } catch (error) {
+      if (error instanceof SteamUpdateCanceledError) {
+        await this.steamUpdateHistoryRepository.update(
+          {
+            id: updateId,
+          },
+          {
+            updateStatus: UpdateStatus.CANCELED,
+            endTime: new Date(),
+            insertsGame,
+            updatesGame,
+            insertsDlc,
+            updatesDlc,
+            errors,
+            events: generateEventAppend(getErrorNameAndMessage('Steam update cancelled')),
+          }
+        );
+
+        return;
+      } else if (error instanceof SteamUpdateDisabledError) {
+        this.logger.warn('Steam updates are disabled');
+      }
+
+      if (updateId) {
+        await this.steamUpdateHistoryRepository.update(
+          {
+            id: updateId,
+          },
+          {
+            updateStatus: UpdateStatus.FAILED,
+            endTime: new Date(),
+            insertsGame,
+            updatesGame,
+            insertsDlc,
+            updatesDlc,
+            errors,
+            events: generateEventAppend(getErrorNameAndMessage(error)),
+          }
+        );
+      }
+    }
   }
 
-  async stopUpdate() {
-    // Check if server has a running update
-    // Check if DB sees a running job
+  private async cleanupHistory() {
+    /**
+     * Clean up DB if there are 'running' updates but server is not tracking any
+     * All running statuses are set to canceled
+     */
+    const runningUpdates = await this.steamUpdateHistoryRepository.find({
+      where: { updateStatus: UpdateStatus.RUNNING },
+    });
+
+    if (runningUpdates.length > 0) {
+      await this.steamUpdateHistoryRepository.update(
+        { updateStatus: UpdateStatus.RUNNING },
+        { updateStatus: UpdateStatus.CANCELED, endTime: new Date(), notes: 'Update manually canceled' }
+      );
+    }
+  }
+
+  /**
+   * Check and handle update cancelation
+   * @param updateId The id of the update history record to cancel
+   * @returns Nothing if the process is not canceled, throws a SteamUpdateCanceledError on cancelation
+   */
+  private async checkForCancelation() {
+    if (!this.isCancelRequested) {
+      return;
+    }
+
+    this.isCancelRequested = false;
+    throw new SteamUpdateCanceledError('Steam update canceled');
+  }
+
+  private async appendEvent(updateId: number, message: string) {
+    await this.steamUpdateHistoryRepository.update(
+      { id: updateId },
+      {
+        events: generateEventAppend(message),
+      }
+    );
+  }
+
+  private async saveAppInfo(app: SteamListApp, appInfo: SteamAppInfo, appAchievements: SteamAppAchievements): Promise<AppInfoResult> {
+    // Every change to steam_apps table has a coresponding insert to the audit table with a given update history id
+    const existing = await this.steamAppRepository.findOneBy({ appid: app.appid });
+
+    return {
+      appType: SteamAppType.GAME,
+      saveType: !!existing ? AppInfoSaveType.UPDATE : AppInfoSaveType.INSERT,
+    };
   }
 
   private async getAppList(lastModified?: Date, lastAppid?: number): Promise<SteamListApp[]> {
@@ -233,7 +424,6 @@ export class SteamInsightManagementService {
 
         // Check if app retrieved no achievements
         if (!achievements) {
-          this.logger.warn(`No achievements found for appid ${appid}`);
           return null;
         }
 
