@@ -1,6 +1,6 @@
 export enum UpdateType {
   FULL = 'F',
-  INRECMENTAL = 'I',
+  INCREMENTAL = 'I',
 }
 
 export enum UpdateStatus {
@@ -10,15 +10,27 @@ export enum UpdateStatus {
   CANCELED = 'X',
 }
 
-export const MAX_STEAM_API_RETRIES = 5;
-export const MAX_STEAM_API_PAGES = 10000;
+export const APP_SAVE_TYPE = {
+  insert: 'I',
+  update: 'U',
+  noChange: 'N',
+} as const;
+
+export const APP_TYPE = {
+  game: 'game',
+  dlc: 'dlc',
+} as const;
+
+/** API */
+export const MAX_STEAM_API_RETRIES = 5 as const;
+export const MAX_STEAM_API_PAGES = 10000 as const;
 
 export const STEAM_API_RETRY_DELAY = {
-  RATE_LIMIT: 300000, // 5 Minutes
-  ERROR: 5000, // 5 Seconds
-};
+  rateLimit: 300000, // 5 Minutes
+  error: 5000, // 5 Seconds
+} as const;
 
-export const STEAM_INSIGHT_PAGE_SIZE = 20;
+export const STEAM_INSIGHT_PAGE_SIZE = 20 as const;
 
 /**
  * Steam Web API: IStoreService/GetAppList (v1)
@@ -74,7 +86,21 @@ const STEAM_API_GET_APPINFO_URL = 'https://store.steampowered.com/api/appdetails
 const STEAM_API_GET_APPSCHEMA_URL = 'https://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2' as const;
 
 export const STEAM_API_URLS = {
-  LIST: STEAM_API_GET_APPLIST_URL,
-  INFO: STEAM_API_GET_APPINFO_URL,
-  SCHEMA: STEAM_API_GET_APPSCHEMA_URL,
+  list: STEAM_API_GET_APPLIST_URL,
+  info: STEAM_API_GET_APPINFO_URL,
+  schema: STEAM_API_GET_APPSCHEMA_URL,
 } as const;
+
+/** MESSAGES */
+export const STEAM_UPDATE_MESSAGES = {
+  updateQueued: 'Steam update has been queued',
+  updateStarted: 'Steam update has been started',
+  updateComplete: 'Steam update is complete',
+  updateCanceled: 'Steam update has been canceled',
+  updateInProgressError: 'Steam update already in progress',
+  updatesDisabledError: 'Steam updates are disabled by configuration',
+  updateError: 'Steam update has encountered an error',
+  maxPageError: 'Exceeded max page count',
+  apiKeyNotFoundError: 'Steam API key missing or invalid',
+  apiKeyRejectedError: 'Steam API key has been rejected',
+};

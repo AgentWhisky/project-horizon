@@ -139,6 +139,9 @@ export interface Movie {
 }
 
 export interface AppInfoResult {
+  appid: number;
   appType: string;
   saveType: string;
 }
+
+export type ChangeDiff = Record<string, { before: any; after: any }>;

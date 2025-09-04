@@ -27,11 +27,17 @@ export class SteamUpdateHistoryEntity {
   @Column({ name: 'updates_game', type: 'int', nullable: true })
   updatesGame: number;
 
+  @Column({ name: 'no_change_game', type: 'int', nullable: true })
+  noChangeGame: number;
+
   @Column({ name: 'inserts_dlc', type: 'int', nullable: true })
   insertsDlc: number;
 
   @Column({ name: 'updates_dlc', type: 'int', nullable: true })
   updatesDlc: number;
+
+  @Column({ name: 'no_change_dlc', type: 'int', nullable: true })
+  noChangeDlc: number;
 
   @Column({ name: 'errors', type: 'int', nullable: true })
   errors: number;

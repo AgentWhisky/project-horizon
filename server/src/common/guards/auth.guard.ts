@@ -27,11 +27,15 @@ export class AuthGuard implements CanActivate {
 
     try {
       const request = context.switchToHttp().getRequest();
+
       const token = request.headers.authorization?.split(' ')[1];
+      if (!token) {
+        throw new UnauthorizedException('Authorization token is required');
+      }
 
       const payload: AuthPayload = this.jwtService.verify(token);
       if (!payload) {
-        throw new UnauthorizedException('Missing or invalid authorization token');
+        throw new UnauthorizedException('Authorization token is invalid or expired');
       }
 
       if (!payload.sub) {
@@ -66,6 +70,8 @@ export class AuthGuard implements CanActivate {
       if (error instanceof UnauthorizedException || error instanceof ForbiddenException) {
         throw error;
       }
+
+      console.log(error);
 
       throw new UnauthorizedException('Authentication failed due to an unexpected error');
     }

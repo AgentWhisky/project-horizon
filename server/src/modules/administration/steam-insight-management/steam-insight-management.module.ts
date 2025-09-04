@@ -1,13 +1,18 @@
 import { Module } from '@nestjs/common';
-import { SteamInsightManagementService } from './steam-insight-management.service';
-import { SteamInsightManagementController } from './steam-insight-management.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SteamUpdateHistoryEntity } from 'src/entities/steam-update-history.entity';
 import { HttpModule } from '@nestjs/axios';
 
+import { SteamAppEntity } from 'src/entities/steam-app.entity';
+import { SteamAppAuditEntity } from 'src/entities/steam-app-audit.entity';
+import { SteamUpdateHistoryEntity } from 'src/entities/steam-update-history.entity';
+
+import { SteamInsightManagementController } from './steam-insight-management.controller';
+import { SteamInsightManagementService } from './services/steam-insight-management.service';
+import { SteamInsightManagementUpdateService } from './services/steam-insight-management-update.service';
+
 @Module({
-  imports: [TypeOrmModule.forFeature([SteamUpdateHistoryEntity]), HttpModule],
+  imports: [TypeOrmModule.forFeature([SteamAppEntity, SteamAppAuditEntity, SteamUpdateHistoryEntity]), HttpModule],
   controllers: [SteamInsightManagementController],
-  providers: [SteamInsightManagementService],
+  providers: [SteamInsightManagementService, SteamInsightManagementUpdateService],
 })
 export class SteamInsightManagementModule {}

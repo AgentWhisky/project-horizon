@@ -206,6 +206,9 @@ export class SteamAppEntity {
   @Column({ name: 'validation_failed', type: 'boolean', default: false })
   validationFailed: boolean;
 
+  @Column({ name: 'active', type: 'boolean', default: true })
+  active: boolean;
+
   // *** AUDIT FIELDS ***
   @CreateDateColumn({ name: 'created_date', type: 'timestamptz' })
   createdDate: Date;

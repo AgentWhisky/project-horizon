@@ -6,7 +6,6 @@ import { DataSourceConfig } from 'db/data-source';
 import { JobsModule } from './jobs/jobs.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from './guards/auth.guard';
 import { UserEntity } from './entities/users.entity';
 import { AuthenticationModule } from './modules/authentication/authentication.module';
 import { AdminDashboardModule } from './modules/administration/admin-dashboard/admin-dashboard.module';
@@ -16,6 +15,7 @@ import { LinkLibraryManagementModule } from './modules/administration/link-libra
 import { CacheModule } from '@nestjs/cache-manager';
 import { SteamInsightModule } from './modules/tools/steam-insight/steam-insight.module';
 import { SteamInsightManagementModule } from './modules/administration/steam-insight-management/steam-insight-management.module';
+import { AuthGuard } from './common/guards';
 
 @Module({
   imports: [

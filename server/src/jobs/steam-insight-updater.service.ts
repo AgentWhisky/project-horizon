@@ -203,6 +203,7 @@ export class SteamInsightUpdaterService implements OnModuleInit {
       metacriticUrl: appInfo.metacritic?.url,
       isAdult: isAdultGame(appInfo),
     });
+    
 
     // Check if record needs to move between partitions
     if (existing && existing.isAdult !== entity.isAdult) {
