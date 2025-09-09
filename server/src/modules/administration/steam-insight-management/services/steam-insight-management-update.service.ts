@@ -3,6 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import { InjectRepository } from '@nestjs/typeorm';
 import { firstValueFrom } from 'rxjs';
 import { Repository } from 'typeorm';
+import { CronJob } from 'cron';
 
 import { SteamAppEntity } from '@hz/entities/steam-app.entity';
 import { SteamAppAuditEntity, SteamAppChangeType } from '@hz/entities/steam-app-audit.entity';
@@ -29,10 +30,12 @@ import {
   RetryExhaustedError,
   SteamAppInfoError,
 } from '@hz/common/errors';
-import { sleep, getErrorNameAndMessage } from '@hz/common/utils';
+import { sleep, getErrorNameAndMessage, generateChangeDiff } from '@hz/common/utils';
 
-import { generateDiff, generateEventAppend, generateEventMessage, isAdultGame } from '../steam-insight-management.utils';
+import { generateEventAppend, generateEventMessage, isAdultGame } from '../steam-insight-management.utils';
 import { AppInfoResult, SteamAppAchievements, SteamAppInfo, SteamListApp } from '../steam-insight-management.model';
+import { CronExpression, SchedulerRegistry } from '@nestjs/schedule';
+import { ChangeDiff } from '@hz/common/model';
 
 @Injectable()
 export class SteamInsightManagementUpdateService implements OnModuleInit {
@@ -43,6 +46,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
 
   constructor(
     private readonly httpService: HttpService,
+    private schedulerRegistry: SchedulerRegistry,
 
     @InjectRepository(SteamAppEntity)
     private readonly steamAppRepository: Repository<SteamAppEntity>,
@@ -56,6 +60,19 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
 
   onModuleInit() {
     this.cleanupHistory();
+
+    if (process.env.STEAM_UPDATE_ENABLE === 'true') {
+      const job = new CronJob(CronExpression.EVERY_HOUR, async () => {
+        await this.startUpdate(true, UpdateType.FULL);
+      });
+
+      this.schedulerRegistry.addCronJob('steamInsightUpdateJob', job);
+      job.start();
+
+      this.logger.log(`Steam insight updates are enabled on this server and a CRON job will run every hour`);
+    } else {
+      this.logger.log(`Steam insight updates are disabled on this server`);
+    }
   }
 
   /*
@@ -245,7 +262,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
           updatesDlc,
           noChangeDlc,
           errors,
-          events: generateEventAppend('Steam update complete'),
+          events: generateEventAppend('Steam insight update complete'),
           notes: STEAM_UPDATE_MESSAGES.updateComplete,
         }
       );
@@ -363,7 +380,77 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
     updateHistoryId: number
   ): Promise<AppInfoResult> {
     // Every change to steam_apps table has a corresponding insert to the audit table with a given update history id
-    const existing = await this.steamAppRepository.findOneBy({ appid: app.appid });
+    const existing = await this.steamAppRepository.findOne({
+      where: { appid: app.appid },
+      select: {
+        appid: true,
+        name: true,
+        lastModified: true,
+        achievements: { total: true, data: true },
+        type: true,
+        requiredAge: true,
+        isFree: true,
+        recommendationsTotal: true,
+        comingSoon: true,
+        releaseDate: true,
+        supportUrl: true,
+        supportEmail: true,
+        contentDescriptorNotes: true,
+        dlc: true,
+        packages: true,
+        contentDescriptorIds: true,
+        developers: true,
+        publishers: true,
+        categories: true,
+        genres: true,
+        detailedDescription: true,
+        aboutTheGame: true,
+        shortDescription: true,
+        supportedLanguages: true,
+        reviews: true,
+        legalNotice: true,
+        screenshots: true,
+        movies: true,
+        ratings: {
+          esrb: { rating: true, descriptors: true, required_age: true, use_age_gate: true, interactive_elements: true },
+          dejus: { rating: true, descriptors: true, required_age: true, use_age_gate: true, interactive_elements: true },
+          pegi: { rating: true, descriptors: true, required_age: true, use_age_gate: true, interactive_elements: true },
+          usk: { rating: true, descriptors: true, required_age: true, use_age_gate: true, interactive_elements: true },
+          nzoflc: { rating: true, descriptors: true, required_age: true, use_age_gate: true, interactive_elements: true },
+          fpb: { rating: true, descriptors: true, required_age: true, use_age_gate: true, interactive_elements: true },
+          csrr: { rating: true, descriptors: true, required_age: true, use_age_gate: true, interactive_elements: true },
+          cero: { rating: true, descriptors: true, required_age: true, use_age_gate: true, interactive_elements: true },
+          crl: { rating: true, descriptors: true, required_age: true, use_age_gate: true, interactive_elements: true },
+        },
+        packageGroups: true,
+        demos: true,
+        fullgame: { appid: true, name: true },
+        headerImage: true,
+        capsuleImage: true,
+        capsuleImagev5: true,
+        website: true,
+        backgroundUrl: true,
+        backgroundRawUrl: true,
+        pcMinimum: true,
+        pcRecommended: true,
+        macMinimum: true,
+        macRecommended: true,
+        linuxMinimum: true,
+        linuxRecommended: true,
+        supportsWindows: true,
+        supportsMac: true,
+        supportsLinux: true,
+        currency: true,
+        initialPrice: true,
+        finalPrice: true,
+        discountPercent: true,
+        initialFormatted: true,
+        finalFormatted: true,
+        metacriticScore: true,
+        metacriticUrl: true,
+        isAdult: true,
+      },
+    });
 
     const entity = this.steamAppRepository.create({
       appid: app.appid,
@@ -424,7 +511,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
       isAdult: isAdultGame(appInfo),
     });
 
-    const changes = existing ? generateDiff(existing, entity) : generateDiff(null, entity);
+    const changes: ChangeDiff = existing ? generateChangeDiff(existing, entity) : generateChangeDiff(null, entity);
 
     if (existing) {
       // Return without updating as there are no changes

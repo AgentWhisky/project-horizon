@@ -4,14 +4,17 @@
       <mat-icon>add</mat-icon>
       Add Tile
     </button>
+    @if(baseConversions().length > 0) {
     <button mat-flat-button (click)="onRemoveAllBases()">
       <mat-icon>delete</mat-icon>
       Remove Tiles
     </button>
+    }
   </div>
-  @if(!baseConversions().length) {
+  @if(baseConversions().length === 0) {
   <hz-banner>
-    <hz-banner-body>No base tiles found</hz-banner-body>
+    <hz-banner-header>No tiles have been added yet</hz-banner-header>
+    <hz-banner-body>Use the button above to create your first one. You can continue adding more tiles at anytime!</hz-banner-body>
   </hz-banner>
 
   } @else {

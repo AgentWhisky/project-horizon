@@ -15,7 +15,6 @@ export class RefreshTokenCleanupService implements OnModuleInit {
 
   // Function cleans up tokens on init
   async onModuleInit() {
-    this.logger.log('Cleaning expired refresh tokens...');
     await this.cleanupTokens();
   }
 
@@ -27,6 +26,8 @@ export class RefreshTokenCleanupService implements OnModuleInit {
 
   // Function to cleanup expired refresh tokens in the database
   private async cleanupTokens() {
+    this.logger.log('Cleaning expired refresh tokens...');
+
     const now = new Date();
     const expiredTokens = await this.refreshTokenRepository.find({
       where: {
@@ -37,10 +38,10 @@ export class RefreshTokenCleanupService implements OnModuleInit {
     try {
       if (expiredTokens.length) {
         await this.refreshTokenRepository.remove(expiredTokens);
-        console.log(`Cleaned ${expiredTokens.length} expired tokens.`);
+        this.logger.log(`Cleaned ${expiredTokens.length} expired tokens.`);
       }
     } catch (error) {
-      console.error(`Error cleaning expired tokens: ${error}.`);
+      this.logger.log(`Error cleaning expired tokens: ${error}.`);
     }
   }
 }

@@ -143,5 +143,3 @@ export interface AppInfoResult {
   appType: string;
   saveType: string;
 }
-
-export type ChangeDiff = Record<string, { before: any; after: any }>;
