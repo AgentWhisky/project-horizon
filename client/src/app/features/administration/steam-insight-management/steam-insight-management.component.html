@@ -1,3 +1,31 @@
-<div class="h-full">
-  <span>STEAM INSIGHT MANAGEMENT</span>
-</div>
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
+  <mat-tab label="Dashboard">
+    <div class="flex flex-col gap-3 p-3">
+      @if(steamInsightDashboard()) {
+
+      <hz-stat-card-group showPrimaryHeader>
+        @for(stat of steamInsightDashboard()?.appStats; track stat) {
+        <hz-stat-card>
+          <hz-stat-card-title>{{ stat.displayName }}</hz-stat-card-title>
+          <hz-stat-card-value>{{ stat.value }}</hz-stat-card-value>
+        </hz-stat-card>
+        }
+      </hz-stat-card-group>
+
+      <mat-divider></mat-divider>
+
+      <hz-stat-card-group showPrimaryHeader>
+        @for(stat of steamInsightDashboard()?.updateStats; track stat) {
+        <hz-stat-card>
+          <hz-stat-card-title>{{ stat.displayName }}</hz-stat-card-title>
+          <hz-stat-card-value>{{ stat.value }}</hz-stat-card-value>
+        </hz-stat-card>
+        }
+      </hz-stat-card-group>
+
+      }
+    </div>
+  </mat-tab>
+  <mat-tab label="Steam App Search">Content 2</mat-tab>
+  <mat-tab label="Steam Update History">Content 3</mat-tab>
+</mat-tab-group>

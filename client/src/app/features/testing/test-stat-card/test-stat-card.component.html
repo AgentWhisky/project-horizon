@@ -1,0 +1,65 @@
+<div class="flex flex-col gap-3">
+  <div class="flex flex-col gap-1">
+    <span class="test-stat-card-section-header">Stat card group</span>
+    <hz-stat-card-group>
+      @for(data of mockData; track data.id) {
+      <hz-stat-card>
+        <hz-stat-card-title>{{ data.title }}</hz-stat-card-title>
+        <hz-stat-card-value>{{ data.value }}</hz-stat-card-value>
+      </hz-stat-card>
+      }
+    </hz-stat-card-group>
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <span class="test-stat-card-section-header">Stat Card Group with border</span>
+    <hz-stat-card-group showBorder>
+      @for(data of mockData; track data.id) {
+      <hz-stat-card>
+        <hz-stat-card-title>{{ data.title }}</hz-stat-card-title>
+        <hz-stat-card-value>{{ data.value }}</hz-stat-card-value>
+      </hz-stat-card>
+      }
+    </hz-stat-card-group>
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <span class="test-stat-card-section-header">Stat Card Group with primary color header</span>
+    <hz-stat-card-group showPrimaryHeader>
+      @for(data of mockData; track data.id) {
+      <hz-stat-card>
+        <hz-stat-card-title>{{ data.title }}</hz-stat-card-title>
+        <hz-stat-card-value>{{ data.value }}</hz-stat-card-value>
+      </hz-stat-card>
+      }
+    </hz-stat-card-group>
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <span class="test-stat-card-section-header">Stat Card Group with border and primary color header</span>
+    <hz-stat-card-group showBorder showPrimaryHeader>
+      @for(data of mockData; track data.id) {
+      <hz-stat-card>
+        <hz-stat-card-title>{{ data.title }}</hz-stat-card-title>
+        <hz-stat-card-value>{{ data.value }}</hz-stat-card-value>
+      </hz-stat-card>
+      }
+    </hz-stat-card-group>
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <span class="test-stat-card-section-header">Stat Card with large text</span>
+    <hz-stat-card showPrimaryHeader>
+      <hz-stat-card-title>Long text title</hz-stat-card-title>
+      <hz-stat-card-value
+        >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed risus a justo tristique fermentum. Proin dignissim, ligula eu
+        viverra aliquet, urna lacus bibendum nibh, nec ullamcorper ex nisi non tortor. Suspendisse fringilla dui in libero volutpat, vel
+        vehicula sapien feugiat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+      </hz-stat-card-value>
+    </hz-stat-card>
+  </div>
+
+  <div class="flex justify-start">
+    <a mat-flat-button [routerLink]="['/testing/dev-portal']"><mat-icon>arrow_back</mat-icon> Back</a>
+  </div>
+</div>

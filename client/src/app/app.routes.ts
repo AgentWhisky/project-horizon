@@ -57,6 +57,31 @@ export const routes: Routes = [
         loadComponent: () => import('./features/tools/pathfinder/pathfinder.component').then((c) => c.PathfinderComponent),
       },
 
+      // *** TESTING ***
+      {
+        path: 'testing',
+        children: [
+          {
+            path: 'dev-portal',
+            children: [
+              {
+                path: '',
+                loadComponent: () => import('./features/testing/dev-portal/dev-portal.component').then((c) => c.DevPortalComponent),
+              },
+              {
+                path: 'hz-banner',
+                loadComponent: () => import('./features/testing/test-banner/test-banner.component').then((c) => c.TestBannerComponent),
+              },
+              {
+                path: 'hz-stat-card',
+                loadComponent: () =>
+                  import('./features/testing/test-stat-card/test-stat-card.component').then((c) => c.TestStatCardComponent),
+              },
+            ],
+          },
+        ],
+      },
+
       // *** ADMINISTRATION ***
       {
         path: 'administration',
@@ -73,7 +98,7 @@ export const routes: Routes = [
             children: [
               {
                 path: '',
-                loadComponent: () => import('./features/administration/dev-portal/dev-portal.component').then((c) => c.DevPortalComponent),
+                loadComponent: () => import('./features/testing/dev-portal/dev-portal.component').then((c) => c.DevPortalComponent),
                 data: { requiredRights: [USER_RIGHTS.DEFAULT] },
               },
               {

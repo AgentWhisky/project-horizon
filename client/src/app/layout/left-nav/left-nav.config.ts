@@ -29,6 +29,10 @@ export const navSections: NavSection[] = [
     ],
   },
   {
+    title: 'Testing',
+    navItems: [{ routerLink: '/testing/dev-portal', name: 'Dev Portal', icon: 'code' }],
+  },
+  {
     title: 'Administration',
     navItems: [
       {
@@ -36,12 +40,6 @@ export const navSections: NavSection[] = [
         name: 'Admin Dashboard',
         icon: 'admin_panel_settings',
         requiredRights: [USER_RIGHTS.VIEW_DASHBOARD],
-      },
-      {
-        routerLink: '/administration/dev-portal',
-        name: 'Dev Portal',
-        icon: 'code',
-        requiredRights: [USER_RIGHTS.DEFAULT],
       },
       {
         routerLink: '/administration/account-management',

@@ -1,13 +1,24 @@
-import { Controller, Post, Query } from '@nestjs/common';
+import { Controller, Get, Post, Query } from '@nestjs/common';
 
 import { UpdateType, USER_RIGHTS } from '@hz/common/constants';
 import { RequireRight } from '@hz/common/decorators';
 
 import { SteamInsightManagementUpdateService } from './services/steam-insight-management-update.service';
+import { SteamInsightManagementService } from './services/steam-insight-management.service';
+import { SteamInsightDashboard } from './steam-insight-management.model';
 
 @Controller('steam-insight-management')
 export class SteamInsightManagementController {
-  constructor(private readonly steamInsightManagementUpdateService: SteamInsightManagementUpdateService) {}
+  constructor(
+    private readonly steamInsightManagementUpdateService: SteamInsightManagementUpdateService,
+    private readonly steamInsightManagementService: SteamInsightManagementService
+  ) {}
+
+  @Get('dashboard')
+  @RequireRight(USER_RIGHTS.MANAGE_STEAM_INSIGHT)
+  async getSteamInsightDashboard(): Promise<SteamInsightDashboard> {
+    return await this.steamInsightManagementService.getDashboard();
+  }
 
   /** Steam Insight Update Endpoints */
   @Post('update/start')

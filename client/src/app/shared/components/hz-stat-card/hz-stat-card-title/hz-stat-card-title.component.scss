@@ -1,0 +1,7 @@
+:host {
+  font: var(----mat-sys-title-medium);
+}
+
+:host(.primary-header) {
+  color: var(--mat-sys-primary);
+}

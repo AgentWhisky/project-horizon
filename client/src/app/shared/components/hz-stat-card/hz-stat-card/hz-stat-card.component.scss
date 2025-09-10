@@ -1,0 +1,21 @@
+:host {
+  display: flex;
+  flex-direction: column;
+
+  padding: 0.5rem 1rem;
+
+  min-width: 12rem;
+
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-left: 4px solid var(--mat-sys-primary);
+
+  border-radius: var(--mat-sys-corner-small);
+}
+
+:host:hover {
+  background-color: var(--mat-sys-surface-container);
+}
+
+:host(.primary-header) ::ng-deep hz-stat-card-title {
+  color: var(--mat-sys-primary);
+}

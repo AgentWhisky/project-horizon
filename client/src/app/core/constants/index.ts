@@ -10,6 +10,7 @@ export * from './screen-values.constants';
 export * from './storage-keys.constants';
 export * from './text.constants';
 export * from './theme.constants';
+export * from './time.constants';
 export * from './title.constants';
 export * from './url.constants';
 export * from './user-rights.constants';
