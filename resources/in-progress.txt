@@ -1,0 +1,2 @@
+- Design and build Steam Insight Admin Panel
+- Design and build custom expandable table

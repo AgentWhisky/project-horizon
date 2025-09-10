@@ -97,10 +97,13 @@ export const STEAM_UPDATE_MESSAGES = {
   updateStarted: 'Steam update has been started',
   updateComplete: 'Steam update is complete',
   updateCanceled: 'Steam update has been canceled',
+} as const;
+
+export const STEAM_UPDATE_ERRORS = {
   updateInProgressError: 'Steam update already in progress',
   updatesDisabledError: 'Steam updates are disabled by configuration',
   updateError: 'Steam update has encountered an error',
   maxPageError: 'Exceeded max page count',
   apiKeyNotFoundError: 'Steam API key missing or invalid',
   apiKeyRejectedError: 'Steam API key has been rejected',
-};
+} as const;
