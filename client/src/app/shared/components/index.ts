@@ -7,4 +7,5 @@ export * from './file-input/file-input.component';
 // Modules
 export * from './hz-banner';
 export * from './hz-timeline';
+export * from './hz-chip';
 export * from './hz-stat-card';

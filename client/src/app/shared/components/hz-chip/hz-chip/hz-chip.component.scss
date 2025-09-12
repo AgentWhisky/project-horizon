@@ -1,0 +1,130 @@
+@use '@angular/material' as mat;
+
+.hz-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  padding: 0 0.75rem;
+  height: 2rem; // keeps it chip-sized
+
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: var(--hz-sys-letter-spacing-large);
+
+  border-radius: 9999px; // pill shape
+  color: var(--hz-sys-on-base);
+  border: 1px solid var(--hz-sys-base-border);
+
+  cursor: default;
+  user-select: none;
+}
+
+.hz-chip.hz-chip-clickable {
+  cursor: pointer;
+}
+
+.hz-chip-close {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+
+  line-height: 16px;
+  cursor: pointer;
+
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  mat-icon {
+    font-size: inherit;
+    width: inherit;
+    height: inherit;
+    line-height: inherit;
+  }
+}
+
+/** BANNER COLORS */
+.hz-chip.base {
+  background-color: var(--hz-sys-base-container);
+  color: var(--hz-sys-on-base);
+  border: 1px solid var(--hz-sys-base-border);
+
+  @include mat.icon-button-overrides(
+    (
+      icon-color: var(--hz-sys-on-base),
+      state-layer-color: var(--hz-sys-on-base),
+    )
+  );
+}
+
+.hz-chip.primary {
+  background-color: var(--hz-sys-base-container);
+  color: var(--mat-sys-primary);
+  border: 1px solid var(--mat-sys-outline-variant);
+
+  @include mat.icon-button-overrides(
+    (
+      icon-color: var(--mat-sys-primary),
+      state-layer-color: var(--mat-sys-primary),
+    )
+  );
+}
+
+.hz-chip.success {
+  background-color: var(--hz-sys-success-container);
+  color: var(--hz-sys-on-success);
+  border: 1px solid var(--hz-sys-success-border);
+
+  @include mat.icon-button-overrides(
+    (
+      icon-color: var(--hz-sys-on-success),
+      state-layer-color: var(--hz-sys-on-success),
+    )
+  );
+}
+
+.hz-chip.warning {
+  background-color: var(--hz-sys-warning-container);
+  color: var(--hz-sys-on-warning);
+  border: 1px solid var(--hz-sys-warning-border);
+
+  @include mat.icon-button-overrides(
+    (
+      icon-color: var(--hz-sys-on-warning),
+      state-layer-color: var(--hz-sys-on-warning),
+    )
+  );
+}
+
+.hz-chip.error {
+  background-color: var(--hz-sys-error-container);
+  color: var(--hz-sys-on-error);
+  border: 1px solid var(--hz-sys-error-border);
+
+  @include mat.icon-button-overrides(
+    (
+      icon-color: var(--hz-sys-on-error),
+      state-layer-color: var(--hz-sys-on-error),
+    )
+  );
+}
+
+.hz-chip:hover {
+  background-color: color-mix(in srgb, var(--hz-sys-base-container) 90%, var(--hz-sys-on-base) 10%);
+}
+
+.hz-chip.success:hover {
+  background-color: color-mix(in srgb, var(--hz-sys-success-container) 90%, var(--hz-sys-success) 10%);
+}
+
+.hz-chip.warning:hover {
+  background-color: color-mix(in srgb, var(--hz-sys-warning-container) 90%, var(--hz-sys-warning) 10%);
+}
+
+.hz-chip.error:hover {
+  background-color: color-mix(in srgb, var(--hz-sys-error-container) 90%, var(--hz-sys-error) 10%);
+}

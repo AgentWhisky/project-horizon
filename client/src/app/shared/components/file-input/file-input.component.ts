@@ -4,6 +4,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+import { SNACKBAR_INTERVAL } from '@hz/core/constants';
+
 @Component({
   selector: 'hz-file-input',
   imports: [MatButtonModule, MatIconModule],
@@ -85,9 +87,9 @@ export class FileInputComponent {
       this.selectedFiles.set(updatedFiles);
 
       // Display Snackbar for one or multiple
-      this.snackbar.open('Successfully Added File(s)', 'Close', { duration: 3000 });
+      this.snackbar.open('Successfully Added File(s)', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     } else {
-      this.snackbar.open('No File(s) added', 'Close', { duration: 3000 });
+      this.snackbar.open('No File(s) added', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     }
   }
 }

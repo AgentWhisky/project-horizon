@@ -13,7 +13,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { REGEX } from '@hz/core/constants';
+import { REGEX, SNACKBAR_INTERVAL } from '@hz/core/constants';
 import { ImageFallbackDirective } from '@hz/core/directives';
 import { ValidatorMessagePipe } from '@hz/core/pipes';
 import { ThemeService } from '@hz/core/services';
@@ -146,11 +146,11 @@ export class LinkLibraryManagementDialogComponent implements OnInit {
     if (exists) {
       this.linkForm.get('icon')?.setValue(faviconUrl);
       this.linkForm.get('icon')?.markAsDirty();
-      this.snackbar.open('Successfully found favicon at url', 'Close', { duration: 3000 });
+      this.snackbar.open('Successfully found favicon at url', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     } else {
       console.error('Favicon not found at', faviconUrl);
       this.linkForm.get('icon')?.reset();
-      this.snackbar.open('Failed to find favicon at url', 'Close', { duration: 3000 });
+      this.snackbar.open('Failed to find favicon at url', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     }
   }
 }

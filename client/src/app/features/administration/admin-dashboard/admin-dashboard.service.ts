@@ -1,9 +1,12 @@
 import { inject, Injectable, signal } from '@angular/core';
-
 import { firstValueFrom } from 'rxjs';
-import { AdminDashboardInfo, CreationCodeRefresh } from './admin-dashboard';
+
 import { MatSnackBar } from '@angular/material/snack-bar';
+
 import { TokenService } from '@hz/core/services';
+import { SNACKBAR_INTERVAL } from '@hz/core/constants';
+
+import { AdminDashboardInfo, CreationCodeRefresh } from './admin-dashboard';
 
 @Injectable({
   providedIn: 'root',
@@ -20,12 +23,12 @@ export class AdminDashboardService {
       const dashboard = await this.getDashboard();
       this._dashboardInfo.set(dashboard);
       if (manual) {
-        this.snackbar.open('Successfully refreshed dashboard', 'Close', { duration: 3000 });
+        this.snackbar.open('Successfully refreshed dashboard', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       }
     } catch (error) {
       console.error(`Error Fetching Dashboard: ${error}`);
       if (manual) {
-        this.snackbar.open('Failed to refresh dashboard', 'Close', { duration: 3000 });
+        this.snackbar.open('Failed to refresh dashboard', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       }
     }
   }
@@ -35,9 +38,9 @@ export class AdminDashboardService {
       await this.postCreationCodeRefresh();
       await this.loadDashboard();
 
-      this.snackbar.open('Successfully refreshed account creation code', 'Close', { duration: 3000 });
+      this.snackbar.open('Successfully refreshed account creation code', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     } catch (error) {
-      this.snackbar.open('Failed to refresh account creation code', 'Close', { duration: 3000 });
+      this.snackbar.open('Failed to refresh account creation code', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       console.error(`Error refreshing creation code: ${error}`);
     }
   }

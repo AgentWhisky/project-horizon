@@ -16,7 +16,7 @@
 
     <div class="main-layout-toolbar-section">
       <!--<button mat-icon-button matTooltip="Notifications" aria-label="Notifications">
-        <mat-icon>notifications</mat-icon>
+         <mat-icon fontSet="material-symbols-outlined">notifications</mat-icon>
       </button>-->
 
       <!-- Toggle Theme Icon -->
@@ -25,12 +25,12 @@
         (click)="onToggleTheme()"
         [matTooltip]="isDarkmode() ? 'Switch to light mode' : 'Switch to dark mode'"
         [attr.aria-label]="isDarkmode() ? 'Switch to light mode' : 'Switch to dark mode'">
-        <mat-icon>{{ isDarkmode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+        <mat-icon fontSet="material-symbols-outlined">{{ isDarkmode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
       </button>
 
       <!-- Settings Menu 
       <button mat-icon-button [matMenuTriggerFor]="settingsMenu">
-        <mat-icon>settings</mat-icon>
+         <mat-icon fontSet="material-symbols-outlined">settings</mat-icon>
       </button>
 
       <mat-menu #settingsMenu="matMenu">
@@ -47,15 +47,15 @@
       <!-- Login/Account Icons -->
       @if(!isLoggedIn()) {
       <button mat-icon-button (click)="onLogin()" matTooltip="Sign In" aria-label="Sign In">
-        <mat-icon>person</mat-icon>
+        <mat-icon fontSet="material-symbols-outlined">person</mat-icon>
       </button>
       } @else {
       <button mat-icon-button [matMenuTriggerFor]="userMenu" matTooltip="Account" aria-label="Account">
-        <mat-icon>account_circle</mat-icon>
+        <mat-icon fontSet="material-symbols-outlined">account_circle</mat-icon>
       </button>
       <mat-menu #userMenu="matMenu">
         <button mat-menu-item (click)="onLogout()">
-          <mat-icon>logout</mat-icon>
+          <mat-icon fontSet="material-symbols-outlined">logout</mat-icon>
           <span>Sign Out</span>
         </button>
       </mat-menu>

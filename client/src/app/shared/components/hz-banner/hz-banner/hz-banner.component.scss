@@ -1,3 +1,5 @@
+@use '@angular/material' as mat;
+
 :host {
   width: 100%;
 }
@@ -11,41 +13,78 @@
 
   align-items: center;
 
-  border: 1px solid var(--mat-sys-outline-variant);
   border-radius: var(--mat-sys-corner-small);
-}
-
-.hz-banner.closed {
-  opacity: 0;
-  max-height: 0;
-  overflow: hidden;
-  padding: 0;
-  margin: 0;
 }
 
 /** BANNER COLORS */
 .hz-banner.base {
-  background-color: var(--mat-sys-surface-container);
-  color: var(--mat-sys-on-surface);
-  border-left: 4px solid var(--mat-sys-on-surface);
+  background-color: var(--hz-sys-base-container);
+  color: var(--hz-sys-on-base);
+  border: 1px solid var(--hz-sys-base-border);
+  border-left: 4px solid var(--hz-sys-base);
+
+  @include mat.icon-button-overrides(
+    (
+      icon-color: var(--hz-sys-on-base),
+      state-layer-color: var(--hz-sys-on-base),
+    )
+  );
+}
+
+.hz-banner.primary {
+  background-color: var(--hz-sys-base-container);
+  color: var(--mat-sys-primary);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-left: 4px solid var(--mat-sys-primary);
+
+  @include mat.icon-button-overrides(
+    (
+      icon-color: var(--mat-sys-primary),
+      state-layer-color: var(--mat-sys-primary),
+    )
+  );
 }
 
 .hz-banner.success {
-  background-color: #e8f5e9;
-  color: #0d3d15;
-  border-left: 4px solid #4caf50;
+  background-color: var(--hz-sys-success-container);
+  color: var(--hz-sys-on-success);
+  border: 1px solid var(--hz-sys-success-border);
+  border-left: 4px solid var(--hz-sys-success);
+
+  @include mat.icon-button-overrides(
+    (
+      icon-color: var(--hz-sys-on-success),
+      state-layer-color: var(--hz-sys-on-success),
+    )
+  );
 }
 
 .hz-banner.warning {
-  background-color: #fff8e1;
-  color: #663c00;
-  border-left: 4px solid #ffb300;
+  background-color: var(--hz-sys-warning-container);
+  color: var(--hz-sys-on-warning);
+  border: 1px solid var(--hz-sys-warning-border);
+  border-left: 4px solid var(--hz-sys-warning);
+
+  @include mat.icon-button-overrides(
+    (
+      icon-color: var(--hz-sys-on-warning),
+      state-layer-color: var(--hz-sys-on-warning),
+    )
+  );
 }
 
 .hz-banner.error {
-  background-color: #ffebee;
-  color: #7f0000;
-  border-left: 4px solid #f44336;
+  background-color: var(--hz-sys-error-container);
+  color: var(--hz-sys-on-error);
+  border: 1px solid var(--hz-sys-error-border);
+  border-left: 4px solid var(--hz-sys-error);
+
+  @include mat.icon-button-overrides(
+    (
+      icon-color: var(--hz-sys-on-error),
+      state-layer-color: var(--hz-sys-on-error),
+    )
+  );
 }
 
 /** CONTENT */

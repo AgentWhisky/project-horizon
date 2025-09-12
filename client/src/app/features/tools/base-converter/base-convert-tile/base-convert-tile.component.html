@@ -20,7 +20,7 @@
       <div class="drag-list base-conversion-container" cdkDropList cdkDropListLockAxis="y" (cdkDropListDropped)="onDrop($event)">
         @for(base of convertBase().conversions; track base) {
         <div cdkDrag class="drag-box base-conversion-small flex flex-row items-center gap-1 p-1 rounded-md overflow-hidden">
-          <div cdkDragHandle class="drag-handle cursor-move"><mat-icon>reorder</mat-icon></div>
+          <div cdkDragHandle class="drag-handle cursor-move"> <mat-icon fontSet="material-symbols-outlined">reorder</mat-icon></div>
 
           <mat-form-field class="flex-grow" floatLabel="always">
             <mat-label>Base {{ base }}{{ baseNames[base] ? ' (' + baseNames[base] + ')' : '' }}</mat-label>
@@ -55,10 +55,10 @@
   </mat-card-content>
   <mat-card-actions align="end">
     <button mat-icon-button (click)="onUpdateConversions()" matTooltip="Modify Conversions">
-      <mat-icon>settings</mat-icon>
+      <mat-icon fontSet="material-symbols-outlined">settings</mat-icon>
     </button>
     <button mat-icon-button (click)="onRemoveBase()" matTooltip="Remove Tile">
-      <mat-icon>delete</mat-icon>
+      <mat-icon fontSet="material-symbols-outlined">delete</mat-icon>
     </button>
   </mat-card-actions>
 </mat-card>

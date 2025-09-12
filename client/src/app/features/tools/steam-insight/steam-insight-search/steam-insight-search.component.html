@@ -11,11 +11,11 @@
         aria-label="Link library search"
         (keydown.enter)="steamGameSearchInput.blur(); onSearch()" />
       <button matSuffix mat-icon-button aria-label="Search" (click)="steamGameSearchInput.blur(); onSearch()">
-        <mat-icon>search</mat-icon>
+         <mat-icon fontSet="material-symbols-outlined">search</mat-icon>
       </button>
       @if(steamGameSearchInput.value && steamGameSearchInput.value !== '') {
       <button matSuffix class="mr-3" mat-icon-button aria-label="Clear" (click)="onResetFilter()">
-        <mat-icon>close</mat-icon>
+         <mat-icon fontSet="material-symbols-outlined">close</mat-icon>
       </button>
       }
       <mat-error>Invalid Search Filter</mat-error>
@@ -37,7 +37,7 @@
           <mat-chip [routerLink]="['/steam-insight', app.appid]" class="!cursor-pointer overflow-hidden">
             <span class="search-history-chip">{{ app.name }}</span>
             <button matChipRemove (click)="onRemoveAppFromHistory(app); $event.stopPropagation()" [attr.aria-label]="'Remove ' + app.name">
-              <mat-icon>cancel</mat-icon>
+               <mat-icon fontSet="material-symbols-outlined">cancel</mat-icon>
             </button>
           </mat-chip>
         </ng-container>
@@ -68,7 +68,7 @@
   <!-- NO GAMES FOUND -->
   @else if (loadingSuccess()) {
   <div class="empty-results-container">
-    <div class="hz-card empty-results-card">
+    <div class="hz-card-legacy empty-results-card">
       <span>No games matched your search.</span>
       <span>Please try different search keywords.</span>
     </div>
@@ -77,7 +77,7 @@
   <!-- FAILED TO LOAD -->
   @else if(loadingFailure()) {
   <div class="empty-results-container">
-    <div class="hz-card empty-results-card">
+    <div class="hz-card-legacy empty-results-card">
       <span>Unable to load games.</span>
       <span>Please try again later.</span>
     </div>

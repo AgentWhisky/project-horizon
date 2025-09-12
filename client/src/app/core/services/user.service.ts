@@ -1,4 +1,4 @@
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
@@ -10,8 +10,8 @@ import { jwtDecode } from 'jwt-decode';
 
 import { environment } from '../../../environments/environment';
 import { AuthInfo, AuthInfoPayload, LoginCredentials, NewAccountCredentials, UserInfo } from '../models';
+import { SNACKBAR_INTERVAL, STORAGE_KEYS, USER_RIGHTS } from '../constants';
 import { LoginDialogComponent } from '@hz/shared/dialogs';
-import { STORAGE_KEYS, USER_RIGHTS } from '../constants';
 
 @Injectable({
   providedIn: 'root',
@@ -61,7 +61,7 @@ export class UserService {
       const authInfo = await firstValueFrom(this.http.post<AuthInfo>(`${this.apiUrl}/login`, {}, { headers }));
 
       if (!authInfo || !authInfo.accessToken || !authInfo.refreshToken) {
-        this.snackbar.open('Login failed', 'Close', { duration: 3000 });
+        this.snackbar.open('Login failed', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
         return false;
       }
 
@@ -69,15 +69,15 @@ export class UserService {
       localStorage.setItem(STORAGE_KEYS.AUTH.REFRESH_TOKEN, authInfo.refreshToken);
 
       this.updateUserInfo(authInfo.accessToken);
-      this.snackbar.open('Login successful', 'Close', { duration: 3000 });
+      this.snackbar.open('Login successful', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       return true;
     } catch (error: any) {
       if (error?.status === 401) {
-        this.snackbar.open('Invalid username or password', 'Close', { duration: 3000 });
+        this.snackbar.open('Invalid username or password', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       } else if (error?.status === 403) {
-        this.snackbar.open('Account disabled', 'Close', { duration: 3000 });
+        this.snackbar.open('Account disabled', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       } else {
-        this.snackbar.open('Login failed', 'Close', { duration: 3000 });
+        this.snackbar.open('Login failed', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       }
       return false;
     }
@@ -87,13 +87,13 @@ export class UserService {
     try {
       const userInfo = this._userInfo();
       if (!userInfo) {
-        this.snackbar.open('You are not logged in', 'Close', { duration: 3000 });
+        this.snackbar.open('You are not logged in', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
         return;
       }
 
       await firstValueFrom(this.http.post<void>(`${this.apiUrl}/logout`, {}));
 
-      this.snackbar.open('Successfully logged out', 'Close', { duration: 3000 });
+      this.snackbar.open('Successfully logged out', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     } finally {
       this.router.navigate(['/home']);
       this.clearUserInfo();
@@ -105,7 +105,7 @@ export class UserService {
       const authInfo = await firstValueFrom(this.http.post<AuthInfo>(`${this.apiUrl}/register`, newAccountCredentials));
 
       if (!authInfo || !authInfo.accessToken || !authInfo.refreshToken) {
-        this.snackbar.open('Login failed', 'Close', { duration: 3000 });
+        this.snackbar.open('Login failed', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
         return false;
       }
 
@@ -113,10 +113,10 @@ export class UserService {
       localStorage.setItem(STORAGE_KEYS.AUTH.REFRESH_TOKEN, authInfo.refreshToken);
       this.updateUserInfo(authInfo.accessToken);
 
-      this.snackbar.open('Account registration successful', 'Close', { duration: 3000 });
+      this.snackbar.open('Account registration successful', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       return true;
     } catch (error) {
-      this.snackbar.open('Account registration failed', 'Close', { duration: 3000 });
+      this.snackbar.open('Account registration failed', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       return false;
     }
   }

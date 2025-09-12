@@ -1,4 +1,4 @@
-<div class="dev-portal-container">
+<div class="flex flex-col gap-3">
   <hz-banner>
     <hz-banner-header>Developer Portal Navigation</hz-banner-header>
     <hz-banner-body>
@@ -8,8 +8,320 @@
     </hz-banner-body>
   </hz-banner>
 
-  <div class="dev-portal-nav-container">
-    <a class="w-96" mat-flat-button [routerLink]="['/testing/dev-portal/hz-banner']">Hz Banner</a>
-    <a class="w-96" mat-flat-button [routerLink]="['/testing/dev-portal/hz-stat-card']">Hz Stat Card</a>
-  </div>
+  <mat-tab-group dynamicHeight>
+    <mat-tab label="Hz Banner">
+      <div class="flex flex-col gap-3 p-3">
+        @for(type of types(); track type) {
+        <!-- Banner with header and body -->
+        <div class="flex flex-col gap-1">
+          <span class="test-banner-section-header">Banner with header and body</span>
+          <hz-banner [type]="type">
+            <hz-banner-header>Lorem ipsum dolor sit amet</hz-banner-header>
+            <hz-banner-body>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod lectus vel purus posuere, vitae tincidunt mi volutpat.
+              Praesent in magna leo.
+            </hz-banner-body>
+          </hz-banner>
+        </div>
+
+        <!-- Banner with only header -->
+        <div class="flex flex-col gap-1">
+          <span class="test-banner-section-header">Banner with only header</span>
+          <hz-banner [type]="type">
+            <hz-banner-header>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod lectus vel purus posuere, vitae tincidunt mi volutpat.
+              Praesent in magna leo.
+            </hz-banner-header>
+          </hz-banner>
+        </div>
+
+        <!-- Banner with only body -->
+        <div class="flex flex-col gap-1">
+          <span class="test-banner-section-header">Banner with only body</span>
+          <hz-banner [type]="type">
+            <hz-banner-body>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod lectus vel purus posuere, vitae tincidunt mi volutpat.
+              Praesent in magna leo.
+            </hz-banner-body>
+          </hz-banner>
+        </div>
+
+        <!-- Banner that is closeable -->
+        <div class="flex flex-col gap-1">
+          <span class="test-banner-section-header">Banner that is closeable</span>
+          <hz-banner [type]="type" closeable>
+            <hz-banner-header>Lorem ipsum dolor sit amet</hz-banner-header>
+            <hz-banner-body>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod lectus vel purus posuere, vitae tincidunt mi volutpat.
+              Praesent in magna leo.
+            </hz-banner-body>
+          </hz-banner>
+        </div>
+
+        <!-- Banner with custom icon -->
+        <div class="flex flex-col gap-1">
+          <span class="test-banner-section-header">Banner with custom icon</span>
+          <hz-banner [type]="type" displayIcon="auto_awesome">
+            <hz-banner-header>Lorem ipsum dolor sit amet</hz-banner-header>
+            <hz-banner-body>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod lectus vel purus posuere, vitae tincidunt mi volutpat.
+              Praesent in magna leo.
+            </hz-banner-body>
+          </hz-banner>
+        </div>
+        }
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Hz Chip">
+      <div class="flex flex-col gap-3 p-3">
+        @for(type of types(); track type) {
+        <!-- Chip Set options -->
+
+        <div class="flex flex-col gap-1">
+          <span class="test-banner-section-header">Chip Set Display</span>
+          <hz-chip-set>
+            <hz-chip [type]="type">Running</hz-chip>
+            <hz-chip [type]="type">Complete</hz-chip>
+            <hz-chip [type]="type">Failed</hz-chip>
+            <hz-chip [type]="type">Canceled</hz-chip>
+            <hz-chip [type]="type">In-Progress</hz-chip>
+            <hz-chip [type]="type">Pending</hz-chip>
+          </hz-chip-set>
+
+          <span class="test-banner-section-header">Chip Set Clickable</span>
+          <hz-chip-set>
+            <hz-chip [type]="type" clickable (clicked)="onClickChip(`Running - ${type}`)">Running</hz-chip>
+            <hz-chip [type]="type" clickable (clicked)="onClickChip(`Complete - ${type}`)">Complete</hz-chip>
+            <hz-chip [type]="type" clickable (clicked)="onClickChip(`Failed - ${type}`)">Failed</hz-chip>
+            <hz-chip [type]="type" clickable (clicked)="onClickChip(`Canceled - ${type}`)">Canceled</hz-chip>
+            <hz-chip [type]="type" clickable (clicked)="onClickChip(`In-Progress - ${type}`)">In-Progress</hz-chip>
+            <hz-chip [type]="type" clickable (clicked)="onClickChip(`Pending - ${type}`)">Pending</hz-chip>
+          </hz-chip-set>
+
+          <span class="test-banner-section-header">Chip Set Clickable and Closeable</span>
+          <hz-chip-set>
+            <hz-chip
+              [type]="type"
+              clickable
+              closeable
+              (closed)="onCloseChip(`Running - ${type}`)"
+              (clicked)="onClickChip(`Running - ${type}`)">
+              Running
+            </hz-chip>
+            <hz-chip
+              [type]="type"
+              clickable
+              closeable
+              (closed)="onCloseChip(`Complete - ${type}`)"
+              (clicked)="onClickChip(`Complete - ${type}`)">
+              Complete
+            </hz-chip>
+            <hz-chip
+              [type]="type"
+              clickable
+              closeable
+              (closed)="onCloseChip(`Failed - ${type}`)"
+              (clicked)="onClickChip(`Failed - ${type}`)">
+              Failed
+            </hz-chip>
+            <hz-chip
+              [type]="type"
+              clickable
+              closeable
+              (closed)="onCloseChip(`Canceled - ${type}`)"
+              (clicked)="onClickChip(`Canceled - ${type}`)">
+              Canceled
+            </hz-chip>
+            <hz-chip
+              [type]="type"
+              clickable
+              closeable
+              (closed)="onCloseChip(`In-Progress - ${type}`)"
+              (clicked)="onClickChip(`In-Progress - ${type}`)">
+              In-Progress
+            </hz-chip>
+            <hz-chip
+              [type]="type"
+              clickable
+              closeable
+              (closed)="onCloseChip(`Pending - ${type}`)"
+              (clicked)="onClickChip(`Pending - ${type}`)">
+              Pending
+            </hz-chip>
+          </hz-chip-set>
+        </div>
+        }
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Hz Card">
+      <div class="flex flex-col gap-3 p-3">
+        <div class="flex flex-col gap-1">
+          <span class="test-banner-section-header">Cards</span>
+          <div class="flex flex-row flex-wrap justify-center gap-3">
+            <hz-card class="w-full max-w-96">
+              <hz-card-header>In-Progress Update</hz-card-header>
+
+              <hz-card-body>
+                <div>Content</div>
+              </hz-card-body>
+            </hz-card>
+
+            <hz-card class="w-full max-w-96">
+              <hz-card-header>In-Progress Update</hz-card-header>
+
+              <hz-card-body>
+                <div>Content</div>
+              </hz-card-body>
+            </hz-card>
+
+            <hz-card class="w-full max-w-96">
+              <hz-card-header>Successful Update</hz-card-header>
+
+              <hz-card-body>
+                <div>Content</div>
+              </hz-card-body>
+            </hz-card>
+
+            <hz-card class="w-full max-w-96">
+              <hz-card-header>Failed Update</hz-card-header>
+
+              <hz-card-body>
+                <div>Content</div>
+              </hz-card-body>
+            </hz-card>
+
+            <hz-card class="w-full max-w-96">
+              <hz-card-header>Warning Update</hz-card-header>
+
+              <hz-card-body>
+                <div>Content</div>
+              </hz-card-body>
+            </hz-card>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <span class="test-banner-section-header">Cards with Chips</span>
+          <div class="flex flex-row flex-wrap justify-center gap-3">
+            <hz-card class="w-full max-w-96">
+              <hz-card-header>In-Progress Update</hz-card-header>
+              <hz-card-chip>
+                <hz-chip>Running</hz-chip>
+              </hz-card-chip>
+
+              <hz-card-body>
+                <div>Content</div>
+              </hz-card-body>
+            </hz-card>
+
+            <hz-card class="w-full max-w-96">
+              <hz-card-header>In-Progress Update</hz-card-header>
+              <hz-card-chip>
+                <hz-chip type="primary">Running</hz-chip>
+              </hz-card-chip>
+
+              <hz-card-body>
+                <div>Content</div>
+              </hz-card-body>
+            </hz-card>
+
+            <hz-card class="w-full max-w-96">
+              <hz-card-header>Successful Update</hz-card-header>
+              <hz-card-chip>
+                <hz-chip type="success">Success</hz-chip>
+              </hz-card-chip>
+
+              <hz-card-body>
+                <div>Content</div>
+              </hz-card-body>
+            </hz-card>
+
+            <hz-card class="w-full max-w-96">
+              <hz-card-header>Failed Update</hz-card-header>
+              <hz-card-chip>
+                <hz-chip type="error">Failed</hz-chip>
+              </hz-card-chip>
+
+              <hz-card-body>
+                <div>Content</div>
+              </hz-card-body>
+            </hz-card>
+
+            <hz-card class="w-full max-w-96">
+              <hz-card-header>Warning Update</hz-card-header>
+              <hz-card-chip>
+                <hz-chip type="warning">Warning</hz-chip>
+              </hz-card-chip>
+
+              <hz-card-body>
+                <div>Content</div>
+              </hz-card-body>
+            </hz-card>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <span class="test-banner-section-header">Cards with Chips and Primary Title</span>
+          <div class="flex flex-row flex-wrap justify-center gap-3">
+            <hz-card class="w-full max-w-96" primary>
+              <hz-card-header>In-Progress Update</hz-card-header>
+              <hz-card-chip>
+                <hz-chip>Running</hz-chip>
+              </hz-card-chip>
+
+              <hz-card-body>
+                <div>Content</div>
+              </hz-card-body>
+            </hz-card>
+
+            <hz-card class="w-full max-w-96" primary>
+              <hz-card-header>In-Progress Update</hz-card-header>
+              <hz-card-chip>
+                <hz-chip type="primary">Running</hz-chip>
+              </hz-card-chip>
+
+              <hz-card-body>
+                <div>Content</div>
+              </hz-card-body>
+            </hz-card>
+
+            <hz-card class="w-full max-w-96" primary>
+              <hz-card-header>Successful Update</hz-card-header>
+              <hz-card-chip>
+                <hz-chip type="success">Success</hz-chip>
+              </hz-card-chip>
+
+              <hz-card-body>
+                <div>Content</div>
+              </hz-card-body>
+            </hz-card>
+
+            <hz-card class="w-full max-w-96" primary>
+              <hz-card-header>Failed Update</hz-card-header>
+              <hz-card-chip>
+                <hz-chip type="error">Failed</hz-chip>
+              </hz-card-chip>
+
+              <hz-card-body>
+                <div>Content</div>
+              </hz-card-body>
+            </hz-card>
+
+            <hz-card class="w-full max-w-96" primary>
+              <hz-card-header>Warning Update</hz-card-header>
+              <hz-card-chip>
+                <hz-chip type="warning">Warning</hz-chip>
+              </hz-card-chip>
+
+              <hz-card-body>
+                <div>Content</div>
+              </hz-card-body>
+            </hz-card>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 </div>

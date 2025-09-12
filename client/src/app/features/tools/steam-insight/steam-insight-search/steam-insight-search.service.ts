@@ -1,13 +1,14 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-
-import { SteamAppSearchInfo, SteamGameSearchOptions, SteamGameSummary } from './steam-insight-search';
 import { firstValueFrom } from 'rxjs';
+
 import { HttpParams } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { LOADING_STATUS } from '@hz/core/constants';
+import { LOADING_STATUS, SNACKBAR_INTERVAL } from '@hz/core/constants';
 import { TokenService } from '@hz/core/services';
 import { cleanObject } from '@hz/core/utilities';
+
+import { SteamAppSearchInfo, SteamGameSearchOptions, SteamGameSummary } from './steam-insight-search';
 
 @Injectable({
   providedIn: 'root',
@@ -83,7 +84,7 @@ export class SteamInsightSearchService {
     } catch (error) {
       this._loadingStatus.set(LOADING_STATUS.FAILED);
       console.error(`Error Fetching Steam Games: ${error}`);
-      this.snackbar.open('Failed to load Steam apps. Please try again in about a minute.', 'Close', { duration: 3000 });
+      this.snackbar.open('Failed to load Steam apps. Please try again in about a minute.', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     }
   }
 

@@ -21,7 +21,7 @@
 
   @if(loadingSuccess()) {
   <!-- TITLE CARD -->
-  <div class="hz-card title-card-container">
+  <div class="hz-card-legacy title-card-container">
     <div class="title-card-text">
       <h2>{{ appDetails().name }}</h2>
       <p>{{ appDetails().shortDescription | decodeHtml }}</p>
@@ -36,7 +36,7 @@
   </div>
 
   <!-- CATEGORIES & GENRES -->
-  <div class="hz-card chip-container">
+  <div class="hz-card-legacy chip-container">
     <div class="chip-block">
       <span class="section-label">Categories</span>
       <mat-chip-set class="chip-set" aria-label="Categories">
@@ -57,7 +57,7 @@
   </div>
 
   <!-- FIRST TAB GROUP -->
-  <mat-tab-group class="hz-card" mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
+  <mat-tab-group class="hz-card-legacy" mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
     <!-- DETAILS -->
     <mat-tab label="Details">
       <div class="tab-container">
@@ -164,7 +164,7 @@
   </mat-tab-group>
 
   <!-- SECOND TAB GROUP -->
-  <mat-tab-group class="hz-card" mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
+  <mat-tab-group class="hz-card-legacy" mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
     <!-- ACHIEVEMENTS -->
     @if(appDetails().type === 'game') {
 
@@ -298,7 +298,7 @@
   </mat-tab-group>
   } @else if(loadingFailure()) {
   <div class="empty-app-details-container">
-    <div class="hz-card empty-app-details-card">
+    <div class="hz-card-legacy empty-app-details-card">
       <span>No Steam app was found for App ID {{ appid() }}.</span>
       <span>Please return to the search page and try again.</span>
     </div>

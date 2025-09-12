@@ -3,7 +3,7 @@ import { moveItemInArray } from '@angular/cdk/drag-drop';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { STORAGE_KEYS } from '@hz/core/constants';
+import { SNACKBAR_INTERVAL, STORAGE_KEYS } from '@hz/core/constants';
 
 import { ConvertBase } from './base-converter';
 
@@ -36,27 +36,27 @@ export class BaseConverterService {
     try {
       const newBase: ConvertBase = { base, conversions };
       this._baseConversions.set([...this.baseConversions(), newBase]);
-      this.snackbar.open(`Successfully added Base ${base} tile`, 'Close', { duration: 3000 });
+      this.snackbar.open(`Successfully added Base ${base} tile`, 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     } catch {
-      this.snackbar.open(`Failed to add Base ${base} tile`, 'Close', { duration: 3000 });
+      this.snackbar.open(`Failed to add Base ${base} tile`, 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     }
   }
 
   removeBase(base: number) {
     try {
       this._baseConversions.set([...this.baseConversions().filter((baseConversion) => baseConversion.base !== base)]);
-      this.snackbar.open(`Successfully removed Base ${base} tile`, 'Close', { duration: 3000 });
+      this.snackbar.open(`Successfully removed Base ${base} tile`, 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     } catch {
-      this.snackbar.open(`Failed to remove Base ${base} tile`, 'Close', { duration: 3000 });
+      this.snackbar.open(`Failed to remove Base ${base} tile`, 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     }
   }
 
   removeAllBases() {
     try {
       this._baseConversions.set([]);
-      this.snackbar.open('Successfully removed all base tiles', 'Close', { duration: 3000 });
+      this.snackbar.open('Successfully removed all base tiles', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     } catch {
-      this.snackbar.open('Failed to remove all base tiles', 'Close', { duration: 3000 });
+      this.snackbar.open('Failed to remove all base tiles', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     }
   }
 
@@ -68,9 +68,9 @@ export class BaseConverterService {
       }));
 
       this._baseConversions.set(convertBaseCopy);
-      this.snackbar.open('Successfully updated base conversions', 'Close', { duration: 3000 });
+      this.snackbar.open('Successfully updated base conversions', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     } catch {
-      this.snackbar.open('Failed to update base conversions', 'Close', { duration: 3000 });
+      this.snackbar.open('Failed to update base conversions', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     }
   }
 

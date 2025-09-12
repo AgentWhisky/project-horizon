@@ -6,9 +6,9 @@
         <textarea matInput [(ngModel)]="textInput" #textAnalyzeInput rows="10"></textarea>
       </mat-form-field>
       <div class="flex flex-col">
-        <button mat-icon-button matTooltip="Clear" (click)="onResetTextInput()"><mat-icon>clear</mat-icon></button>
+        <button mat-icon-button matTooltip="Clear" (click)="onResetTextInput()"> <mat-icon fontSet="material-symbols-outlined">clear</mat-icon></button>
         <button mat-icon-button matTooltip="Copy" (click)="onCopyTextInput()">
-          <mat-icon>content_copy</mat-icon>
+           <mat-icon fontSet="material-symbols-outlined">content_copy</mat-icon>
         </button>
       </div>
     </div>
@@ -22,7 +22,7 @@
   @if(hasTextInput()) {
   <div class="text-analyzer-results-container">
     <!-- TEXT COUNT ANALYTICS -->
-    <mat-card class="hz-card text-analyzer-results-card" appearance="outlined">
+    <mat-card class="hz-card-legacy text-analyzer-results-card" appearance="outlined">
       <mat-card-header>
         <mat-card-title>Text Statistics</mat-card-title>
       </mat-card-header>
@@ -54,7 +54,7 @@
 
     <!-- TIME ESTIMATE ANALYTICS -->
     @if(timeEstimateAnalytics()) {
-    <mat-card class="hz-card text-analyzer-results-card" appearance="outlined">
+    <mat-card class="hz-card-legacy text-analyzer-results-card" appearance="outlined">
       <mat-card-header>
         <mat-card-title>Time Estimates</mat-card-title>
       </mat-card-header>
@@ -83,7 +83,7 @@
 
     <!-- CONTENT QUALITY ANALYTICS -->
     @if(contentQualityAnalytics()){
-    <mat-card class="hz-card text-analyzer-results-card" appearance="outlined">
+    <mat-card class="hz-card-legacy text-analyzer-results-card" appearance="outlined">
       <mat-card-header>
         <mat-card-title>Content Quality</mat-card-title>
       </mat-card-header>
@@ -112,7 +112,7 @@
 
     <!-- READABILITY ANALYTICS -->
     @if(readabilityAnalytics()) {
-    <mat-card class="hz-card text-analyzer-results-card" appearance="outlined">
+    <mat-card class="hz-card-legacy text-analyzer-results-card" appearance="outlined">
       <mat-card-header>
         <mat-card-title>Readability</mat-card-title>
       </mat-card-header>
@@ -149,7 +149,7 @@
   </div>
 
   <div class="text-analyzer-results-container items-start">
-    <mat-card class="hz-card flex-1">
+    <mat-card class="hz-card-legacy flex-1">
       <mat-card-header>
         <mat-card-title>Character Breakdown</mat-card-title>
       </mat-card-header>
@@ -181,7 +181,7 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="hz-card flex-1">
+    <mat-card class="hz-card-legacy flex-1">
       <mat-card-header>
         <mat-card-title>Word Breakdown</mat-card-title>
       </mat-card-header>

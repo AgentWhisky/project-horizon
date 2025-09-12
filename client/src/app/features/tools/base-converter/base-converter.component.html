@@ -1,12 +1,12 @@
 <div class="flex flex-col gap-3">
   <div class="base-converter-actions-container">
     <button mat-flat-button (click)="onAddBase()">
-      <mat-icon>add</mat-icon>
+       <mat-icon fontSet="material-symbols-outlined">add</mat-icon>
       Add Tile
     </button>
     @if(baseConversions().length > 0) {
     <button mat-flat-button (click)="onRemoveAllBases()">
-      <mat-icon>delete</mat-icon>
+       <mat-icon fontSet="material-symbols-outlined">delete</mat-icon>
       Remove Tiles
     </button>
     }
@@ -14,7 +14,7 @@
   @if(baseConversions().length === 0) {
   <hz-banner>
     <hz-banner-header>No tiles have been added yet</hz-banner-header>
-    <hz-banner-body>Use the button above to create your first one. You can continue adding more tiles at anytime!</hz-banner-body>
+    <hz-banner-body>Use the button above to create your first one. You can add more tiles at anytime!</hz-banner-body>
   </hz-banner>
 
   } @else {

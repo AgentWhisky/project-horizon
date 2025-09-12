@@ -1,7 +1,7 @@
 <div class="w-full flex flex-col">
   <div class="flex justify-end">
     <button mat-flat-button (click)="onRefreshDashboard()">
-      <mat-icon>refresh</mat-icon>
+       <mat-icon fontSet="material-symbols-outlined">refresh</mat-icon>
       Refresh Dashboard
     </button>
   </div>
@@ -9,7 +9,7 @@
     <!-- SETTINGS -->
     <mat-tab label="Settings">
       <div class="pt-3">
-        <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
+        <mat-card class="hz-card-legacy flex-1 min-w-64" appearance="outlined">
           <mat-card-header>
             <mat-card-title>App Settings</mat-card-title>
           </mat-card-header>
@@ -36,7 +36,7 @@
       <div class="flex flex-col gap-3 pt-3">
         <!-- APP UPDATE STATS -->
         <div class="flex flex-col md:flex-row flex-wrap gap-3 justify-center">
-          <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
+          <mat-card class="hz-card-legacy flex-1 min-w-64" appearance="outlined">
             <mat-card-header>
               <mat-card-title>App Update Stats (Past Week)</mat-card-title>
             </mat-card-header>
@@ -67,7 +67,7 @@
           </mat-card>
 
           <!-- APP STATS -->
-          <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
+          <mat-card class="hz-card-legacy flex-1 min-w-64" appearance="outlined">
             <mat-card-header>
               <mat-card-title>App Stats (All Time)</mat-card-title>
             </mat-card-header>
@@ -99,7 +99,7 @@
         </div>
 
         <!-- STEAM UPDATE LOGS -->
-        <mat-card class="hz-card flex-1 min-w-64" appearance="outlined">
+        <mat-card class="hz-card-legacy flex-1 min-w-64" appearance="outlined">
           <mat-card-header>
             <mat-card-title>Steam App Update Logs (Past Week)</mat-card-title>
           </mat-card-header>

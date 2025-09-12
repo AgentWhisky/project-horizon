@@ -1,5 +1,7 @@
 @use '@angular/material' as mat;
-@use './app/themes/hz-theme-1.scss';
+@use './app/themes/hz-theme.scss';
+
+//@use './app/themes/hz-theme-1.scss';
 
 @include mat.elevation-classes();
 @include mat.app-background();
@@ -103,7 +105,7 @@ body {
 }
 
 // *** CARDS ***
-.hz-card {
+.hz-card-legacy {
   background-color: var(--mat-sys-surface-container-low) !important;
   border: 1px solid var(--mat-sys-outline-variant) !important;
   border-radius: var(--mat-sys-corner-small) !important;

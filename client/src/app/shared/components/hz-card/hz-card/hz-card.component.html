@@ -1,0 +1,8 @@
+<div class="hz-card">
+  <div class="hz-card-header-container" [class.hz-card-primary]="primary()">
+    <ng-content select="hz-card-header"></ng-content>
+    <ng-content select="hz-card-chip"></ng-content>
+  </div>
+
+  <ng-content select="hz-card-body"></ng-content>
+</div>

@@ -1,11 +1,13 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-
 import { firstValueFrom } from 'rxjs';
+
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { Category, CategoryPayload, Link, LinkPayload, Tag, TagPayload } from './link-library-management';
 import { DeleteResponse, OperationResult } from '@hz/core/models';
 import { TokenService, DownloadService } from '@hz/core/services';
+import { SNACKBAR_INTERVAL } from '@hz/core/constants';
+
+import { Category, CategoryPayload, Link, LinkPayload, Tag, TagPayload } from './link-library-management';
 
 @Injectable({
   providedIn: 'root',
@@ -43,9 +45,9 @@ export class LinkLibraryManagementService {
     try {
       const newLink = await this.postLink(linkPayload);
       this._links.set([...this._links(), newLink]);
-      this.snackbar.open('Successfully added link', 'Close', { duration: 3000 });
+      this.snackbar.open('Successfully added link', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     } catch (error) {
-      this.snackbar.open('Failed to add link', 'Close', { duration: 3000 });
+      this.snackbar.open('Failed to add link', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       console.error(`Error adding link: ${error}`);
     }
   }
@@ -60,9 +62,9 @@ export class LinkLibraryManagementService {
       updatedLinks.splice(updatedIndex, 0, updatedLink);
 
       this._links.set(updatedLinks);
-      this.snackbar.open('Successfully updated link', 'Close', { duration: 3000 });
+      this.snackbar.open('Successfully updated link', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     } catch (error) {
-      this.snackbar.open('Failed to update link', 'Close', { duration: 3000 });
+      this.snackbar.open('Failed to update link', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       console.error(`Error updating link: ${error}`);
     }
   }
@@ -73,10 +75,10 @@ export class LinkLibraryManagementService {
 
       if (deleteResponse.success) {
         this._links.set([...this._links().filter((item) => item.id !== deleteResponse.id)]);
-        this.snackbar.open('Successfully deleted link', 'Close', { duration: 3000 });
+        this.snackbar.open('Successfully deleted link', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       }
     } catch (error) {
-      this.snackbar.open('Failed to delete link', 'Close', { duration: 3000 });
+      this.snackbar.open('Failed to delete link', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       console.error(`Error removing link: ${error}`);
     }
   }
@@ -106,7 +108,7 @@ export class LinkLibraryManagementService {
 
       await this.putLink(id, linkPayload);
     } catch (error) {
-      this.snackbar.open('Failed to update link', 'Close', { duration: 3000 });
+      this.snackbar.open('Failed to update link', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       console.error(`Error updating link: ${error}`);
 
       this._links.set(oldLinks);
@@ -116,9 +118,9 @@ export class LinkLibraryManagementService {
   async rebaseLinks() {
     try {
       await this.postRebaseLinks();
-      this.snackbar.open('Successfully rebased links', 'Close', { duration: 3000 });
+      this.snackbar.open('Successfully rebased links', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     } catch (error) {
-      this.snackbar.open('Failed to rebase links', 'Close', { duration: 3000 });
+      this.snackbar.open('Failed to rebase links', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       console.error(`Error rebasing links: ${error}`);
     }
   }
@@ -137,9 +139,9 @@ export class LinkLibraryManagementService {
     try {
       const linkCategory = await this.postCategory(categoryPayload);
       this._linkCategories.set([...this._linkCategories(), linkCategory]);
-      this.snackbar.open('Successfully added category', 'Close', { duration: 3000 });
+      this.snackbar.open('Successfully added category', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     } catch (error) {
-      this.snackbar.open('Failed to add category', 'Close', { duration: 3000 });
+      this.snackbar.open('Failed to add category', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       console.error(`Error Creating Category: ${error}`);
     }
   }
@@ -154,9 +156,9 @@ export class LinkLibraryManagementService {
       updatedCategories.splice(updatedIndex, 0, updatedCategory);
 
       this._linkCategories.set(updatedCategories);
-      this.snackbar.open('Successfully updated category', 'Close', { duration: 3000 });
+      this.snackbar.open('Successfully updated category', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     } catch (error) {
-      this.snackbar.open('Failed to update category', 'Close', { duration: 3000 });
+      this.snackbar.open('Failed to update category', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       console.error(`Error Updating Category: ${error}`);
     }
   }
@@ -167,10 +169,10 @@ export class LinkLibraryManagementService {
 
       if (deleteResponse.success) {
         this._linkCategories.set([...this.linkCategories().filter((item) => item.id !== deleteResponse.id)]);
-        this.snackbar.open('Successfully deleted category', 'Close', { duration: 3000 });
+        this.snackbar.open('Successfully deleted category', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       }
     } catch (error) {
-      this.snackbar.open('Failed to delete category', 'Close', { duration: 3000 });
+      this.snackbar.open('Failed to delete category', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       console.error(`Error Removing Category: ${error}`);
     }
   }
@@ -181,7 +183,7 @@ export class LinkLibraryManagementService {
       const linkTags = await this.getTags();
       this._linkTags.set(linkTags);
     } catch (error) {
-      this.snackbar.open('Failed to fetch tags', 'Close', { duration: 3000 });
+      this.snackbar.open('Failed to fetch tags', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       console.error(`Error fetching tags: ${error}`);
     }
   }
@@ -190,9 +192,9 @@ export class LinkLibraryManagementService {
     try {
       const linkTag = await this.postTag(tagPayload);
       this._linkTags.set([...this._linkTags(), linkTag]);
-      this.snackbar.open('Successfully added new tag', 'Close', { duration: 3000 });
+      this.snackbar.open('Successfully added new tag', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     } catch (error) {
-      this.snackbar.open('Failed to add tag', 'Close', { duration: 3000 });
+      this.snackbar.open('Failed to add tag', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       console.error(`Error adding tag: ${error}`);
     }
   }
@@ -207,9 +209,9 @@ export class LinkLibraryManagementService {
       updatedTags.splice(updatedIndex, 0, updatedTag);
 
       this._linkTags.set(updatedTags);
-      this.snackbar.open('Successfully update tag', 'Close', { duration: 3000 });
+      this.snackbar.open('Successfully update tag', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     } catch (error) {
-      this.snackbar.open('Failed to update tag', 'Close', { duration: 3000 });
+      this.snackbar.open('Failed to update tag', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       console.error(`Error updating tag: ${error}`);
     }
   }
@@ -220,10 +222,10 @@ export class LinkLibraryManagementService {
 
       if (deleteResponse.success) {
         this._linkTags.set([...this.linkTags().filter((item) => item.id !== deleteResponse.id)]);
-        this.snackbar.open('Successfully deleted tag', 'Close', { duration: 3000 });
+        this.snackbar.open('Successfully deleted tag', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       }
     } catch (error) {
-      this.snackbar.open('Failed to delete tag', 'Close', { duration: 3000 });
+      this.snackbar.open('Failed to delete tag', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       console.error(`Error removing tag: ${error}`);
     }
   }
@@ -232,9 +234,9 @@ export class LinkLibraryManagementService {
   async importLinkLibrary(file: File) {
     try {
       await this.postLinkLibraryImport(file);
-      this.snackbar.open('Successfully imported Link Library', 'Close', { duration: 3000 });
+      this.snackbar.open('Successfully imported Link Library', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     } catch (error) {
-      this.snackbar.open('Failed to import Link Library', 'Close', { duration: 3000 });
+      this.snackbar.open('Failed to import Link Library', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       console.error(`Failed to import Link Library: ${error}`);
     }
   }
@@ -245,9 +247,9 @@ export class LinkLibraryManagementService {
 
       this.downloadService.downloadFile(exportFile, 'linkLibraryExport.json');
 
-      this.snackbar.open('Successfully exported Link Library', 'Close', { duration: 3000 });
+      this.snackbar.open('Successfully exported Link Library', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     } catch (error) {
-      this.snackbar.open('Failed to export Link Library', 'Close', { duration: 3000 });
+      this.snackbar.open('Failed to export Link Library', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       console.error(`Failed to export Link Library: ${error}`);
     }
   }

@@ -69,10 +69,6 @@ export const routes: Routes = [
                 loadComponent: () => import('./features/testing/dev-portal/dev-portal.component').then((c) => c.DevPortalComponent),
               },
               {
-                path: 'hz-banner',
-                loadComponent: () => import('./features/testing/test-banner/test-banner.component').then((c) => c.TestBannerComponent),
-              },
-              {
                 path: 'hz-stat-card',
                 loadComponent: () =>
                   import('./features/testing/test-stat-card/test-stat-card.component').then((c) => c.TestStatCardComponent),
@@ -99,11 +95,6 @@ export const routes: Routes = [
               {
                 path: '',
                 loadComponent: () => import('./features/testing/dev-portal/dev-portal.component').then((c) => c.DevPortalComponent),
-                data: { requiredRights: [USER_RIGHTS.DEFAULT] },
-              },
-              {
-                path: 'test-banner',
-                loadComponent: () => import('./features/testing/test-banner/test-banner.component').then((c) => c.TestBannerComponent),
                 data: { requiredRights: [USER_RIGHTS.DEFAULT] },
               },
             ],

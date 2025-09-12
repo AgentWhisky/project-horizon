@@ -1,0 +1,27 @@
+.hz-card {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem;
+  width: 100%;
+  gap: 0.75rem;
+
+  align-items: center;
+
+  border-radius: var(--mat-sys-corner-small);
+  background-color: var(--hz-sys-base-container-variant);
+  color: var(--hz-sys-on-base);
+  border: 1px solid var(--hz-sys-base-border);
+}
+
+.hz-card-primary {
+  color: var(--mat-sys-primary);
+}
+
+.hz-card-header-container {
+  display: flex;
+  flex-direction: row;
+
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}

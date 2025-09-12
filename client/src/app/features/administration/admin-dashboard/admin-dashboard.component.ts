@@ -1,4 +1,5 @@
 import { Component, computed, effect, inject, model, OnInit, viewChild } from '@angular/core';
+import { DatePipe, DecimalPipe } from '@angular/common';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -14,10 +15,10 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatExpansionModule } from '@angular/material/expansion';
 
-import { DatePipe, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DurationPipe } from '@hz/core/pipes';
 import { ScreenService } from '@hz/core/services';
+import { SNACKBAR_INTERVAL } from '@hz/core/constants';
 
 @Component({
   selector: 'hz-admin-dashboard',
@@ -105,10 +106,10 @@ export class AdminDashboardComponent implements OnInit {
     navigator.clipboard
       .writeText(text)
       .then(() => {
-        this.snackbar.open(`Successfully copied to clipboard`, 'Close', { duration: 3000 });
+        this.snackbar.open(`Successfully copied to clipboard`, 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       })
       .catch(() => {
-        this.snackbar.open(`Failed to copy to clipboard`, 'Close', { duration: 3000 });
+        this.snackbar.open(`Failed to copy to clipboard`, 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       });
   }
 

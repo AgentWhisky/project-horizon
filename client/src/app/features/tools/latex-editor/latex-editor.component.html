@@ -6,16 +6,16 @@
         <textarea matInput [(ngModel)]="textInput" #textAnalyzeInput rows="10"></textarea>
       </mat-form-field>
       <div class="flex flex-col">
-        <button mat-icon-button matTooltip="Clear" (click)="onResetTextInput()"><mat-icon>clear</mat-icon></button>
+        <button mat-icon-button matTooltip="Clear" (click)="onResetTextInput()"> <mat-icon fontSet="material-symbols-outlined">clear</mat-icon></button>
         <button mat-icon-button matTooltip="Copy" (click)="onCopyTextInput()">
-          <mat-icon>content_copy</mat-icon>
+           <mat-icon fontSet="material-symbols-outlined">content_copy</mat-icon>
         </button>
       </div>
     </div>
   </div>
 
   @if(textInput()) {
-  <mat-card class="hz-card" appearance="outlined">
+  <mat-card class="hz-card-legacy" appearance="outlined">
     <mat-card-content>
       <div class="latex-editor-display">
         <div [innerHTML]="renderedLatex()" [style.fontSize.px]="renderSize()"></div>

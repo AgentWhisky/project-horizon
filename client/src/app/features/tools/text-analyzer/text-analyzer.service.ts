@@ -2,7 +2,9 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+import { SNACKBAR_INTERVAL } from '@hz/core/constants';
 import { analyzeText } from './text-analyzer.utils';
+
 
 @Injectable({
   providedIn: 'root',
@@ -21,9 +23,9 @@ export class TextAnalyzerService {
   resetTextInput() {
     try {
       this.textInput.set('');
-      this.snackbar.open(`Successfully cleared text input`, 'Close', { duration: 3000 });
+      this.snackbar.open(`Successfully cleared text input`, 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     } catch (error) {
-      this.snackbar.open(`Failed to clear text input`, 'Close', { duration: 3000 });
+      this.snackbar.open(`Failed to clear text input`, 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     }
   }
 
@@ -31,10 +33,10 @@ export class TextAnalyzerService {
     navigator.clipboard
       .writeText(this.textInput())
       .then(() => {
-        this.snackbar.open(`Successfully copied to clipboard`, 'Close', { duration: 3000 });
+        this.snackbar.open(`Successfully copied to clipboard`, 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       })
       .catch(() => {
-        this.snackbar.open(`Failed to copy to clipboard`, 'Close', { duration: 3000 });
+        this.snackbar.open(`Failed to copy to clipboard`, 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       });
   }
 

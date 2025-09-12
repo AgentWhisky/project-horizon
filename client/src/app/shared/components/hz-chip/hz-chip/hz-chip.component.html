@@ -1,0 +1,16 @@
+<div
+  class="hz-chip"
+  [class.hz-chip-clickable]="clickable()"
+  [ngClass]="type()"
+  matRipple
+  [matRippleColor]="rippleColor"
+  (click)="onClick()"
+  [attr.role]="clickable() ? 'button' : null"
+  [attr.tabindex]="clickable() ? 0 : null">
+  <ng-content></ng-content>
+  @if (closeable()) {
+  <button type="button" class="hz-chip-close" aria-label="Remove chip" (click)="onClose($event)">
+    <mat-icon fontSet="material-symbols-outlined">close</mat-icon>
+  </button>
+  }
+</div>
