@@ -5,7 +5,14 @@ import { Repository } from 'typeorm';
 import { SteamAppEntity } from '@hz/entities/steam-app.entity';
 import { SteamAppAuditEntity } from '@hz/entities/steam-app-audit.entity';
 import { SteamUpdateHistoryEntity } from '@hz/entities/steam-update-history.entity';
-import { SteamInsightDashboard, SteamInsightStat } from '../steam-insight-management.model';
+import {
+  SteamAppStats,
+  SteamInsightDashboard,
+  SteamInsightStat,
+  SteamInsightUpdate,
+  SteamUpdateStats,
+} from '../steam-insight-management.model';
+import { SteamInsightUpdatesDto } from '../dto/steam-insight-management-update-history.dto';
 
 @Injectable()
 export class SteamInsightManagementService {
@@ -63,19 +70,48 @@ export class SteamInsightManagementService {
       updateStats,
     };
   }
-}
 
-interface SteamAppStats {
-  total_games: string;
-  total_dlc: string;
-  adult_apps: string;
-  total_validation_failed: string;
-  inactive_apps: string;
-  max_appid: string;
-}
+  async getSteamInsightUpdates(query: SteamInsightUpdatesDto): Promise<SteamInsightUpdate[]> {
+    const { page, pageSize, sortBy, sortOrder, status, type } = query;
 
-interface SteamUpdateStats {
-  complete_updates: string;
-  canceled_updates: string;
-  failed_updates: string;
+    console.log(query);
+
+    const updates = await this.steamUpdateHistoryRepository.find({
+      select: {
+        id: true,
+        updateType: true,
+        updateStatus: true,
+        startTime: true,
+        endTime: true,
+        insertsGame: true,
+        updatesGame: true,
+        noChangeGame: true,
+        insertsDlc: true,
+        updatesDlc: true,
+        noChangeDlc: true,
+        notes: true,
+        events: true,
+      },
+      order: { [sortBy]: sortOrder },
+      skip: page * pageSize,
+      take: pageSize,
+    });
+
+    const steamInsightUpdates: SteamInsightUpdate[] = updates.map((update) => ({
+      id: update.id,
+      updateType: update.updateType,
+      updateStatus: update.updateStatus,
+      startTime: update.startTime,
+      endTime: update.endTime ?? null,
+      notes: update.notes,
+      events: update.events,
+      stats: {
+        games: { inserts: update.insertsGame, updates: update.updatesGame, noChange: update.noChangeGame },
+        dlc: { inserts: update.insertsDlc, updates: update.updatesDlc, noChange: update.noChangeDlc },
+        errors: update.errors,
+      },
+    }));
+
+    return steamInsightUpdates;
+  }
 }

@@ -1,12 +1,17 @@
 import { Controller, Get, Post, Query } from '@nestjs/common';
 
-import { UpdateType, USER_RIGHTS } from '@hz/common/constants';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
+
+import { USER_RIGHTS } from '@hz/common/constants';
 import { RequireRight } from '@hz/common/decorators';
+import { UpdateType } from '@hz/common/enums';
 
 import { SteamInsightManagementUpdateService } from './services/steam-insight-management-update.service';
 import { SteamInsightManagementService } from './services/steam-insight-management.service';
 import { SteamInsightDashboard } from './steam-insight-management.model';
+import { SteamInsightUpdatesDto } from './dto/steam-insight-management-update-history.dto';
 
+@ApiTags('Steam Insight Management')
 @Controller('steam-insight-management')
 export class SteamInsightManagementController {
   constructor(
@@ -18,6 +23,12 @@ export class SteamInsightManagementController {
   @RequireRight(USER_RIGHTS.MANAGE_STEAM_INSIGHT)
   async getSteamInsightDashboard(): Promise<SteamInsightDashboard> {
     return await this.steamInsightManagementService.getDashboard();
+  }
+
+  @Get('updates')
+  async getSteamInsightUpdates(@Query() query: SteamInsightUpdatesDto) {
+    console.log('UPDATES');
+    return this.steamInsightManagementService.getSteamInsightUpdates(query);
   }
 
   /** Steam Insight Update Endpoints */

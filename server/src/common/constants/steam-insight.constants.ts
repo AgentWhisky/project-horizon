@@ -1,15 +1,3 @@
-export enum UpdateType {
-  FULL = 'F',
-  INCREMENTAL = 'I',
-}
-
-export enum UpdateStatus {
-  RUNNING = 'R',
-  COMPLETE = 'C',
-  FAILED = 'F',
-  CANCELED = 'X',
-}
-
 export const APP_SAVE_TYPE = {
   insert: 'I',
   update: 'U',

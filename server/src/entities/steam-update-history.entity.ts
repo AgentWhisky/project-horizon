@@ -1,5 +1,6 @@
-import { UpdateStatus, UpdateType } from 'src/common/constants/steam-insight.constants';
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
+
+import { UpdateStatus, UpdateType } from '@hz/common/enums';
 
 @Entity('steam_update_history')
 export class SteamUpdateHistoryEntity {

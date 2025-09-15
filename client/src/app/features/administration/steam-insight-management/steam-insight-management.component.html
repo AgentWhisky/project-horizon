@@ -27,5 +27,69 @@
     </div>
   </mat-tab>
   <mat-tab label="Steam App Search">Content 2</mat-tab>
-  <mat-tab label="Steam Update History">Content 3</mat-tab>
+  <mat-tab label="Steam Update History">
+    <div class="flex flex-col gap-3 p-3">
+      <table mat-table [dataSource]="userDataSource" matSort #userSort="matSort" class="mat-elevation-z8">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by id">ID</th>
+          <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by username">Username</th>
+          <td mat-cell *matCellDef="let element">{{ element.username }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">Name</th>
+          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="roles">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by roles">Roles</th>
+          <td mat-cell *matCellDef="let element">
+            <div class="flex flex-wrap gap-x-3 gap-y-1">
+              @for(role of element.roles; track role.id) {
+              <mat-chip [matTooltip]="role.description">{{ role.name }}</mat-chip>
+              }
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="active">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by roles">Active</th>
+          <td mat-cell *matCellDef="let element">{{ element.active ? 'Yes' : 'No' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="lastLogin">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by last login date">Last Login</th>
+          <td mat-cell *matCellDef="let element">{{ element.lastLogin ? (element.lastLogin | date : 'short') : 'NONE' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef aria-hidden="true"></th>
+          <td mat-cell class="min-w-16" *matCellDef="let element">
+            <div class="flex justify-end items-center">
+              <button
+                mat-icon-button
+                (click)="onToggleUser(element)"
+                [attr.aria-label]="element.active ? 'Disable User' : 'Enable User'"
+                [disabled]="element.id === currentUser?.userId">
+                <mat-icon [matTooltip]="element.active ? 'Disable User' : 'Enable User'">
+                  {{ element.active ? 'person' : 'person_off' }}
+                </mat-icon>
+              </button>
+              <button mat-icon-button (click)="onEditUser(element)" aria-label="Edit User">
+                <mat-icon matTooltip="Edit User">edit</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="userDisplayedColumns"></tr>
+        <tr mat-row class="table-row" *matRowDef="let row; columns: userDisplayedColumns"></tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="[25, 50, 100]" #userPaginator showFirstLastButtons aria-label="User Paginator"></mat-paginator>
+    </div>
+  </mat-tab>
 </mat-tab-group>
