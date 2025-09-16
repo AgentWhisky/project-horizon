@@ -1,8 +1,9 @@
 <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
   <mat-tab label="Dashboard">
     <div class="flex flex-col gap-3 p-3">
-      @if(steamInsightDashboard()) {
+      @if(steamInsightDashboard() && dashboardLoadingStatus() === LOADING_STATUS.SUCCESS) {
 
+      <!-- App Stats -->
       <hz-stat-card-group showPrimaryHeader>
         @for(stat of steamInsightDashboard()?.appStats; track stat) {
         <hz-stat-card>
@@ -12,17 +13,86 @@
         }
       </hz-stat-card-group>
 
-      <mat-divider></mat-divider>
-
-      <hz-stat-card-group showPrimaryHeader>
-        @for(stat of steamInsightDashboard()?.updateStats; track stat) {
-        <hz-stat-card>
-          <hz-stat-card-title>{{ stat.displayName }}</hz-stat-card-title>
-          <hz-stat-card-value>{{ stat.value }}</hz-stat-card-value>
-        </hz-stat-card>
+      <div class="grid grid-cols-2 gap-3">
+        <!-- Running Update -->
+        @if(runningUpdate()) {
+        <hz-card>
+          <hz-card-header>In-Progress Update</hz-card-header>
+          <hz-card-chip>
+            <hz-chip>Running</hz-chip>
+          </hz-card-chip>
+          <hz-card-body>
+            <div class="flex flex-col gap-3">
+              <div class="flex flex-col gap-3">
+                <div class="flex flex-row gap-3">
+                  <span>Start: {{ runningUpdate()!.startTime | date : 'short' }}</span>
+                  <span>End: {{ runningUpdate()!.endTime | date : 'short' }}</span>
+                </div>
+                <span>Runtime:</span>
+              </div>
+              <div>
+                <span class="font-medium">Events:</span>
+                <ul class="list-disc list-inside text-gray-400">
+                  @for (event of runningUpdate()!.events; track event) {
+                  <li>{{ event }}</li>
+                  }
+                </ul>
+              </div>
+            </div>
+          </hz-card-body>
+        </hz-card>
+        } @else {
+        <hz-card>
+          <hz-card-header>No In-Progress Update</hz-card-header>
+          <hz-card-chip>
+            <hz-chip>Not Running</hz-chip>
+          </hz-card-chip>
+          <hz-card-body>
+            <div>Buttons</div>
+          </hz-card-body>
+        </hz-card>
         }
-      </hz-stat-card-group>
 
+        <div class="grid gap-4">
+          @for (update of steamInsightDashboard()?.recentUpdates; track update.id) {
+          <hz-card>
+            <hz-card-header>{{ getUpdateType(update.updateType) }} Update - [{{ update.id }}]</hz-card-header>
+            <hz-card-chip>
+              <hz-chip [type]="getUpdateStatusType(update.updateStatus)">{{ getUpdateStatus(update.updateStatus) }}</hz-chip>
+            </hz-card-chip>
+
+            <hz-card-body>
+              <div class="grid grid-cols-2 w-full">
+                <div class="flex flex-col gap-3">
+                  <div class="flex flex-row gap-3">
+                    <span>Start: {{ update.startTime | date : 'short' }}</span>
+                    <span>End: {{ update.endTime | date : 'short' }}</span>
+                  </div>
+                  <span>Runtime: {{ getRuntime(update.startTime, update.endTime) | duration }}</span>
+                </div>
+              </div>
+            </hz-card-body>
+          </hz-card>
+
+          }
+        </div>
+      </div>
+
+      <!-- Handle Loading and Errors-->
+      } @else if(dashboardLoadingStatus() === LOADING_STATUS.IN_PROGRESS) {
+      <div class="w-full flex justify-center">
+        <mat-spinner></mat-spinner>
+      </div>
+      } @else if(dashboardLoadingStatus() === LOADING_STATUS.FAILED) {
+      <hz-banner type="error">
+        <hz-banner-header>Steam Insight Dashboard Failed to load</hz-banner-header>
+        <hz-banner-body>
+          The system was unable to retrieve data required to render the Steam Insight Dashboard. This issue may be caused by a connectivity
+          failure between the application and the backend service, a timeout during data retrieval, or a misconfigured server endpoint.
+          Please verify that the server is online and accessible, and confirm that the API service responsible for dashboard data is running
+          correctly.
+        </hz-banner-body>
+      </hz-banner>
       }
     </div>
   </mat-tab>

@@ -42,6 +42,9 @@ import { ChangeDiff } from '@hz/common/model';
 export class SteamInsightManagementUpdateService implements OnModuleInit {
   private readonly logger = new Logger(SteamInsightManagementUpdateService.name);
 
+  private isUpdateEnabled = false;
+  private isUpdateCronEnabled = false;
+
   private updatePromise: Promise<void> | null = null;
   private isCancelRequested = false;
 
@@ -62,7 +65,11 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
   onModuleInit() {
     this.cleanupHistory();
 
-    if (process.env.STEAM_UPDATE_ENABLE === 'true') {
+    this.isUpdateEnabled = process.env.STEAM_UPDATE_ENABLE === 'true';
+    this.isUpdateCronEnabled = process.env.STEAM_UPDATE_CRON_ENABLE === 'true';
+
+    // If updates and update CRON are enabled
+    if (this.isUpdateEnabled && this.isUpdateCronEnabled) {
       const job = new CronJob(CronExpression.EVERY_HOUR, async () => {
         await this.startUpdate(true, UpdateType.INCREMENTAL);
       });
@@ -70,9 +77,11 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
       this.schedulerRegistry.addCronJob('steamInsightUpdateJob', job);
       job.start();
 
-      this.logger.log(`Steam insight updates are enabled on this server and a CRON job will run every hour`);
+      this.logger.log(`Steam insight updates are enabled on this server and an update CRON job will run every hour`);
+    } else if (this.isUpdateEnabled) {
+      this.logger.warn(`Steam insight updates are enabled on this server but the update CRON job is disabled`);
     } else {
-      this.logger.log(`Steam insight updates are disabled on this server`);
+      this.logger.warn(`Steam insight updates are disabled on this server`);
     }
   }
 
@@ -80,7 +89,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
     // CRON - Skip error with warning
     // ENDPOINT - Throw HTTP Error
 
-    if (process.env.STEAM_UPDATE_ENABLE !== 'true') {
+    if (!this.isUpdateEnabled) {
       if (isCron) {
         this.logger.warn(`[Cron] ${STEAM_UPDATE_ERRORS.updatesDisabledError}`);
       } else {
@@ -129,7 +138,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
     let errors = 0;
 
     try {
-      if (process.env.STEAM_UPDATE_ENABLE !== 'true') {
+      if (!this.isUpdateEnabled) {
         throw new SteamUpdateDisabledError(STEAM_UPDATE_ERRORS.updatesDisabledError);
       }
 

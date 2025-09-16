@@ -1,11 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 
 import { SteamAppEntity } from '@hz/entities/steam-app.entity';
 import { SteamAppAuditEntity } from '@hz/entities/steam-app-audit.entity';
 import { SteamUpdateHistoryEntity } from '@hz/entities/steam-update-history.entity';
 import { SteamInsightDashboard, SteamInsightStat } from '../steam-insight-management.model';
+import { UpdateStatus } from '@hz/common/constants';
 
 @Injectable()
 export class SteamInsightManagementService {
@@ -24,7 +25,7 @@ export class SteamInsightManagementService {
 
   async getDashboard(): Promise<SteamInsightDashboard> {
     // Get Dashboard Stats
-    const [steamAppStats, steamUpdateHistoryStats] = await Promise.all([
+    const [steamAppStats, steamUpdateHistoryStats, runningUpdate, recentUpdates] = await Promise.all([
       this.steamAppRepository
         .createQueryBuilder('app')
         .select(`COUNT(*) FILTER (WHERE app.type = 'game')`, 'total_games')
@@ -41,6 +42,17 @@ export class SteamInsightManagementService {
         .addSelect(`COUNT(*) FILTER (WHERE app.update_status = 'X')`, 'canceled_updates')
         .addSelect(`COUNT(*) FILTER (WHERE app.update_status = 'F')`, 'failed_updates')
         .getRawOne<SteamUpdateStats>(),
+
+      this.steamUpdateHistoryRepository.findOne({
+        where: { updateStatus: UpdateStatus.RUNNING },
+        order: { id: 'DESC' },
+      }),
+
+      this.steamUpdateHistoryRepository.find({
+        where: { updateStatus: Not(UpdateStatus.RUNNING) },
+        order: { id: 'DESC' },
+        take: 10,
+      }),
     ]);
 
     const appStats: SteamInsightStat[] = [
@@ -61,6 +73,8 @@ export class SteamInsightManagementService {
     return {
       appStats,
       updateStats,
+      runningUpdate,
+      recentUpdates,
     };
   }
 }

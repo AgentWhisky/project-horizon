@@ -33,8 +33,6 @@
   --hz-sys-letter-spacing-small: 0.1px;
   --hz-sys-letter-spacing-medium: 0.28px;
   --hz-sys-letter-spacing-large: 0.5px;
-
-  --hz-sys-text-color: #8a90a6;
 }
 
 .dark-theme {
@@ -43,7 +41,7 @@
   --hz-sys-on-base: #f5f5f5;
   --hz-sys-on-base-dimmed: #bdbdbd;
   --hz-sys-base-container: #181818;
-  --hz-sys-base-container-variant: #141414;
+  --hz-sys-base-container-variant: #0f0f0f;
   --hz-sys-base-border: #ffffff33;
   --hz-sys-base-ripple: #f5f5f533;
 
@@ -67,6 +65,4 @@
   --hz-sys-error-container: #ff6b6b1f;
   --hz-sys-error-border: #ff6b6b59;
   --hz-sys-error-ripple: #ffc1c133;
-
-  --hz-sys-text-color: #4b5563;
 }

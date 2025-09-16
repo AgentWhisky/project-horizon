@@ -8,9 +8,8 @@
   align-items: center;
 
   border-radius: var(--mat-sys-corner-small);
-  background-color: var(--hz-sys-base-container-variant);
-  color: var(--hz-sys-on-base);
-  border: 1px solid var(--hz-sys-base-border);
+  background-color: var(--mat-sys-surface);
+  //border: 1px solid var(--hz-sys-base-border);
 }
 
 .hz-card-primary {
@@ -24,4 +23,8 @@
   width: 100%;
   align-items: center;
   justify-content: space-between;
+}
+
+.hz-card-header-container:empty {
+  display: none;
 }

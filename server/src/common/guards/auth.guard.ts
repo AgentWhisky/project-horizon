@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, TokenExpiredError } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { USER_RIGHTS } from 'src/common/constants/user-rights.constants';
 import { REQUIRE_RIGHTS_KEY } from 'src/common/decorators/require-right.decorator';
@@ -71,7 +71,9 @@ export class AuthGuard implements CanActivate {
         throw error;
       }
 
-      console.log(error);
+      if (error instanceof TokenExpiredError) {
+        throw new UnauthorizedException('Authorization token has expired');
+      }
 
       throw new UnauthorizedException('Authentication failed due to an unexpected error');
     }
