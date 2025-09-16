@@ -1,3 +1,6 @@
+import { UpdateStatus, UpdateType } from '@hz/common/enums';
+
+// *** STEAM INSIGHT UPDATES ***
 export interface SteamAppEntry {
   appid: number;
   type: string;
@@ -144,7 +147,7 @@ export interface AppInfoResult {
   saveType: string;
 }
 
-// *** DASHBOARD ***
+// *** ADMINISTRATION PAGE ***
 export interface SteamInsightDashboard {
   appStats: SteamInsightStat[];
   updateStats: SteamInsightStat[];
@@ -157,11 +160,41 @@ export interface SteamInsightStat {
   value: number | string;
 }
 
+<<<<<<< HEAD
 export interface SteamInsightUpdate {
   id: number;
   updateType: string;
   updateStatus: string;
   startTime: Date;
   endTime: Date;
+=======
+export interface SteamAppStats {
+  total_games: string;
+  total_dlc: string;
+  adult_apps: string;
+  total_validation_failed: string;
+  inactive_apps: string;
+  max_appid: string;
+}
+
+export interface SteamUpdateStats {
+  complete_updates: string;
+  canceled_updates: string;
+  failed_updates: string;
+}
+
+export interface SteamInsightUpdate {
+  id: number;
+  updateType: UpdateType;
+  updateStatus: UpdateStatus;
+  startTime: Date;
+  endTime?: Date;
+  stats: {
+    games: { inserts: number; updates: number; noChange: number };
+    dlc: { inserts: number; updates: number; noChange: number };
+    errors: number;
+  };
+  notes: string;
+>>>>>>> f66ef8feba239927bf2fbbac846ccd07604e2714
   events: string[];
 }

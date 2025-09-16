@@ -19,8 +19,6 @@ import {
   STEAM_API_URLS,
   STEAM_UPDATE_ERRORS,
   STEAM_UPDATE_MESSAGES,
-  UpdateStatus,
-  UpdateType,
 } from '@hz/common/constants';
 import {
   SteamUpdateDisabledError,
@@ -32,11 +30,12 @@ import {
   SteamAppInfoError,
 } from '@hz/common/errors';
 import { sleep, getErrorNameAndMessage, generateChangeDiff } from '@hz/common/utils';
+import { ChangeDiff } from '@hz/common/model';
 
 import { generateEventAppend, generateEventMessage, isAdultGame } from '../steam-insight-management.utils';
 import { AppInfoResult, SteamAppAchievements, SteamAppInfo, SteamListApp } from '../steam-insight-management.model';
 import { CronExpression, SchedulerRegistry } from '@nestjs/schedule';
-import { ChangeDiff } from '@hz/common/model';
+import { UpdateStatus, UpdateType } from '@hz/common/enums';
 
 @Injectable()
 export class SteamInsightManagementUpdateService implements OnModuleInit {

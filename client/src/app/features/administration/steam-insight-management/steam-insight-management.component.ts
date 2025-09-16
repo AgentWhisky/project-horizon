@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 
 import { LOADING_STATUS, REFRESH_INTERVAL } from '@hz/core/constants';
 
@@ -6,25 +6,10 @@ import { SteamInsightManagementService } from './steam-insight-management.servic
 import { HzBannerModule, HzStatCardModule } from '@hz/shared/components';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { HzCardModule } from '@hz/shared/components/hz-card';
-import { CommonModule } from '@angular/common';
-import { HzStatusType } from '@hz/core/models';
-import { DurationPipe } from '@hz/core/pipes';
-import { getRuntimeMs } from '@hz/core/utilities';
 
 @Component({
   selector: 'hz-steam-insight-management',
-  imports: [
-    MatDividerModule,
-    MatTabsModule,
-    MatProgressSpinnerModule,
-    CommonModule,
-    HzBannerModule,
-    HzStatCardModule,
-    HzCardModule,
-    DurationPipe,
-  ],
+  imports: [MatDividerModule, MatTabsModule, HzStatCardModule],
   templateUrl: './steam-insight-management.component.html',
   styleUrl: './steam-insight-management.component.scss',
 })
@@ -37,6 +22,11 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
   readonly LOADING_STATUS = LOADING_STATUS;
 
   readonly steamInsightDashboard = this.steamInsightMangementService.dashboard;
+
+  readonly steamInsightUpdatesSort = viewChild<MatSort>('steamInsightUpdatesSort');
+  readonly steamInsightUpdatesPaginator = viewChild<MatPaginator>('steamInsightUpdatesPaginator');
+  readonly steamInsightUpdatesDisplayedColumns: string[] = ['id', 'name', 'description', 'active', 'rights', 'actions'];
+  readonly steamInsightUpdatesDataSource = new MatTableDataSource<SteamInsightUpdate>();
   readonly dashboardLoadingStatus = this.steamInsightMangementService.dashboardLoadingStatus;
 
   readonly runningUpdate = computed(() => this.steamInsightDashboard()?.runningUpdate);
