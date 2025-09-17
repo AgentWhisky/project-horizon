@@ -5,10 +5,6 @@ import { Not, Repository } from 'typeorm';
 import { SteamAppEntity } from '@hz/entities/steam-app.entity';
 import { SteamAppAuditEntity } from '@hz/entities/steam-app-audit.entity';
 import { SteamUpdateHistoryEntity } from '@hz/entities/steam-update-history.entity';
-<<<<<<< HEAD
-import { SteamInsightDashboard, SteamInsightStat } from '../steam-insight-management.model';
-import { UpdateStatus } from '@hz/common/constants';
-=======
 import {
   SteamAppStats,
   SteamInsightDashboard,
@@ -17,7 +13,7 @@ import {
   SteamUpdateStats,
 } from '../steam-insight-management.model';
 import { SteamInsightUpdatesDto } from '../dto/steam-insight-management-update-history.dto';
->>>>>>> f66ef8feba239927bf2fbbac846ccd07604e2714
+import { UpdateStatus } from '@hz/common/enums';
 
 @Injectable()
 export class SteamInsightManagementService {
@@ -55,11 +51,13 @@ export class SteamInsightManagementService {
         .getRawOne<SteamUpdateStats>(),
 
       this.steamUpdateHistoryRepository.findOne({
+        select: { id: true, updateType: true, updateStatus: true, startTime: true, endTime: true },
         where: { updateStatus: UpdateStatus.RUNNING },
         order: { id: 'DESC' },
       }),
 
       this.steamUpdateHistoryRepository.find({
+        select: { id: true, updateType: true, updateStatus: true, startTime: true, endTime: true },
         where: { updateStatus: Not(UpdateStatus.RUNNING) },
         order: { id: 'DESC' },
         take: 10,

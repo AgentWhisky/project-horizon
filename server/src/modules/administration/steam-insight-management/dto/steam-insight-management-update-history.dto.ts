@@ -1,4 +1,4 @@
-import { IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 import { SortOrder, SteamInsightUpdateField, UpdateStatus, UpdateType } from '@hz/common/enums';
 import { ApiPropertyOptional } from '@nestjs/swagger';

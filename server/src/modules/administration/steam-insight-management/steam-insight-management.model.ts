@@ -151,8 +151,8 @@ export interface AppInfoResult {
 export interface SteamInsightDashboard {
   appStats: SteamInsightStat[];
   updateStats: SteamInsightStat[];
-  runningUpdate?: SteamInsightUpdate;
-  recentUpdates: SteamInsightUpdate[];
+  runningUpdate?: SteamInsightUpdateSimple;
+  recentUpdates: SteamInsightUpdateSimple[];
 }
 
 export interface SteamInsightStat {
@@ -160,14 +160,6 @@ export interface SteamInsightStat {
   value: number | string;
 }
 
-<<<<<<< HEAD
-export interface SteamInsightUpdate {
-  id: number;
-  updateType: string;
-  updateStatus: string;
-  startTime: Date;
-  endTime: Date;
-=======
 export interface SteamAppStats {
   total_games: string;
   total_dlc: string;
@@ -183,6 +175,14 @@ export interface SteamUpdateStats {
   failed_updates: string;
 }
 
+export interface SteamInsightUpdateSimple {
+  id: number;
+  updateType: UpdateType;
+  updateStatus: UpdateStatus;
+  startTime: Date;
+  endTime?: Date;
+}
+
 export interface SteamInsightUpdate {
   id: number;
   updateType: UpdateType;
@@ -195,6 +195,5 @@ export interface SteamInsightUpdate {
     errors: number;
   };
   notes: string;
->>>>>>> f66ef8feba239927bf2fbbac846ccd07604e2714
   events: string[];
 }
