@@ -30,10 +30,10 @@ export class SteamInsightUpdatesDto {
   @IsEnum(SortOrder, { message: 'sortOrder must be ASC or DESC' })
   sortOrder: 'ASC' | 'DESC' = 'DESC';
 
-  @ApiPropertyOptional({ description: 'Filter by update status', enum: UpdateStatus })
+  @ApiPropertyOptional({ description: 'Filter by update status', enum: UpdateStatus, isArray: true })
   @IsOptional()
-  @IsEnum(UpdateStatus)
-  status?: UpdateStatus;
+  @IsEnum(UpdateStatus, { each: true })
+  status?: UpdateStatus[];
 
   @ApiPropertyOptional({ description: 'Filter by update type', enum: UpdateType })
   @IsOptional()

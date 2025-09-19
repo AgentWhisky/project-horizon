@@ -1,4 +1,5 @@
 import { UpdateStatus, UpdateType } from '@hz/common/enums';
+import { HzEvent } from '@hz/common/model';
 
 // *** STEAM INSIGHT UPDATES ***
 export interface SteamAppEntry {
@@ -195,5 +196,10 @@ export interface SteamInsightUpdate {
     errors: number;
   };
   notes: string;
-  events: string[];
+  events: HzEvent[];
+}
+
+export interface SteamInsightUpdateSearchResponse {
+  pageLength: number;
+  updates: SteamInsightUpdate[];
 }

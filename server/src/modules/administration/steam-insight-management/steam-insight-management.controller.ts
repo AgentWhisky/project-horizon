@@ -27,7 +27,6 @@ export class SteamInsightManagementController {
 
   @Get('updates')
   async getSteamInsightUpdates(@Query() query: SteamInsightUpdatesDto) {
-    console.log('UPDATES');
     return this.steamInsightManagementService.getSteamInsightUpdates(query);
   }
 

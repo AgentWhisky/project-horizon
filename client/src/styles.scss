@@ -20,7 +20,7 @@ html {
       //color: mat.$violet-palette,
       color: hz-theme-3.$primary-palette,
       typography: Roboto,
-      density: 0,
+      density: 0
     )
   );
 }
@@ -148,6 +148,15 @@ body {
 // *** TABLE ***
 .table-row:hover {
   background: var(--mat-sys-surface-container-high);
+}
+
+.table-row-clickable:hover {
+  background: var(--mat-sys-surface-container-high);
+  cursor: pointer;
+}
+
+.table-row-clickable:active {
+  background: var(--mat-sys-surface-container-highest);
 }
 
 // *** CDK DRAG AND DROP ***

@@ -10,7 +10,7 @@ export function generateEventMessage(message: string): string {
 
 export function isAdultGame(appInfo: SteamAppInfo): boolean {
   const name = appInfo.name?.toLowerCase() ?? '';
-  
+
   const about = appInfo.about_the_game?.toLowerCase() ?? '';
   const desc = appInfo.detailed_description?.toLowerCase() ?? '';
   const notes = appInfo.content_descriptors?.notes?.toLowerCase() ?? '';

@@ -8,7 +8,7 @@ import { SteamUpdateLogEntity } from 'src/entities/steam-update-log.entity';
 import { CacheUtils } from 'src/common/utils/cache.utils';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([RefreshTokenEntity, SteamAppEntity, SteamUpdateLogEntity]), HttpModule],
+  imports: [TypeOrmModule.forFeature([RefreshTokenEntity])],
   providers: [RefreshTokenCleanupService, CacheUtils],
   exports: [RefreshTokenCleanupService],
 })

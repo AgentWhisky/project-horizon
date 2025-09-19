@@ -5,7 +5,7 @@
 
       <!-- App Stats -->
       <hz-stat-card-group showPrimaryHeader>
-        @for(stat of steamInsightDashboard()?.appStats; track stat) {
+        @for(stat of steamInsightDashboard()?.appStats; track stat.displayName) {
         <hz-stat-card>
           <hz-stat-card-title>{{ stat.displayName }}</hz-stat-card-title>
           <hz-stat-card-value>{{ stat.value }}</hz-stat-card-value>
@@ -68,7 +68,7 @@
                     <span>Start: {{ update.startTime | date : 'short' }}</span>
                     <span>End: {{ update.endTime | date : 'short' }}</span>
                   </div>
-                  <span>Runtime: {{ getRuntime(update.startTime, update.endTime) | duration }}</span>
+                  <span>Runtime: 0</span>
                 </div>
               </div>
             </hz-card-body>
@@ -85,7 +85,7 @@
       </div>
       } @else if(dashboardLoadingStatus() === LOADING_STATUS.FAILED) {
       <hz-banner type="error">
-        <hz-banner-header>Steam Insight Dashboard Failed to load</hz-banner-header>
+        <hz-banner-header>Steam Insight Dashboard failed to load</hz-banner-header>
         <hz-banner-body>
           The system was unable to retrieve data required to render the Steam Insight Dashboard. This issue may be caused by a connectivity
           failure between the application and the backend service, a timeout during data retrieval, or a misconfigured server endpoint.
@@ -99,67 +99,125 @@
   <mat-tab label="Steam App Search">Content 2</mat-tab>
   <mat-tab label="Steam Update History">
     <div class="flex flex-col gap-3 p-3">
-      <table mat-table [dataSource]="userDataSource" matSort #userSort="matSort" class="mat-elevation-z8">
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by id">ID</th>
-          <td mat-cell *matCellDef="let element">{{ element.id }}</td>
-        </ng-container>
+      @if(steamInsightUpdatesLoadingStatus() === LOADING_STATUS.SUCCESS || steamInsightUpdatesLoadingStatus() ===
+      LOADING_STATUS.IN_PROGRESS) {
+      <hz-card class="flex self-start">
+        <hz-card-header>
+          <mat-icon fontSet="material-symbols-outlined">filter_alt</mat-icon>
+          Filter
+        </hz-card-header>
+        <hz-card-body>
+          <form [formGroup]="steamInsightUpdatesSearchForm" class="flex flex-row flex-wrap gap-3 items-center">
+            <mat-form-field subscriptSizing="dynamic">
+              <mat-label>Update Status</mat-label>
+              <mat-select formControlName="statuses" multiple>
+                @for (status of steamInsightUpdatesStatusOptions(); track status.value) {
+                <mat-option [value]="status.value">{{ status.label }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
 
-        <ng-container matColumnDef="username">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by username">Username</th>
-          <td mat-cell *matCellDef="let element">{{ element.username }}</td>
-        </ng-container>
+            <mat-form-field subscriptSizing="dynamic">
+              <mat-label>Update Type</mat-label>
+              <mat-select formControlName="type">
+                <mat-option [value]="null">None</mat-option>
+                @for (type of steamInsightUpdatesTypeOptions(); track type.value) {
+                <mat-option [value]="type.value">{{ type.label }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
 
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">Name</th>
-          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
-        </ng-container>
+            <button mat-flat-button (click)="onResetFilters()">
+              <mat-icon fontSet="material-symbols-outlined">refresh</mat-icon> Reset
+            </button>
+          </form>
+        </hz-card-body>
+      </hz-card>
 
-        <ng-container matColumnDef="roles">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by roles">Roles</th>
-          <td mat-cell *matCellDef="let element">
-            <div class="flex flex-wrap gap-x-3 gap-y-1">
-              @for(role of element.roles; track role.id) {
-              <mat-chip [matTooltip]="role.description">{{ role.name }}</mat-chip>
-              }
-            </div>
-          </td>
-        </ng-container>
+      <hz-card>
+        <hz-card-body>
+          <div class="w-full flex flex-col">
+            <table
+              mat-table
+              [dataSource]="steamInsightUpdatesDataSource"
+              matSort
+              (matSortChange)="onSteamInsightUpdatesSort($event)"
+              #steamInsightUpdateSort="matSort"
+              class="mat-elevation-z8">
+              <ng-container matColumnDef="startTime">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by start time">Start Time</th>
+                <td mat-cell *matCellDef="let element">{{ element.startTime | date : 'short' }}</td>
+              </ng-container>
 
-        <ng-container matColumnDef="active">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by roles">Active</th>
-          <td mat-cell *matCellDef="let element">{{ element.active ? 'Yes' : 'No' }}</td>
-        </ng-container>
+              <ng-container matColumnDef="endTime">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by end time">End Time</th>
+                <td mat-cell *matCellDef="let element">{{ element.endTime | date : 'short' }}</td>
+              </ng-container>
 
-        <ng-container matColumnDef="lastLogin">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by last login date">Last Login</th>
-          <td mat-cell *matCellDef="let element">{{ element.lastLogin ? (element.lastLogin | date : 'short') : 'NONE' }}</td>
-        </ng-container>
+              <ng-container matColumnDef="totalRuntime">
+                <th mat-header-cell *matHeaderCellDef>Total Runtime</th>
+                <td mat-cell *matCellDef="let element">{{ element.totalRuntime | duration : 's' }}</td>
+              </ng-container>
 
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef aria-hidden="true"></th>
-          <td mat-cell class="min-w-16" *matCellDef="let element">
-            <div class="flex justify-end items-center">
-              <button
-                mat-icon-button
-                (click)="onToggleUser(element)"
-                [attr.aria-label]="element.active ? 'Disable User' : 'Enable User'"
-                [disabled]="element.id === currentUser?.userId">
-                <mat-icon [matTooltip]="element.active ? 'Disable User' : 'Enable User'">
-                  {{ element.active ? 'person' : 'person_off' }}
-                </mat-icon>
-              </button>
-              <button mat-icon-button (click)="onEditUser(element)" aria-label="Edit User">
-                <mat-icon matTooltip="Edit User">edit</mat-icon>
-              </button>
-            </div>
-          </td>
-        </ng-container>
+              <ng-container matColumnDef="updateStatus">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by update status">Update Status</th>
+                <td mat-cell *matCellDef="let element">
+                  <hz-chip [type]="element.updateStatusType">{{ element.updateStatus }}</hz-chip>
+                </td>
+              </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="userDisplayedColumns"></tr>
-        <tr mat-row class="table-row" *matRowDef="let row; columns: userDisplayedColumns"></tr>
-      </table>
-      <mat-paginator [pageSizeOptions]="[25, 50, 100]" #userPaginator showFirstLastButtons aria-label="User Paginator"></mat-paginator>
+              <ng-container matColumnDef="updateType">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by update type">Update Type</th>
+                <td mat-cell *matCellDef="let element">
+                  <hz-chip>{{ element.updateType }}</hz-chip>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="notes">
+                <th mat-header-cell *matHeaderCellDef>Notes</th>
+                <td mat-cell *matCellDef="let element">{{ element.notes }}</td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="steamInsightUpdatesDisplayedColumns()"></tr>
+              <tr
+                mat-row
+                class="table-row-clickable"
+                *matRowDef="let row; columns: steamInsightUpdatesDisplayedColumns()"
+                (click)="onSteamInsightUpdatesRowClick(row)"></tr>
+            </table>
+            @if (steamInsightUpdateRows() && steamInsightUpdateRows().length > 0) {
+            <mat-paginator
+              [length]="steamInsightUpdatesPageLength()"
+              [pageIndex]="steamInsightUpdatesPage()"
+              [pageSize]="steamInsightUpdatesPageSize()"
+              [pageSizeOptions]="[5, 10, 100]"
+              (page)="onSteamInsightUpdatesPageChange($event)"
+              showFirstLastButtons
+              aria-label="Steam Insight Updates Paginator"
+              #steamInsightUpdatesPaginator>
+            </mat-paginator>
+            } @else {
+            <hz-banner type="warning" class="mt-3">
+              <hz-banner-header>No update history found</hz-banner-header>
+              <hz-banner-body>
+                There are no records that match the current filters in the Steam Insight Update History. Try adjusting your search criteria
+                or refresh the table to check for newly available updates.
+              </hz-banner-body>
+            </hz-banner>
+            }
+          </div>
+        </hz-card-body>
+      </hz-card>
+      } @else if(steamInsightUpdatesLoadingStatus() === LOADING_STATUS.FAILED) {
+      <hz-banner type="error">
+        <hz-banner-header>Steam Insight Update History failed to load</hz-banner-header>
+        <hz-banner-body>
+          The system was unable to retrieve update history data for this table. This may be due to a connectivity issue with the backend
+          service, a timeout while fetching records, or a misconfigured API endpoint. Please verify that the server is online and reachable,
+          and confirm that the update history API service is running correctly.
+        </hz-banner-body>
+      </hz-banner>
+      }
     </div>
   </mat-tab>
 </mat-tab-group>

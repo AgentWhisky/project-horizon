@@ -1,46 +1,156 @@
-import { inject, Injectable, signal } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { effect, inject, Injectable, OnInit, signal, untracked } from '@angular/core';
+import { firstValueFrom, tap } from 'rxjs';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { TokenService } from '@hz/core/services';
-import { SteamInsightDashboard } from './steam-insight-management.model';
-import { LOADING_STATUS } from '@hz/core/constants';
+import { LOADING_STATUS, STORAGE_KEYS } from '@hz/core/constants';
+import {
+  SteamInsightDashboard,
+  SteamInsightUpdate,
+  SteamInsightUpdateSearchResponse,
+  SteamInsightUpdatesQuery,
+} from './resources/steam-insight-management.model';
+import { cleanObject } from '@hz/core/utilities';
+import { HttpParams } from '@angular/common/http';
+import { SortOrder } from '@hz/core/enums';
+import { SteamInsightUpdateField, UpdateStatus, UpdateType } from './resources/steam-insight-management.enum';
+import { FormBuilder, FormControl } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SteamInsightManagementService {
   private tokenService = inject(TokenService);
+  private fb = inject(FormBuilder);
   private snackbar = inject(MatSnackBar);
 
-  private _dashboard = signal<SteamInsightDashboard | null>(null);
-  readonly dashboard = this._dashboard.asReadonly();
+  readonly dashboard = signal<SteamInsightDashboard | null>(null);
+  readonly dashboardLoadingStatus = signal<number>(LOADING_STATUS.NOT_LOADED);
 
-  private _dashboardLoadingStatus = signal<number>(LOADING_STATUS.NOT_LOADED);
-  readonly dashboardLoadingStatus = this._dashboardLoadingStatus.asReadonly();
+  readonly steamInsightUpdates = signal<SteamInsightUpdate[]>([]);
+  readonly steamInsightUpdatesLoadingStatus = signal<number>(LOADING_STATUS.NOT_LOADED);
+  readonly steamInsightUpdatesPageLength = signal<number>(0);
+  readonly steamInsightUpdatesSortBy = signal<SteamInsightUpdateField | null>(null);
+  readonly steamInsightUpdatesSortOrder = signal<SortOrder | null>(null);
+  readonly steamInsightUpdatesPage = signal<number>(0);
+  readonly steamInsightUpdatesPageSize = signal<number>(this.loadUpdateHistoryPageSize());
+  readonly steamInsightUpdatesSearchForm = this.getSteamUpdateHistorySearchForm();
 
-  constructor() {}
+  constructor() {
+    this.steamInsightUpdatesSearchForm.valueChanges
+      .pipe(
+        tap((value) =>
+          this.loadUpdateHistory({
+            status: value.statuses ?? undefined,
+            type: value.type ?? undefined,
+          })
+        )
+      )
+      .subscribe();
+  }
 
   async loadDashboard() {
     try {
       // Keep status as success to prevent showing loading spinner during updates to dashboard
-      if (this._dashboardLoadingStatus() !== LOADING_STATUS.SUCCESS) {
-        this._dashboardLoadingStatus.set(LOADING_STATUS.IN_PROGRESS);
+      if (this.dashboardLoadingStatus() !== LOADING_STATUS.SUCCESS) {
+        this.dashboardLoadingStatus.set(LOADING_STATUS.IN_PROGRESS);
       }
       const steamInsightDashboard = await this.getDashboard();
-      this._dashboard.set(steamInsightDashboard);
-      this._dashboardLoadingStatus.set(LOADING_STATUS.SUCCESS);
+      this.dashboard.set(steamInsightDashboard);
+      this.dashboardLoadingStatus.set(LOADING_STATUS.SUCCESS);
     } catch (error) {
-      this._dashboardLoadingStatus.set(LOADING_STATUS.FAILED);
+      this.dashboardLoadingStatus.set(LOADING_STATUS.FAILED);
       console.error(`Error fetching dashboard: ${error}`);
     }
   }
 
-  // PRIVATE FUNCTIONS
+  async loadUpdateHistory(query: SteamInsightUpdatesQuery = {}) {
+    try {
+      this.steamInsightUpdatesLoadingStatus.set(LOADING_STATUS.IN_PROGRESS);
 
+      query.page = this.steamInsightUpdatesPage();
+      query.pageSize = this.steamInsightUpdatesPageSize();
+      query.sortBy = this.steamInsightUpdatesSortBy() ?? undefined;
+      query.sortOrder = this.steamInsightUpdatesSortOrder() ?? undefined;
+      /*query.type = this.steamInsightUpdatesType() ?? undefined;
+
+      const statuses = this.steamInsightUpdatesStatuses();
+      if (statuses && statuses.length > 0) {
+        query.status = statuses;
+      }*/
+
+      query = cleanObject(query);
+
+      console.log('LOADING', query);
+
+      const response = await this.getUpdateHistory(query);
+      this.steamInsightUpdates.set(response.updates);
+      this.steamInsightUpdatesPageLength.set(response.pageLength);
+      this.steamInsightUpdatesLoadingStatus.set(LOADING_STATUS.SUCCESS);
+    } catch (error) {
+      this.steamInsightUpdatesLoadingStatus.set(LOADING_STATUS.FAILED);
+      console.error(`Error fetching steam insight updates: ${error}`);
+    }
+  }
+
+  updateSteamUpdateHistorySort(sortBy: string, sortOrder: string) {
+    if (sortOrder === 'ASC' || sortOrder === 'DESC') {
+      this.steamInsightUpdatesSortBy.set(null);
+      this.steamInsightUpdatesSortOrder.set(null);
+    }
+
+    this.steamInsightUpdatesSortBy.set(sortBy as SteamInsightUpdateField);
+    this.steamInsightUpdatesSortOrder.set(sortOrder as SortOrder);
+
+    this.steamInsightUpdatesPage.set(0);
+    this.loadUpdateHistory();
+  }
+
+  updateSteamUpdateHistoryPage(page: number, pageSize: number) {
+    this.steamInsightUpdatesPage.set(page);
+    this.steamInsightUpdatesPageSize.set(pageSize);
+
+    this.saveUpdateHistoryPageSize(pageSize);
+    this.loadUpdateHistory();
+  }
+
+  getSteamUpdateHistorySearchForm() {
+    return this.fb.group({
+      statuses: new FormControl<UpdateStatus[]>([]),
+      type: new FormControl<UpdateType | null>(null),
+    });
+  }
+
+  resetFilters() {
+    this.steamInsightUpdatesSearchForm.reset();
+  }
+
+  // PRIVATE SERVICE FUNCTIONS
+  private saveUpdateHistoryPageSize(pageSize: number) {
+    localStorage.setItem(STORAGE_KEYS.STEAM_INSIGHT_MANAGEMENT.UPDATE_HISTORY.PAGE_SIZE, JSON.stringify(pageSize));
+  }
+
+  private loadUpdateHistoryPageSize(): number {
+    const pageSize = localStorage.getItem(STORAGE_KEYS.STEAM_INSIGHT_MANAGEMENT.UPDATE_HISTORY.PAGE_SIZE);
+    return pageSize ? Number(pageSize) : 25;
+  }
+
+  // PRIVATE API FUNCTIONS
   private async getDashboard() {
     const steamStats$ = this.tokenService.getWithTokenRefresh<SteamInsightDashboard>(`/steam-insight-management/dashboard`);
     return firstValueFrom(steamStats$);
+  }
+
+  private async getUpdateHistory(query: SteamInsightUpdatesQuery) {
+    const params = new HttpParams({ fromObject: query as any });
+
+    const steamInsightUpdates$ = this.tokenService.getWithTokenRefresh<SteamInsightUpdateSearchResponse>(
+      `/steam-insight-management/updates`,
+      {
+        params,
+      }
+    );
+    return firstValueFrom(steamInsightUpdates$);
   }
 }

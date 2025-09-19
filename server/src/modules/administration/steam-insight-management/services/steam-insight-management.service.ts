@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Not, Repository } from 'typeorm';
+import { FindOptionsWhere, In, Not, Repository } from 'typeorm';
 
 import { SteamAppEntity } from '@hz/entities/steam-app.entity';
 import { SteamAppAuditEntity } from '@hz/entities/steam-app-audit.entity';
@@ -10,10 +10,12 @@ import {
   SteamInsightDashboard,
   SteamInsightStat,
   SteamInsightUpdate,
+  SteamInsightUpdateSearchResponse,
   SteamUpdateStats,
 } from '../steam-insight-management.model';
 import { SteamInsightUpdatesDto } from '../dto/steam-insight-management-update-history.dto';
 import { UpdateStatus } from '@hz/common/enums';
+import { parseHzEvent } from '@hz/common/utils';
 
 @Injectable()
 export class SteamInsightManagementService {
@@ -87,12 +89,20 @@ export class SteamInsightManagementService {
     };
   }
 
-  async getSteamInsightUpdates(query: SteamInsightUpdatesDto): Promise<SteamInsightUpdate[]> {
+  async getSteamInsightUpdates(query: SteamInsightUpdatesDto): Promise<SteamInsightUpdateSearchResponse> {
     const { page, pageSize, sortBy, sortOrder, status, type } = query;
 
-    console.log(query);
+    const condition: FindOptionsWhere<SteamUpdateHistoryEntity> = {};
 
-    const updates = await this.steamUpdateHistoryRepository.find({
+    if (status && status.length > 0) {
+      condition.updateStatus = In(status);
+    }
+
+    if (type) {
+      condition.updateType = type;
+    }
+
+    const updateRecords = await this.steamUpdateHistoryRepository.findAndCount({
       select: {
         id: true,
         updateType: true,
@@ -108,19 +118,20 @@ export class SteamInsightManagementService {
         notes: true,
         events: true,
       },
+      where: condition,
       order: { [sortBy]: sortOrder },
       skip: page * pageSize,
       take: pageSize,
     });
 
-    const steamInsightUpdates: SteamInsightUpdate[] = updates.map((update) => ({
+    const steamInsightUpdates: SteamInsightUpdate[] = updateRecords[0].map((update) => ({
       id: update.id,
       updateType: update.updateType,
       updateStatus: update.updateStatus,
       startTime: update.startTime,
       endTime: update.endTime ?? null,
       notes: update.notes,
-      events: update.events,
+      events: update.events.map(parseHzEvent).reverse(),
       stats: {
         games: { inserts: update.insertsGame, updates: update.updatesGame, noChange: update.noChangeGame },
         dlc: { inserts: update.insertsDlc, updates: update.updatesDlc, noChange: update.noChangeDlc },
@@ -128,6 +139,9 @@ export class SteamInsightManagementService {
       },
     }));
 
-    return steamInsightUpdates;
+    return {
+      pageLength: updateRecords[1],
+      updates: steamInsightUpdates,
+    };
   }
 }

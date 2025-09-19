@@ -1,0 +1,15 @@
+/** MATERIAL OVERRIDE LOCATION */
+::ng-deep .dialog-title-override {
+  display: flex;
+  padding: 1rem;
+}
+
+.title-content {
+  width: 100%;
+  display: flex;
+  gap: 1rem;
+
+  align-items: center;
+
+  justify-content: space-between;
+}

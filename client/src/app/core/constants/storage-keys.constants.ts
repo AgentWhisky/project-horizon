@@ -19,4 +19,9 @@ export const STORAGE_KEYS = {
   PATHFINDER: {
     BOARD: 'horizon.pathfinder.board',
   },
+  STEAM_INSIGHT_MANAGEMENT: {
+    UPDATE_HISTORY: {
+      PAGE_SIZE: 'horizon.steamInsightManagement.updateHistory.pageSize',
+    },
+  },
 } as const;
