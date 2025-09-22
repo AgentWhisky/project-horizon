@@ -24,17 +24,17 @@
           <hz-card-body>
             <div class="flex flex-col gap-3">
               <div class="flex flex-col gap-3">
-                <div class="flex flex-row gap-3">
-                  <span>Start: {{ runningUpdate()!.startTime | date : 'short' }}</span>
-                  <span>End: {{ runningUpdate()!.endTime | date : 'short' }}</span>
+                <div>
+                  <span class="font-semibold">Start Time</span>
+                  <div>{{ runningUpdate()!.startTime | date : 'short' }}</div>
                 </div>
                 <span>Runtime:</span>
               </div>
               <div>
                 <span class="font-medium">Events:</span>
                 <ul class="list-disc list-inside text-gray-400">
-                  @for (event of runningUpdate()!.events; track event) {
-                  <li>{{ event }}</li>
+                  @for (event of runningUpdate()!.events; track event.message) {
+                  <li>{{ event.timestamp | date : 'short' }} - {{ event.message | formatDate }}</li>
                   }
                 </ul>
               </div>
@@ -45,12 +45,6 @@
         </hz-card>
         } @else {
         <hz-card>
-          <hz-card-header>No Running Update</hz-card-header>
-
-          <hz-card-chip>
-            <hz-chip color="warn">Not Running</hz-chip>
-          </hz-card-chip>
-
           <hz-card-body class="flex flex-col gap-4">
             <hz-banner type="primary">
               <hz-banner-header>No update in progress</hz-banner-header>
@@ -58,8 +52,8 @@
             </hz-banner>
 
             <div class="flex flex-row flex-wrap gap-3">
-              <button mat-flat-button (click)="onStartUpdate(true)">Start Full Update</button>
-              <button mat-flat-button (click)="onStartUpdate()">Start Incremental Update</button>
+              <button mat-flat-button (click)="onStartUpdate(true)">Start Update - Full</button>
+              <button mat-flat-button (click)="onStartUpdate()">Start Update - Incremental</button>
             </div>
           </hz-card-body>
         </hz-card>
@@ -68,7 +62,7 @@
         <div class="grid gap-4">
           @for (update of steamInsightDashboard()?.recentUpdates; track update.id) {
           <hz-card>
-            <hz-card-header>{{ getUpdateType(update.updateType) }} Update - [{{ update.id }}]</hz-card-header>
+            <hz-card-header>{{ getUpdateType(update.updateType) }}</hz-card-header>
             <hz-card-chip>
               <hz-chip [type]="getUpdateStatusType(update.updateStatus)">{{ getUpdateStatus(update.updateStatus) }}</hz-chip>
             </hz-card-chip>
@@ -174,12 +168,12 @@
 
               <ng-container matColumnDef="endTime">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by end time">End Time</th>
-                <td mat-cell *matCellDef="let element">{{ element.endTime | date : 'short' }}</td>
+                <td mat-cell *matCellDef="let element">{{ element.endTime ? (element.endTime | date : 'short') : '—' }}</td>
               </ng-container>
 
               <ng-container matColumnDef="totalRuntime">
                 <th mat-header-cell *matHeaderCellDef>Total Runtime</th>
-                <td mat-cell *matCellDef="let element">{{ element.totalRuntime | duration : 's' }}</td>
+                <td mat-cell *matCellDef="let element">{{ element.totalRuntime ? (element.totalRuntime | duration : 's') : '—' }}</td>
               </ng-container>
 
               <ng-container matColumnDef="updateStatus">

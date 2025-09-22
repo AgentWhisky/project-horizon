@@ -6,7 +6,7 @@ import { HzChipModule, HzStatCardModule, HzTimelineModule } from '@hz/shared/com
 import { MatButtonModule } from '@angular/material/button';
 import { HzCardModule } from '@hz/shared/components/hz-card';
 import { DatePipe } from '@angular/common';
-import { DurationPipe } from '@hz/core/pipes';
+import { DurationPipe, FormatDatePipe } from '@hz/core/pipes';
 
 interface DialogData {
   row: SteamInsightUpdateRow;
@@ -14,7 +14,7 @@ interface DialogData {
 
 @Component({
   selector: 'hz-steam-insight-update-history-dialog',
-  imports: [MatButtonModule, MatDialogModule, HzCardModule, HzChipModule, HzTimelineModule, DatePipe, DurationPipe],
+  imports: [MatButtonModule, MatDialogModule, HzCardModule, HzChipModule, HzTimelineModule, DatePipe, DurationPipe, FormatDatePipe],
   templateUrl: './steam-insight-update-history-dialog.component.html',
   styleUrl: './steam-insight-update-history-dialog.component.scss',
 })

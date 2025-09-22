@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
 
 import { UpdateStatus, UpdateType } from '@hz/common/enums';
+import { SteamInsightUpdateStats } from '@hz/common/model';
 
 @Entity('steam_update_history')
 export class SteamUpdateHistoryEntity {
@@ -22,26 +23,8 @@ export class SteamUpdateHistoryEntity {
   @Column({ name: 'end_time', type: 'timestamptz', nullable: true })
   endTime: Date;
 
-  @Column({ name: 'inserts_game', type: 'int', nullable: true })
-  insertsGame: number;
-
-  @Column({ name: 'updates_game', type: 'int', nullable: true })
-  updatesGame: number;
-
-  @Column({ name: 'no_change_game', type: 'int', nullable: true })
-  noChangeGame: number;
-
-  @Column({ name: 'inserts_dlc', type: 'int', nullable: true })
-  insertsDlc: number;
-
-  @Column({ name: 'updates_dlc', type: 'int', nullable: true })
-  updatesDlc: number;
-
-  @Column({ name: 'no_change_dlc', type: 'int', nullable: true })
-  noChangeDlc: number;
-
-  @Column({ name: 'errors', type: 'int', nullable: true })
-  errors: number;
+  @Column({ name: 'stats', type: 'jsonb', nullable: true })
+  stats: SteamInsightUpdateStats;
 
   @Column({ name: 'events', type: 'text', array: true, default: () => "'{}'" })
   events: string[];

@@ -14,7 +14,7 @@ export function getUpdateType(code: string): string {
 export function getUpdateStatus(code: string): string {
   switch (code) {
     case 'R':
-      return 'Run';
+      return 'Running';
     case 'C':
       return 'Complete';
     case 'X':

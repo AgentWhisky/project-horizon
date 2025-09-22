@@ -182,6 +182,7 @@ export interface SteamInsightUpdateSimple {
   updateStatus: UpdateStatus;
   startTime: Date;
   endTime?: Date;
+  events?: HzEvent[];
 }
 
 export interface SteamInsightUpdate {
@@ -194,6 +195,7 @@ export interface SteamInsightUpdate {
     games: { inserts: number; updates: number; noChange: number };
     dlc: { inserts: number; updates: number; noChange: number };
     errors: number;
+    total: number;
   };
   notes: string;
   events: HzEvent[];

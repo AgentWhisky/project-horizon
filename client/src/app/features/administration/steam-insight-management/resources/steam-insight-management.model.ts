@@ -6,13 +6,22 @@ import { HzEvent, HzStatusType } from '@hz/core/models';
 export interface SteamInsightDashboard {
   appStats: SteamInsightStat[];
   updateStats: SteamInsightStat[];
-  runningUpdate?: SteamInsightUpdate;
-  recentUpdates: SteamInsightUpdate[];
+  runningUpdate?: SteamInsightUpdateSimple;
+  recentUpdates: SteamInsightUpdateSimple[];
 }
 
 export interface SteamInsightStat {
   displayName: string;
   value: number | string;
+}
+
+export interface SteamInsightUpdateSimple {
+  id: number;
+  updateType: UpdateType;
+  updateStatus: UpdateStatus;
+  startTime: Date;
+  endTime?: Date;
+  events?: HzEvent[];
 }
 
 // *** Steam Insight Updates ***
@@ -25,17 +34,20 @@ export interface SteamInsightUpdatesQuery {
   type?: UpdateType;
 }
 
+export interface SteamInsightUpdateStats {
+  games: { inserts: number; updates: number; noChange: number };
+  dlc: { inserts: number; updates: number; noChange: number };
+  errors: number;
+  total: number;
+}
+
 export interface SteamInsightUpdate {
   id: number;
   updateType: UpdateType;
   updateStatus: UpdateStatus;
   startTime: Date;
   endTime?: Date;
-  stats?: {
-    games: { inserts: number; updates: number; noChange: number };
-    dlc: { inserts: number; updates: number; noChange: number };
-    errors: number;
-  };
+  stats?: SteamInsightUpdateStats;
   notes: string;
   events: HzEvent[];
 }
@@ -54,10 +66,6 @@ export interface SteamInsightUpdateRow {
   updateStatusType: HzStatusType;
   updateType: string;
   notes: string;
-  stats?: {
-    games: { inserts: number; updates: number; noChange: number };
-    dlc: { inserts: number; updates: number; noChange: number };
-    errors: number;
-  };
+  stats?: SteamInsightUpdateStats;
   events: HzEvent[];
 }

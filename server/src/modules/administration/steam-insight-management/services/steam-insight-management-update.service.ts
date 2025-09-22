@@ -1,14 +1,13 @@
-import { ConflictException, ForbiddenException, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
+import { ConflictException, ForbiddenException, Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
-import { firstValueFrom } from 'rxjs';
+
 import { Repository } from 'typeorm';
 import { CronJob } from 'cron';
+import { firstValueFrom } from 'rxjs';
 
-import { SteamAppEntity } from '@hz/entities/steam-app.entity';
-import { SteamAppAuditEntity, SteamAppChangeType } from '@hz/entities/steam-app-audit.entity';
-import { SteamUpdateHistoryEntity } from '@hz/entities/steam-update-history.entity';
-
+// Internal project modules (sorted by path)
 import {
   APP_SAVE_TYPE,
   APP_TYPE,
@@ -20,22 +19,25 @@ import {
   STEAM_UPDATE_ERRORS,
   STEAM_UPDATE_MESSAGES,
 } from '@hz/common/constants';
+import { UpdateStatus, UpdateType } from '@hz/common/enums';
 import {
+  SteamUpdateCanceledError,
   SteamUpdateDisabledError,
   SteamUpdateInProgressError,
-  SteamUpdateCanceledError,
   SteamApiKeyError,
   SteamApiMaxPageError,
   RetryExhaustedError,
   SteamAppInfoError,
 } from '@hz/common/errors';
-import { sleep, getErrorNameAndMessage, generateChangeDiff } from '@hz/common/utils';
 import { ChangeDiff } from '@hz/common/model';
+import { sleep, getErrorNameAndMessage, generateChangeDiff } from '@hz/common/utils';
 
-import { generateEventAppend, generateEventMessage, isAdultGame } from '../steam-insight-management.utils';
+import { SteamAppEntity } from '@hz/entities/steam-app.entity';
+import { SteamAppAuditEntity, SteamAppChangeType } from '@hz/entities/steam-app-audit.entity';
+import { SteamUpdateHistoryEntity } from '@hz/entities/steam-update-history.entity';
+
 import { AppInfoResult, SteamAppAchievements, SteamAppInfo, SteamListApp } from '../steam-insight-management.model';
-import { CronExpression, SchedulerRegistry } from '@nestjs/schedule';
-import { UpdateStatus, UpdateType } from '@hz/common/enums';
+import { generateEventAppend, generateEventMessage, isAdultGame } from '../steam-insight-management.utils';
 
 @Injectable()
 export class SteamInsightManagementUpdateService implements OnModuleInit {
@@ -128,13 +130,12 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
 
   private async update(updateType: UpdateType = UpdateType.FULL) {
     let updateHistoryId: number | null = null;
-    let insertsGame = 0;
-    let updatesGame = 0;
-    let noChangeGame = 0;
-    let insertsDlc = 0;
-    let updatesDlc = 0;
-    let noChangeDlc = 0;
-    let errors = 0;
+    const statsCounter = {
+      games: { inserts: 0, updates: 0, noChange: 0 },
+      dlc: { inserts: 0, updates: 0, noChange: 0 },
+      errors: 0,
+      total: 0,
+    };
 
     try {
       if (!this.isUpdateEnabled) {
@@ -175,7 +176,6 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
 
       let lastCompleteStartTime: Date | null = null;
       if (updateType !== UpdateType.FULL) {
-        await this.appendEvent(updateHistoryId, `Retrieving last completed update history record`);
         // Get Most Recent complete update start time
         const lastCompleteRecord = await this.steamUpdateHistoryRepository.findOne({
           where: { updateStatus: UpdateStatus.COMPLETE },
@@ -183,10 +183,11 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
         });
         lastCompleteStartTime = lastCompleteRecord?.startTime ?? null;
       }
+
       await this.checkForCancellation();
 
       if (lastCompleteStartTime) {
-        await this.appendEvent(updateHistoryId, `Retrieving apps updated after [${lastCompleteStartTime?.toISOString() ?? 'N/A'}]`);
+        await this.appendEvent(updateHistoryId, `Retrieving apps updated after ${lastCompleteStartTime?.toISOString() ?? 'N/A'}`);
       } else {
         await this.appendEvent(updateHistoryId, `Retrieving full apps list`);
       }
@@ -197,14 +198,20 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
       if (lastCompleteStartTime) {
         await this.appendEvent(
           updateHistoryId,
-          `Retrieved [${appList.length}] apps to update after [${lastCompleteStartTime?.toISOString() ?? 'N/A'}]`
+          `Retrieved ${appList.length} apps to update after ${lastCompleteStartTime?.toISOString() ?? 'N/A'}`
         );
       } else {
-        await this.appendEvent(updateHistoryId, `Retrieved [${appList.length}] apps to update`);
+        await this.appendEvent(updateHistoryId, `Retrieved ${appList.length} apps to update`);
       }
 
-      await this.appendEvent(updateHistoryId, `Started updating steam apps`);
+      let appCount = 0;
       for (const app of appList) {
+        appCount++;
+
+        if (appCount % 10000 === 0) {
+          await this.appendEvent(updateHistoryId, `Updated ${appCount}/${appList.length} apps`);
+        }
+
         await this.checkForCancellation();
         const appid = app.appid;
 
@@ -216,17 +223,17 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
 
           // Increment counters for each save type
           if (result.appType === APP_TYPE.game && result.saveType === APP_SAVE_TYPE.insert) {
-            insertsGame++;
+            statsCounter.games.inserts++;
           } else if (result.appType === APP_TYPE.game && result.saveType === APP_SAVE_TYPE.update) {
-            updatesGame++;
+            statsCounter.games.updates++;
           } else if (result.appType === APP_TYPE.game && result.saveType === APP_SAVE_TYPE.noChange) {
-            noChangeGame++;
+            statsCounter.games.noChange++;
           } else if (result.appType === APP_TYPE.dlc && result.saveType === APP_SAVE_TYPE.insert) {
-            insertsDlc++;
+            statsCounter.dlc.inserts++;
           } else if (result.appType === APP_TYPE.dlc && result.saveType === APP_SAVE_TYPE.update) {
-            updatesDlc++;
+            statsCounter.dlc.updates++;
           } else if (result.appType === APP_TYPE.dlc && result.saveType === APP_SAVE_TYPE.noChange) {
-            noChangeDlc++;
+            statsCounter.dlc.noChange++;
           }
         } catch (error) {
           // Failures if they exist should set app as validation_failed
@@ -247,10 +254,12 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
             }
           } catch {}
 
-          errors++;
+          statsCounter.errors++;
+        } finally {
+          statsCounter.total++;
         }
       }
-      await this.appendEvent(updateHistoryId, `Finished updating steam apps`);
+      await this.appendEvent(updateHistoryId, `Finished updating Steam apps`);
 
       // Final cleanup and completion of update
       await this.steamUpdateHistoryRepository.update(
@@ -260,14 +269,8 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
         {
           updateStatus: UpdateStatus.COMPLETE,
           endTime: new Date(),
-          insertsGame,
-          updatesGame,
-          noChangeGame,
-          insertsDlc,
-          updatesDlc,
-          noChangeDlc,
-          errors,
-          events: generateEventAppend('Steam insight update complete'),
+          stats: statsCounter,
+          events: generateEventAppend(STEAM_UPDATE_MESSAGES.updateComplete),
           notes: STEAM_UPDATE_MESSAGES.updateComplete,
         }
       );
@@ -280,13 +283,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
           {
             updateStatus: UpdateStatus.CANCELED,
             endTime: new Date(),
-            insertsGame,
-            updatesGame,
-            noChangeGame,
-            insertsDlc,
-            updatesDlc,
-            noChangeDlc,
-            errors,
+            stats: statsCounter,
             events: generateEventAppend(STEAM_UPDATE_MESSAGES.updateCanceled),
             notes: STEAM_UPDATE_MESSAGES.updateCanceled,
           }
@@ -305,13 +302,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
           {
             updateStatus: UpdateStatus.FAILED,
             endTime: new Date(),
-            insertsGame,
-            updatesGame,
-            noChangeGame,
-            insertsDlc,
-            updatesDlc,
-            noChangeDlc,
-            errors,
+            stats: statsCounter,
             events: generateEventAppend(getErrorNameAndMessage(error)),
             notes: getErrorNameAndMessage(error),
           }

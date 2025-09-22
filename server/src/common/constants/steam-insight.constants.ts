@@ -81,16 +81,16 @@ export const STEAM_API_URLS = {
 
 /** MESSAGES */
 export const STEAM_UPDATE_MESSAGES = {
-  updateQueued: 'Steam update has been queued',
-  updateStarted: 'Steam update has been started',
-  updateComplete: 'Steam update is complete',
-  updateCanceled: 'Steam update has been canceled',
+  updateQueued: 'Steam Insight update has been queued',
+  updateStarted: 'Steam Insight update has started',
+  updateComplete: 'Steam Insight update is complete',
+  updateCanceled: 'Steam Insight update has been canceled',
 } as const;
 
 export const STEAM_UPDATE_ERRORS = {
-  updateInProgressError: 'Steam update already in progress',
-  updatesDisabledError: 'Steam updates are disabled by configuration',
-  updateError: 'Steam update has encountered an error',
+  updateInProgressError: 'Steam Insight update already in progress',
+  updatesDisabledError: 'Steam Insight updates are disabled by configuration',
+  updateError: 'Steam Insight update has encountered an error',
   maxPageError: 'Exceeded max page count',
   apiKeyNotFoundError: 'Steam API key missing or invalid',
   apiKeyRejectedError: 'Steam API key has been rejected',

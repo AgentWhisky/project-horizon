@@ -13,7 +13,7 @@ import { HzOption, HzStatusType } from '@hz/core/models';
 import { getRuntimeMs } from '@hz/core/utilities';
 import { HzCardModule } from '@hz/shared/components/hz-card';
 import { DatePipe } from '@angular/common';
-import { DurationPipe } from '@hz/core/pipes';
+import { DurationPipe, FormatDatePipe } from '@hz/core/pipes';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SteamInsightUpdate, SteamInsightUpdateRow } from './resources/steam-insight-management.model';
 import { ScreenService } from '@hz/core/services';
@@ -49,6 +49,7 @@ import { filter, tap } from 'rxjs';
     HzChipModule,
     DatePipe,
     DurationPipe,
+    FormatDatePipe,
   ],
   templateUrl: './steam-insight-management.component.html',
   styleUrl: './steam-insight-management.component.scss',

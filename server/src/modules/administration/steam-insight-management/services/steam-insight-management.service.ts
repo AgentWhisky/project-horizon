@@ -11,6 +11,7 @@ import {
   SteamInsightStat,
   SteamInsightUpdate,
   SteamInsightUpdateSearchResponse,
+  SteamInsightUpdateSimple,
   SteamUpdateStats,
 } from '../steam-insight-management.model';
 import { SteamInsightUpdatesDto } from '../dto/steam-insight-management-update-history.dto';
@@ -34,7 +35,7 @@ export class SteamInsightManagementService {
 
   async getDashboard(): Promise<SteamInsightDashboard> {
     // Get Dashboard Stats
-    const [steamAppStats, steamUpdateHistoryStats, runningUpdate, recentUpdates] = await Promise.all([
+    const [steamAppStats, steamUpdateHistoryStats, runningUpdateDB, recentUpdatesDB] = await Promise.all([
       this.steamAppRepository
         .createQueryBuilder('app')
         .select(`COUNT(*) FILTER (WHERE app.type = 'game')`, 'total_games')
@@ -53,7 +54,7 @@ export class SteamInsightManagementService {
         .getRawOne<SteamUpdateStats>(),
 
       this.steamUpdateHistoryRepository.findOne({
-        select: { id: true, updateType: true, updateStatus: true, startTime: true, endTime: true },
+        select: { id: true, updateType: true, updateStatus: true, startTime: true, endTime: true, events: true },
         where: { updateStatus: UpdateStatus.RUNNING },
         order: { id: 'DESC' },
       }),
@@ -80,6 +81,19 @@ export class SteamInsightManagementService {
       { displayName: 'Canceled Updates', value: Number(steamUpdateHistoryStats.canceled_updates) },
       { displayName: 'Failed Updates', value: Number(steamUpdateHistoryStats.failed_updates) },
     ];
+
+    let runningUpdate = undefined;
+    if (runningUpdateDB) {
+      runningUpdate = {
+        ...runningUpdateDB,
+        events: runningUpdateDB?.events?.map((event) => parseHzEvent(event)) ?? [],
+      };
+    }
+
+    const recentUpdates: SteamInsightUpdateSimple[] = recentUpdatesDB.map((update) => ({
+      ...update,
+      events: update?.events?.map((event) => parseHzEvent(event)) ?? [],
+    }));
 
     return {
       appStats,
@@ -109,12 +123,12 @@ export class SteamInsightManagementService {
         updateStatus: true,
         startTime: true,
         endTime: true,
-        insertsGame: true,
-        updatesGame: true,
-        noChangeGame: true,
-        insertsDlc: true,
-        updatesDlc: true,
-        noChangeDlc: true,
+        stats: {
+          games: { inserts: true, updates: true, noChange: true },
+          dlc: { inserts: true, updates: true, noChange: true },
+          errors: true,
+          total: true,
+        },
         notes: true,
         events: true,
       },
@@ -132,11 +146,7 @@ export class SteamInsightManagementService {
       endTime: update.endTime ?? null,
       notes: update.notes,
       events: update.events.map(parseHzEvent).reverse(),
-      stats: {
-        games: { inserts: update.insertsGame, updates: update.updatesGame, noChange: update.noChangeGame },
-        dlc: { inserts: update.insertsDlc, updates: update.updatesDlc, noChange: update.noChangeDlc },
-        errors: update.errors,
-      },
+      stats: update.stats,
     }));
 
     return {
