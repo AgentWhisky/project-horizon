@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { UserDialogComponent } from 'app/features/administration/account-management/user-dialog/user-dialog.component';
 import { SteamInsightUpdateRow } from '../../resources/steam-insight-management.model';
-import { HzChipModule, HzTimelineModule } from '@hz/shared/components';
+import { HzChipModule, HzStatCardModule, HzTimelineModule } from '@hz/shared/components';
 import { MatButtonModule } from '@angular/material/button';
 import { HzCardModule } from '@hz/shared/components/hz-card';
 import { DatePipe } from '@angular/common';

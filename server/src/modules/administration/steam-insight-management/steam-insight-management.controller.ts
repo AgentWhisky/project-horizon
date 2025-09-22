@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 
@@ -32,13 +32,13 @@ export class SteamInsightManagementController {
 
   /** Steam Insight Update Endpoints */
   @Post('update/start')
-  //@RequireRight(USER_RIGHTS.MANAGE_STEAM_INSIGHT)
-  async postUpdateStart(@Query('type') type?: UpdateType) {
-    return await this.steamInsightManagementUpdateService.startUpdate(false, type ?? UpdateType.FULL);
+  @RequireRight(USER_RIGHTS.MANAGE_STEAM_INSIGHT)
+  async postUpdateStart(@Body('type') type?: UpdateType) {
+    return this.steamInsightManagementUpdateService.startUpdate(false, type ?? UpdateType.FULL);
   }
 
   @Post('update/stop')
-  //@RequireRight(USER_RIGHTS.MANAGE_STEAM_INSIGHT)
+  @RequireRight(USER_RIGHTS.MANAGE_STEAM_INSIGHT)
   async postUpdateStop() {
     return await this.steamInsightManagementUpdateService.stopUpdate();
   }

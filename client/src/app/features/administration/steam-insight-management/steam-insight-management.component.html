@@ -1,4 +1,4 @@
-<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" (selectedTabChange)="onTabChange($event)" dynamicHeight>
   <mat-tab label="Dashboard">
     <div class="flex flex-col gap-3 p-3">
       @if(steamInsightDashboard() && dashboardLoadingStatus() === LOADING_STATUS.SUCCESS) {
@@ -14,7 +14,7 @@
       </hz-stat-card-group>
 
       <div class="grid grid-cols-2 gap-3">
-        <!-- Running Update -->
+        <!-- IN PROGRESS UPDATE-->
         @if(runningUpdate()) {
         <hz-card>
           <hz-card-header>In-Progress Update</hz-card-header>
@@ -38,17 +38,29 @@
                   }
                 </ul>
               </div>
+
+              <button mat-flat-button (click)="onStopUpdate()">Stop Update</button>
             </div>
           </hz-card-body>
         </hz-card>
         } @else {
         <hz-card>
-          <hz-card-header>No In-Progress Update</hz-card-header>
+          <hz-card-header>No Running Update</hz-card-header>
+
           <hz-card-chip>
-            <hz-chip>Not Running</hz-chip>
+            <hz-chip color="warn">Not Running</hz-chip>
           </hz-card-chip>
-          <hz-card-body>
-            <div>Buttons</div>
+
+          <hz-card-body class="flex flex-col gap-4">
+            <hz-banner type="primary">
+              <hz-banner-header>No update in progress</hz-banner-header>
+              <hz-banner-body>Steam Insight is not currently running an update.</hz-banner-body>
+            </hz-banner>
+
+            <div class="flex flex-row flex-wrap gap-3">
+              <button mat-flat-button (click)="onStartUpdate(true)">Start Full Update</button>
+              <button mat-flat-button (click)="onStartUpdate()">Start Incremental Update</button>
+            </div>
           </hz-card-body>
         </hz-card>
         }
@@ -62,13 +74,14 @@
             </hz-card-chip>
 
             <hz-card-body>
-              <div class="grid grid-cols-2 w-full">
-                <div class="flex flex-col gap-3">
-                  <div class="flex flex-row gap-3">
-                    <span>Start: {{ update.startTime | date : 'short' }}</span>
-                    <span>End: {{ update.endTime | date : 'short' }}</span>
-                  </div>
-                  <span>Runtime: 0</span>
+              <div class="grid grid-cols-2 gap-3 w-full">
+                <div>
+                  <span class="font-semibold">Start Time</span>
+                  <div>{{ update.startTime | date : 'short' }}</div>
+                </div>
+                <div>
+                  <span class="font-semibold">End Time</span>
+                  <div>{{ update.endTime ? (update.endTime | date : 'short') : '—' }}</div>
                 </div>
               </div>
             </hz-card-body>
@@ -96,7 +109,16 @@
       }
     </div>
   </mat-tab>
-  <mat-tab label="Steam App Search">Content 2</mat-tab>
+
+  <mat-tab label="Steam App Search">
+    <div class="flex flex-col gap-3 p-3">
+      <hz-banner type="warning">
+        <hz-banner-header>In Development</hz-banner-header>
+        <hz-banner-body>This section is still under development and may not function correctly</hz-banner-body>
+      </hz-banner>
+    </div>
+  </mat-tab>
+
   <mat-tab label="Steam Update History">
     <div class="flex flex-col gap-3 p-3">
       @if(steamInsightUpdatesLoadingStatus() === LOADING_STATUS.SUCCESS || steamInsightUpdatesLoadingStatus() ===
@@ -128,7 +150,8 @@
             </mat-form-field>
 
             <button mat-flat-button (click)="onResetFilters()">
-              <mat-icon fontSet="material-symbols-outlined">refresh</mat-icon> Reset
+              <mat-icon fontSet="material-symbols-outlined">refresh</mat-icon>
+              Reset
             </button>
           </form>
         </hz-card-body>
@@ -190,12 +213,11 @@
               [length]="steamInsightUpdatesPageLength()"
               [pageIndex]="steamInsightUpdatesPage()"
               [pageSize]="steamInsightUpdatesPageSize()"
-              [pageSizeOptions]="[5, 10, 100]"
+              [pageSizeOptions]="PAGE_SIZE_OPTIONS"
               (page)="onSteamInsightUpdatesPageChange($event)"
               showFirstLastButtons
               aria-label="Steam Insight Updates Paginator"
-              #steamInsightUpdatesPaginator>
-            </mat-paginator>
+              #steamInsightUpdatesPaginator></mat-paginator>
             } @else {
             <hz-banner type="warning" class="mt-3">
               <hz-banner-header>No update history found</hz-banner-header>

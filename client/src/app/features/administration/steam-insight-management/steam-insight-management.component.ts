@@ -5,7 +5,7 @@ import { LOADING_STATUS, REFRESH_INTERVAL } from '@hz/core/constants';
 import { SteamInsightManagementService } from './steam-insight-management.service';
 import { HzBannerModule, HzChipModule, HzStatCardModule } from '@hz/shared/components';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -26,6 +26,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { SteamInsightUpdateHistoryDialogComponent } from './dialogs/steam-insight-update-history-dialog/steam-insight-update-history-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { PAGE_SIZE_OPTIONS } from '@hz/core/constants/pagination.constants';
+import { ConfirmDialogComponent } from '@hz/shared/dialogs';
+import { filter, tap } from 'rxjs';
 
 @Component({
   selector: 'hz-steam-insight-management',
@@ -107,6 +110,8 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
     })
   );
 
+  readonly PAGE_SIZE_OPTIONS = PAGE_SIZE_OPTIONS;
+
   readonly getUpdateType = getUpdateType;
   readonly getUpdateStatus = getUpdateStatus;
   readonly getUpdateStatusType = getUpdateStatusType;
@@ -130,6 +135,42 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
     if (this.intervalId) {
       clearInterval(this.intervalId);
     }
+  }
+
+  /** TABS */
+  onTabChange(event: MatTabChangeEvent) {
+    const index = event.index;
+
+    // Steam Insight Dashboard
+    if (index === 0) {
+      this.steamInsightMangementService.loadDashboard();
+    }
+
+    // Steam Insight Update Search
+    if (index === 2) {
+      this.steamInsightMangementService.loadUpdateHistory();
+    }
+  }
+
+  /** STEAM INSIGHT DASHBAORD */
+  onStartUpdate(isFullUpdate?: boolean) {
+    const updateType = isFullUpdate ? 'Full' : 'Incremental';
+
+    const title = `Start Update - ${updateType}`;
+    const message = 'Are you sure you want to start a Steam Insight Update';
+
+    this.dialog
+      .open(ConfirmDialogComponent, { data: { title, message }, panelClass: 'hz-dialog-container' })
+      .afterClosed()
+      .pipe(
+        filter((result) => result),
+        tap(() => this.steamInsightMangementService.startUpdate(isFullUpdate))
+      )
+      .subscribe();
+  }
+
+  onStopUpdate() {
+    this.steamInsightMangementService.stopUpdate();
   }
 
   /** STEAM INSIGHT UPDATE HISTORY SEARCH */

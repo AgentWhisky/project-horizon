@@ -9,46 +9,47 @@
 
 <mat-dialog-content>
   <div class="flex flex-col gap-3">
-    <!-- Core Details -->
-    <div class="grid grid-cols-2 gap-4 text-sm">
+    <!-- Main Information -->
+    <div class="grid grid-cols-2 gap-3">
       <div>
-        <span class="font-semibold">Start Time:</span>
+        <span class="font-semibold">Start Time</span>
         <div>{{ row.startTime | date : 'short' }}</div>
       </div>
       <div>
-        <span>End Time:</span>
+        <span class="font-semibold">End Time</span>
         <div>{{ row.endTime ? (row.endTime | date : 'short') : '—' }}</div>
       </div>
       <div>
-        <span>Total Runtime:</span>
+        <span class="font-semibold">Total Runtime</span>
         <div>{{ row.totalRuntime | duration : 's' }}</div>
       </div>
       <div>
-        <span>Notes:</span>
+        <span class="font-semibold">Notes</span>
         <div>{{ row.notes || '—' }}</div>
       </div>
     </div>
 
-    <!-- Stats -->
+    <!-- Update Stats -->
     @if (row.stats && showStats) {
     <div class="flex flex-col gap-2">
-      <h3 class="text-base font-medium">Stats</h3>
-      <div class="grid grid-cols-3 gap-4 text-sm">
-        <div>
-          <strong>Games</strong>
-          <div>Inserts: {{ row.stats.games.inserts }}</div>
-          <div>Updates: {{ row.stats.games.updates }}</div>
-          <div>No Change: {{ row.stats.games.noChange }}</div>
+      <div class="grid grid-cols-3 gap-3">
+        <div class="flex flex-col">
+          <span class="font-semibold">Games</span>
+          <span>Inserts: {{ row.stats.games.inserts }}</span>
+          <span>Updates: {{ row.stats.games.updates }}</span>
+          <span>No Change: {{ row.stats.games.noChange }}</span>
         </div>
-        <div>
-          <strong>DLC</strong>
-          <div>Inserts: {{ row.stats.dlc.inserts }}</div>
-          <div>Updates: {{ row.stats.dlc.updates }}</div>
-          <div>No Change: {{ row.stats.dlc.noChange }}</div>
+
+        <div class="flex flex-col">
+          <span class="font-semibold">DLC</span>
+          <span>Inserts: {{ row.stats.dlc.inserts }}</span>
+          <span>Updates: {{ row.stats.dlc.updates }}</span>
+          <span>No Change: {{ row.stats.dlc.noChange }}</span>
         </div>
+
         <div>
           <strong>Errors</strong>
-          <div>{{ row.stats.errors }}</div>
+          <div>{{ row.stats.errors || 'None' }}</div>
         </div>
       </div>
     </div>
@@ -56,18 +57,14 @@
 
     <!-- Events -->
     @if (row.events && row.events.length) {
-
     <hz-timeline>
       @for (event of row.events; track event; let first = $first) {
-
       <hz-timeline-item [latest]="first">
         <hz-timeline-header>{{ event.timestamp | date : 'short' }}</hz-timeline-header>
-        <hz-timeline-meta>{{ event.timestamp | date : 'short' }}</hz-timeline-meta>
         <hz-timeline-body>{{ event.message }}</hz-timeline-body>
       </hz-timeline-item>
       }
     </hz-timeline>
-
     }
   </div>
 </mat-dialog-content>

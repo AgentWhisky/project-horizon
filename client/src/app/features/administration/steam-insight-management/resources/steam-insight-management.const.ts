@@ -19,7 +19,7 @@ export const UPDATE_TYPE_OPTIONS = [
 ];
 
 export const UPDATE_STATUS_OPTIONS = [
-  { value: UpdateStatus.RUNNING, label: 'Run' },
+  { value: UpdateStatus.RUNNING, label: 'Running' },
   { value: UpdateStatus.COMPLETE, label: 'Complete' },
   { value: UpdateStatus.CANCELED, label: 'Canceled' },
   { value: UpdateStatus.FAILED, label: 'Failed' },

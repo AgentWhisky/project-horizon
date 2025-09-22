@@ -4,7 +4,7 @@ import { firstValueFrom, tap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { TokenService } from '@hz/core/services';
-import { LOADING_STATUS, STORAGE_KEYS } from '@hz/core/constants';
+import { LOADING_STATUS, SNACKBAR_INTERVAL, STORAGE_KEYS } from '@hz/core/constants';
 import {
   SteamInsightDashboard,
   SteamInsightUpdate,
@@ -38,16 +38,7 @@ export class SteamInsightManagementService {
   readonly steamInsightUpdatesSearchForm = this.getSteamUpdateHistorySearchForm();
 
   constructor() {
-    this.steamInsightUpdatesSearchForm.valueChanges
-      .pipe(
-        tap((value) =>
-          this.loadUpdateHistory({
-            status: value.statuses ?? undefined,
-            type: value.type ?? undefined,
-          })
-        )
-      )
-      .subscribe();
+    this.steamInsightUpdatesSearchForm.valueChanges.pipe(tap(() => this.loadUpdateHistory())).subscribe();
   }
 
   async loadDashboard() {
@@ -65,6 +56,36 @@ export class SteamInsightManagementService {
     }
   }
 
+  async startUpdate(isFullUpdate?: boolean) {
+    try {
+      await this.postStartUpdate(isFullUpdate);
+      this.snackbar.open('Steam insight update has been started', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+    } catch (error) {
+      console.error(`Error starting steam insight update: ${error}`);
+      this.snackbar.open('Failed to start steam insight update', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+    } finally {
+      this.loadDashboard();
+    }
+  }
+
+  async stopUpdate() {
+    try {
+      await this.postStopUpdate();
+    } catch (error: any) {
+      const status = error?.status;
+
+      console.error(`Error stopping steam insight update: ${error}`);
+      if (status === 409) {
+        this.snackbar.open('No steam insight update is running', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+      } else {
+        this.snackbar.open('Failed to stop steam insight update', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+      }
+    } finally {
+      this.loadDashboard();
+    }
+  }
+
+  // *** UPDATE HISTORY SEARCH ***
   async loadUpdateHistory(query: SteamInsightUpdatesQuery = {}) {
     try {
       this.steamInsightUpdatesLoadingStatus.set(LOADING_STATUS.IN_PROGRESS);
@@ -73,16 +94,11 @@ export class SteamInsightManagementService {
       query.pageSize = this.steamInsightUpdatesPageSize();
       query.sortBy = this.steamInsightUpdatesSortBy() ?? undefined;
       query.sortOrder = this.steamInsightUpdatesSortOrder() ?? undefined;
-      /*query.type = this.steamInsightUpdatesType() ?? undefined;
 
-      const statuses = this.steamInsightUpdatesStatuses();
-      if (statuses && statuses.length > 0) {
-        query.status = statuses;
-      }*/
+      query.status = this.steamInsightUpdatesSearchForm.get('statuses')?.value ?? undefined;
+      query.type = this.steamInsightUpdatesSearchForm.get('type')?.value ?? undefined;
 
       query = cleanObject(query);
-
-      console.log('LOADING', query);
 
       const response = await this.getUpdateHistory(query);
       this.steamInsightUpdates.set(response.updates);
@@ -140,6 +156,20 @@ export class SteamInsightManagementService {
   private async getDashboard() {
     const steamStats$ = this.tokenService.getWithTokenRefresh<SteamInsightDashboard>(`/steam-insight-management/dashboard`);
     return firstValueFrom(steamStats$);
+  }
+
+  private async postStartUpdate(isFullUpdate?: boolean) {
+    const updateType = isFullUpdate ? UpdateType.FULL : UpdateType.INCREMENTAL;
+
+    const response$ = this.tokenService.postWithTokenRefresh('/steam-insight-management/update/start', { type: updateType });
+
+    return firstValueFrom(response$);
+  }
+
+  private async postStopUpdate() {
+    const response$ = this.tokenService.postWithTokenRefresh('/steam-insight-management/update/stop', {});
+
+    return firstValueFrom(response$);
   }
 
   private async getUpdateHistory(query: SteamInsightUpdatesQuery) {
