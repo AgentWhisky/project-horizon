@@ -13,7 +13,7 @@ import {
   SteamInsightUpdateSearchResponse,
   SteamInsightUpdateSimple,
   SteamUpdateStats,
-} from '../steam-insight-management.model';
+} from '../resources/steam-insight-management.model';
 import { SteamInsightUpdatesDto } from '../dto/steam-insight-management-update-history.dto';
 import { UpdateStatus } from '@hz/common/enums';
 import { parseHzEvent } from '@hz/common/utils';

@@ -8,7 +8,7 @@ import { UpdateType } from '@hz/common/enums';
 
 import { SteamInsightManagementUpdateService } from './services/steam-insight-management-update.service';
 import { SteamInsightManagementService } from './services/steam-insight-management.service';
-import { SteamInsightDashboard } from './steam-insight-management.model';
+import { SteamInsightDashboard } from './resources/steam-insight-management.model';
 import { SteamInsightUpdatesDto } from './dto/steam-insight-management-update-history.dto';
 
 @ApiTags('Steam Insight Management')

@@ -3,7 +3,7 @@
  * @param ms The given miliseconds to sleep
  * @param abortSignal The AbortSignal used to abort the sleep timeout
  */
-export function sleep(ms: number, abortSignal?: AbortSignal, AbortErrorCtor: new () => Error = SleepAbortedError): Promise<void> {
+export function sleep(ms: number, abortSignal?: AbortSignal): Promise<void> {
   return new Promise((resolve, reject) => {
     const timer = setTimeout(() => {
       cleanup();
@@ -19,14 +19,14 @@ export function sleep(ms: number, abortSignal?: AbortSignal, AbortErrorCtor: new
 
     function onAbort() {
       cleanup();
-      reject(new AbortErrorCtor());
+      reject(new SleepAbortedError());
     }
 
     if (abortSignal) {
       // Check for aported signal on start
       if (abortSignal.aborted) {
         cleanup();
-        return reject(new AbortErrorCtor());
+        return reject(new SleepAbortedError());
       }
       abortSignal.addEventListener('abort', onAbort);
     }

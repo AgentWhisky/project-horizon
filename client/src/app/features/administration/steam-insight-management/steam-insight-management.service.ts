@@ -11,7 +11,7 @@ import {
   SteamInsightUpdateSearchResponse,
   SteamInsightUpdatesQuery,
 } from './resources/steam-insight-management.model';
-import { cleanObject } from '@hz/core/utilities';
+import { cleanObject, sleep } from '@hz/core/utilities';
 import { HttpParams } from '@angular/common/http';
 import { SortOrder } from '@hz/core/enums';
 import { SteamInsightUpdateField, UpdateStatus, UpdateType } from './resources/steam-insight-management.enum';
@@ -64,6 +64,7 @@ export class SteamInsightManagementService {
       console.error(`Error starting steam insight update: ${error}`);
       this.snackbar.open('Failed to start steam insight update', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
     } finally {
+      await sleep(1000); // 1s delay before refreshing dashboard
       this.loadDashboard();
     }
   }
@@ -81,6 +82,7 @@ export class SteamInsightManagementService {
         this.snackbar.open('Failed to stop steam insight update', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       }
     } finally {
+      await sleep(1000); // 1s delay before refreshing dashboard
       this.loadDashboard();
     }
   }

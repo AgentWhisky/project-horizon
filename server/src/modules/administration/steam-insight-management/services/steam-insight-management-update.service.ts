@@ -1,4 +1,4 @@
-import { HttpService } from '@nestjs/axios';
+import { HttpModuleAsyncOptions, HttpService } from '@nestjs/axios';
 import { ConflictException, ForbiddenException, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,28 +7,7 @@ import { Repository } from 'typeorm';
 import { CronJob } from 'cron';
 import { firstValueFrom } from 'rxjs';
 
-// Internal project modules (sorted by path)
-import {
-  APP_SAVE_TYPE,
-  APP_TYPE,
-  MAX_STEAM_API_PAGES,
-  MAX_STEAM_API_RETRIES,
-  POSTGRES_ERRORS,
-  STEAM_API_RETRY_DELAY,
-  STEAM_API_URLS,
-  STEAM_UPDATE_ERRORS,
-  STEAM_UPDATE_MESSAGES,
-} from '@hz/common/constants';
 import { UpdateStatus, UpdateType } from '@hz/common/enums';
-import {
-  SteamUpdateCanceledError,
-  SteamUpdateDisabledError,
-  SteamUpdateInProgressError,
-  SteamApiKeyError,
-  SteamApiMaxPageError,
-  RetryExhaustedError,
-  SteamAppInfoError,
-} from '@hz/common/errors';
 import { ChangeDiff } from '@hz/common/model';
 import { sleep, getErrorNameAndMessage, generateChangeDiff } from '@hz/common/utils';
 
@@ -36,8 +15,28 @@ import { SteamAppEntity } from '@hz/entities/steam-app.entity';
 import { SteamAppAuditEntity, SteamAppChangeType } from '@hz/entities/steam-app-audit.entity';
 import { SteamUpdateHistoryEntity } from '@hz/entities/steam-update-history.entity';
 
-import { AppInfoResult, SteamAppAchievements, SteamAppInfo, SteamListApp } from '../steam-insight-management.model';
+import { AppInfoResult, SteamAppAchievements, SteamAppInfo, SteamListApp } from '../resources/steam-insight-management.model';
 import { generateEventAppend, generateEventMessage, isAdultGame } from '../steam-insight-management.utils';
+import {
+  SteamApiKeyError,
+  SteamApiMaxPageError,
+  SteamAppInfoError,
+  SteamUpdateCanceledError,
+  SteamUpdateDisabledError,
+  SteamUpdateInProgressError,
+} from '../resources/steam-insight-management.error';
+import {
+  APP_SAVE_TYPE,
+  APP_TYPE,
+  MAX_STEAM_API_PAGES,
+  MAX_STEAM_API_RETRIES,
+  STEAM_API_RETRY_DELAY,
+  STEAM_API_URLS,
+  STEAM_UPDATE_ERRORS,
+  STEAM_UPDATE_MESSAGES,
+} from '../resources/steam-insight-management.constants';
+import { POSTGRES_ERRORS } from '@hz/common/constants';
+import { RetryExhaustedError } from '@hz/common/errors';
 
 @Injectable()
 export class SteamInsightManagementUpdateService implements OnModuleInit {
@@ -47,11 +46,12 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
   private isUpdateCronEnabled = false;
 
   private updatePromise: Promise<void> | null = null;
-  private isCancelRequested = false;
+
+  private abortController?: AbortController;
 
   constructor(
-    private readonly httpService: HttpService,
     private schedulerRegistry: SchedulerRegistry,
+    private readonly httpService: HttpService,
 
     @InjectRepository(SteamAppEntity)
     private readonly steamAppRepository: Repository<SteamAppEntity>,
@@ -86,10 +86,12 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
     }
   }
 
+  /**
+   * Start a Steam Insight Update
+   * @param isCron Whether the update trigger is a CRON job or manual
+   * @param updateType If the update is FULL 'F' or INCREMENTAL 'I'
+   */
   async startUpdate(isCron?: boolean, updateType?: UpdateType) {
-    // CRON - Skip error with warning
-    // ENDPOINT - Throw HTTP Error
-
     if (!this.isUpdateEnabled) {
       if (isCron) {
         this.logger.warn(`[Cron] ${STEAM_UPDATE_ERRORS.updatesDisabledError}`);
@@ -105,7 +107,8 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
         throw new ConflictException(STEAM_UPDATE_ERRORS.updateInProgressError);
       }
     }
-    this.isCancelRequested = false;
+
+    this.abortController = new AbortController();
 
     // Clear updatePromise on completion to track in-progress updates
     this.updatePromise = this.update(updateType).finally(() => {
@@ -116,7 +119,9 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
   }
 
   async stopUpdate() {
-    this.isCancelRequested = true;
+    if (this.abortController) {
+      this.abortController.abort();
+    }
 
     // Only cleanup history if the server is not tracking an in-progress update
     if (this.updatePromise) {
@@ -124,7 +129,6 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
     }
 
     await this.cleanupHistory();
-
     throw new ConflictException('No update in progress to cancel');
   }
 
@@ -139,8 +143,10 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
 
     try {
       if (!this.isUpdateEnabled) {
-        throw new SteamUpdateDisabledError(STEAM_UPDATE_ERRORS.updatesDisabledError);
+        throw new SteamUpdateDisabledError();
       }
+
+      this.logger.log(STEAM_UPDATE_MESSAGES.updateStarted);
 
       // Create Update History Record
       const updateRecord = this.steamUpdateHistoryRepository.create({
@@ -166,7 +172,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
           });
           await this.steamUpdateHistoryRepository.save(failedRecord);
 
-          throw new SteamUpdateInProgressError(STEAM_UPDATE_ERRORS.updateInProgressError);
+          throw new SteamUpdateInProgressError();
         }
         throw error;
       }
@@ -194,6 +200,8 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
 
       // Get steam update list of apps
       const appList = await this.getAppList(lastCompleteStartTime);
+
+      await this.checkForCancellation();
 
       if (lastCompleteStartTime) {
         await this.appendEvent(
@@ -274,8 +282,12 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
           notes: STEAM_UPDATE_MESSAGES.updateComplete,
         }
       );
+
+      this.logger.log(STEAM_UPDATE_MESSAGES.updateComplete);
     } catch (error) {
       if (error instanceof SteamUpdateCanceledError) {
+        this.logger.warn(STEAM_UPDATE_MESSAGES.updateCanceled);
+
         await this.steamUpdateHistoryRepository.update(
           {
             id: updateHistoryId,
@@ -308,6 +320,8 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
           }
         );
       }
+    } finally {
+      this.abortController = null;
     }
   }
 
@@ -339,12 +353,11 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
    * @returns Nothing if the process is not canceled, throws a SteamUpdateCanceledError on cancellation
    */
   private async checkForCancellation() {
-    if (!this.isCancelRequested) {
+    if (!this.abortController.signal.aborted) {
       return;
     }
 
-    this.isCancelRequested = false;
-    throw new SteamUpdateCanceledError(STEAM_UPDATE_MESSAGES.updateCanceled);
+    throw new SteamUpdateCanceledError();
   }
 
   /**
@@ -584,26 +597,54 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
     }
 
     const appList: SteamListApp[] = [];
-    let hasMoreResults = true;
     let pageCount = 0;
-    do {
-      let success = false;
-      pageCount++;
 
+    while (true) {
+      await this.checkForCancellation();
+      let success = false;
+
+      // Prevent Infinite Paging Loop
+      pageCount++;
       if (pageCount > MAX_STEAM_API_PAGES) {
-        throw new SteamApiMaxPageError(STEAM_UPDATE_ERRORS.maxPageError);
+        throw new SteamApiMaxPageError();
       }
 
       for (let attempt = 0; attempt < MAX_STEAM_API_RETRIES; attempt++) {
         try {
-          const response = await firstValueFrom(this.httpService.get(STEAM_API_URLS.list, { params }));
+          const response = await firstValueFrom(this.httpService.get(STEAM_API_URLS.list, { params, signal: this.abortController.signal }));
           const data = response?.data?.response;
+
           const apps: SteamListApp[] = data?.apps ?? [];
+
+          const nextLastAppid: number | null = data?.last_appid;
+          const haveMoreResults: number | null = data?.have_more_results;
+
+          /**
+           * Retry a call with 0 app results
+           * - High chance its an API error and not the true results
+           * - Retry after 5s delay
+           */
+          if (apps.length === 0) {
+            this.logger.warn(
+              `[GetAppList] Empty page at page=${pageCount}, attempt=${attempt + 1}/${MAX_STEAM_API_RETRIES}, last_appid=${params.last_appid}`
+            );
+            await sleep(STEAM_API_RETRY_DELAY.error, this.abortController.signal, SteamUpdateCanceledError);
+            continue;
+          }
 
           appList.push(...apps);
 
-          params.last_appid = data?.last_appid ?? 0;
-          hasMoreResults = data?.have_more_results ?? false;
+          // Log Response
+          this.logger.log(
+            `[GetAppList] Page ${pageCount} retrieved ${apps.length} apps, last_appid=${nextLastAppid}, have_more_results=${haveMoreResults}`
+          );
+
+          // If nextLastAppid is not given, return list
+          if (!nextLastAppid) {
+            return appList;
+          }
+
+          params.last_appid = nextLastAppid ?? 0;
 
           success = true;
           break;
@@ -617,9 +658,9 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
 
           // Retry all other error types
           if (status === 429) {
-            await sleep(STEAM_API_RETRY_DELAY.rateLimit);
+            await sleep(STEAM_API_RETRY_DELAY.rateLimit, this.abortController.signal, SteamUpdateCanceledError);
           } else {
-            await sleep(STEAM_API_RETRY_DELAY.error);
+            await sleep(STEAM_API_RETRY_DELAY.error, this.abortController.signal, SteamUpdateCanceledError);
           }
         }
       }
@@ -627,9 +668,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
       if (!success) {
         throw new RetryExhaustedError(`Failed to retrieve app list after ${MAX_STEAM_API_RETRIES} attempts`);
       }
-    } while (hasMoreResults);
-
-    return appList;
+    }
   }
 
   /**
@@ -645,21 +684,27 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
     };
 
     for (let attempt = 0; attempt < MAX_STEAM_API_RETRIES; attempt++) {
+      await this.checkForCancellation();
+
       try {
-        const response = await firstValueFrom(this.httpService.get(STEAM_API_URLS.info, { params }));
+        const response = await firstValueFrom(this.httpService.get(STEAM_API_URLS.info, { params, signal: this.abortController.signal }));
         const result = response?.data?.[String(appid)];
 
         if (!result?.success) {
-          throw new SteamAppInfoError(`Steam app get info failed for appid: ${appid}`, appid);
+          throw new SteamAppInfoError(appid);
         }
 
         const appInfo: SteamAppInfo = response?.data?.[String(appid)]?.data;
         if (!appInfo) {
-          throw new SteamAppInfoError(`Steam app info not found for appid: ${appid}`, appid);
+          throw new SteamAppInfoError(appid);
         }
 
         return appInfo ?? null;
       } catch (error) {
+        if (error instanceof SteamUpdateCanceledError) {
+          throw error;
+        }
+
         const status = error?.response?.status;
 
         // Immediately throw a SteamAppInfoError to prevent unnecessary retries
@@ -669,15 +714,15 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
 
         // Retry all other error types
         if (status === 429) {
-          this.logger.warn(`GET AppInfo rate limit error: ${getErrorNameAndMessage(error)}`);
+          this.logger.warn(`[GetAppInfo] Rate limit error: ${getErrorNameAndMessage(error)}`);
 
-          await sleep(STEAM_API_RETRY_DELAY.rateLimit);
+          await sleep(STEAM_API_RETRY_DELAY.rateLimit, this.abortController.signal, SteamUpdateCanceledError);
         } else {
           this.logger.warn(
-            `GET AppInfo attempt ${attempt + 1}/${MAX_STEAM_API_RETRIES} failed for appid: ${appid} - ${getErrorNameAndMessage(error)}`
+            `[GetAppInfo] Attempt ${attempt + 1}/${MAX_STEAM_API_RETRIES} failed for appid: ${appid} - ${getErrorNameAndMessage(error)}`
           );
 
-          await sleep(STEAM_API_RETRY_DELAY.error);
+          await sleep(STEAM_API_RETRY_DELAY.error, this.abortController.signal, SteamUpdateCanceledError);
         }
       }
     }
@@ -693,9 +738,10 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
     };
 
     for (let attempt = 0; attempt < MAX_STEAM_API_RETRIES; attempt++) {
-      try {
-        const response = await firstValueFrom(this.httpService.get(STEAM_API_URLS.schema, { params }));
+      await this.checkForCancellation();
 
+      try {
+        const response = await firstValueFrom(this.httpService.get(STEAM_API_URLS.schema, { params, signal: this.abortController.signal }));
         const achievements = response?.data?.game?.availableGameStats?.achievements;
 
         // Check if app retrieved no achievements
@@ -708,6 +754,10 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
           data: achievements,
         };
       } catch (error) {
+        if (error instanceof SteamUpdateCanceledError) {
+          throw error;
+        }
+
         const status = error?.response?.status;
 
         if (status === 400) {
@@ -721,15 +771,15 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
 
         // Retry all other error types
         if (status === 429) {
-          this.logger.warn(`GET AppAchievements rate limit error: ${getErrorNameAndMessage(error)}`);
+          this.logger.warn(`[GetAppAchievements] Rate limit error: ${getErrorNameAndMessage(error)}`);
 
-          await sleep(STEAM_API_RETRY_DELAY.rateLimit);
+          await sleep(STEAM_API_RETRY_DELAY.rateLimit, this.abortController.signal, SteamUpdateCanceledError);
         } else {
           this.logger.warn(
-            `GET AppAchievements attempt ${attempt + 1}/${MAX_STEAM_API_RETRIES} failed for appid: ${appid} - ${getErrorNameAndMessage(error)}`
+            `[GetAppAchievements] Attempt ${attempt + 1}/${MAX_STEAM_API_RETRIES} failed for appid: ${appid} - ${getErrorNameAndMessage(error)}`
           );
 
-          await sleep(STEAM_API_RETRY_DELAY.error);
+          await sleep(STEAM_API_RETRY_DELAY.error, this.abortController.signal, SteamUpdateCanceledError);
         }
       }
     }

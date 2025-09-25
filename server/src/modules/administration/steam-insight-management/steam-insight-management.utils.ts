@@ -1,4 +1,4 @@
-import { SteamAppInfo } from './steam-insight-management.model';
+import { SteamAppInfo } from './resources/steam-insight-management.model';
 
 export function generateEventAppend(message: string): () => string {
   return () => `array_append(events, '${generateEventMessage(message)}')`;

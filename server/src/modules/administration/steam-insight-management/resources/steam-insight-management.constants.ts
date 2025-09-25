@@ -11,7 +11,7 @@ export const APP_TYPE = {
 
 /** API */
 export const MAX_STEAM_API_RETRIES = 5 as const;
-export const MAX_STEAM_API_PAGES = 10000 as const;
+export const MAX_STEAM_API_PAGES = 200 as const;
 
 export const STEAM_API_RETRY_DELAY = {
   rateLimit: 300000, // 5 Minutes
@@ -91,6 +91,7 @@ export const STEAM_UPDATE_ERRORS = {
   updateInProgressError: 'Steam Insight update already in progress',
   updatesDisabledError: 'Steam Insight updates are disabled by configuration',
   updateError: 'Steam Insight update has encountered an error',
+  appInfoError: 'Steam app [GetInfo] failed for appid',
   maxPageError: 'Exceeded max page count',
   apiKeyNotFoundError: 'Steam API key missing or invalid',
   apiKeyRejectedError: 'Steam API key has been rejected',
