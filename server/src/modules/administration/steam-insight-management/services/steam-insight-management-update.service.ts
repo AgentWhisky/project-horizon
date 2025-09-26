@@ -9,7 +9,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { UpdateStatus, UpdateType } from '@hz/common/enums';
 import { ChangeDiff } from '@hz/common/model';
-import { sleep, getErrorNameAndMessage, generateChangeDiff } from '@hz/common/utils';
+import { sleep, getErrorNameAndMessage, generateChangeDiff, formatETFromNow } from '@hz/common/utils';
 
 import { SteamAppEntity } from '@hz/entities/steam-app.entity';
 import { SteamAppAuditEntity, SteamAppChangeType } from '@hz/entities/steam-app-audit.entity';
@@ -46,6 +46,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
   private isUpdateCronEnabled = false;
 
   private updatePromise: Promise<void> | null = null;
+  private updateHistoryId: number | null = null;
 
   private abortController?: AbortController;
 
@@ -113,6 +114,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
     // Clear updatePromise on completion to track in-progress updates
     this.updatePromise = this.update(updateType).finally(() => {
       this.updatePromise = null;
+      this.updateHistoryId = null;
     });
 
     return { message: STEAM_UPDATE_MESSAGES.updateQueued };
@@ -133,7 +135,6 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
   }
 
   private async update(updateType: UpdateType = UpdateType.FULL) {
-    let updateHistoryId: number | null = null;
     const statsCounter = {
       games: { inserts: 0, updates: 0, noChange: 0 },
       dlc: { inserts: 0, updates: 0, noChange: 0 },
@@ -177,7 +178,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
         throw error;
       }
 
-      updateHistoryId = updateHistoryRecord.id;
+      this.updateHistoryId = updateHistoryRecord.id;
       await this.checkForCancellation();
 
       let lastCompleteStartTime: Date | null = null;
@@ -193,9 +194,9 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
       await this.checkForCancellation();
 
       if (lastCompleteStartTime) {
-        await this.appendEvent(updateHistoryId, `Retrieving apps updated after ${lastCompleteStartTime?.toISOString() ?? 'N/A'}`);
+        await this.appendEvent(this.updateHistoryId, `Retrieving apps updated after ${lastCompleteStartTime?.toISOString() ?? 'N/A'}`);
       } else {
-        await this.appendEvent(updateHistoryId, `Retrieving full apps list`);
+        await this.appendEvent(this.updateHistoryId, `Retrieving full apps list`);
       }
 
       // Get steam update list of apps
@@ -205,11 +206,11 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
 
       if (lastCompleteStartTime) {
         await this.appendEvent(
-          updateHistoryId,
+          this.updateHistoryId,
           `Retrieved ${appList.length} apps to update after ${lastCompleteStartTime?.toISOString() ?? 'N/A'}`
         );
       } else {
-        await this.appendEvent(updateHistoryId, `Retrieved ${appList.length} apps to update`);
+        await this.appendEvent(this.updateHistoryId, `Retrieved ${appList.length} apps to update`);
       }
 
       let appCount = 0;
@@ -217,7 +218,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
         appCount++;
 
         if (appCount % 10000 === 0) {
-          await this.appendEvent(updateHistoryId, `Updated ${appCount}/${appList.length} apps`);
+          await this.appendEvent(this.updateHistoryId, `Updated ${appCount}/${appList.length} apps`);
         }
 
         await this.checkForCancellation();
@@ -225,9 +226,13 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
 
         try {
           const appInfo = await this.getAppInfo(appid);
-          const appAchievements = await this.getAppAchievements(appid);
 
-          const result = await this.saveAppInfo(app, appInfo, appAchievements, updateHistoryId);
+          let appAchievements: SteamAppAchievements | null = null;
+          if (appInfo.type === APP_TYPE.game) {
+            appAchievements = await this.getAppAchievements(appid);
+          }
+
+          const result = await this.saveAppInfo(app, appInfo, appAchievements, this.updateHistoryId);
 
           // Increment counters for each save type
           if (result.appType === APP_TYPE.game && result.saveType === APP_SAVE_TYPE.insert) {
@@ -252,7 +257,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
 
               await this.steamAppAuditRepository.save({
                 appid: app.appid,
-                updateHistoryId,
+                updateHistoryId: this.updateHistoryId,
                 changeType: SteamAppChangeType.UPDATE,
                 changes: {
                   validationFailed: { before: existing.validationFailed, after: true },
@@ -267,12 +272,12 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
           statsCounter.total++;
         }
       }
-      await this.appendEvent(updateHistoryId, `Finished updating Steam apps`);
+      await this.appendEvent(this.updateHistoryId, `Finished updating Steam apps`);
 
       // Final cleanup and completion of update
       await this.steamUpdateHistoryRepository.update(
         {
-          id: updateHistoryId,
+          id: this.updateHistoryId,
         },
         {
           updateStatus: UpdateStatus.COMPLETE,
@@ -290,7 +295,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
 
         await this.steamUpdateHistoryRepository.update(
           {
-            id: updateHistoryId,
+            id: this.updateHistoryId,
           },
           {
             updateStatus: UpdateStatus.CANCELED,
@@ -306,10 +311,10 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
         this.logger.warn(STEAM_UPDATE_ERRORS.updatesDisabledError);
       }
 
-      if (updateHistoryId) {
+      if (this.updateHistoryId) {
         await this.steamUpdateHistoryRepository.update(
           {
-            id: updateHistoryId,
+            id: this.updateHistoryId,
           },
           {
             updateStatus: UpdateStatus.FAILED,
@@ -658,6 +663,8 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
 
           // Retry all other error types
           if (status === 429) {
+            this.logger.warn(`[GetAppList] API rate limit reached - retrying at ${formatETFromNow(STEAM_API_RETRY_DELAY.rateLimit)}`);
+
             await sleep(STEAM_API_RETRY_DELAY.rateLimit, this.abortController.signal, SteamUpdateCanceledError);
           } else {
             await sleep(STEAM_API_RETRY_DELAY.error, this.abortController.signal, SteamUpdateCanceledError);
@@ -714,7 +721,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
 
         // Retry all other error types
         if (status === 429) {
-          this.logger.warn(`[GetAppInfo] Rate limit error: ${getErrorNameAndMessage(error)}`);
+          this.logger.warn(`[GetAppInfo] API rate limit reached - retrying at ${formatETFromNow(STEAM_API_RETRY_DELAY.rateLimit)}`);
 
           await sleep(STEAM_API_RETRY_DELAY.rateLimit, this.abortController.signal, SteamUpdateCanceledError);
         } else {
@@ -771,7 +778,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
 
         // Retry all other error types
         if (status === 429) {
-          this.logger.warn(`[GetAppAchievements] Rate limit error: ${getErrorNameAndMessage(error)}`);
+          this.logger.warn(`[GetAppAchievements] API rate limit reached - retrying at ${formatETFromNow(STEAM_API_RETRY_DELAY.rateLimit)}`);
 
           await sleep(STEAM_API_RETRY_DELAY.rateLimit, this.abortController.signal, SteamUpdateCanceledError);
         } else {

@@ -1,5 +1,5 @@
 # Build
-FROM node:23.11.0-alpine3.21 as builder
+FROM node:24-alpine as builder
 WORKDIR /app
 
 ARG ENV_CONFIG=production
