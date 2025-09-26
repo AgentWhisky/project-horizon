@@ -1,4 +1,4 @@
-
+- Add error message when failing to load links
 - Generate custom themes for App instead of prebuilt
 - Refactor content-tile to be advanced formatting like hz-timeline
 
