@@ -12,7 +12,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { HzOption, HzStatusType } from '@hz/core/models';
 import { getRuntimeMs } from '@hz/core/utilities';
 import { HzCardModule } from '@hz/shared/components/hz-card';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { DurationPipe, FormatDatePipe } from '@hz/core/pipes';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SteamInsightUpdate, SteamInsightUpdateRow } from './resources/steam-insight-management.model';
@@ -43,6 +43,7 @@ import { filter, tap } from 'rxjs';
     MatSortModule,
     MatButtonModule,
     ReactiveFormsModule,
+    CommonModule,
     HzStatCardModule,
     HzBannerModule,
     HzCardModule,
@@ -63,6 +64,7 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
 
   readonly LOADING_STATUS = LOADING_STATUS;
   readonly isSmallScreen = this.screenService.isSmallScreen;
+  readonly isMobileScreen = this.screenService.isMobileScreen;
 
   /** DASHBOARD */
   readonly steamInsightDashboard = this.steamInsightMangementService.dashboard;
@@ -189,7 +191,7 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
   }
 
   onResetFilters() {
-    this.steamInsightMangementService.resetFilters();
+    this.steamInsightMangementService.resetUpdateSearchFilters();
   }
 
   onSteamInsightUpdatesRowClick(row: SteamInsightUpdateRow) {

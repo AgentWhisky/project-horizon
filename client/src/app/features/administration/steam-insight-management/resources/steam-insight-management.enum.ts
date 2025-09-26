@@ -17,3 +17,14 @@ export enum SteamInsightUpdateField {
   START_TIME = 'startTime',
   END_TIME = 'endTime',
 }
+
+export enum SteamInsightAppField {
+  APPID = 'appid',
+  NAME = 'name',
+  TYPE = 'type',
+  IS_ADULT = 'isAdult',
+  VALIDATION_FAILED = 'validationFailed',
+  ACTIVE = 'active',
+  CREATED_DATE = 'createdDate',
+  UPDATED_DATE = 'updatedDate',
+}

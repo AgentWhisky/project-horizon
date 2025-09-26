@@ -13,10 +13,10 @@
         }
       </hz-stat-card-group>
 
-      <div class="grid grid-cols-2 gap-3">
+      <div class="grid grid-cols-2 gap-3" [ngClass]="isMobileScreen() ? 'grid-cols-1' : 'grid-cols-2'">
         <!-- IN PROGRESS UPDATE-->
         @if(runningUpdate()) {
-        <hz-card>
+        <hz-card primary>
           <hz-card-header>In-Progress Update</hz-card-header>
           <hz-card-chip>
             <hz-chip>Running</hz-chip>
@@ -28,11 +28,10 @@
                   <span class="font-semibold">Start Time</span>
                   <div>{{ runningUpdate()!.startTime | date : 'short' }}</div>
                 </div>
-                <span>Runtime:</span>
               </div>
               <div>
-                <span class="font-medium">Events:</span>
-                <ul class="list-disc list-inside text-gray-400">
+                <span class="font-semibold">Events</span>
+                <ul class="list-disc list-inside">
                   @for (event of runningUpdate()!.events; track event.message) {
                   <li>{{ event.timestamp | date : 'short' }} - {{ event.message | formatDate }}</li>
                   }
@@ -45,24 +44,27 @@
         </hz-card>
         } @else {
         <hz-card>
-          <hz-card-body class="flex flex-col gap-4">
+          <hz-card-body class="flex flex-col gap-3">
             <hz-banner type="primary">
               <hz-banner-header>No update in progress</hz-banner-header>
               <hz-banner-body>Steam Insight is not currently running an update.</hz-banner-body>
             </hz-banner>
 
-            <div class="flex flex-row flex-wrap gap-3">
-              <button mat-flat-button (click)="onStartUpdate(true)">Start Update - Full</button>
-              <button mat-flat-button (click)="onStartUpdate()">Start Update - Incremental</button>
+            <div class="flex flex-col gap-2">
+              <span class="font-semibold">Start Update</span>
+              <div class="flex flex-row flex-wrap gap-3">
+                <button mat-flat-button (click)="onStartUpdate(true)">Full</button>
+                <button mat-flat-button (click)="onStartUpdate()">Incremental</button>
+              </div>
             </div>
           </hz-card-body>
         </hz-card>
         }
 
-        <div class="grid gap-4">
+        <div class="grid gap-3">
           @for (update of steamInsightDashboard()?.recentUpdates; track update.id) {
-          <hz-card>
-            <hz-card-header>{{ getUpdateType(update.updateType) }}</hz-card-header>
+          <hz-card primary>
+            <hz-card-header>{{ getUpdateType(update.updateType) }} Update</hz-card-header>
             <hz-card-chip>
               <hz-chip [type]="getUpdateStatusType(update.updateStatus)">{{ getUpdateStatus(update.updateStatus) }}</hz-chip>
             </hz-card-chip>

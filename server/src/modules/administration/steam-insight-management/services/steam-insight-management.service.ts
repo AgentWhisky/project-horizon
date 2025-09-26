@@ -1,12 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, In, Not, Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, In, Not, Repository } from 'typeorm';
 
 import { SteamAppEntity } from '@hz/entities/steam-app.entity';
 import { SteamAppAuditEntity } from '@hz/entities/steam-app-audit.entity';
 import { SteamUpdateHistoryEntity } from '@hz/entities/steam-update-history.entity';
 import {
   SteamAppStats,
+  SteamInsightAppResponse,
+  SteamInsightAppSearchResponse,
   SteamInsightDashboard,
   SteamInsightStat,
   SteamInsightUpdate,
@@ -14,9 +16,11 @@ import {
   SteamInsightUpdateSimple,
   SteamUpdateStats,
 } from '../resources/steam-insight-management.model';
-import { SteamInsightUpdatesDto } from '../dto/steam-insight-management-update-history.dto';
+
 import { UpdateStatus } from '@hz/common/enums';
 import { parseHzEvent } from '@hz/common/utils';
+import { SteamInsightUpdatesQueryDto } from '../dto/steam-insight-management-updates-query.dto';
+import { SteamInsightAppsQueryDto } from '../dto/steam-insight-management-apps-query.dto';
 
 @Injectable()
 export class SteamInsightManagementService {
@@ -103,7 +107,76 @@ export class SteamInsightManagementService {
     };
   }
 
-  async getSteamInsightUpdates(query: SteamInsightUpdatesDto): Promise<SteamInsightUpdateSearchResponse> {
+  async getSteamInsightApps(query: SteamInsightAppsQueryDto): Promise<SteamInsightAppSearchResponse> {
+    const { page, pageSize, sortBy, sortOrder, appid, keywords, isAdult, validationFailed, active } = query;
+
+    /** Setup base condition boolean and number checks */
+    const baseCondition: FindOptionsWhere<SteamAppEntity> = {};
+
+    if (appid !== undefined) {
+      baseCondition.appid = appid;
+    }
+    if (isAdult !== undefined) {
+      baseCondition.isAdult = isAdult;
+    }
+    if (validationFailed !== undefined) {
+      baseCondition.validationFailed = validationFailed;
+    }
+    if (active !== undefined) {
+      baseCondition.active = active;
+    }
+
+    /** Setup ILIKE search on name keywords */
+    let where: FindOptionsWhere<SteamAppEntity> | FindOptionsWhere<SteamAppEntity>[] = baseCondition;
+    if (keywords) {
+      const parts = keywords
+        .split(',')
+        .map((word) => word.trim())
+        .filter((word) => word.length > 0);
+
+      if (parts.length > 0) {
+        where = parts.map((word) => ({
+          ...baseCondition,
+          name: ILike(`%${word}%`),
+        }));
+      }
+    }
+
+    const dbApps = await this.steamAppRepository.findAndCount({
+      select: {
+        appid: true,
+        name: true,
+        type: true,
+        isAdult: true,
+        validationFailed: true,
+        active: true,
+        createdDate: true,
+        updatedDate: true,
+      },
+      where,
+      order: { [sortBy]: sortOrder },
+      skip: page * pageSize,
+      take: pageSize,
+    });
+
+    const apps: SteamInsightAppResponse[] = dbApps[0].map((app) => ({
+      appid: app.appid,
+      name: app.name,
+      type: app.type,
+      isAdult: app.isAdult,
+      validationFailed: app.validationFailed,
+      active: app.active,
+      createdDate: app.createdDate,
+      updatedDate: app.updatedDate,
+    }));
+
+    return {
+      pageLength: dbApps[1],
+      apps,
+    };
+  }
+
+  async getSteamInsightUpdates(query: SteamInsightUpdatesQueryDto): Promise<SteamInsightUpdateSearchResponse> {
     const { page, pageSize, sortBy, sortOrder, status, type } = query;
 
     const condition: FindOptionsWhere<SteamUpdateHistoryEntity> = {};

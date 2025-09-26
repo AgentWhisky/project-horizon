@@ -3,8 +3,8 @@ import { Type } from 'class-transformer';
 import { SortOrder, SteamInsightUpdateField, UpdateStatus, UpdateType } from '@hz/common/enums';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
-export class SteamInsightUpdatesDto {
-  @ApiPropertyOptional({ description: 'Page number (0-Starting)', type: Number, example: 1, default: 1 })
+export class SteamInsightUpdatesQueryDto {
+  @ApiPropertyOptional({ description: 'Page number (0-Starting)', type: Number, example: 0, default: 0 })
   @IsOptional()
   @Type(() => Number)
   @IsInt()

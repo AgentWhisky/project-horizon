@@ -9,7 +9,8 @@ import { UpdateType } from '@hz/common/enums';
 import { SteamInsightManagementUpdateService } from './services/steam-insight-management-update.service';
 import { SteamInsightManagementService } from './services/steam-insight-management.service';
 import { SteamInsightDashboard } from './resources/steam-insight-management.model';
-import { SteamInsightUpdatesDto } from './dto/steam-insight-management-update-history.dto';
+import { SteamInsightUpdatesQueryDto } from './dto/steam-insight-management-updates-query.dto';
+import { SteamInsightAppsQueryDto } from './dto/steam-insight-management-apps-query.dto';
 
 @ApiTags('Steam Insight Management')
 @Controller('steam-insight-management')
@@ -26,8 +27,13 @@ export class SteamInsightManagementController {
   }
 
   @Get('updates')
-  async getSteamInsightUpdates(@Query() query: SteamInsightUpdatesDto) {
+  async getSteamInsightUpdates(@Query() query: SteamInsightUpdatesQueryDto) {
     return this.steamInsightManagementService.getSteamInsightUpdates(query);
+  }
+
+  @Get('apps')
+  async getSteamInsightApps(@Query() query: SteamInsightAppsQueryDto) {
+    return this.steamInsightManagementService.getSteamInsightApps(query);
   }
 
   /** Steam Insight Update Endpoints */

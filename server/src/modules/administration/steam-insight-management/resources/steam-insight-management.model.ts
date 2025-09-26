@@ -176,6 +176,24 @@ export interface SteamUpdateStats {
   failed_updates: string;
 }
 
+/** STEAM INSIGHT APP SEARCH */
+export interface SteamInsightAppResponse {
+  appid: number;
+  name: string;
+  type: string;
+  isAdult: boolean;
+  validationFailed: boolean;
+  active: boolean;
+  createdDate: Date;
+  updatedDate: Date;
+}
+
+export interface SteamInsightAppSearchResponse {
+  pageLength: number;
+  apps: SteamInsightAppResponse[];
+}
+
+/** STEAM INSIGHT UPDATES */
 export interface SteamInsightUpdateSimple {
   id: number;
   updateType: UpdateType;

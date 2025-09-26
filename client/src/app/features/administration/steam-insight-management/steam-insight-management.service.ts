@@ -6,6 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TokenService } from '@hz/core/services';
 import { LOADING_STATUS, SNACKBAR_INTERVAL, STORAGE_KEYS } from '@hz/core/constants';
 import {
+  SteamInsightAppResponse,
   SteamInsightDashboard,
   SteamInsightUpdate,
   SteamInsightUpdateSearchResponse,
@@ -14,7 +15,7 @@ import {
 import { cleanObject, sleep } from '@hz/core/utilities';
 import { HttpParams } from '@angular/common/http';
 import { SortOrder } from '@hz/core/enums';
-import { SteamInsightUpdateField, UpdateStatus, UpdateType } from './resources/steam-insight-management.enum';
+import { SteamInsightAppField, SteamInsightUpdateField, UpdateStatus, UpdateType } from './resources/steam-insight-management.enum';
 import { FormBuilder, FormControl } from '@angular/forms';
 
 @Injectable({
@@ -28,6 +29,17 @@ export class SteamInsightManagementService {
   readonly dashboard = signal<SteamInsightDashboard | null>(null);
   readonly dashboardLoadingStatus = signal<number>(LOADING_STATUS.NOT_LOADED);
 
+  /** Steam Insight App Search */
+  readonly steamInsightApps = signal<SteamInsightAppResponse[]>([]);
+  readonly steamInsightAppsLoadingStatus = signal<number>(LOADING_STATUS.NOT_LOADED);
+  readonly steamInsightAppsPageLength = signal<number>(0);
+  readonly steamInsightAppsSortBy = signal<SteamInsightAppField | null>(null);
+  readonly steamInsightAppsSortOrder = signal<SortOrder | null>(null);
+  readonly steamInsightAppsPage = signal<number>(0);
+  readonly steamInsightAppsPageSize = signal<number>(this.loadUpdateHistoryPageSize());
+  readonly steamInsightAppsSearchForm = this.getSteamUpdateHistorySearchForm();
+
+  /** Steam Insight Updates */
   readonly steamInsightUpdates = signal<SteamInsightUpdate[]>([]);
   readonly steamInsightUpdatesLoadingStatus = signal<number>(LOADING_STATUS.NOT_LOADED);
   readonly steamInsightUpdatesPageLength = signal<number>(0);
@@ -87,6 +99,41 @@ export class SteamInsightManagementService {
     }
   }
 
+  // *** STEAM INSIGHT APP SEARCH ***
+  async loadAppSearch() {}
+
+  updateSteamAppSearchSort(sortBy: string, sortOrder: string) {
+    if (sortOrder === 'ASC' || sortOrder === 'DESC') {
+      this.steamInsightAppsSortBy.set(null);
+      this.steamInsightAppsSortOrder.set(null);
+    }
+
+    this.steamInsightAppsSortBy.set(sortBy as SteamInsightAppField);
+    this.steamInsightAppsSortOrder.set(sortOrder as SortOrder);
+
+    this.steamInsightAppsPage.set(0);
+    this.loadAppSearch();
+  }
+
+  updateSteamAppSearchPage(page: number, pageSize: number) {
+    this.steamInsightAppsPage.set(page);
+    this.steamInsightAppsPageSize.set(pageSize);
+
+    this.saveAppSearchPageSize(pageSize);
+    this.loadAppSearch();
+  }
+
+  getSteamAppSearchForm() {
+    return this.fb.group({
+      appid: new FormControl<number | null>(null),
+      sortBy: new FormControl<UpdateType | null>(null),
+    });
+  }
+
+  resetAppSearchFilters() {
+    this.steamInsightAppsSearchForm.reset();
+  }
+
   // *** UPDATE HISTORY SEARCH ***
   async loadUpdateHistory(query: SteamInsightUpdatesQuery = {}) {
     try {
@@ -140,11 +187,20 @@ export class SteamInsightManagementService {
     });
   }
 
-  resetFilters() {
+  resetUpdateSearchFilters() {
     this.steamInsightUpdatesSearchForm.reset();
   }
 
   // PRIVATE SERVICE FUNCTIONS
+  private saveAppSearchPageSize(pageSize: number) {
+    localStorage.setItem(STORAGE_KEYS.STEAM_INSIGHT_MANAGEMENT.APP_SEARCH.PAGE_SIZE, JSON.stringify(pageSize));
+  }
+
+  private loadAppSearchPageSize(): number {
+    const pageSize = localStorage.getItem(STORAGE_KEYS.STEAM_INSIGHT_MANAGEMENT.APP_SEARCH.PAGE_SIZE);
+    return pageSize ? Number(pageSize) : 25;
+  }
+
   private saveUpdateHistoryPageSize(pageSize: number) {
     localStorage.setItem(STORAGE_KEYS.STEAM_INSIGHT_MANAGEMENT.UPDATE_HISTORY.PAGE_SIZE, JSON.stringify(pageSize));
   }
