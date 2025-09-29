@@ -108,10 +108,167 @@
 
   <mat-tab label="Steam App Search">
     <div class="flex flex-col gap-3 p-3">
-      <hz-banner type="warning">
-        <hz-banner-header>In Development</hz-banner-header>
-        <hz-banner-body>This section is still under development and may not function correctly</hz-banner-body>
+      @if(steamInsightAppsLoadingStatus() === LOADING_STATUS.SUCCESS || steamInsightAppsLoadingStatus() === LOADING_STATUS.IN_PROGRESS) {
+      <hz-card class="flex self-start">
+        <hz-card-header>
+          <mat-icon fontSet="material-symbols-outlined">filter_alt</mat-icon>
+          Filter
+        </hz-card-header>
+        <hz-card-body>
+          <form [formGroup]="steamInsightAppsSearchForm" class="flex flex-row flex-wrap gap-3 items-center">
+            <mat-form-field subscriptSizing="dynamic">
+              <mat-label>Appid</mat-label>
+              <input matInput formControlName="appid" />
+            </mat-form-field>
+
+            <mat-form-field subscriptSizing="dynamic">
+              <mat-label>App Type</mat-label>
+              <mat-select formControlName="type">
+                @for (type of steamInsightAppsTypeOptions(); track type.value) {
+                <mat-option [value]="type.value">{{ type.label }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field subscriptSizing="dynamic">
+              <mat-label>Is Adult</mat-label>
+              <mat-select formControlName="isAdult">
+                <mat-option [value]="null">None</mat-option>
+                <mat-option [value]="true">Yes</mat-option>
+                <mat-option [value]="false">No</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field subscriptSizing="dynamic">
+              <mat-label>Validation Failed</mat-label>
+              <mat-select formControlName="validationFailed">
+                <mat-option [value]="null">None</mat-option>
+                <mat-option [value]="true">Yes</mat-option>
+                <mat-option [value]="false">No</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field subscriptSizing="dynamic">
+              <mat-label>Active</mat-label>
+              <mat-select formControlName="active">
+                <mat-option [value]="null">None</mat-option>
+                <mat-option [value]="true">Yes</mat-option>
+                <mat-option [value]="false">No</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <button mat-flat-button (click)="onResetAppSearchFilters()">
+              <mat-icon fontSet="material-symbols-outlined">refresh</mat-icon>
+              Reset
+            </button>
+          </form>
+        </hz-card-body>
+      </hz-card>
+
+      <hz-card>
+        <hz-card-body>
+          <div class="w-full flex flex-col">
+            <table
+              mat-table
+              [dataSource]="steamInsightAppsDataSource"
+              matSort
+              (matSortChange)="onSteamInsightAppSort($event)"
+              #steamInsightAppsSort="matSort"
+              class="mat-elevation-z8">
+              <ng-container matColumnDef="appid">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by app id">Appid</th>
+                <td mat-cell *matCellDef="let element">{{ element.appid }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">Name</th>
+                <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by type">Type</th>
+                <td mat-cell *matCellDef="let element">
+                  <hz-chip>{{ element.type }}</hz-chip>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="isAdult">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by is adult">Is Adult</th>
+                <td mat-cell *matCellDef="let element">
+                  <hz-chip [type]="element.isAdult ? 'error' : 'success'">{{ element.isAdult ? 'Yes' : 'No' }}</hz-chip>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="validationFailed">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by is validation status">
+                  Validation Failed
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <hz-chip [type]="element.validationFailed ? 'error' : 'success'">{{ element.validationFailed ? 'Yes' : 'No' }}</hz-chip>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="active">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by active status">Active</th>
+                <td mat-cell *matCellDef="let element">
+                  <hz-chip [type]="element.active ? 'success' : 'error'">{{ element.active ? 'Yes' : 'No' }}</hz-chip>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef aria-hidden="true"></th>
+                <td mat-cell class="min-w-16" *matCellDef="let element">
+                  <div class="flex justify-end items-center">
+                    <button mat-icon-button (click)="onViewApp(element)" aria-label="View App">
+                      <mat-icon matTooltip="View App">visibility</mat-icon>
+                    </button>
+                    <button
+                      mat-icon-button
+                      (click)="onUpdateAppActiveStatus(element)"
+                      [attr.aria-label]="element.active ? 'Disable App' : 'Enable App'">
+                      <mat-icon fontSet="material-symbols-outlined" [matTooltip]="element.active ? 'Disable App' : 'Enable App'">
+                        {{ element.active ? 'cancel' : 'check_circle' }}
+                      </mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="steamInsightAppsDisplayedColumns()"></tr>
+              <tr mat-row class="table-row" *matRowDef="let row; columns: steamInsightAppsDisplayedColumns()"></tr>
+            </table>
+            @if (steamInsightAppRows() && steamInsightAppRows().length > 0) {
+            <mat-paginator
+              [length]="steamInsightAppsPageLength()"
+              [pageIndex]="steamInsightAppsPage()"
+              [pageSize]="steamInsightAppsPageSize()"
+              [pageSizeOptions]="PAGE_SIZE_OPTIONS"
+              (page)="onSteamInsightAppPageChange($event)"
+              showFirstLastButtons
+              aria-label="Steam Insight App Search Paginator"
+              #steamInsightAppsPaginator></mat-paginator>
+            } @else {
+            <hz-banner type="warning" class="mt-3">
+              <hz-banner-header>No apps found</hz-banner-header>
+              <hz-banner-body>
+                There are no records that match the current filters in the Steam Insight Apps. Try adjusting your search criteria or refresh
+                the table to check for newly available apps.
+              </hz-banner-body>
+            </hz-banner>
+            }
+          </div>
+        </hz-card-body>
+      </hz-card>
+      } @else if(steamInsightAppsLoadingStatus() === LOADING_STATUS.FAILED) {
+      <hz-banner type="error">
+        <hz-banner-header>Steam Insight Apps failed to load</hz-banner-header>
+        <hz-banner-body>
+          The system was unable to retrieve apps data for this table. This may be due to a connectivity issue with the backend service, a
+          timeout while fetching records, or a misconfigured API endpoint. Please verify that the server is online and reachable, and
+          confirm that the app API service is running correctly.
+        </hz-banner-body>
       </hz-banner>
+      }
     </div>
   </mat-tab>
 
@@ -145,7 +302,7 @@
               </mat-select>
             </mat-form-field>
 
-            <button mat-flat-button (click)="onResetFilters()">
+            <button mat-flat-button (click)="onResetUpdateSearchFilters()">
               <mat-icon fontSet="material-symbols-outlined">refresh</mat-icon>
               Reset
             </button>

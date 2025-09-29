@@ -1,4 +1,4 @@
-import { UpdateStatus, UpdateType } from '@hz/common/enums';
+import { SteamInsightUpdateStatus, SteamInsightUpdateType } from '@hz/common/enums';
 import { HzEvent } from '@hz/common/model';
 
 // *** STEAM INSIGHT UPDATES ***
@@ -196,8 +196,8 @@ export interface SteamInsightAppSearchResponse {
 /** STEAM INSIGHT UPDATES */
 export interface SteamInsightUpdateSimple {
   id: number;
-  updateType: UpdateType;
-  updateStatus: UpdateStatus;
+  updateType: SteamInsightUpdateType;
+  updateStatus: SteamInsightUpdateStatus;
   startTime: Date;
   endTime?: Date;
   events?: HzEvent[];
@@ -205,8 +205,8 @@ export interface SteamInsightUpdateSimple {
 
 export interface SteamInsightUpdate {
   id: number;
-  updateType: UpdateType;
-  updateStatus: UpdateStatus;
+  updateType: SteamInsightUpdateType;
+  updateStatus: SteamInsightUpdateStatus;
   startTime: Date;
   endTime?: Date;
   stats: {
@@ -222,4 +222,82 @@ export interface SteamInsightUpdate {
 export interface SteamInsightUpdateSearchResponse {
   pageLength: number;
   updates: SteamInsightUpdate[];
+}
+
+/** STEAM INSIGHT APP */
+export interface AppActiveStatus {
+  appid: number;
+  active: boolean;
+}
+
+export interface SteamAppInfoAdmin {
+  type: string;
+  name: string;
+  steam_appid: number;
+  required_age: number | string;
+  controller_support?: string;
+  is_free: boolean;
+  dlc?: number[];
+  detailed_description: string;
+  about_the_game: string;
+  short_description: string;
+  fullgame?: { appid: number; name: string }[];
+  supported_languages: string;
+  header_image: string;
+  capsule_image?: string;
+  capsule_imagev5?: string;
+  website?: string;
+  background?: string;
+  background_raw?: string;
+  reviews?: string;
+  legal_notice?: string;
+  ratings?: any;
+  developers?: string[];
+  publishers?: string[];
+  categories?: { id: number; description: string }[];
+  genres?: { id: string; description: string }[];
+  screenshots?: Screenshot[];
+  movies?: Movie[];
+  achievements?: {
+    total: number;
+    highlighted: { name: string; path: string }[];
+  };
+  release_date: {
+    coming_soon: boolean;
+    date: string;
+  };
+  support_info?: {
+    url: string;
+    email: string;
+  };
+  content_descriptors?: {
+    ids?: number[];
+    notes?: string;
+  };
+  platforms?: {
+    windows: boolean;
+    mac: boolean;
+    linux: boolean;
+  };
+  metacritic?: {
+    score: number;
+    url: string;
+  };
+  recommendations?: {
+    total: number;
+  };
+  price_overview?: {
+    currency: string;
+    initial: number;
+    final: number;
+    discount_percent: number;
+    initial_formatted: string;
+    final_formatted: string;
+  };
+  packages?: number[];
+  package_groups?: PackageGroup[];
+  demos?: { appid: number; description: string }[];
+  pc_requirements?: Requirements;
+  mac_requirements?: Requirements;
+  linux_requirements?: Requirements;
 }

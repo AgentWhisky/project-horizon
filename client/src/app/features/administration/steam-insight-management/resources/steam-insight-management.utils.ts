@@ -1,5 +1,16 @@
 import { HzStatusType } from '@hz/core/models';
 
+export function getAppType(code: string): string {
+  switch (code) {
+    case 'game':
+      return 'Game';
+    case 'dlc':
+      return 'Dlc';
+    default:
+      return code;
+  }
+}
+
 export function getUpdateType(code: string): string {
   switch (code) {
     case 'I':

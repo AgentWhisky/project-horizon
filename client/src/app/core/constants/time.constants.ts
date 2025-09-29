@@ -5,4 +5,8 @@ export const REFRESH_INTERVAL = {
 
 export const SNACKBAR_INTERVAL = {
   NORMAL: 3000, // 3s
+} as const;
+
+export const DEBOUNCE_TIME = {
+  NORMAL: 500, // 0.5s
 };

@@ -1,6 +1,6 @@
 import { IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import { SortOrder, SteamInsightUpdateField, UpdateStatus, UpdateType } from '@hz/common/enums';
+import { SortOrder, SteamInsightUpdateField, SteamInsightUpdateStatus, SteamInsightUpdateType } from '@hz/common/enums';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class SteamInsightUpdatesQueryDto {
@@ -30,13 +30,13 @@ export class SteamInsightUpdatesQueryDto {
   @IsEnum(SortOrder, { message: 'sortOrder must be ASC or DESC' })
   sortOrder: 'ASC' | 'DESC' = 'DESC';
 
-  @ApiPropertyOptional({ description: 'Filter by update status', enum: UpdateStatus, isArray: true })
+  @ApiPropertyOptional({ description: 'Filter by update status', enum: SteamInsightUpdateStatus, isArray: true })
   @IsOptional()
-  @IsEnum(UpdateStatus, { each: true })
-  status?: UpdateStatus[];
+  @IsEnum(SteamInsightUpdateStatus, { each: true })
+  status?: SteamInsightUpdateStatus[];
 
-  @ApiPropertyOptional({ description: 'Filter by update type', enum: UpdateType })
+  @ApiPropertyOptional({ description: 'Filter by update type', enum: SteamInsightUpdateType })
   @IsOptional()
-  @IsEnum(UpdateType)
-  type?: UpdateType;
+  @IsEnum(SteamInsightUpdateType)
+  type?: SteamInsightUpdateType;
 }

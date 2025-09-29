@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
 
-import { UpdateStatus, UpdateType } from '@hz/common/enums';
+import { SteamInsightUpdateStatus, SteamInsightUpdateType } from '@hz/common/enums';
 import { SteamInsightUpdateStats } from '@hz/common/model';
 
 @Entity('steam_update_history')
@@ -9,13 +9,13 @@ export class SteamUpdateHistoryEntity {
   id: number;
 
   @Index()
-  @Column({ name: 'update_type', type: 'enum', enum: UpdateType, default: 'F' })
-  updateType: UpdateType;
+  @Column({ name: 'update_type', type: 'enum', enum: SteamInsightUpdateType, default: 'F' })
+  updateType: SteamInsightUpdateType;
 
   @Index()
   @Index('steam_app_update_running_unique', { synchronize: false })
-  @Column({ name: 'update_status', enum: UpdateStatus, default: 'R' })
-  updateStatus: UpdateStatus;
+  @Column({ name: 'update_status', enum: SteamInsightUpdateStatus, default: 'R' })
+  updateStatus: SteamInsightUpdateStatus;
 
   @Column({ name: 'start_time', type: 'timestamptz' })
   startTime: Date;

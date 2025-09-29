@@ -3,18 +3,20 @@
 .hz-chip {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
 
+  height: 2rem;
+  min-width: 4rem;
   padding: 0 0.75rem;
-  height: 2rem; // keeps it chip-sized
 
   font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: var(--hz-sys-letter-spacing-large);
 
-  border-radius: 9999px; // pill shape
-  color: var(--hz-sys-on-base);
+  border-radius: 50rem; /* pill shape */
   border: 1px solid var(--hz-sys-base-border);
+  color: var(--hz-sys-on-base);
 
   cursor: default;
   user-select: none;

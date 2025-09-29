@@ -1,6 +1,13 @@
 import { SortOrder } from '@hz/core/enums';
-import { SteamInsightAppField, SteamInsightUpdateField, UpdateStatus, UpdateType } from './steam-insight-management.enum';
 import { HzEvent, HzStatusType } from '@hz/core/models';
+
+import {
+  SteamInsightAppField,
+  SteamInsightAppType,
+  SteamInsightUpdateField,
+  SteamInsightUpdateStatus,
+  SteamInsightUpdateType,
+} from './steam-insight-management.enum';
 
 // *** DASHBOARD ***
 export interface SteamInsightDashboard {
@@ -17,8 +24,8 @@ export interface SteamInsightStat {
 
 export interface SteamInsightUpdateSimple {
   id: number;
-  updateType: UpdateType;
-  updateStatus: UpdateStatus;
+  updateType: SteamInsightUpdateType;
+  updateStatus: SteamInsightUpdateStatus;
   startTime: Date;
   endTime?: Date;
   events?: HzEvent[];
@@ -31,6 +38,7 @@ export interface SteamInsightAppsQuery {
   sortBy?: SteamInsightAppField;
   sortOrder?: SortOrder;
   appid?: number;
+  type?: SteamInsightAppType;
   keywords?: string;
   isAdult?: boolean;
   validationFailed?: boolean;
@@ -53,14 +61,19 @@ export interface SteamInsightAppSearchResponse {
   apps: SteamInsightAppResponse[];
 }
 
+export interface AppActiveStatus {
+  appid: number;
+  active: boolean;
+}
+
 /** STEAM INSIGHT UPDATES */
 export interface SteamInsightUpdatesQuery {
   page?: number;
   pageSize?: number;
   sortBy?: SteamInsightUpdateField;
   sortOrder?: SortOrder;
-  status?: UpdateStatus[];
-  type?: UpdateType;
+  status?: SteamInsightUpdateStatus[];
+  type?: SteamInsightUpdateType;
 }
 
 export interface SteamInsightUpdateStats {
@@ -72,8 +85,8 @@ export interface SteamInsightUpdateStats {
 
 export interface SteamInsightUpdate {
   id: number;
-  updateType: UpdateType;
-  updateStatus: UpdateStatus;
+  updateType: SteamInsightUpdateType;
+  updateStatus: SteamInsightUpdateStatus;
   startTime: Date;
   endTime?: Date;
   stats?: SteamInsightUpdateStats;

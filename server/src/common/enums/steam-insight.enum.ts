@@ -1,9 +1,9 @@
-export enum UpdateType {
+export enum SteamInsightUpdateType {
   FULL = 'F',
   INCREMENTAL = 'I',
 }
 
-export enum UpdateStatus {
+export enum SteamInsightUpdateStatus {
   RUNNING = 'R',
   COMPLETE = 'C',
   FAILED = 'F',
@@ -32,4 +32,9 @@ export enum SteamInsightAppField {
   ACTIVE = 'active',
   CREATED_DATE = 'createdDate',
   UPDATED_DATE = 'updatedDate',
+}
+
+export enum SteamInsightAppType {
+  GAME = 'game',
+  DLC = 'dlc',
 }

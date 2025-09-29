@@ -15,13 +15,13 @@ import { HzCardModule } from '@hz/shared/components/hz-card';
 import { CommonModule, DatePipe } from '@angular/common';
 import { DurationPipe, FormatDatePipe } from '@hz/core/pipes';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { SteamInsightUpdate, SteamInsightUpdateRow } from './resources/steam-insight-management.model';
+import { SteamInsightAppResponse, SteamInsightUpdate, SteamInsightUpdateRow } from './resources/steam-insight-management.model';
 import { ScreenService } from '@hz/core/services';
-import { UpdateStatus, UpdateType } from './resources/steam-insight-management.enum';
+import { SteamInsightAppType, SteamInsightUpdateStatus, SteamInsightUpdateType } from './resources/steam-insight-management.enum';
 import { MatIconModule } from '@angular/material/icon';
-import { getUpdateStatus, getUpdateStatusType, getUpdateType } from './resources/steam-insight-management.utils';
+import { getAppType, getUpdateStatus, getUpdateStatusType, getUpdateType } from './resources/steam-insight-management.utils';
 import { MatSelectModule } from '@angular/material/select';
-import { UPDATE_STATUS_OPTIONS, UPDATE_TYPE_OPTIONS } from './resources/steam-insight-management.const';
+import { APP_TYPE_OPTIONS, UPDATE_STATUS_OPTIONS, UPDATE_TYPE_OPTIONS } from './resources/steam-insight-management.const';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { SteamInsightUpdateHistoryDialogComponent } from './dialogs/steam-insight-update-history-dialog/steam-insight-update-history-dialog.component';
@@ -29,6 +29,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { PAGE_SIZE_OPTIONS } from '@hz/core/constants/pagination.constants';
 import { ConfirmDialogComponent } from '@hz/shared/dialogs';
 import { filter, tap } from 'rxjs';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'hz-steam-insight-management',
@@ -36,12 +38,14 @@ import { filter, tap } from 'rxjs';
     MatDividerModule,
     MatIconModule,
     MatTabsModule,
+    MatInputModule,
     MatSelectModule,
     MatProgressSpinnerModule,
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
     MatButtonModule,
+    MatTooltipModule,
     ReactiveFormsModule,
     CommonModule,
     HzStatCardModule,
@@ -71,7 +75,29 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
   readonly dashboardLoadingStatus = this.steamInsightMangementService.dashboardLoadingStatus;
   readonly runningUpdate = computed(() => this.steamInsightDashboard()?.runningUpdate);
 
-  /** UPDATE SEARCH */
+  /** APP SEARCH */
+  readonly steamInsightAppsDisplayedColumns = computed<string[]>(() =>
+    this.isSmallScreen() ? ['appid', 'name', 'type'] : ['appid', 'name', 'type', 'isAdult', 'validationFailed', 'active', 'actions']
+  );
+
+  readonly steamInsightAppsDataSource = new MatTableDataSource<SteamInsightAppResponse>();
+  readonly steamInsightAppsPageLength = this.steamInsightMangementService.steamInsightAppsPageLength;
+  readonly steamInsightAppsPage = this.steamInsightMangementService.steamInsightAppsPage;
+  readonly steamInsightAppsPageSize = this.steamInsightMangementService.steamInsightAppsPageSize;
+  readonly steamInsightAppsSearchForm = this.steamInsightMangementService.steamInsightAppsSearchForm;
+
+  readonly steamInsightAppsTypeOptions = signal<HzOption<SteamInsightAppType>[]>(APP_TYPE_OPTIONS);
+
+  readonly steamInsightAppsLoadingStatus = this.steamInsightMangementService.steamInsightAppsLoadingStatus;
+
+  readonly steamInsightAppRows = computed<SteamInsightAppResponse[]>(() =>
+    this.steamInsightMangementService.steamInsightApps().map((app) => ({
+      ...app,
+      type: getAppType(app.type),
+    }))
+  );
+
+  /** 1 SEARCH */
   readonly steamInsightUpdatesDisplayedColumns = computed<string[]>(() =>
     this.isSmallScreen()
       ? ['startTime', 'endTime', 'updateStatus']
@@ -83,8 +109,8 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
   readonly steamInsightUpdatesPageSize = this.steamInsightMangementService.steamInsightUpdatesPageSize;
   readonly steamInsightUpdatesSearchForm = this.steamInsightMangementService.steamInsightUpdatesSearchForm;
 
-  readonly steamInsightUpdatesStatusOptions = signal<HzOption<UpdateStatus>[]>(UPDATE_STATUS_OPTIONS);
-  readonly steamInsightUpdatesTypeOptions = signal<HzOption<UpdateType>[]>(UPDATE_TYPE_OPTIONS);
+  readonly steamInsightUpdatesStatusOptions = signal<HzOption<SteamInsightUpdateStatus>[]>(UPDATE_STATUS_OPTIONS);
+  readonly steamInsightUpdatesTypeOptions = signal<HzOption<SteamInsightUpdateType>[]>(UPDATE_TYPE_OPTIONS);
 
   readonly steamInsightUpdatesLoadingStatus = this.steamInsightMangementService.steamInsightUpdatesLoadingStatus;
 
@@ -121,6 +147,10 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
 
   constructor() {
     effect(() => {
+      this.steamInsightAppsDataSource.data = this.steamInsightAppRows();
+    });
+
+    effect(() => {
       this.steamInsightUpdatesDataSource.data = this.steamInsightUpdateRows();
     });
   }
@@ -147,6 +177,11 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
     // Steam Insight Dashboard
     if (index === 0) {
       this.steamInsightMangementService.loadDashboard();
+    }
+
+    // Steam Insight App Search
+    if (index === 1) {
+      this.steamInsightMangementService.loadAppSearch();
     }
 
     // Steam Insight Update Search
@@ -176,6 +211,32 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
     this.steamInsightMangementService.stopUpdate();
   }
 
+  /** STEAM INSIGHT APP SEARCH */
+  onSteamInsightAppSort(event: Sort) {
+    const field = event.active;
+    const direction = event.direction.toUpperCase();
+
+    this.steamInsightMangementService.updateSteamAppSearchSort(field, direction);
+  }
+
+  onSteamInsightAppPageChange(event: PageEvent) {
+    const newPage = event.pageIndex;
+    const newPageSize = event.pageSize;
+    this.steamInsightMangementService.updateSteamAppSearchPage(newPage, newPageSize);
+  }
+
+  onResetAppSearchFilters() {
+    this.steamInsightMangementService.resetAppSearchFilters();
+  }
+
+  onViewApp(row: any) {
+    console.log(row);
+  }
+
+  onUpdateAppActiveStatus(app: SteamInsightAppResponse) {
+    this.steamInsightMangementService.updateAppActive(app.appid, !app.active);
+  }
+
   /** STEAM INSIGHT UPDATE HISTORY SEARCH */
   onSteamInsightUpdatesSort(event: Sort) {
     const field = event.active;
@@ -190,7 +251,7 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
     this.steamInsightMangementService.updateSteamUpdateHistoryPage(newPage, newPageSize);
   }
 
-  onResetFilters() {
+  onResetUpdateSearchFilters() {
     this.steamInsightMangementService.resetUpdateSearchFilters();
   }
 

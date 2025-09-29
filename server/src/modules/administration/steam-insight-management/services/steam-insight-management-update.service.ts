@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 import { CronJob } from 'cron';
 import { firstValueFrom } from 'rxjs';
 
-import { UpdateStatus, UpdateType } from '@hz/common/enums';
+import { SteamInsightUpdateStatus, SteamInsightUpdateType } from '@hz/common/enums';
 import { ChangeDiff } from '@hz/common/model';
 import { sleep, getErrorNameAndMessage, generateChangeDiff, formatETFromNow } from '@hz/common/utils';
 
@@ -73,7 +73,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
     // If updates and update CRON are enabled
     if (this.isUpdateEnabled && this.isUpdateCronEnabled) {
       const job = new CronJob(CronExpression.EVERY_HOUR, async () => {
-        await this.startUpdate(true, UpdateType.INCREMENTAL);
+        await this.startUpdate(true, SteamInsightUpdateType.INCREMENTAL);
       });
 
       this.schedulerRegistry.addCronJob('steamInsightUpdateJob', job);
@@ -92,7 +92,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
    * @param isCron Whether the update trigger is a CRON job or manual
    * @param updateType If the update is FULL 'F' or INCREMENTAL 'I'
    */
-  async startUpdate(isCron?: boolean, updateType?: UpdateType) {
+  async startUpdate(isCron?: boolean, updateType?: SteamInsightUpdateType) {
     if (!this.isUpdateEnabled) {
       if (isCron) {
         this.logger.warn(`[Cron] ${STEAM_UPDATE_ERRORS.updatesDisabledError}`);
@@ -134,7 +134,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
     throw new ConflictException('No update in progress to cancel');
   }
 
-  private async update(updateType: UpdateType = UpdateType.FULL) {
+  private async update(updateType: SteamInsightUpdateType = SteamInsightUpdateType.FULL) {
     const statsCounter = {
       games: { inserts: 0, updates: 0, noChange: 0 },
       dlc: { inserts: 0, updates: 0, noChange: 0 },
@@ -152,7 +152,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
       // Create Update History Record
       const updateRecord = this.steamUpdateHistoryRepository.create({
         updateType,
-        updateStatus: UpdateStatus.RUNNING,
+        updateStatus: SteamInsightUpdateStatus.RUNNING,
         startTime: new Date(),
         events: [generateEventMessage(STEAM_UPDATE_MESSAGES.updateStarted)],
       });
@@ -165,7 +165,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
         if (error?.code === POSTGRES_ERRORS.uniqueViolation) {
           const failedRecord = this.steamUpdateHistoryRepository.create({
             updateType,
-            updateStatus: UpdateStatus.FAILED,
+            updateStatus: SteamInsightUpdateStatus.FAILED,
             startTime: new Date(),
             endTime: new Date(),
             events: [generateEventMessage(STEAM_UPDATE_ERRORS.updateInProgressError)],
@@ -182,10 +182,10 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
       await this.checkForCancellation();
 
       let lastCompleteStartTime: Date | null = null;
-      if (updateType !== UpdateType.FULL) {
+      if (updateType !== SteamInsightUpdateType.FULL) {
         // Get Most Recent complete update start time
         const lastCompleteRecord = await this.steamUpdateHistoryRepository.findOne({
-          where: { updateStatus: UpdateStatus.COMPLETE },
+          where: { updateStatus: SteamInsightUpdateStatus.COMPLETE },
           order: { startTime: 'DESC' },
         });
         lastCompleteStartTime = lastCompleteRecord?.startTime ?? null;
@@ -280,7 +280,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
           id: this.updateHistoryId,
         },
         {
-          updateStatus: UpdateStatus.COMPLETE,
+          updateStatus: SteamInsightUpdateStatus.COMPLETE,
           endTime: new Date(),
           stats: statsCounter,
           events: generateEventAppend(STEAM_UPDATE_MESSAGES.updateComplete),
@@ -298,7 +298,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
             id: this.updateHistoryId,
           },
           {
-            updateStatus: UpdateStatus.CANCELED,
+            updateStatus: SteamInsightUpdateStatus.CANCELED,
             endTime: new Date(),
             stats: statsCounter,
             events: generateEventAppend(STEAM_UPDATE_MESSAGES.updateCanceled),
@@ -317,7 +317,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
             id: this.updateHistoryId,
           },
           {
-            updateStatus: UpdateStatus.FAILED,
+            updateStatus: SteamInsightUpdateStatus.FAILED,
             endTime: new Date(),
             stats: statsCounter,
             events: generateEventAppend(getErrorNameAndMessage(error)),
@@ -336,14 +336,14 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
    */
   private async cleanupHistory() {
     const runningUpdates = await this.steamUpdateHistoryRepository.find({
-      where: { updateStatus: UpdateStatus.RUNNING },
+      where: { updateStatus: SteamInsightUpdateStatus.RUNNING },
     });
 
     if (runningUpdates.length > 0) {
       await this.steamUpdateHistoryRepository.update(
-        { updateStatus: UpdateStatus.RUNNING },
+        { updateStatus: SteamInsightUpdateStatus.RUNNING },
         {
-          updateStatus: UpdateStatus.CANCELED,
+          updateStatus: SteamInsightUpdateStatus.CANCELED,
           endTime: new Date(),
           events: generateEventAppend(STEAM_UPDATE_MESSAGES.updateCanceled),
           notes: STEAM_UPDATE_MESSAGES.updateCanceled,

@@ -1,6 +1,6 @@
 import { IsBoolean, IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
-import { KeywordMode, SortOrder, SteamInsightAppField } from '@hz/common/enums';
+import { KeywordMode, SortOrder, SteamInsightAppField, SteamInsightAppType } from '@hz/common/enums';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { ToBoolean } from '@hz/common/transformers';
 import { IsBooleanQuery } from '@hz/common/validators';
@@ -27,7 +27,12 @@ export class SteamInsightAppsQueryDto {
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  appid: number;
+  appid?: number;
+
+  @ApiPropertyOptional({ description: 'Filter by app type', enum: SteamInsightAppType })
+  @IsOptional()
+  @IsEnum(SteamInsightAppType)
+  type?: SteamInsightAppType;
 
   @ApiPropertyOptional({ description: 'Keywords for filtering, comma separated', type: String, example: 'Counter,Strike,Global,Offensive' })
   @IsOptional()
@@ -37,33 +42,33 @@ export class SteamInsightAppsQueryDto {
   @ApiPropertyOptional({ description: 'Keyword match mode', enum: KeywordMode, default: KeywordMode.OR })
   @IsOptional()
   @IsEnum(KeywordMode)
-  keywordMode: KeywordMode = KeywordMode.OR;
+  keywordMode?: KeywordMode = KeywordMode.OR;
 
   @ApiPropertyOptional({ description: 'Field to sort by', enum: SteamInsightAppField, example: 'appid', default: 'appid' })
   @IsOptional()
   @IsEnum(SteamInsightAppField, { message: 'sortBy must be a valid field' })
-  sortBy: string = 'appid';
+  sortBy?: string = 'appid';
 
   @ApiPropertyOptional({ description: 'Sort direction', enum: SortOrder, example: 'DESC', default: 'DESC' })
   @IsOptional()
   @IsEnum(SortOrder, { message: 'sortOrder must be ASC or DESC' })
-  sortOrder: 'ASC' | 'DESC' = 'DESC';
+  sortOrder?: 'ASC' | 'DESC' = 'DESC';
 
   @ApiPropertyOptional({ description: 'Filter by adult-only apps', type: Boolean })
   @IsOptional()
   @IsBooleanQuery()
   @Transform(ToBoolean())
-  isAdult: boolean;
+  isAdult?: boolean;
 
   @ApiPropertyOptional({ description: 'Filter by validation failed apps', type: Boolean })
   @IsOptional()
   @IsBooleanQuery()
   @Transform(ToBoolean())
-  validationFailed: boolean;
+  validationFailed?: boolean;
 
   @ApiPropertyOptional({ description: 'Filter by active apps', type: Boolean })
   @IsOptional()
   @IsBooleanQuery()
   @Transform(ToBoolean())
-  active: boolean;
+  active?: boolean;
 }

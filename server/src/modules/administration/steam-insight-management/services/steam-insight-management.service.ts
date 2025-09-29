@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, ILike, In, Not, Repository } from 'typeorm';
 
@@ -6,6 +6,7 @@ import { SteamAppEntity } from '@hz/entities/steam-app.entity';
 import { SteamAppAuditEntity } from '@hz/entities/steam-app-audit.entity';
 import { SteamUpdateHistoryEntity } from '@hz/entities/steam-update-history.entity';
 import {
+  AppActiveStatus,
   SteamAppStats,
   SteamInsightAppResponse,
   SteamInsightAppSearchResponse,
@@ -17,7 +18,7 @@ import {
   SteamUpdateStats,
 } from '../resources/steam-insight-management.model';
 
-import { UpdateStatus } from '@hz/common/enums';
+import { SteamInsightUpdateStatus } from '@hz/common/enums';
 import { parseHzEvent } from '@hz/common/utils';
 import { SteamInsightUpdatesQueryDto } from '../dto/steam-insight-management-updates-query.dto';
 import { SteamInsightAppsQueryDto } from '../dto/steam-insight-management-apps-query.dto';
@@ -59,13 +60,13 @@ export class SteamInsightManagementService {
 
       this.steamUpdateHistoryRepository.findOne({
         select: { id: true, updateType: true, updateStatus: true, startTime: true, endTime: true, events: true },
-        where: { updateStatus: UpdateStatus.RUNNING },
+        where: { updateStatus: SteamInsightUpdateStatus.RUNNING },
         order: { id: 'DESC' },
       }),
 
       this.steamUpdateHistoryRepository.find({
         select: { id: true, updateType: true, updateStatus: true, startTime: true, endTime: true },
-        where: { updateStatus: Not(UpdateStatus.RUNNING) },
+        where: { updateStatus: Not(SteamInsightUpdateStatus.RUNNING) },
         order: { id: 'DESC' },
         take: 10,
       }),
@@ -108,20 +109,27 @@ export class SteamInsightManagementService {
   }
 
   async getSteamInsightApps(query: SteamInsightAppsQueryDto): Promise<SteamInsightAppSearchResponse> {
-    const { page, pageSize, sortBy, sortOrder, appid, keywords, isAdult, validationFailed, active } = query;
+    const { page, pageSize, sortBy, sortOrder, appid, type, keywords, isAdult, validationFailed, active } = query;
 
     /** Setup base condition boolean and number checks */
     const baseCondition: FindOptionsWhere<SteamAppEntity> = {};
 
-    if (appid !== undefined) {
+    if (appid) {
       baseCondition.appid = appid;
     }
+
+    if (type) {
+      baseCondition.type = type;
+    }
+
     if (isAdult !== undefined) {
       baseCondition.isAdult = isAdult;
     }
+
     if (validationFailed !== undefined) {
       baseCondition.validationFailed = validationFailed;
     }
+
     if (active !== undefined) {
       baseCondition.active = active;
     }
@@ -226,5 +234,29 @@ export class SteamInsightManagementService {
       pageLength: updateRecords[1],
       updates: steamInsightUpdates,
     };
+  }
+
+  async getSteamInsightApp(appid: number): Promise<void> {}
+
+  async updateSteamInsightAppActive(appid: number, active: boolean): Promise<SteamInsightAppResponse> {
+    const result = await this.steamAppRepository.update({ appid }, { active });
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`App with appid [${appid}] not found`);
+    }
+
+    return await this.steamAppRepository.findOne({
+      select: {
+        appid: true,
+        name: true,
+        type: true,
+        isAdult: true,
+        validationFailed: true,
+        active: true,
+        createdDate: true,
+        updatedDate: true,
+      },
+      where: { appid },
+    });
   }
 }
