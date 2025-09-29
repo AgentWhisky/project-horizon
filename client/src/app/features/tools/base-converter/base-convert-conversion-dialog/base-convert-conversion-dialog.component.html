@@ -15,5 +15,5 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button (click)="onCancel()">Cancel</button>
-  <button mat-flat-button (click)="onConfirm()" [disabled]="!conversionForm.valid || !conversionForm.dirty">Update Conversions</button>
+  <button matButton="filled" (click)="onConfirm()" [disabled]="!conversionForm.valid || !conversionForm.dirty">Update Conversions</button>
 </mat-dialog-actions>

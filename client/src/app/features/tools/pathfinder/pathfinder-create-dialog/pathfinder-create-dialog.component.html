@@ -15,5 +15,5 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button (click)="onClose()">Cancel</button>
-  <button mat-flat-button (click)="onSubmit()" [disabled]="!createForm.valid">Create Board</button>
+  <button matButton="filled" (click)="onSubmit()" [disabled]="!createForm.valid">Create Board</button>
 </mat-dialog-actions>

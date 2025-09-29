@@ -1,6 +1,6 @@
 <div class="w-full flex flex-col gap-3">
   <div class="flex justify-end">
-    <button mat-flat-button (click)="onRefreshDashboard()">
+    <button matButton="filled" (click)="onRefreshDashboard()">
       <mat-icon fontSet="material-symbols-outlined">refresh</mat-icon>
       Refresh Dashboard
     </button>
@@ -19,8 +19,8 @@
         </div>
       </div>
       <div class="flex flex-wrap gap-3 pt-3">
-        <button mat-flat-button (click)="onCopyToClipboard(dashboardInfo().creationCode)">Copy Creation Code</button>
-        <button mat-flat-button (click)="onRefreshCreationCode()">Refresh Creation Code</button>
+        <button matButton="filled" (click)="onCopyToClipboard(dashboardInfo().creationCode)">Copy Creation Code</button>
+        <button matButton="filled" (click)="onRefreshCreationCode()">Refresh Creation Code</button>
       </div>
     </mat-card-content>
   </mat-card>

@@ -18,7 +18,7 @@
             (keydown.enter)="onLogin()" />
           <button
             matSuffix
-            mat-icon-button
+            matIconButton
             aria-label="Toggle Password Visible"
             tabindex="-1"
             (mouseover)="onShowPassword()"
@@ -32,7 +32,7 @@
     </mat-dialog-content>
     <mat-dialog-actions>
       <button mat-button (click)="onCancel()">Cancel</button>
-      <button mat-flat-button (click)="onLogin()" [disabled]="!loginForm.valid">Sign In</button>
+      <button matButton="filled" (click)="onLogin()" [disabled]="!loginForm.valid">Sign In</button>
     </mat-dialog-actions>
   </mat-tab>
 
@@ -61,7 +61,7 @@
             [errorStateMatcher]="passwordMatcher" />
           <button
             matSuffix
-            mat-icon-button
+            matIconButton
             aria-label="Toggle Password Visible"
             tabindex="-1"
             (mouseover)="onShowPassword()"
@@ -84,7 +84,7 @@
             [errorStateMatcher]="passwordMatcher" />
           <button
             matSuffix
-            mat-icon-button
+            matIconButton
             aria-label="Toggle Confirm Password Visible"
             tabindex="-1"
             (mouseover)="onShowConfirmPassword()"
@@ -102,7 +102,7 @@
           <input matInput formControlName="creationCode" uppercase (keydown.enter)="onCreateAccount()" />
           <button
             matSuffix
-            mat-icon-button
+            matIconButton
             aria-label="Creation Code Info"
             matTooltip="Code required to create an account, provided by an Admin"
             disableRipple>
@@ -116,7 +116,7 @@
     </mat-dialog-content>
     <mat-dialog-actions>
       <button mat-button (click)="onCancel()">Cancel</button>
-      <button mat-flat-button (click)="onCreateAccount()" [disabled]="!newAccountForm.valid">Create Account</button>
+      <button matButton="filled" (click)="onCreateAccount()" [disabled]="!newAccountForm.valid">Create Account</button>
     </mat-dialog-actions>
   </mat-tab>
 </mat-tab-group>

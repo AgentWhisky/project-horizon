@@ -43,7 +43,7 @@
                 </ul>
               </div>
 
-              <button mat-flat-button (click)="onStopUpdate()">Stop Update</button>
+              <button matButton="filled" (click)="onStopUpdate()">Stop Update</button>
             </div>
           </hz-card-body>
         </hz-card>
@@ -58,8 +58,8 @@
             <div class="flex flex-col gap-2">
               <span class="font-semibold">Start Update</span>
               <div class="flex flex-row flex-wrap gap-3">
-                <button mat-flat-button (click)="onStartUpdate(true)">Full</button>
-                <button mat-flat-button (click)="onStartUpdate()">Incremental</button>
+                <button matButton="filled" (click)="onStartUpdate(true)">Full</button>
+                <button matButton="filled" (click)="onStartUpdate()">Incremental</button>
               </div>
             </div>
           </hz-card-body>
@@ -167,7 +167,7 @@
               </mat-select>
             </mat-form-field>
 
-            <button mat-flat-button (click)="onResetAppSearchFilters()">
+            <button matButton="filled" (click)="onResetAppSearchFilters()">
               <mat-icon fontSet="material-symbols-outlined">refresh</mat-icon>
               Reset
             </button>
@@ -229,11 +229,11 @@
                 <th mat-header-cell *matHeaderCellDef aria-hidden="true"></th>
                 <td mat-cell class="min-w-16" *matCellDef="let element">
                   <div class="flex justify-end items-center">
-                    <button mat-icon-button (click)="onViewApp(element)" aria-label="View App">
+                    <button matIconButton (click)="onViewApp(element)" aria-label="View App">
                       <mat-icon matTooltip="View App">visibility</mat-icon>
                     </button>
                     <button
-                      mat-icon-button
+                      matIconButton
                       (click)="onUpdateAppActiveStatus(element)"
                       [attr.aria-label]="element.active ? 'Disable App' : 'Enable App'">
                       <mat-icon fontSet="material-symbols-outlined" [matTooltip]="element.active ? 'Disable App' : 'Enable App'">
@@ -312,7 +312,7 @@
               </mat-select>
             </mat-form-field>
 
-            <button mat-flat-button (click)="onResetUpdateSearchFilters()">
+            <button matButton="filled" (click)="onResetUpdateSearchFilters()">
               <mat-icon fontSet="material-symbols-outlined">refresh</mat-icon>
               Reset
             </button>

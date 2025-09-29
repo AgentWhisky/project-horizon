@@ -33,3 +33,8 @@ export enum SteamInsightAppType {
   GAME = 'game',
   DLC = 'dlc',
 }
+
+export enum SteamInsightAuditType {
+  INSERT = 'I',
+  UPDATE = 'U',
+}

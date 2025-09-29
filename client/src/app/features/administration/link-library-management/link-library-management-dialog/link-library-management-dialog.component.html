@@ -21,7 +21,7 @@
         <button
           class="mr-3"
           matSuffix
-          mat-icon-button
+          matIconButton
           type="button"
           aria-label="Search for icon"
           (click)="onSearchIcon()"
@@ -70,7 +70,7 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button (click)="onCancel()">Cancel</button>
-  <button mat-flat-button (click)="onConfirm()" [disabled]="!linkForm.valid || !linkForm.dirty">
+  <button matButton="filled" (click)="onConfirm()" [disabled]="!linkForm.valid || !linkForm.dirty">
     {{ this.data.type === 'create' ? 'Create' : 'Update' }}
   </button>
 </mat-dialog-actions>

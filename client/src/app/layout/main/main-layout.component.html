@@ -2,7 +2,7 @@
   <div class="main-layout-toolbar">
     <div class="main-layout-toolbar-section">
       <button
-        mat-icon-button
+        matIconButton
         (click)="onToggleLeftNav()"
         [attr.aria-label]="isLeftNavOpen() ? 'Close left navigation' : 'Open left navigation'">
         <mat-icon fontSet="material-symbols-outlined">{{ isLeftNavOpen() ? 'left_panel_close' : 'left_panel_open' }}</mat-icon>
@@ -15,13 +15,13 @@
     </div>
 
     <div class="main-layout-toolbar-section">
-      <!--<button mat-icon-button matTooltip="Notifications" aria-label="Notifications">
+      <!--<button matIconButton matTooltip="Notifications" aria-label="Notifications">
          <mat-icon fontSet="material-symbols-outlined">notifications</mat-icon>
       </button>-->
 
       <!-- Toggle Theme Icon -->
       <button
-        mat-icon-button
+        matIconButton
         (click)="onToggleTheme()"
         [matTooltip]="isDarkmode() ? 'Switch to light mode' : 'Switch to dark mode'"
         [attr.aria-label]="isDarkmode() ? 'Switch to light mode' : 'Switch to dark mode'">
@@ -29,7 +29,7 @@
       </button>
 
       <!-- Settings Menu 
-      <button mat-icon-button [matMenuTriggerFor]="settingsMenu">
+      <button matIconButton [matMenuTriggerFor]="settingsMenu">
          <mat-icon fontSet="material-symbols-outlined">settings</mat-icon>
       </button>
 
@@ -46,11 +46,11 @@
 
       <!-- Login/Account Icons -->
       @if(!isLoggedIn()) {
-      <button mat-icon-button (click)="onLogin()" matTooltip="Sign In" aria-label="Sign In">
+      <button matIconButton (click)="onLogin()" matTooltip="Sign In" aria-label="Sign In">
         <mat-icon fontSet="material-symbols-outlined">person</mat-icon>
       </button>
       } @else {
-      <button mat-icon-button [matMenuTriggerFor]="userMenu" matTooltip="Account" aria-label="Account">
+      <button matIconButton [matMenuTriggerFor]="userMenu" matTooltip="Account" aria-label="Account">
         <mat-icon fontSet="material-symbols-outlined">account_circle</mat-icon>
       </button>
       <mat-menu #userMenu="matMenu">

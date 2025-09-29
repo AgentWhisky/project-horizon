@@ -14,8 +14,8 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-stroked-button (click)="onClose()" cdkFocusInitial>Close</button>
-  <a mat-flat-button color="primary" [href]="githubRepoUrl" target="_blank" rel="noopener">
+  <button matButton="outlined" (click)="onClose()" cdkFocusInitial>Close</button>
+  <a matButton="filled" color="primary" [href]="githubRepoUrl" target="_blank" rel="noopener">
     <mat-icon svgIcon="github"></mat-icon>
     Open on GitHub
   </a>

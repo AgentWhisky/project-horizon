@@ -1,5 +1,6 @@
 import { SteamInsightUpdateStatus, SteamInsightUpdateType } from '@hz/common/enums';
 import { HzEvent } from '@hz/common/model';
+import { SteamAppAuditEntity, SteamAppChangeType } from '@hz/entities/steam-app-audit.entity';
 
 // *** STEAM INSIGHT UPDATES ***
 export interface SteamAppEntry {
@@ -231,8 +232,17 @@ export interface AppActiveStatus {
 }
 
 export interface SteamInsightAppRaw {
-  name: string;
-  appid: number;
-  type: string;
+  name?: string;
+  appid?: number;
+  type?: string;
+  audits?: SteamInsightAppAudit[];
   [key: string]: unknown;
+}
+
+export interface SteamInsightAppAudit {
+  id: number;
+  appid: number;
+  changeType: SteamAppChangeType;
+  changes: Record<string, unknown>;
+  createdDate: Date;
 }

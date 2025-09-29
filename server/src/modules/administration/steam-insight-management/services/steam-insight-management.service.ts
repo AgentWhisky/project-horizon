@@ -249,11 +249,24 @@ export class SteamInsightManagementService {
       throw new NotFoundException(`App with appid [${appid}] not found`);
     }
 
+    const audits = await this.steamAppAuditRepository.find({
+      select: {
+        id: true,
+        appid: true,
+        changeType: true,
+        changes: {},
+        createdDate: true,
+      },
+      where: { appid },
+      order: { id: 'DESC' },
+    });
+
     return {
       ...app,
       appid: app.appid,
       name: app.name,
       type: app.type,
+      audits,
     };
   }
 

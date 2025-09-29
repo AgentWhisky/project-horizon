@@ -38,7 +38,7 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-flat-button (click)="onSubmit()" [disabled]="!roleForm.valid || !roleForm.dirty">
+  <button matButton="filled" (click)="onSubmit()" [disabled]="!roleForm.valid || !roleForm.dirty">
     {{ this.data.type === 'create' ? 'Create' : 'Update' }}
   </button>
 </mat-dialog-actions>

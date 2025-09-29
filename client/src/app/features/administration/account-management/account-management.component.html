@@ -44,7 +44,7 @@
           <td mat-cell class="min-w-16" *matCellDef="let element">
             <div class="flex justify-end items-center">
               <button
-                mat-icon-button
+                matIconButton
                 (click)="onToggleUser(element)"
                 [attr.aria-label]="element.active ? 'Disable User' : 'Enable User'"
                 [disabled]="element.id === currentUser?.userId">
@@ -52,7 +52,7 @@
                   {{ element.active ? 'person' : 'person_off' }}
                 </mat-icon>
               </button>
-              <button mat-icon-button (click)="onEditUser(element)" aria-label="Edit User">
+              <button matIconButton (click)="onEditUser(element)" aria-label="Edit User">
                 <mat-icon matTooltip="Edit User">edit</mat-icon>
               </button>
             </div>
@@ -116,10 +116,10 @@
           <th mat-header-cell *matHeaderCellDef aria-hidden="true"></th>
           <td mat-cell class="min-w-16" *matCellDef="let element">
             <div class="flex justify-end items-center">
-              <button mat-icon-button (click)="onEditRole(element)" aria-label="Edit Role">
+              <button matIconButton (click)="onEditRole(element)" aria-label="Edit Role">
                 <mat-icon matTooltip="Edit Role">edit</mat-icon>
               </button>
-              <button mat-icon-button (click)="onDeleteRole(element)" aria-label="Delete Role" [disabled]="element.inUse">
+              <button matIconButton (click)="onDeleteRole(element)" aria-label="Delete Role" [disabled]="element.inUse">
                 <mat-icon matTooltip="Delete Role">delete</mat-icon>
               </button>
             </div>

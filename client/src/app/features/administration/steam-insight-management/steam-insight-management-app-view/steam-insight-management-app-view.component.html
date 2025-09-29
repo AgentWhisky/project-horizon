@@ -1,1 +1,44 @@
-<p>APPID: {{ appid() }}</p>
+<div class="flex flex-col gap-3">
+  @if(appRawLoadingStatus() === LOADING_STATUS.IN_PROGRESS) {
+  <div class="w-full flex justify-center">
+    <mat-spinner></mat-spinner>
+  </div>
+  } @else if(appRawLoadingStatus() === LOADING_STATUS.SUCCESS) {
+
+  <hz-card>
+    <hz-card-header>{{ appRaw()?.name }}</hz-card-header>
+    <hz-card-chip>
+      <hz-chip>{{ appRaw()?.type | titlecase }}</hz-chip>
+    </hz-card-chip>
+    <hz-card-body>
+      <div class="flex w-full flex-col gap-3"></div>
+    </hz-card-body>
+  </hz-card>
+
+  <hz-card>
+    <hz-card-header>Version History</hz-card-header>
+    <hz-card-body class="flex flex-col gap-3">
+      @if(appRaw()?.audits) {
+      <mat-accordion>
+        @let auditLength = appRaw()?.audits?.length ?? 0;
+        <!-- AUDITS -->
+        @for(audit of appRaw()?.audits; track audit.id; let i = $index) {
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>v{{ auditLength - i }} - {{ audit.createdDate | date : 'short' }}</mat-expansion-panel-header>
+          <pre>{{ audit.changes | json }}</pre>
+        </mat-expansion-panel>
+        }
+      </mat-accordion>
+      }
+    </hz-card-body>
+  </hz-card>
+  }
+
+  <!-- LOADING FAILURE-->
+  @else if(appRawLoadingStatus() === LOADING_STATUS.FAILED) {
+  <hz-banner type="error">
+    <hz-banner-header>Failed to load Steam Insight app</hz-banner-header>
+    <hz-banner-body>We were unable to retrieve details for this app. Please try again later.</hz-banner-body>
+  </hz-banner>
+  }
+</div>

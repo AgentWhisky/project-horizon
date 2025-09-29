@@ -6,8 +6,8 @@
         <textarea matInput [(ngModel)]="textInput" #textAnalyzeInput rows="10"></textarea>
       </mat-form-field>
       <div class="flex flex-col">
-        <button mat-icon-button matTooltip="Clear" (click)="onResetTextInput()"> <mat-icon fontSet="material-symbols-outlined">clear</mat-icon></button>
-        <button mat-icon-button matTooltip="Copy" (click)="onCopyTextInput()">
+        <button matIconButton matTooltip="Clear" (click)="onResetTextInput()"> <mat-icon fontSet="material-symbols-outlined">clear</mat-icon></button>
+        <button matIconButton matTooltip="Copy" (click)="onCopyTextInput()">
            <mat-icon fontSet="material-symbols-outlined">content_copy</mat-icon>
         </button>
       </div>

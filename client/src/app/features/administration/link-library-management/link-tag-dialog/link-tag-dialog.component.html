@@ -12,8 +12,8 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-stroked-button (click)="onCancel()">Cancel</button>
-  <button mat-flat-button (click)="onConfirm()" [disabled]="!tagForm.valid || !tagForm.dirty">
+  <button matButton="outlined" (click)="onCancel()">Cancel</button>
+  <button matButton="filled" (click)="onConfirm()" [disabled]="!tagForm.valid || !tagForm.dirty">
     {{ this.data.type === 'create' ? 'Create' : 'Update' }}
   </button>
 </mat-dialog-actions>

@@ -10,11 +10,11 @@
         maxlength="1024"
         aria-label="Link library search"
         (keydown.enter)="steamGameSearchInput.blur(); onSearch()" />
-      <button matSuffix mat-icon-button aria-label="Search" (click)="steamGameSearchInput.blur(); onSearch()">
+      <button matSuffix matIconButton aria-label="Search" (click)="steamGameSearchInput.blur(); onSearch()">
          <mat-icon fontSet="material-symbols-outlined">search</mat-icon>
       </button>
       @if(steamGameSearchInput.value && steamGameSearchInput.value !== '') {
-      <button matSuffix class="mr-3" mat-icon-button aria-label="Clear" (click)="onResetFilter()">
+      <button matSuffix class="mr-3" matIconButton aria-label="Clear" (click)="onResetFilter()">
          <mat-icon fontSet="material-symbols-outlined">close</mat-icon>
       </button>
       }
