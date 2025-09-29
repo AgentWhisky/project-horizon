@@ -5,7 +5,6 @@ import { In, Repository } from 'typeorm';
 import { DlcDetails, SteamAppDetails, SteamAppSearchInfo, SteamAppSearchOptions } from './steam-insight.model';
 import { STEAM_INSIGHT_PAGE_SIZE } from 'src/modules/administration/steam-insight-management/resources/steam-insight-management.constants';
 
-
 @Injectable()
 export class SteamInsightService {
   constructor(
@@ -20,7 +19,7 @@ export class SteamInsightService {
     // Setup Keyword Query
     const qb = this.steamAppRepository.createQueryBuilder('app');
     qb.select(['app.appid', 'app.name', 'app.headerImage', 'app.shortDescription', 'app.categories']);
-    qb.where('app.type = :type AND app.is_adult = :isAdult', { type: 'game', isAdult: false });
+    qb.where('app.type = :type AND app.is_adult = :isAdult AND app.active = :active', { type: 'game', isAdult: false, active: true });
     qb.skip(skip).take(STEAM_INSIGHT_PAGE_SIZE);
     qb.orderBy('app.appid', 'DESC');
 
@@ -52,7 +51,7 @@ export class SteamInsightService {
    */
   async getSteamAppDetails(appid: number): Promise<SteamAppDetails> {
     const appDetails = await this.steamAppRepository.findOne({
-      where: { appid },
+      where: { appid, active: true },
       select: {
         appid: true,
         name: true,

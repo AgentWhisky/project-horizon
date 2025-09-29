@@ -122,6 +122,14 @@ export const routes: Routes = [
             data: { requiredRights: [USER_RIGHTS.MANAGE_STEAM_INSIGHT] },
           },
           {
+            path: 'steam-insight-management/:appid',
+            loadComponent: () =>
+              import(
+                './features/administration/steam-insight-management/steam-insight-management-app-view/steam-insight-management-app-view.component'
+              ).then((c) => c.SteamInsightManagementAppViewComponent),
+            data: { requiredRights: [USER_RIGHTS.MANAGE_STEAM_INSIGHT] },
+          },
+          {
             path: '',
             redirectTo: 'dashboard',
             pathMatch: 'full',

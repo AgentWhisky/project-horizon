@@ -22,7 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { getAppType, getUpdateStatus, getUpdateStatusType, getUpdateType } from './resources/steam-insight-management.utils';
 import { MatSelectModule } from '@angular/material/select';
 import { APP_TYPE_OPTIONS, UPDATE_STATUS_OPTIONS, UPDATE_TYPE_OPTIONS } from './resources/steam-insight-management.const';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { SteamInsightUpdateHistoryDialogComponent } from './dialogs/steam-insight-update-history-dialog/steam-insight-update-history-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -31,6 +31,7 @@ import { ConfirmDialogComponent } from '@hz/shared/dialogs';
 import { filter, tap } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'hz-steam-insight-management',
@@ -62,6 +63,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 export class SteamInsightManagementComponent implements OnInit, OnDestroy {
   private screenService = inject(ScreenService);
   private dialog = inject(MatDialog);
+  private router = inject(Router);
   private steamInsightMangementService = inject(SteamInsightManagementService);
 
   private intervalId?: ReturnType<typeof setInterval>;
@@ -69,6 +71,8 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
   readonly LOADING_STATUS = LOADING_STATUS;
   readonly isSmallScreen = this.screenService.isSmallScreen;
   readonly isMobileScreen = this.screenService.isMobileScreen;
+
+  readonly tabIndex = this.steamInsightMangementService.tabIndex;
 
   /** DASHBOARD */
   readonly steamInsightDashboard = this.steamInsightMangementService.dashboard;
@@ -174,6 +178,8 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
   onTabChange(event: MatTabChangeEvent) {
     const index = event.index;
 
+    this.steamInsightMangementService.updateTabIndex(index);
+
     // Steam Insight Dashboard
     if (index === 0) {
       this.steamInsightMangementService.loadDashboard();
@@ -229,8 +235,10 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
     this.steamInsightMangementService.resetAppSearchFilters();
   }
 
-  onViewApp(row: any) {
-    console.log(row);
+  onViewApp(row: SteamInsightAppResponse) {
+    const appid = row.appid;
+
+    this.router.navigate(['administration', 'steam-insight-management', appid]);
   }
 
   onUpdateAppActiveStatus(app: SteamInsightAppResponse) {

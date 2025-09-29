@@ -42,7 +42,7 @@ export class SteamInsightManagementController {
   @Get('apps/:appid')
   @RequireRight(USER_RIGHTS.MANAGE_STEAM_INSIGHT)
   async getSteamInsightAppById(@Param('appid') appid: number) {
-    return this.steamInsightManagementService.getSteamInsightApp(appid);
+    return this.steamInsightManagementService.getSteamInsightAppRaw(appid);
   }
 
   @Put('apps/:appid/active')

@@ -57,20 +57,5 @@ export class AdminDashboardService {
 }
 
 const EMPTY_ADMIN_DASHBOARD_INFO: AdminDashboardInfo = {
-  settings: {
-    creationCode: '',
-  },
-  steamInsight: {
-    logs: [],
-    totalNewGames: 0,
-    totalUpdatedGames: 0,
-    totalNewDlc: 0,
-    totalUpdatedDlc: 0,
-    totalFailures: 0,
-    totalGames: 0,
-    totalDLC: 0,
-    gameLastModified: new Date(),
-    dlcLastModified: new Date(),
-    maxAppid: 0,
-  },
+  creationCode: '',
 };

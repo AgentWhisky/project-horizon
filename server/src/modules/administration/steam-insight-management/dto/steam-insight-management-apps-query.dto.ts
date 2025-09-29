@@ -39,11 +39,6 @@ export class SteamInsightAppsQueryDto {
   @Type(() => String)
   keywords?: string;
 
-  @ApiPropertyOptional({ description: 'Keyword match mode', enum: KeywordMode, default: KeywordMode.OR })
-  @IsOptional()
-  @IsEnum(KeywordMode)
-  keywordMode?: KeywordMode = KeywordMode.OR;
-
   @ApiPropertyOptional({ description: 'Field to sort by', enum: SteamInsightAppField, example: 'appid', default: 'appid' })
   @IsOptional()
   @IsEnum(SteamInsightAppField, { message: 'sortBy must be a valid field' })

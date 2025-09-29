@@ -1,6 +1,11 @@
-<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" (selectedTabChange)="onTabChange($event)" dynamicHeight>
+<mat-tab-group
+  mat-stretch-tabs="false"
+  mat-align-tabs="start"
+  (selectedTabChange)="onTabChange($event)"
+  dynamicHeight
+  [selectedIndex]="tabIndex()">
   <mat-tab label="Dashboard">
-    <div class="flex flex-col gap-3 p-3">
+    <div class="flex flex-col gap-3 py-3">
       @if(steamInsightDashboard() && dashboardLoadingStatus() === LOADING_STATUS.SUCCESS) {
 
       <!-- App Stats -->
@@ -107,7 +112,7 @@
   </mat-tab>
 
   <mat-tab label="Steam App Search">
-    <div class="flex flex-col gap-3 p-3">
+    <div class="flex flex-col gap-3 py-3">
       @if(steamInsightAppsLoadingStatus() === LOADING_STATUS.SUCCESS || steamInsightAppsLoadingStatus() === LOADING_STATUS.IN_PROGRESS) {
       <hz-card class="flex self-start">
         <hz-card-header>
@@ -119,6 +124,11 @@
             <mat-form-field subscriptSizing="dynamic">
               <mat-label>Appid</mat-label>
               <input matInput formControlName="appid" />
+            </mat-form-field>
+
+            <mat-form-field subscriptSizing="dynamic">
+              <mat-label>Keywords</mat-label>
+              <input matInput formControlName="keywords" />
             </mat-form-field>
 
             <mat-form-field subscriptSizing="dynamic">
@@ -273,7 +283,7 @@
   </mat-tab>
 
   <mat-tab label="Steam Update History">
-    <div class="flex flex-col gap-3 p-3">
+    <div class="flex flex-col gap-3 py-3">
       @if(steamInsightUpdatesLoadingStatus() === LOADING_STATUS.SUCCESS || steamInsightUpdatesLoadingStatus() ===
       LOADING_STATUS.IN_PROGRESS) {
       <hz-card class="flex self-start">

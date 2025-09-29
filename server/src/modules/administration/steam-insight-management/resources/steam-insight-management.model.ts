@@ -230,74 +230,9 @@ export interface AppActiveStatus {
   active: boolean;
 }
 
-export interface SteamAppInfoAdmin {
-  type: string;
+export interface SteamInsightAppRaw {
   name: string;
-  steam_appid: number;
-  required_age: number | string;
-  controller_support?: string;
-  is_free: boolean;
-  dlc?: number[];
-  detailed_description: string;
-  about_the_game: string;
-  short_description: string;
-  fullgame?: { appid: number; name: string }[];
-  supported_languages: string;
-  header_image: string;
-  capsule_image?: string;
-  capsule_imagev5?: string;
-  website?: string;
-  background?: string;
-  background_raw?: string;
-  reviews?: string;
-  legal_notice?: string;
-  ratings?: any;
-  developers?: string[];
-  publishers?: string[];
-  categories?: { id: number; description: string }[];
-  genres?: { id: string; description: string }[];
-  screenshots?: Screenshot[];
-  movies?: Movie[];
-  achievements?: {
-    total: number;
-    highlighted: { name: string; path: string }[];
-  };
-  release_date: {
-    coming_soon: boolean;
-    date: string;
-  };
-  support_info?: {
-    url: string;
-    email: string;
-  };
-  content_descriptors?: {
-    ids?: number[];
-    notes?: string;
-  };
-  platforms?: {
-    windows: boolean;
-    mac: boolean;
-    linux: boolean;
-  };
-  metacritic?: {
-    score: number;
-    url: string;
-  };
-  recommendations?: {
-    total: number;
-  };
-  price_overview?: {
-    currency: string;
-    initial: number;
-    final: number;
-    discount_percent: number;
-    initial_formatted: string;
-    final_formatted: string;
-  };
-  packages?: number[];
-  package_groups?: PackageGroup[];
-  demos?: { appid: number; description: string }[];
-  pc_requirements?: Requirements;
-  mac_requirements?: Requirements;
-  linux_requirements?: Requirements;
+  appid: number;
+  type: string;
+  [key: string]: unknown;
 }

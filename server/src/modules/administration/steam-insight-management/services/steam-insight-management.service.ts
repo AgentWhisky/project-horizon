@@ -1,6 +1,6 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, ILike, In, Not, Repository } from 'typeorm';
+import { And, FindOptionsWhere, ILike, In, Not, Repository } from 'typeorm';
 
 import { SteamAppEntity } from '@hz/entities/steam-app.entity';
 import { SteamAppAuditEntity } from '@hz/entities/steam-app-audit.entity';
@@ -8,6 +8,7 @@ import { SteamUpdateHistoryEntity } from '@hz/entities/steam-update-history.enti
 import {
   AppActiveStatus,
   SteamAppStats,
+  SteamInsightAppRaw,
   SteamInsightAppResponse,
   SteamInsightAppSearchResponse,
   SteamInsightDashboard,
@@ -143,10 +144,10 @@ export class SteamInsightManagementService {
         .filter((word) => word.length > 0);
 
       if (parts.length > 0) {
-        where = parts.map((word) => ({
+        where = {
           ...baseCondition,
-          name: ILike(`%${word}%`),
-        }));
+          name: And(...parts.map((word) => ILike(`%${word}%`))),
+        };
       }
     }
 
@@ -236,7 +237,25 @@ export class SteamInsightManagementService {
     };
   }
 
-  async getSteamInsightApp(appid: number): Promise<void> {}
+  /**
+   * Get the raw JSON dump for a given Steam Insight app
+   * @param appid The appid of the given app
+   * @returns A raw JSON dump
+   */
+  async getSteamInsightAppRaw(appid: number): Promise<SteamInsightAppRaw> {
+    const app = await this.steamAppRepository.findOne({ where: { appid } });
+
+    if (!app) {
+      throw new NotFoundException(`App with appid [${appid}] not found`);
+    }
+
+    return {
+      ...app,
+      appid: app.appid,
+      name: app.name,
+      type: app.type,
+    };
+  }
 
   async updateSteamInsightAppActive(appid: number, active: boolean): Promise<SteamInsightAppResponse> {
     const result = await this.steamAppRepository.update({ appid }, { active });

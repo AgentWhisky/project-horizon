@@ -38,6 +38,8 @@ export class SteamInsightManagementService {
   readonly dashboard = signal<SteamInsightDashboard | null>(null);
   readonly dashboardLoadingStatus = signal<number>(LOADING_STATUS.NOT_LOADED);
 
+  readonly tabIndex = signal<number>(0);
+
   /** Steam Insight App Search */
   readonly steamInsightApps = signal<SteamInsightAppResponse[]>([]);
   readonly steamInsightAppsLoadingStatus = signal<number>(LOADING_STATUS.NOT_LOADED);
@@ -57,6 +59,10 @@ export class SteamInsightManagementService {
   readonly steamInsightUpdatesPage = signal<number>(0);
   readonly steamInsightUpdatesPageSize = signal<number>(this.loadUpdateHistoryPageSize());
   readonly steamInsightUpdatesSearchForm = this.getSteamUpdateHistorySearchForm();
+
+  updateTabIndex(index: number) {
+    this.tabIndex.set(index);
+  }
 
   async loadDashboard() {
     try {
@@ -116,6 +122,7 @@ export class SteamInsightManagementService {
       query.sortOrder = this.steamInsightAppsSortOrder() ?? undefined;
 
       query.appid = this.steamInsightAppsSearchForm.get('appid')?.value ?? undefined;
+      query.keywords = this.steamInsightAppsSearchForm.get('keywords')?.value ?? undefined;
       query.type = this.steamInsightAppsSearchForm.get('type')?.value ?? undefined;
       query.isAdult = this.steamInsightAppsSearchForm.get('isAdult')?.value ?? undefined;
       query.validationFailed = this.steamInsightAppsSearchForm.get('validationFailed')?.value ?? undefined;
