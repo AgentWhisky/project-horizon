@@ -10,7 +10,6 @@ import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { HzOption, HzStatusType } from '@hz/core/models';
-import { getRuntimeMs } from '@hz/core/utilities';
 import { HzCardModule } from '@hz/shared/components/hz-card';
 import { CommonModule, DatePipe } from '@angular/common';
 import { DurationPipe, FormatDatePipe } from '@hz/core/pipes';
@@ -31,7 +30,7 @@ import { ConfirmDialogComponent } from '@hz/shared/dialogs';
 import { filter, tap } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'hz-steam-insight-management',
@@ -49,6 +48,7 @@ import { Router } from '@angular/router';
     MatTooltipModule,
     ReactiveFormsModule,
     CommonModule,
+    RouterModule,
     HzStatCardModule,
     HzBannerModule,
     HzCardModule,
@@ -244,7 +244,7 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
   onViewApp(row: SteamInsightAppResponse) {
     const appid = row.appid;
 
-    this.router.navigate(['administration', 'steam-insight-management', appid]);
+    this.router.navigate(['administration', 'steam-insight-management', 'app', appid]);
   }
 
   onUpdateAppActiveStatus(app: SteamInsightAppResponse) {
@@ -270,10 +270,12 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
   }
 
   onSteamInsightUpdatesRowClick(row: SteamInsightUpdateRow) {
-    this.dialog.open(SteamInsightUpdateHistoryDialogComponent, {
+    /*this.dialog.open(SteamInsightUpdateHistoryDialogComponent, {
       data: { row },
       width: '560px',
       panelClass: 'hz-dialog-container',
-    });
+    });*/
+
+    this.router.navigate([`/administration/steam-insight-management/update/${row.id}`]);
   }
 }

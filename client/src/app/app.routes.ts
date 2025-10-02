@@ -118,6 +118,7 @@ export const routes: Routes = [
               ),
             data: { requiredRights: [USER_RIGHTS.MANAGE_LINKS] },
           },
+          /** STEAM INSIGHT ROUTES */
           {
             path: 'steam-insight-management',
             loadComponent: () =>
@@ -127,11 +128,30 @@ export const routes: Routes = [
             data: { requiredRights: [USER_RIGHTS.MANAGE_STEAM_INSIGHT] },
           },
           {
-            path: 'steam-insight-management/:appid',
+            path: 'steam-insight-management/app',
+            pathMatch: 'full',
+            redirectTo: '/administration/steam-insight-management',
+          },
+
+          {
+            path: 'steam-insight-management/app/:appid',
             loadComponent: () =>
               import(
                 './features/administration/steam-insight-management/steam-insight-management-app-view/steam-insight-management-app-view.component'
               ).then((c) => c.SteamInsightManagementAppViewComponent),
+            data: { requiredRights: [USER_RIGHTS.MANAGE_STEAM_INSIGHT] },
+          },
+          {
+            path: 'steam-insight-management/update',
+            pathMatch: 'full',
+            redirectTo: '/administration/steam-insight-management',
+          },
+          {
+            path: 'steam-insight-management/update/:id',
+            loadComponent: () =>
+              import('./features/administration/steam-insight-management/update-overview/update-overview.component').then(
+                (c) => c.UpdateOverviewComponent
+              ),
             data: { requiredRights: [USER_RIGHTS.MANAGE_STEAM_INSIGHT] },
           },
           {

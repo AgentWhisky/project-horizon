@@ -185,58 +185,6 @@ export class SteamInsightManagementService {
     };
   }
 
-  async getSteamInsightUpdates(query: SteamInsightUpdatesQueryDto): Promise<SteamInsightUpdateSearchResponse> {
-    const { page, pageSize, sortBy, sortOrder, status, type } = query;
-
-    const condition: FindOptionsWhere<SteamUpdateHistoryEntity> = {};
-
-    if (status && status.length > 0) {
-      condition.updateStatus = In(status);
-    }
-
-    if (type) {
-      condition.updateType = type;
-    }
-
-    const updateRecords = await this.steamUpdateHistoryRepository.findAndCount({
-      select: {
-        id: true,
-        updateType: true,
-        updateStatus: true,
-        startTime: true,
-        endTime: true,
-        stats: {
-          games: { inserts: true, updates: true, noChange: true },
-          dlc: { inserts: true, updates: true, noChange: true },
-          errors: true,
-          total: true,
-        },
-        notes: true,
-        events: true,
-      },
-      where: condition,
-      order: { [sortBy]: sortOrder },
-      skip: page * pageSize,
-      take: pageSize,
-    });
-
-    const steamInsightUpdates: SteamInsightUpdate[] = updateRecords[0].map((update) => ({
-      id: update.id,
-      updateType: update.updateType,
-      updateStatus: update.updateStatus,
-      startTime: update.startTime,
-      endTime: update.endTime ?? null,
-      notes: update.notes,
-      events: update.events.map(parseHzEvent).reverse(),
-      stats: update.stats,
-    }));
-
-    return {
-      pageLength: updateRecords[1],
-      updates: steamInsightUpdates,
-    };
-  }
-
   /**
    * Get the raw JSON dump for a given Steam Insight app
    * @param appid The appid of the given app
@@ -290,5 +238,88 @@ export class SteamInsightManagementService {
       },
       where: { appid },
     });
+  }
+
+  /** STEAM INSIGHT UPDATES */
+  async getSteamInsightUpdates(query: SteamInsightUpdatesQueryDto): Promise<SteamInsightUpdateSearchResponse> {
+    const { page, pageSize, sortBy, sortOrder, status, type } = query;
+
+    const condition: FindOptionsWhere<SteamUpdateHistoryEntity> = {};
+
+    if (status && status.length > 0) {
+      condition.updateStatus = In(status);
+    }
+
+    if (type) {
+      condition.updateType = type;
+    }
+
+    const updateRecords = await this.steamUpdateHistoryRepository.findAndCount({
+      select: {
+        id: true,
+        updateType: true,
+        updateStatus: true,
+        startTime: true,
+        endTime: true,
+        stats: {
+          games: { inserts: true, updates: true, noChange: true },
+          dlc: { inserts: true, updates: true, noChange: true },
+          errors: true,
+          total: true,
+        },
+        notes: true,
+        events: true,
+      },
+      where: condition,
+      order: { [sortBy]: sortOrder },
+      skip: page * pageSize,
+      take: pageSize,
+    });
+
+    const steamInsightUpdates: SteamInsightUpdate[] = updateRecords[0].map((update) => ({
+      id: update.id,
+      updateType: update.updateType,
+      updateStatus: update.updateStatus,
+      startTime: update.startTime,
+      endTime: update.endTime ?? null,
+      notes: update.notes,
+      events: update.events.map(parseHzEvent).reverse(),
+      stats: update.stats,
+    }));
+
+    return {
+      pageLength: updateRecords[1],
+      updates: steamInsightUpdates,
+    };
+  }
+
+  async getSteamInsightUpdate(id: number): Promise<SteamInsightUpdate> {
+    const update = await this.steamUpdateHistoryRepository.findOne({
+      select: {
+        id: true,
+        updateType: true,
+        updateStatus: true,
+        startTime: true,
+        endTime: true,
+        stats: {
+          games: { inserts: true, updates: true, noChange: true },
+          dlc: { inserts: true, updates: true, noChange: true },
+          errors: true,
+          total: true,
+        },
+        notes: true,
+        events: true,
+      },
+      where: { id },
+    });
+
+    if (!update) {
+      throw new NotFoundException(`Steam Insight Update with id [${id}] not found`);
+    }
+
+    return {
+      ...update,
+      events: update.events.map(parseHzEvent).reverse(),
+    };
   }
 }

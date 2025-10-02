@@ -33,19 +33,25 @@ export class SteamInsightManagementController {
     return this.steamInsightManagementService.getSteamInsightUpdates(query);
   }
 
+  @Get('update/:id')
+  @RequireRight(USER_RIGHTS.MANAGE_STEAM_INSIGHT)
+  async getSteamInsightUpdate(@Param('id') id: number) {
+    return this.steamInsightManagementService.getSteamInsightUpdate(id);
+  }
+
   @Get('apps')
   @RequireRight(USER_RIGHTS.MANAGE_STEAM_INSIGHT)
   async getSteamInsightApps(@Query() query: SteamInsightAppsQueryDto) {
     return this.steamInsightManagementService.getSteamInsightApps(query);
   }
 
-  @Get('apps/:appid')
+  @Get('app/:appid')
   @RequireRight(USER_RIGHTS.MANAGE_STEAM_INSIGHT)
   async getSteamInsightAppById(@Param('appid') appid: number) {
     return this.steamInsightManagementService.getSteamInsightAppRaw(appid);
   }
 
-  @Put('apps/:appid/active')
+  @Put('app/:appid/active')
   @RequireRight(USER_RIGHTS.MANAGE_STEAM_INSIGHT)
   async updateUserActive(@Param('appid', ParseIntPipe) id: number, @Body() body: AppActiveDto): Promise<AppActiveStatus> {
     return this.steamInsightManagementService.updateSteamInsightAppActive(id, body.active);

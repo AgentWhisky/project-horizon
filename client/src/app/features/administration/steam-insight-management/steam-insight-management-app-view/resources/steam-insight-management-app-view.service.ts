@@ -28,7 +28,7 @@ export class SteamInsightManagementAppViewService {
   }
 
   private async getAppRaw(appid: number) {
-    const app$ = this.tokenService.getWithTokenRefresh<SteamInsightAppRaw>(`/steam-insight-management/apps/${appid}`);
+    const app$ = this.tokenService.getWithTokenRefresh<SteamInsightAppRaw>(`/steam-insight-management/app/${appid}`);
     return firstValueFrom(app$);
   }
 }

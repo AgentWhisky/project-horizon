@@ -335,7 +335,7 @@ export class SteamInsightManagementService {
   }
 
   private async putAppActive(appid: number, active: boolean) {
-    const appInfo$ = this.tokenService.putWithTokenRefresh<SteamInsightAppResponse>(`/steam-insight-management/apps/${appid}/active`, {
+    const appInfo$ = this.tokenService.putWithTokenRefresh<SteamInsightAppResponse>(`/steam-insight-management/app/${appid}/active`, {
       active,
     });
 
