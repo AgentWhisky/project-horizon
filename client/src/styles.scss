@@ -14,8 +14,8 @@ html {
 
   @include mat.theme(
     (
-      color: mat.$violet-palette,
-      //color: hz-theme-3.$primary-palette,
+      //color: mat.$violet-palette,
+      color: hz-theme-3.$primary-palette,
       typography: Roboto,
       density: 0
     )
@@ -26,8 +26,8 @@ html {
   @include mat.theme(
     (
       color: (
-        primary: mat.$violet-palette,
-        //primary: hz-theme-3.$primary-palette,
+        //primary: mat.$violet-palette,
+        primary: hz-theme-3.$primary-palette,
         theme-type: dark,
       ),
     )

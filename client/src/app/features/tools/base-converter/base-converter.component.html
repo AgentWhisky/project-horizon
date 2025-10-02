@@ -1,12 +1,12 @@
 <div class="flex flex-col gap-3">
   <div class="base-converter-actions-container">
     <button matButton="filled" (click)="onAddBase()">
-       <mat-icon fontSet="material-symbols-outlined">add</mat-icon>
+       <mat-icon>add</mat-icon>
       Add Tile
     </button>
     @if(baseConversions().length > 0) {
     <button matButton="filled" (click)="onRemoveAllBases()">
-       <mat-icon fontSet="material-symbols-outlined">delete</mat-icon>
+       <mat-icon>delete</mat-icon>
       Remove Tiles
     </button>
     }

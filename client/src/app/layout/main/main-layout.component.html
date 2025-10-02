@@ -5,7 +5,7 @@
         matIconButton
         (click)="onToggleLeftNav()"
         [attr.aria-label]="isLeftNavOpen() ? 'Close left navigation' : 'Open left navigation'">
-        <mat-icon fontSet="material-symbols-outlined">{{ isLeftNavOpen() ? 'left_panel_close' : 'left_panel_open' }}</mat-icon>
+        <mat-icon>{{ isLeftNavOpen() ? 'left_panel_close' : 'left_panel_open' }}</mat-icon>
       </button>
 
       <a [routerLink]="['/home']" class="main-layout-toolbar-title-container">
@@ -16,7 +16,7 @@
 
     <div class="main-layout-toolbar-section">
       <!--<button matIconButton matTooltip="Notifications" aria-label="Notifications">
-         <mat-icon fontSet="material-symbols-outlined">notifications</mat-icon>
+         <mat-icon>notifications</mat-icon>
       </button>-->
 
       <!-- Toggle Theme Icon -->
@@ -25,12 +25,12 @@
         (click)="onToggleTheme()"
         [matTooltip]="isDarkmode() ? 'Switch to light mode' : 'Switch to dark mode'"
         [attr.aria-label]="isDarkmode() ? 'Switch to light mode' : 'Switch to dark mode'">
-        <mat-icon fontSet="material-symbols-outlined">{{ isDarkmode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+        <mat-icon>{{ isDarkmode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
       </button>
 
       <!-- Settings Menu 
       <button matIconButton [matMenuTriggerFor]="settingsMenu">
-         <mat-icon fontSet="material-symbols-outlined">settings</mat-icon>
+         <mat-icon>settings</mat-icon>
       </button>
 
       <mat-menu #settingsMenu="matMenu">
@@ -47,15 +47,15 @@
       <!-- Login/Account Icons -->
       @if(!isLoggedIn()) {
       <button matIconButton (click)="onLogin()" matTooltip="Sign In" aria-label="Sign In">
-        <mat-icon fontSet="material-symbols-outlined">person</mat-icon>
+        <mat-icon>person</mat-icon>
       </button>
       } @else {
       <button matIconButton [matMenuTriggerFor]="userMenu" matTooltip="Account" aria-label="Account">
-        <mat-icon fontSet="material-symbols-outlined">account_circle</mat-icon>
+        <mat-icon>account_circle</mat-icon>
       </button>
       <mat-menu #userMenu="matMenu">
         <button mat-menu-item (click)="onLogout()">
-          <mat-icon fontSet="material-symbols-outlined">logout</mat-icon>
+          <mat-icon>logout</mat-icon>
           <span>Sign Out</span>
         </button>
       </mat-menu>

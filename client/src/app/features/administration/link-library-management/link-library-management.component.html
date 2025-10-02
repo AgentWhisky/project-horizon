@@ -15,7 +15,7 @@
             (keydown.enter)="linkFilterInput.blur()" />
           @if(linkFilterInput.value && linkFilterInput.value !== '') {
           <button class="clear-icon-button" matSuffix matIconButton type="button" aria-label="Clear" (click)="onResetLinkFilter()">
-             <mat-icon fontSet="material-symbols-outlined">close</mat-icon>
+             <mat-icon>close</mat-icon>
           </button>
           } @if(linkFilterInput.value && linkFilterInput.value !== '') {
           <mat-hint>
@@ -29,7 +29,7 @@
         </mat-form-field>
 
         <button mat-button type="button" aria-label="Add Link" (click)="onCreateLink()">
-           <mat-icon fontSet="material-symbols-outlined">add</mat-icon>
+           <mat-icon>add</mat-icon>
           Add New Link
         </button>
       </div>
@@ -68,11 +68,11 @@
 
               <div class="link-actions">
                 <button matIconButton type="button" [attr.aria-label]="'Edit ' + link.name + ' Link'" (click)="onEditLink(link)">
-                   <mat-icon fontSet="material-symbols-outlined">edit</mat-icon>
+                   <mat-icon>edit</mat-icon>
                 </button>
 
                 <button matIconButton type="button" [attr.aria-label]="'Remove ' + link.name + ' Link'" (click)="onDeleteLink(link)">
-                   <mat-icon fontSet="material-symbols-outlined">delete</mat-icon>
+                   <mat-icon>delete</mat-icon>
                 </button>
               </div>
             </div>
@@ -113,11 +113,11 @@
 
               <div class="link-actions">
                 <button matIconButton type="button" [attr.aria-label]="'Edit ' + link.name + ' Link'" (click)="onEditLink(link)">
-                   <mat-icon fontSet="material-symbols-outlined">edit</mat-icon>
+                   <mat-icon>edit</mat-icon>
                 </button>
 
                 <button matIconButton type="button" [attr.aria-label]="'Remove ' + link.name + ' Link'" (click)="onDeleteLink(link)">
-                   <mat-icon fontSet="material-symbols-outlined">delete</mat-icon>
+                   <mat-icon>delete</mat-icon>
                 </button>
               </div>
             </div>
@@ -143,7 +143,7 @@
             (keydown.enter)="categoryFilterInput.blur()" />
           @if(categoryFilterInput.value && categoryFilterInput.value !== '') {
           <button class="clear-icon-button" matSuffix matIconButton type="button" aria-label="Clear" (click)="onResetCategoryFilter()">
-             <mat-icon fontSet="material-symbols-outlined">close</mat-icon>
+             <mat-icon>close</mat-icon>
           </button>
           } @if(categoryFilterInput.value && categoryFilterInput.value !== '') {
           <mat-hint>
@@ -157,7 +157,7 @@
         </mat-form-field>
 
         <button mat-button type="button" aria-label="Add Category" (click)="onCreateCategory()">
-           <mat-icon fontSet="material-symbols-outlined">add</mat-icon>
+           <mat-icon>add</mat-icon>
           Add New Category
         </button>
       </div>
@@ -177,7 +177,7 @@
               type="button"
               [attr.aria-label]="'Edit ' + category.name + ' Category'"
               (click)="onEditCategory(category)">
-               <mat-icon fontSet="material-symbols-outlined">edit</mat-icon>
+               <mat-icon>edit</mat-icon>
             </button>
             @if(!category.inUse) {
             <button
@@ -185,7 +185,7 @@
               type="button"
               [attr.aria-label]="'Remove ' + category.name + ' Category'"
               (click)="onDeleteCategory(category)">
-               <mat-icon fontSet="material-symbols-outlined">delete</mat-icon>
+               <mat-icon>delete</mat-icon>
             </button>
             }
           </div>
@@ -209,7 +209,7 @@
             (keydown.enter)="tagFilterInput.blur()" />
           @if(tagFilterInput.value && tagFilterInput.value !== '') {
           <button class="clear-icon-button" matSuffix matIconButton type="button" aria-label="Clear" (click)="onResetTagFilter()">
-             <mat-icon fontSet="material-symbols-outlined">close</mat-icon>
+             <mat-icon>close</mat-icon>
           </button>
           } @if(tagFilterInput.value && tagFilterInput.value !== '') {
           <mat-hint>
@@ -223,7 +223,7 @@
         </mat-form-field>
 
         <button mat-button type="button" aria-label="Add Tag" (click)="onCreateTag()">
-           <mat-icon fontSet="material-symbols-outlined">add</mat-icon>
+           <mat-icon>add</mat-icon>
           Add New Tag
         </button>
       </div>
@@ -235,11 +235,11 @@
           <span>{{ tag.name }}</span>
           <div class="link-tag-actions">
             <button matIconButton type="button" [attr.aria-label]="'Edit ' + tag.name + ' Tag'" (click)="onEditTag(tag)">
-               <mat-icon fontSet="material-symbols-outlined">edit</mat-icon>
+               <mat-icon>edit</mat-icon>
             </button>
             @if(!tag.inUse) {
             <button matIconButton type="button" [attr.aria-label]="'Remove ' + tag.name + ' Tag'" (click)="onDeleteTag(tag)">
-               <mat-icon fontSet="material-symbols-outlined">delete</mat-icon>
+               <mat-icon>delete</mat-icon>
             </button>
             }
           </div>
@@ -251,12 +251,12 @@
     <mat-tab label="Import & Export" class="flex flex-col">
       <div class="import-export-container">
         <button matButton="filled" (click)="onExportLinkLibrary()">
-           <mat-icon fontSet="material-symbols-outlined">download</mat-icon>
+           <mat-icon>download</mat-icon>
           Export Library
         </button>
         @if(hasImportLibraryRight()) {
         <button matButton="filled" (click)="onImportLinkLibrary()">
-           <mat-icon fontSet="material-symbols-outlined">upload</mat-icon>
+           <mat-icon>upload</mat-icon>
           Import Library
         </button>
         }

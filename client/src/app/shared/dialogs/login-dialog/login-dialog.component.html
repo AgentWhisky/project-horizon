@@ -24,7 +24,7 @@
             (mouseover)="onShowPassword()"
             (mouseleave)="onHidePassword()"
             disableRipple>
-             <mat-icon fontSet="material-symbols-outlined">{{ showPassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
+             <mat-icon>{{ showPassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
           </button>
           <mat-error>{{ loginForm.get('password')?.errors | validatorMessage }}</mat-error>
         </mat-form-field>
@@ -67,7 +67,7 @@
             (mouseover)="onShowPassword()"
             (mouseleave)="onHidePassword()"
             disableRipple>
-             <mat-icon fontSet="material-symbols-outlined">{{ showPassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
+             <mat-icon>{{ showPassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
           </button>
           <mat-error>
             {{ newAccountForm.get('password')?.errors | validatorMessage : { default: 'Passwords do not match' } }}
@@ -90,7 +90,7 @@
             (mouseover)="onShowConfirmPassword()"
             (mouseleave)="onHideConfirmPassword()"
             disableRipple>
-             <mat-icon fontSet="material-symbols-outlined">{{ showConfirmPassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
+             <mat-icon>{{ showConfirmPassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
           </button>
           <mat-error>
             {{ newAccountForm.get('confirmPassword')?.errors | validatorMessage : { default: 'Passwords do not match' } }}
@@ -106,7 +106,7 @@
             aria-label="Creation Code Info"
             matTooltip="Code required to create an account, provided by an Admin"
             disableRipple>
-             <mat-icon fontSet="material-symbols-outlined">info</mat-icon>
+             <mat-icon>info</mat-icon>
           </button>
           <mat-error>
             {{ newAccountForm.get('creationCode')?.errors | validatorMessage : { pattern: 'Your creation code must be 12 characters' } }}

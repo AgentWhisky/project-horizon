@@ -8,6 +8,7 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { IconService, TitleService, TokenService, VersionHistoryService } from '@hz/core/services';
 import { tokenInterceptor } from '@hz/core/interceptors';
 import { routes } from './app.routes';
+import { MAT_ICON_DEFAULT_OPTIONS } from '@angular/material/icon';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,6 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withViewTransitions(), withComponentInputBinding()),
     provideHttpClient(withInterceptors([tokenInterceptor])),
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } }, // Set all mat-form-fields to outline appearance
+    { provide: MAT_ICON_DEFAULT_OPTIONS, useValue: { fontSet: 'material-symbols-outlined' } },
     provideAppInitializer(async () => {
       const titleService = inject(TitleService);
       const tokenService = inject(TokenService);

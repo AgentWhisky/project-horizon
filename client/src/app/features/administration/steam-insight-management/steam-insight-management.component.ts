@@ -3,7 +3,7 @@ import { Component, computed, effect, inject, OnDestroy, OnInit, signal, viewChi
 import { LOADING_STATUS, REFRESH_INTERVAL } from '@hz/core/constants';
 
 import { SteamInsightManagementService } from './steam-insight-management.service';
-import { HzBannerModule, HzChipModule, HzStatCardModule } from '@hz/shared/components';
+import { HzBannerModule, HzBreadcrumbItem, HzBreadcrumbModule, HzChipModule, HzStatCardModule } from '@hz/shared/components';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
@@ -53,6 +53,7 @@ import { Router } from '@angular/router';
     HzBannerModule,
     HzCardModule,
     HzChipModule,
+    HzBreadcrumbModule,
     DatePipe,
     DurationPipe,
     FormatDatePipe,
@@ -67,6 +68,11 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
   private steamInsightMangementService = inject(SteamInsightManagementService);
 
   private intervalId?: ReturnType<typeof setInterval>;
+
+  readonly breadcrumbItems: HzBreadcrumbItem[] = [
+    { label: 'Administration', route: '/administration', icon: 'admin_panel_settings' },
+    { label: 'Steam Insight Management', route: '/administration/steam-insight-management', svgIcon: 'steam' },
+  ];
 
   readonly LOADING_STATUS = LOADING_STATUS;
   readonly isSmallScreen = this.screenService.isSmallScreen;

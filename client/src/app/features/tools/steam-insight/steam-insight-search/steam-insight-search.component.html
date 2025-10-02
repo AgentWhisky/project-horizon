@@ -11,11 +11,11 @@
         aria-label="Link library search"
         (keydown.enter)="steamGameSearchInput.blur(); onSearch()" />
       <button matSuffix matIconButton aria-label="Search" (click)="steamGameSearchInput.blur(); onSearch()">
-         <mat-icon fontSet="material-symbols-outlined">search</mat-icon>
+         <mat-icon>search</mat-icon>
       </button>
       @if(steamGameSearchInput.value && steamGameSearchInput.value !== '') {
       <button matSuffix class="mr-3" matIconButton aria-label="Clear" (click)="onResetFilter()">
-         <mat-icon fontSet="material-symbols-outlined">close</mat-icon>
+         <mat-icon>close</mat-icon>
       </button>
       }
       <mat-error>Invalid Search Filter</mat-error>
@@ -37,7 +37,7 @@
           <mat-chip [routerLink]="['/steam-insight', app.appid]" class="!cursor-pointer overflow-hidden">
             <span class="search-history-chip">{{ app.name }}</span>
             <button matChipRemove (click)="onRemoveAppFromHistory(app); $event.stopPropagation()" [attr.aria-label]="'Remove ' + app.name">
-               <mat-icon fontSet="material-symbols-outlined">cancel</mat-icon>
+               <mat-icon>cancel</mat-icon>
             </button>
           </mat-chip>
         </ng-container>

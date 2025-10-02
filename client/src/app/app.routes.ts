@@ -75,6 +75,11 @@ export const routes: Routes = [
               },
             ],
           },
+          {
+            path: '',
+            redirectTo: 'dev-portal',
+            pathMatch: 'full',
+          },
         ],
       },
 

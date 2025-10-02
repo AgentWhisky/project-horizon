@@ -323,5 +323,34 @@
         </div>
       </div>
     </mat-tab>
+
+    <mat-tab label="Hz Breadcrumb">
+      <div class="flex flex-col gap-3 p-3">
+        <div class="flex flex-col gap-1">
+          <span class="test-banner-section-header">Breadcrumbs</span>
+          <hz-breadcrumb [items]="breadcrumbSet1"></hz-breadcrumb>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <span class="test-banner-section-header">Breadcrumbs with icons</span>
+          <hz-breadcrumb [items]="breadcrumbSet2"></hz-breadcrumb>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <span class="test-banner-section-header">Breadcrumbs with disabled routes</span>
+          <hz-breadcrumb [items]="breadcrumbSet3"></hz-breadcrumb>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <span class="test-banner-section-header">Breadcrumbs with tooltips</span>
+          <hz-breadcrumb [items]="breadcrumbSet4"></hz-breadcrumb>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <span class="test-banner-section-header">Breadcrumbs with all options</span>
+          <hz-breadcrumb [items]="breadcrumbSet5"></hz-breadcrumb>
+        </div>
+      </div>
+    </mat-tab>
   </mat-tab-group>
 </div>
