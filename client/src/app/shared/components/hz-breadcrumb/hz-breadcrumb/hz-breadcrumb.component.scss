@@ -1,0 +1,52 @@
+.hz-breadcrumb {
+  padding: 0.25rem;
+}
+
+.hz-breadcrumb-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  list-style: none;
+
+  margin: 0;
+  padding: 0;
+}
+
+.hz-breadcrumb-list-item {
+  display: flex;
+  align-items: center;
+}
+
+/** Chevron icon */
+.hz-breadcrumb-chevron {
+  font-size: 1rem;
+  height: 1rem;
+  width: 1rem;
+  margin: 0 0.25rem;
+  color: var(--mat-sys-outline);
+}
+
+/** Ellipsis */
+.hz-breadcrumb-ellipsis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.25rem;
+
+  font-size: 1rem;
+  font-weight: bold;
+
+  color: var(--mat-sys-outline);
+  cursor: pointer;
+}
+
+.hz-breadcrumb-ellipsis:hover {
+  color: var(--mat-sys-primary);
+}
+
+.hz-breadcrumb-ellipsis:focus {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

@@ -1,0 +1,31 @@
+@let item = breadcrumbItem();
+<li class="hz-breadcrumb-list-item">
+  <!-- DISPLAY AS LINK -->
+  @if (!last() && item.route && !item.disabled) {
+  <a class="hz-breadcrumb-link" [routerLink]="item.route" [matTooltip]="item.tooltip || ''">
+    @if (item.icon) {
+    <mat-icon class="hz-breadcrumb-icon hz-breadcrumb-link-icon" aria-hidden="true">{{ item.icon }}</mat-icon>
+    } @else if(item.svgIcon) {
+    <mat-icon class="hz-breadcrumb-icon hz-breadcrumb-link-icon" aria-hidden="true" [svgIcon]="item.svgIcon"></mat-icon>
+    }
+    {{ item.label }}
+  </a>
+  }
+  <!-- DISPLAY AS TEXT -->
+  @else {
+  <span
+    class="hz-breadcrumb-text"
+    [attr.aria-disabled]="item.disabled || null"
+    [matTooltip]="item.tooltip || ''"
+    [attr.aria-current]="last() ? 'page' : null">
+    @if (item.icon) {
+    <mat-icon class="hz-breadcrumb-icon" aria-hidden="true">{{ item.icon }}</mat-icon>
+    } @else if(item.svgIcon) {
+    <mat-icon class="hz-breadcrumb-icon" aria-hidden="true" [svgIcon]="item.svgIcon"></mat-icon>
+    }
+    {{ item.label }}
+  </span>
+  } @if (!last()) {
+  <mat-icon class="hz-breadcrumb-chevron" aria-hidden="true">chevron_right</mat-icon>
+  }
+</li>

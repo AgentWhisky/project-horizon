@@ -19,9 +19,9 @@ export class UpdateOverviewComponent implements OnInit {
 
   private updateOverviewService = inject(UpdateOverviewService);
 
-  readonly update = this.updateOverviewService.update;
+  readonly steamInsightUpdate = this.updateOverviewService.update;
   readonly updateDetails = computed(() => {
-    const update = this.update();
+    const update = this.steamInsightUpdate();
 
     return {
       updateType: update ? getUpdateType(update.updateType) : '',

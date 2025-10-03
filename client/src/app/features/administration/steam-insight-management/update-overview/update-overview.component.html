@@ -1,9 +1,10 @@
+@let update = steamInsightUpdate(); @if(update) {
 <div class="flex flex-col gap-3">
   <hz-breadcrumb [items]="breadcrumbItems"></hz-breadcrumb>
 
-  <div class="flex flex-col gap-3 justify-center items-center">
+  <div class="flex flex-row flex-wrap gap-3 justify-center">
     <hz-card primary class="flex w-full max-w-96">
-      <hz-card-header>{{ updateDetails().updateType }} Update</hz-card-header>
+      <hz-card-header>Update General Info</hz-card-header>
       <hz-card-chip>
         <hz-chip [type]="updateDetails().updateStatusType">{{ updateDetails().updateStatus }}</hz-chip>
       </hz-card-chip>
@@ -11,12 +12,20 @@
       <hz-card-body>
         <div class="grid grid-cols-2 gap-3">
           <div>
+            <span class="font-semibold">Update ID</span>
+            <div>{{ update.id }}</div>
+          </div>
+          <div>
+            <span class="font-semibold">Update Type</span>
+            <div>{{ updateDetails().updateType }}</div>
+          </div>
+          <div>
             <span class="font-semibold">Start Time</span>
-            <div>{{ update()?.startTime | date : 'short' }}</div>
+            <div>{{ update.startTime | date : 'short' }}</div>
           </div>
           <div>
             <span class="font-semibold">End Time</span>
-            <div>{{ update()?.endTime ? (update()?.endTime | date : 'short') : '—' }}</div>
+            <div>{{ update.endTime ? (update.endTime | date : 'short') : '—' }}</div>
           </div>
           <div>
             <span class="font-semibold">Total Runtime</span>
@@ -24,29 +33,29 @@
           </div>
           <div>
             <span class="font-semibold">Notes</span>
-            <div>{{ update()?.notes || '—' }}</div>
+            <div>{{ update.notes || '—' }}</div>
           </div>
         </div>
       </hz-card-body>
     </hz-card>
 
-    <div class="w-full flex flex-row flex-wrap gap-3 justify-center">
+    <div class="flex flex-row flex-wrap gap-3 justify-center">
       <hz-card primary>
         <hz-card-header>Game Update Stats</hz-card-header>
         <hz-card-body class="flex flex-row flex-wrap gap-3">
           <div class="flex flex-col gap-1">
             <span class="font-medium">Inserts</span>
-            <span>{{ update()?.stats?.games?.inserts ?? 0 }}</span>
+            <span>{{ update.stats?.games?.inserts ?? 0 }}</span>
           </div>
 
           <div class="flex flex-col gap-1">
             <span class="font-medium">Updates</span>
-            <span>{{ update()?.stats?.games?.updates ?? 0 }}</span>
+            <span>{{ update.stats?.games?.updates ?? 0 }}</span>
           </div>
 
           <div class="flex flex-col gap-1">
             <span class="font-medium">No Change</span>
-            <span>{{ update()?.stats?.games?.noChange ?? 0 }}</span>
+            <span>{{ update.stats?.games?.noChange ?? 0 }}</span>
           </div>
         </hz-card-body>
       </hz-card>
@@ -56,17 +65,17 @@
         <hz-card-body class="flex flex-row flex-wrap gap-3">
           <div class="flex flex-col gap-1">
             <span class="font-medium">Inserts</span>
-            <span>{{ update()?.stats?.dlc?.inserts ?? 0 }}</span>
+            <span>{{ update.stats?.dlc?.inserts ?? 0 }}</span>
           </div>
 
           <div class="flex flex-col gap-1">
             <span class="font-medium">Updates</span>
-            <span>{{ update()?.stats?.dlc?.updates ?? 0 }}</span>
+            <span>{{ update.stats?.dlc?.updates ?? 0 }}</span>
           </div>
 
           <div class="flex flex-col gap-1">
             <span class="font-medium">No Change</span>
-            <span>{{ update()?.stats?.dlc?.noChange ?? 0 }}</span>
+            <span>{{ update.stats?.dlc?.noChange ?? 0 }}</span>
           </div>
         </hz-card-body>
       </hz-card>
@@ -76,30 +85,35 @@
         <hz-card-body class="flex flex-row flex-wrap gap-3">
           <div class="flex flex-col gap-1">
             <span class="font-medium">Total Apps</span>
-            <span>{{ update()?.stats?.total ?? 0 }}</span>
+            <span>{{ update.stats?.total ?? 0 }}</span>
           </div>
 
           <div class="flex flex-col gap-1">
             <span class="font-medium">App Errors</span>
-            <span>{{ update()?.stats?.errors ?? 0 }}</span>
+            <span>{{ update.stats?.errors ?? 0 }}</span>
           </div>
         </hz-card-body>
       </hz-card>
     </div>
   </div>
 
-  <div class="flex flex-row flex-wrap gap-3 justify-center">
-    <div class="flex w-full max-w-96">
-      @if (update()?.events && update()?.events?.length) {
-      <hz-timeline class="w-full">
-        @for (event of update()?.events; track event; let first = $first) {
-        <hz-timeline-item [latest]="first">
-          <hz-timeline-header>{{ event.timestamp | date : 'short' }}</hz-timeline-header>
-          <hz-timeline-body>{{ event.message | formatDate }}</hz-timeline-body>
-        </hz-timeline-item>
+  <div class="w-full flex flex-col gap-3 justify-center items-center">
+    <hz-card primary class="flex w-full max-w-96">
+      <hz-card-header>Update Events</hz-card-header>
+      <hz-card-body>
+        @if (update.events && update.events.length) {
+        <hz-timeline class="w-full">
+          @for (event of update.events; track event; let first = $first) {
+          <hz-timeline-item [latest]="first">
+            <hz-timeline-header>{{ event.timestamp | date : 'short' }}</hz-timeline-header>
+            <hz-timeline-body>{{ event.message | formatDate }}</hz-timeline-body>
+          </hz-timeline-item>
+          }
+        </hz-timeline>
         }
-      </hz-timeline>
-      }
-    </div>
+      </hz-card-body>
+    </hz-card>
   </div>
 </div>
+
+}

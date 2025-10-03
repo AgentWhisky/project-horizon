@@ -1,0 +1,26 @@
+<nav class="hz-breadcrumb" aria-label="breadcrumb">
+  <!-- DISPLAY COLLAPSED BREADCRUMBS -->
+  @if(isMobileScreen() && !isExpanded() && items().length > 2) {
+  <ol class="hz-breadcrumb-list">
+    <!-- FIRST ITEM -->
+    <hz-breadcrumb-item [breadcrumbItem]="items()[0]"></hz-breadcrumb-item>
+
+    <li class="hz-breadcrumb-list-item">
+      <button class="hz-breadcrumb-ellipsis" (click)="onExpand()">…</button>
+      <mat-icon class="hz-breadcrumb-chevron">chevron_right</mat-icon>
+    </li>
+
+    <!-- LAST ITEM -->
+    <hz-breadcrumb-item [breadcrumbItem]="items()[items().length - 1]" [last]="true"></hz-breadcrumb-item>
+  </ol>
+
+  }
+  <!-- DISPLAY FULL BREADCRUMBS -->
+  @else {
+  <ol class="hz-breadcrumb-list">
+    @for (item of items(); track item; let last = $last) {
+    <hz-breadcrumb-item [breadcrumbItem]="item" [last]="last"></hz-breadcrumb-item>
+    }
+  </ol>
+  }
+</nav>
