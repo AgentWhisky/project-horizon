@@ -32,7 +32,7 @@
           </div>
           <div>
             <span class="font-semibold">Total Runtime</span>
-            <div>{{ totalRuntime() ? (totalRuntime() ?? 0 | duration : 's') : '' }}</div>
+            <div>{{ update.endTime ? (update.startTime | duration : update.endTime) : '—' }}</div>
           </div>
           <div>
             <span class="font-semibold">Notes</span>

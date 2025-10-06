@@ -13,10 +13,9 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
-import { DurationPipe } from '@hz/core/pipes';
-
 import { TextAnalyzerService } from './text-analyzer.service';
 import { CharacterBreakdown, WordBreakdown } from './text-analyzer';
+import { TimespanPipe } from '@hz/core/pipes';
 
 @Component({
   selector: 'hz-text-analyzer',
@@ -33,7 +32,7 @@ import { CharacterBreakdown, WordBreakdown } from './text-analyzer';
     MatPaginatorModule,
     ReactiveFormsModule,
     FormsModule,
-    DurationPipe,
+    TimespanPipe,
     CommonModule,
   ],
   templateUrl: './text-analyzer.component.html',

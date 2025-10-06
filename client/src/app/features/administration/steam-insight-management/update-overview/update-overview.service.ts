@@ -1,8 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { catchError, delay, of, tap } from 'rxjs';
+import { catchError, of, tap } from 'rxjs';
 
-import { MIN_LOADING_DURATION } from '@hz/core/constants';
 import { TokenService } from '@hz/core/services';
 import { HzLoadingState } from '@hz/core/utilities';
 
@@ -23,7 +22,6 @@ export class UpdateOverviewService {
     this.tokenService
       .getWithTokenRefresh<SteamInsightUpdate>(`/steam-insight-management/update/${id}`)
       .pipe(
-        delay(MIN_LOADING_DURATION.NORMAL),
         tap((response) => {
           this.update.set(response);
           this.loadingState.setSuccess();

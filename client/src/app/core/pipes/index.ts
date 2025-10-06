@@ -1,5 +1,6 @@
 export * from './decode-html.pipe';
 export * from './duration.pipe';
+export * from './timespan.pipe';
 export * from './format-date.pipe';
 export * from './keyword.pipe';
 export * from './secure-url.pipe';

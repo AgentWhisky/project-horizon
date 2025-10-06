@@ -1,10 +1,9 @@
-import { Component, computed, inject, input, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { DurationPipe, FormatDatePipe } from '@hz/core/pipes';
-import { getRuntime } from '@hz/core/utilities';
 import { HzBannerModule, HzBreadcrumbItem, HzBreadcrumbModule, HzCardModule, HzTimelineModule } from '@hz/shared/components';
 
 import { UpdateOverviewService } from './update-overview.service';
@@ -34,11 +33,6 @@ export class UpdateOverviewComponent implements OnInit {
   private readonly updateOverviewService = inject(UpdateOverviewService);
 
   readonly steamInsightUpdate = this.updateOverviewService.update;
-  readonly totalRuntime = computed(() => {
-    const update = this.steamInsightUpdate();
-    return update ? getRuntime(update.startTime, update?.endTime, 's') : null;
-  });
-
   readonly loadingState = this.updateOverviewService.loadingState;
 
   readonly breadcrumbItems: HzBreadcrumbItem[] = [

@@ -1,33 +1,27 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { TimespanPipe } from './timespan.pipe';
 
-/**
- * A pipe that returns a duration breakdown with a given value and time unit
- * - `value` is the integer value of time elapsed
- * - `unit` is the type of unit passed in (miliseconds or seconds)
- *
- * - Returns a formatted string of days, hours, minutes, and seconds
- * - Does not include sections with 0 values other than seconds
- *
- */
 @Pipe({
   name: 'duration',
+  standalone: true,
 })
 export class DurationPipe implements PipeTransform {
-  transform(value: number, unit: 'ms' | 's' = 'ms'): string {
-    const totalSeconds = unit === 'ms' ? Math.floor(value / 1000) : Math.floor(value);
+  private readonly timespanPipe = new TimespanPipe();
 
-    const days = Math.floor(totalSeconds / 86400);
-    const hours = Math.floor((totalSeconds % 86400) / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
+  transform(start: Date | string | null, end: Date | string | null): string {
+    if (!start || !end) {
+      return '';
+    }
 
-    const sections = [
-      days > 0 && `${days}d`,
-      (hours > 0 || days > 0) && `${hours}h`,
-      (minutes > 0 || hours > 0 || days > 0) && `${minutes}m`,
-      `${seconds}s`,
-    ];
+    const startTime = new Date(start).getTime();
+    const endTime = new Date(end).getTime();
 
-    return sections.filter(Boolean).join(' ');
+    if (isNaN(startTime) || isNaN(endTime)) {
+      return '';
+    }
+
+    const diffMs = Math.abs(endTime - startTime);
+
+    return this.timespanPipe.transform(diffMs, 'ms');
   }
 }

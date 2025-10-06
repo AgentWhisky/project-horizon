@@ -66,15 +66,15 @@
           </div>
           <div class="display-text">
             <span>Average Read Time:</span>
-            <span class="text-right">~{{ textBreakdown().averageReadTimeSeconds | duration : 's' }}</span>
+            <span class="text-right">~{{ textBreakdown().averageReadTimeSeconds | timespan : 's' }}</span>
           </div>
           <div class="display-text">
             <span>Average Speaking Time:</span>
-            <span class="text-right">~{{ textBreakdown().averageSpeakingTimeSeconds | duration : 's' }}</span>
+            <span class="text-right">~{{ textBreakdown().averageSpeakingTimeSeconds | timespan : 's' }}</span>
           </div>
           <div class="display-text">
             <span>Average Typing Time:</span>
-            <span class="text-right">~{{ textBreakdown().averageTypingTimeSeconds | duration : 's' }}</span>
+            <span class="text-right">~{{ textBreakdown().averageTypingTimeSeconds | timespan : 's' }}</span>
           </div>
         </div>
       </mat-card-content>

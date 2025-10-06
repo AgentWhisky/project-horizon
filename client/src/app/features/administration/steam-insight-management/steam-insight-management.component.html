@@ -342,7 +342,9 @@
 
                 <ng-container matColumnDef="totalRuntime">
                   <th mat-header-cell *matHeaderCellDef>Total Runtime</th>
-                  <td mat-cell *matCellDef="let element">{{ element.totalRuntime ? (element.totalRuntime | duration : 's') : '—' }}</td>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.endTime ? (element.startTime | duration : element.endTime ?? null) : '—' }}
+                  </td>
                 </ng-container>
 
                 <ng-container matColumnDef="updateStatus">
