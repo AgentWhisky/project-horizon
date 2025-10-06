@@ -1,42 +1,45 @@
 import { Component, computed, inject, input, OnInit } from '@angular/core';
-import { HzBannerModule, HzBreadcrumbItem, HzBreadcrumbModule, HzCardModule, HzTimelineModule } from '@hz/shared/components';
-import { UpdateOverviewService } from './update-overview.service';
-import { getUpdateStatus, getUpdateStatusType, getUpdateType } from '../resources/steam-insight-management.utils';
-import { HzStatusType } from '@hz/core/models';
 import { DatePipe } from '@angular/common';
+
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 import { DurationPipe, FormatDatePipe } from '@hz/core/pipes';
-import { CdkTableModule } from '@angular/cdk/table';
-import { getGenericLoadFailureMessage, getNotFoundMessage, getRuntime } from '@hz/core/utilities';
-import { LOADING_STATUS } from '@hz/core/constants';
+import { getRuntime } from '@hz/core/utilities';
+import { HzBannerModule, HzBreadcrumbItem, HzBreadcrumbModule, HzCardModule, HzTimelineModule } from '@hz/shared/components';
+
+import { UpdateOverviewService } from './update-overview.service';
+import { UpdateStatusPipe, UpdateStatusTypePipe, UpdateTypePipe } from '../resources/steam-insight-management.pipe';
 
 @Component({
   selector: 'hz-update-overview',
-  imports: [HzBreadcrumbModule, HzCardModule, HzTimelineModule, HzBannerModule, DatePipe, DurationPipe, FormatDatePipe, CdkTableModule],
+  imports: [
+    MatProgressSpinnerModule,
+    HzBreadcrumbModule,
+    HzCardModule,
+    HzTimelineModule,
+    HzBannerModule,
+    DatePipe,
+    DurationPipe,
+    FormatDatePipe,
+    UpdateTypePipe,
+    UpdateStatusPipe,
+    UpdateStatusTypePipe,
+  ],
   templateUrl: './update-overview.component.html',
   styleUrl: './update-overview.component.scss',
 })
 export class UpdateOverviewComponent implements OnInit {
   readonly id = input.required<number>();
 
-  private updateOverviewService = inject(UpdateOverviewService);
+  private readonly updateOverviewService = inject(UpdateOverviewService);
 
   readonly steamInsightUpdate = this.updateOverviewService.update;
-  readonly updateDetails = computed(() => {
+  readonly totalRuntime = computed(() => {
     const update = this.steamInsightUpdate();
-
-    return {
-      updateType: update ? getUpdateType(update.updateType) : '',
-      updateStatus: update ? getUpdateStatus(update.updateStatus) : '',
-      updateStatusType: update ? getUpdateStatusType(update.updateStatus) : ('base' as HzStatusType),
-      totalRuntime: update ? getRuntime(update.startTime, update?.endTime, 's') : null,
-    };
+    return update ? getRuntime(update.startTime, update?.endTime, 's') : null;
   });
-  readonly loadingStatus = this.updateOverviewService.loadingStatus;
-  readonly loadingError = this.updateOverviewService.loadingError;
 
-  readonly LOADING_STATUS = LOADING_STATUS;
-  readonly notFoundErrorMsg = getNotFoundMessage('Steam Insight Update');
-  readonly loadErrorMsg = getGenericLoadFailureMessage('Steam Insight Update');
+  readonly loadingState = this.updateOverviewService.loadingState;
 
   readonly breadcrumbItems: HzBreadcrumbItem[] = [
     { label: 'Administration', route: '/administration', icon: 'admin_panel_settings' },

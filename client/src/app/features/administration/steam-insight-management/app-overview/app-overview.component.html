@@ -1,0 +1,44 @@
+@let app = steamInsightApp();
+
+<div class="flex flex-col gap-3">
+  <hz-breadcrumb [items]="breadcrumbItems"></hz-breadcrumb>
+
+  <!-- LOAD SUCCESS -->
+  @if(app && loadingState.isSuccess()) {
+  <hz-card>
+    <hz-card-header>{{ app.name }}</hz-card-header>
+    <hz-card-chip>
+      <hz-chip>{{ app.type | titlecase }}</hz-chip>
+    </hz-card-chip>
+    <hz-card-body>
+      <div class="flex w-full flex-col gap-3"></div>
+    </hz-card-body>
+  </hz-card>
+
+  <!-- VERSION HISTORY -->
+  <mat-accordion>
+    @for(audit of app.audits; track audit.id; let i = $index) {
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>v{{ app.audits.length - i }} - {{ audit.createdDate | date : 'short' }}</mat-expansion-panel-header>
+      <pre>{{ audit.changes | json }}</pre>
+    </mat-expansion-panel>
+    }
+  </mat-accordion>
+  }
+
+  <!-- LOAD IN-PROGRESS -->
+  @else if (loadingState.isLoading()) {
+  <div class="progress-spinner-container">
+    <div class="progress-spinner-text">Loading Steam Insight App Overview...</div>
+    <mat-spinner diameter="32"></mat-spinner>
+  </div>
+  }
+
+  <!-- LOAD FAILURE -->
+  @else if(loadingState.isFailed()) {
+  <hz-banner type="error">
+    <hz-banner-header>{{ loadingState.errorMessage()?.header }}</hz-banner-header>
+    <hz-banner-body>{{ loadingState.errorMessage()?.body }}</hz-banner-body>
+  </hz-banner>
+  }
+</div>

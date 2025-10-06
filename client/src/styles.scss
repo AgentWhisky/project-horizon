@@ -156,6 +156,20 @@ body {
   background: var(--mat-sys-surface-container-highest);
 }
 
+// *** SPINNER ***
+.progress-spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.progress-spinner-text {
+  text-align: center;
+}
+
 // *** CDK DRAG AND DROP ***
 .cdk-drag-preview {
   border: none;

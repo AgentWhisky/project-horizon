@@ -6,31 +6,31 @@ import { MIN_LOADING_DURATION } from '@hz/core/constants';
 import { TokenService } from '@hz/core/services';
 import { HzLoadingState } from '@hz/core/utilities';
 
-import { SteamInsightUpdate } from '../resources/steam-insight-management.model';
+import { SteamInsightAppRaw } from '../steam-insight-management-app-view/resources/steam-insight-management-app-view.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UpdateOverviewService {
+export class AppOverviewService {
   private tokenService = inject(TokenService);
 
-  readonly update = signal<SteamInsightUpdate | null>(null);
-  readonly loadingState = new HzLoadingState('Steam Insight Update');
+  readonly app = signal<SteamInsightAppRaw | null>(null);
+  readonly loadingState = new HzLoadingState('Steam Insight App');
 
-  loadUpdate(id: number) {
+  loadApp(appid: number) {
     this.loadingState.setInProgress();
 
     this.tokenService
-      .getWithTokenRefresh<SteamInsightUpdate>(`/steam-insight-management/update/${id}`)
+      .getWithTokenRefresh<SteamInsightAppRaw>(`/steam-insight-management/app/${appid}`)
       .pipe(
         delay(MIN_LOADING_DURATION.NORMAL),
         tap((response) => {
-          this.update.set(response);
+          this.app.set(response);
           this.loadingState.setSuccess();
         }),
         catchError((err: HttpErrorResponse) => {
           this.loadingState.setFailed(err.status);
-          console.error(`Failed to fetch Steam Insight Update`, { id, error: err });
+          console.error(`Failed to fetch Steam Insight App`, { appid, error: err });
           return of(null);
         })
       )

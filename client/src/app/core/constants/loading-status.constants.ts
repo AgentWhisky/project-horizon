@@ -4,3 +4,4 @@ export const LOADING_STATUS = {
   SUCCESS: 2,
   FAILED: 3,
 } as const;
+

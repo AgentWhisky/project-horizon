@@ -23,7 +23,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { APP_TYPE_OPTIONS, UPDATE_STATUS_OPTIONS, UPDATE_TYPE_OPTIONS } from './resources/steam-insight-management.const';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { SteamInsightUpdateHistoryDialogComponent } from './dialogs/steam-insight-update-history-dialog/steam-insight-update-history-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { PAGE_SIZE_OPTIONS } from '@hz/core/constants/pagination.constants';
 import { ConfirmDialogComponent } from '@hz/shared/dialogs';

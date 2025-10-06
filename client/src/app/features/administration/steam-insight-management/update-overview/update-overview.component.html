@@ -1,12 +1,15 @@
-@let update = steamInsightUpdate(); @if(update) { @if(loadingStatus() === LOADING_STATUS.SUCCESS) {}
+@let update = steamInsightUpdate();
+
 <div class="flex flex-col gap-3">
   <hz-breadcrumb [items]="breadcrumbItems"></hz-breadcrumb>
 
+  <!-- LOAD SUCCESS -->
+  @if(update && loadingState.isSuccess()) {
   <div class="flex flex-row flex-wrap gap-3 justify-center">
     <hz-card primary class="flex w-full max-w-96">
       <hz-card-header>Update General Info</hz-card-header>
       <hz-card-chip>
-        <hz-chip [type]="updateDetails().updateStatusType">{{ updateDetails().updateStatus }}</hz-chip>
+        <hz-chip [type]="update.updateStatus | updateStatusType">{{ update.updateStatus | updateStatus }}</hz-chip>
       </hz-card-chip>
 
       <hz-card-body>
@@ -17,7 +20,7 @@
           </div>
           <div>
             <span class="font-semibold">Update Type</span>
-            <div>{{ updateDetails().updateType }}</div>
+            <div>{{ update.updateType | updateType }}</div>
           </div>
           <div>
             <span class="font-semibold">Start Time</span>
@@ -29,7 +32,7 @@
           </div>
           <div>
             <span class="font-semibold">Total Runtime</span>
-            <div>{{ updateDetails().totalRuntime ? (updateDetails().totalRuntime ?? 0 | duration : 's') : '' }}</div>
+            <div>{{ totalRuntime() ? (totalRuntime() ?? 0 | duration : 's') : '' }}</div>
           </div>
           <div>
             <span class="font-semibold">Notes</span>
@@ -97,12 +100,12 @@
     </div>
   </div>
 
-  <div class="w-full flex flex-col gap-3 justify-center items-center">
+  <div class="flex flex-col gap-3 justify-center items-center">
     <hz-card primary class="flex w-full max-w-96">
       <hz-card-header>Update Events</hz-card-header>
       <hz-card-body>
         @if (update.events && update.events.length) {
-        <hz-timeline class="w-full">
+        <hz-timeline>
           @for (event of update.events; track event.message; let first = $first) {
           <hz-timeline-item [latest]="first">
             <hz-timeline-header>{{ event.timestamp | date : 'short' }}</hz-timeline-header>
@@ -114,11 +117,22 @@
       </hz-card-body>
     </hz-card>
   </div>
-</div>
 
-}@else if(loadingStatus() === LOADING_STATUS.FAILED) {
-<hz-banner type="error">
-  <hz-banner-header>Steam Insight Update failed to load</hz-banner-header>
-  <hz-banner-body>{{ loadErrorMsg }}</hz-banner-body>
-</hz-banner>
-}
+  }
+
+  <!-- LOAD IN-PROGRESS -->
+  @else if (loadingState.isLoading()) {
+  <div class="progress-spinner-container">
+    <div class="progress-spinner-text">Loading Steam Insight Update Overview...</div>
+    <mat-spinner diameter="32"></mat-spinner>
+  </div>
+  }
+
+  <!-- LOAD FAILURE -->
+  @else if(loadingState.isFailed()) {
+  <hz-banner type="error">
+    <hz-banner-header>{{ loadingState.errorMessage()?.header }}</hz-banner-header>
+    <hz-banner-body>{{ loadingState.errorMessage()?.body }}</hz-banner-body>
+  </hz-banner>
+  }
+</div>

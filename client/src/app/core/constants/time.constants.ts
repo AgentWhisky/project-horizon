@@ -10,3 +10,7 @@ export const SNACKBAR_INTERVAL = {
 export const DEBOUNCE_TIME = {
   NORMAL: 500, // 0.5s
 };
+
+export const MIN_LOADING_DURATION = {
+  NORMAL: 500,
+} as const;
