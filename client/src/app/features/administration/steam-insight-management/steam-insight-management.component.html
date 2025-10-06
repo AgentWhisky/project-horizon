@@ -21,7 +21,7 @@
           }
         </hz-stat-card-group>
 
-        <div class="grid grid-cols-2 gap-3" [ngClass]="isMobileScreen() ? 'grid-cols-1' : 'grid-cols-2'">
+        <div class="grid gap-3" [class.grid-cols-1]="isMobileScreen()" [class.grid-cols-2]="!isMobileScreen()">
           <!-- IN PROGRESS UPDATE-->
           @if(runningUpdate()) {
           <hz-card primary>
@@ -51,20 +51,17 @@
             </hz-card-body>
           </hz-card>
           } @else {
-          <hz-card>
-            <hz-card-body class="flex flex-col gap-3">
-              <hz-banner type="primary">
-                <hz-banner-header>No update in progress</hz-banner-header>
-                <hz-banner-body>Steam Insight is not currently running an update.</hz-banner-body>
-              </hz-banner>
-
-              <div class="flex flex-col gap-2">
-                <span class="font-semibold">Start Update</span>
-                <div class="flex flex-row flex-wrap gap-3">
-                  <button matButton="filled" (click)="onStartUpdate(true)">Full</button>
-                  <button matButton="filled" (click)="onStartUpdate()">Incremental</button>
-                </div>
-              </div>
+          <hz-card primary>
+            <hz-card-header>No update in progress</hz-card-header>
+            <hz-card-body class="flex flex-row flex-wrap gap-3">
+              <button matButton="filled" class="flex flex-grow" (click)="onStartUpdate()">
+                <mat-icon>sync_alt</mat-icon>
+                Start Incremental Update
+              </button>
+              <button matButton="filled" class="flex flex-grow" (click)="onStartUpdate(true)">
+                <mat-icon>sync</mat-icon>
+                Start Full Update
+              </button>
             </hz-card-body>
           </hz-card>
           }

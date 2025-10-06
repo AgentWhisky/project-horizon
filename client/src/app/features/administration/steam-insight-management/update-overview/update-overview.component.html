@@ -1,4 +1,4 @@
-@let update = steamInsightUpdate(); @if(update) {
+@let update = steamInsightUpdate(); @if(update) { @if(loadingStatus() === LOADING_STATUS.SUCCESS) {}
 <div class="flex flex-col gap-3">
   <hz-breadcrumb [items]="breadcrumbItems"></hz-breadcrumb>
 
@@ -103,7 +103,7 @@
       <hz-card-body>
         @if (update.events && update.events.length) {
         <hz-timeline class="w-full">
-          @for (event of update.events; track event; let first = $first) {
+          @for (event of update.events; track event.message; let first = $first) {
           <hz-timeline-item [latest]="first">
             <hz-timeline-header>{{ event.timestamp | date : 'short' }}</hz-timeline-header>
             <hz-timeline-body>{{ event.message | formatDate }}</hz-timeline-body>
@@ -116,4 +116,9 @@
   </div>
 </div>
 
+}@else if(loadingStatus() === LOADING_STATUS.FAILED) {
+<hz-banner type="error">
+  <hz-banner-header>Steam Insight Update failed to load</hz-banner-header>
+  <hz-banner-body>{{ loadErrorMsg }}</hz-banner-body>
+</hz-banner>
 }

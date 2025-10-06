@@ -1,16 +1,17 @@
 import { Component, computed, inject, input, OnInit } from '@angular/core';
-import { HzBreadcrumbItem, HzBreadcrumbModule, HzCardModule, HzTimelineModule } from '@hz/shared/components';
+import { HzBannerModule, HzBreadcrumbItem, HzBreadcrumbModule, HzCardModule, HzTimelineModule } from '@hz/shared/components';
 import { UpdateOverviewService } from './update-overview.service';
 import { getUpdateStatus, getUpdateStatusType, getUpdateType } from '../resources/steam-insight-management.utils';
 import { HzStatusType } from '@hz/core/models';
 import { DatePipe } from '@angular/common';
 import { DurationPipe, FormatDatePipe } from '@hz/core/pipes';
 import { CdkTableModule } from '@angular/cdk/table';
-import { getRuntime } from '@hz/core/utilities';
+import { getGenericLoadFailureMessage, getNotFoundMessage, getRuntime } from '@hz/core/utilities';
+import { LOADING_STATUS } from '@hz/core/constants';
 
 @Component({
   selector: 'hz-update-overview',
-  imports: [HzBreadcrumbModule, HzCardModule, HzTimelineModule, DatePipe, DurationPipe, FormatDatePipe, CdkTableModule],
+  imports: [HzBreadcrumbModule, HzCardModule, HzTimelineModule, HzBannerModule, DatePipe, DurationPipe, FormatDatePipe, CdkTableModule],
   templateUrl: './update-overview.component.html',
   styleUrl: './update-overview.component.scss',
 })
@@ -30,6 +31,12 @@ export class UpdateOverviewComponent implements OnInit {
       totalRuntime: update ? getRuntime(update.startTime, update?.endTime, 's') : null,
     };
   });
+  readonly loadingStatus = this.updateOverviewService.loadingStatus;
+  readonly loadingError = this.updateOverviewService.loadingError;
+
+  readonly LOADING_STATUS = LOADING_STATUS;
+  readonly notFoundErrorMsg = getNotFoundMessage('Steam Insight Update');
+  readonly loadErrorMsg = getGenericLoadFailureMessage('Steam Insight Update');
 
   readonly breadcrumbItems: HzBreadcrumbItem[] = [
     { label: 'Administration', route: '/administration', icon: 'admin_panel_settings' },

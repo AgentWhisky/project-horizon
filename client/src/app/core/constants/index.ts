@@ -4,6 +4,7 @@ export * from './average-action-time.constants';
 export * from './endpoints.constants';
 export * from './lexo-rank.constants';
 export * from './loading-status.constants';
+export * from './pagination.constants';
 export * from './regex.constants';
 export * from './routes.constants';
 export * from './screen-values.constants';
