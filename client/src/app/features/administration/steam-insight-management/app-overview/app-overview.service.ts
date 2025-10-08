@@ -1,12 +1,11 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { catchError, delay, of, tap } from 'rxjs';
+import { catchError, of, tap } from 'rxjs';
 
-import { MIN_LOADING_DURATION } from '@hz/core/constants';
 import { TokenService } from '@hz/core/services';
 import { HzLoadingState } from '@hz/core/utilities';
 
-import { SteamInsightAppRaw } from '../steam-insight-management-app-view/resources/steam-insight-management-app-view.model';
+import { AppActiveStatus, SteamInsightAppRaw } from '../resources/steam-insight-management.model';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +22,6 @@ export class AppOverviewService {
     this.tokenService
       .getWithTokenRefresh<SteamInsightAppRaw>(`/steam-insight-management/app/${appid}`)
       .pipe(
-        delay(MIN_LOADING_DURATION.NORMAL),
         tap((response) => {
           this.app.set(response);
           this.loadingState.setSuccess();
@@ -31,6 +29,29 @@ export class AppOverviewService {
         catchError((err: HttpErrorResponse) => {
           this.loadingState.setFailed(err.status);
           console.error(`Failed to fetch Steam Insight App`, { appid, error: err });
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
+  toggleAppActive() {
+    const app = this.app();
+
+    if (!app) {
+      console.error('No Steam Insight App loaded to toggle active status');
+      return;
+    }
+
+    this.tokenService
+      .putWithTokenRefresh<AppActiveStatus>(`/steam-insight-management/app/${app.appid}/active`, { active: !app.active })
+      .pipe(
+        tap((response) => {
+          const newApp = { ...this.app()!, active: response.active };
+          this.app.set(newApp);
+        }),
+        catchError((err: HttpErrorResponse) => {
+          console.error(`Failed to update Steam Insight App active status`, { appid: app.appid, error: err });
           return of(null);
         })
       )

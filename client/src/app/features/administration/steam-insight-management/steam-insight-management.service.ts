@@ -206,24 +206,6 @@ export class SteamInsightManagementService {
     this.loadAppSearch();
   }
 
-  async updateAppActive(appid: number, active: boolean) {
-    try {
-      const appInfo = await this.putAppActive(appid, active);
-
-      const apps = this.steamInsightApps();
-
-      const updatedApps = apps.map((app) => (app.appid === appInfo.appid ? appInfo : app));
-
-      this.steamInsightApps.set([...updatedApps]);
-
-      this.snackbar.open(`Successfully ${appInfo.active ? 'enabled' : 'disabled'} Steam Insight app - ${appInfo.name}`, 'Close', {
-        duration: SNACKBAR_INTERVAL.NORMAL,
-      });
-    } catch (error) {
-      console.error(`Error updating Steam Insight app active status`, error);
-    }
-  }
-
   // *** UPDATE HISTORY SEARCH ***
   async loadUpdateHistory(query: SteamInsightUpdatesQuery = {}) {
     try {
@@ -332,14 +314,6 @@ export class SteamInsightManagementService {
       params,
     });
     return firstValueFrom(steamInsightApps$);
-  }
-
-  private async putAppActive(appid: number, active: boolean) {
-    const appInfo$ = this.tokenService.putWithTokenRefresh<SteamInsightAppResponse>(`/steam-insight-management/app/${appid}/active`, {
-      active,
-    });
-
-    return firstValueFrom(appInfo$);
   }
 
   private async getUpdateHistory(query: SteamInsightUpdatesQuery) {

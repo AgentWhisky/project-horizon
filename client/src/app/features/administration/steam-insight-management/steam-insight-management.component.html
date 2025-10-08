@@ -225,27 +225,12 @@
                   </td>
                 </ng-container>
 
-                <ng-container matColumnDef="actions">
-                  <th mat-header-cell *matHeaderCellDef aria-hidden="true"></th>
-                  <td mat-cell class="min-w-16" *matCellDef="let element">
-                    <div class="flex justify-end items-center">
-                      <button matIconButton (click)="onViewApp(element)" aria-label="View App">
-                        <mat-icon matTooltip="View App">visibility</mat-icon>
-                      </button>
-                      <button
-                        matIconButton
-                        (click)="onUpdateAppActiveStatus(element)"
-                        [attr.aria-label]="element.active ? 'Disable App' : 'Enable App'">
-                        <mat-icon [matTooltip]="element.active ? 'Disable App' : 'Enable App'">
-                          {{ element.active ? 'cancel' : 'check_circle' }}
-                        </mat-icon>
-                      </button>
-                    </div>
-                  </td>
-                </ng-container>
-
                 <tr mat-header-row *matHeaderRowDef="steamInsightAppsDisplayedColumns()"></tr>
-                <tr mat-row class="table-row" *matRowDef="let row; columns: steamInsightAppsDisplayedColumns()"></tr>
+                <tr
+                  mat-row
+                  class="table-row-clickable"
+                  (click)="onViewApp(row)"
+                  *matRowDef="let row; columns: steamInsightAppsDisplayedColumns()"></tr>
               </table>
               @if (steamInsightAppRows() && steamInsightAppRows().length > 0) {
               <mat-paginator

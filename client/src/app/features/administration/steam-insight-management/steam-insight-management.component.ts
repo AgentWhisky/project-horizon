@@ -86,7 +86,7 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
 
   /** APP SEARCH */
   readonly steamInsightAppsDisplayedColumns = computed<string[]>(() =>
-    this.isSmallScreen() ? ['appid', 'name', 'type'] : ['appid', 'name', 'type', 'isAdult', 'validationFailed', 'active', 'actions']
+    this.isSmallScreen() ? ['appid', 'name', 'type'] : ['appid', 'name', 'type', 'isAdult', 'validationFailed', 'active']
   );
 
   readonly steamInsightAppsDataSource = new MatTableDataSource<SteamInsightAppResponse>();
@@ -244,10 +244,6 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
     const appid = row.appid;
 
     this.router.navigate(['administration', 'steam-insight-management', 'app', appid]);
-  }
-
-  onUpdateAppActiveStatus(app: SteamInsightAppResponse) {
-    this.steamInsightMangementService.updateAppActive(app.appid, !app.active);
   }
 
   /** STEAM INSIGHT UPDATE HISTORY SEARCH */

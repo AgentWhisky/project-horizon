@@ -4,6 +4,7 @@ import { HzEvent, HzStatusType } from '@hz/core/models';
 import {
   SteamInsightAppField,
   SteamInsightAppType,
+  SteamInsightAuditType,
   SteamInsightUpdateField,
   SteamInsightUpdateStatus,
   SteamInsightUpdateType,
@@ -99,6 +100,30 @@ export interface SteamInsightUpdateSearchResponse {
   updates: SteamInsightUpdate[];
 }
 
+// *** APP OVERVIEW ***
+export interface SteamInsightAppRaw {
+  appid: number;
+  name: string;
+  type: string;
+  active: boolean;
+  audits: SteamInsightAppAudit[];
+  [key: string]: unknown;
+}
+
+export interface SteamInsightAppAudit {
+  id: number;
+  appid: number;
+  changeType: SteamInsightAuditType;
+  changes: Record<string, { before: unknown; after: unknown }>;
+  createdDate: Date;
+}
+
+export interface AppActiveStatus {
+  appid: number;
+  active: boolean;
+}
+
+// *** UPDATE OVERVIEW ***
 export interface SteamInsightUpdateRow {
   id: number;
   startTime: Date | null;

@@ -218,7 +218,7 @@ export class SteamInsightManagementService {
     };
   }
 
-  async updateSteamInsightAppActive(appid: number, active: boolean): Promise<SteamInsightAppResponse> {
+  async updateSteamInsightAppActive(appid: number, active: boolean): Promise<AppActiveStatus> {
     const result = await this.steamAppRepository.update({ appid }, { active });
 
     if (result.affected === 0) {
@@ -228,13 +228,7 @@ export class SteamInsightManagementService {
     return await this.steamAppRepository.findOne({
       select: {
         appid: true,
-        name: true,
-        type: true,
-        isAdult: true,
-        validationFailed: true,
         active: true,
-        createdDate: true,
-        updatedDate: true,
       },
       where: { appid },
     });

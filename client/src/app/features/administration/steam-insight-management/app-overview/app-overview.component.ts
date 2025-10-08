@@ -37,4 +37,8 @@ export class AppOverviewComponent implements OnInit {
   ngOnInit() {
     this.appOverviewService.loadApp(this.appid());
   }
+
+  onAppActiveUpdate() {
+    this.appOverviewService.toggleAppActive();
+  }
 }
