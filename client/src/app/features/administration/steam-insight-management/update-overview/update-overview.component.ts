@@ -4,7 +4,14 @@ import { DatePipe } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { DurationPipe, FormatDatePipe } from '@hz/core/pipes';
-import { HzBannerModule, HzBreadcrumbItem, HzBreadcrumbModule, HzCardModule, HzTimelineModule } from '@hz/shared/components';
+import {
+  HzBannerModule,
+  HzBreadcrumbItem,
+  HzBreadcrumbModule,
+  HzCardModule,
+  HzLoadingSpinnerModule,
+  HzTimelineModule,
+} from '@hz/shared/components';
 
 import { UpdateOverviewService } from './update-overview.service';
 import { UpdateStatusPipe, UpdateStatusTypePipe, UpdateTypePipe } from '../resources/steam-insight-management.pipe';
@@ -17,6 +24,7 @@ import { UpdateStatusPipe, UpdateStatusTypePipe, UpdateTypePipe } from '../resou
     HzCardModule,
     HzTimelineModule,
     HzBannerModule,
+    HzLoadingSpinnerModule,
     DatePipe,
     DurationPipe,
     FormatDatePipe,

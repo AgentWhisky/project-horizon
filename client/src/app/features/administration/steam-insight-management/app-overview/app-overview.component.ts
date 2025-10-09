@@ -1,5 +1,5 @@
 import { Component, inject, input, OnInit } from '@angular/core';
-import { HzBannerModule, HzBreadcrumbItem, HzBreadcrumbModule, HzCardModule } from '@hz/shared/components';
+import { HzBannerModule, HzBreadcrumbItem, HzBreadcrumbModule, HzCardModule, HzLoadingSpinnerModule } from '@hz/shared/components';
 import { AppOverviewService } from './app-overview.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DatePipe, JsonPipe, TitleCasePipe } from '@angular/common';
@@ -13,6 +13,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     HzBreadcrumbModule,
     HzBannerModule,
     HzCardModule,
+    HzLoadingSpinnerModule,
     TitleCasePipe,
     DatePipe,
     JsonPipe,

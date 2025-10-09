@@ -8,11 +8,28 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { HzStatusType } from '@hz/core/models';
 import { SNACKBAR_INTERVAL } from '@hz/core/constants';
-import { HzBannerModule, HzBreadcrumbItem, HzBreadcrumbModule, HzCardModule, HzChipModule } from '@hz/shared/components';
+import {
+  HzBannerModule,
+  HzBreadcrumbItem,
+  HzBreadcrumbModule,
+  HzCardModule,
+  HzChipModule,
+  HzLoadingSpinnerModule,
+} from '@hz/shared/components';
 
 @Component({
   selector: 'hz-dev-portal',
-  imports: [MatButtonModule, MatIconModule, MatTabsModule, RouterModule, HzBannerModule, HzChipModule, HzCardModule, HzBreadcrumbModule],
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    MatTabsModule,
+    RouterModule,
+    HzBannerModule,
+    HzChipModule,
+    HzCardModule,
+    HzBreadcrumbModule,
+    HzLoadingSpinnerModule,
+  ],
   templateUrl: './dev-portal.component.html',
   styleUrl: './dev-portal.component.scss',
 })

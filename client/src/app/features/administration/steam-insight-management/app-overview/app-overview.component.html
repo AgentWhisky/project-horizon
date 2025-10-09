@@ -28,10 +28,7 @@
 
   <!-- LOAD IN-PROGRESS -->
   @else if (loadingState.isLoading()) {
-  <div class="progress-spinner-container">
-    <div class="progress-spinner-text">Loading Steam Insight App Overview...</div>
-    <mat-spinner diameter="32"></mat-spinner>
-  </div>
+  <hz-loading-spinner text="Loading Steam Insight App Overview..."></hz-loading-spinner>
   }
 
   <!-- LOAD FAILURE -->

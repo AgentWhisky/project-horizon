@@ -352,5 +352,29 @@
         </div>
       </div>
     </mat-tab>
+
+    <mat-tab label="Hz Loading">
+      <div class="flex flex-col gap-3 p-3">
+        <div class="flex flex-col gap-1">
+          <span class="test-banner-section-header">Loading spinner</span>
+          <hz-loading-spinner></hz-loading-spinner>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <span class="test-banner-section-header">Loading spinner with background</span>
+          <hz-loading-spinner showBackground></hz-loading-spinner>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <span class="test-banner-section-header">Loading spinner with custom text</span>
+          <hz-loading-spinner text="Loading test payload..."></hz-loading-spinner>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <span class="test-banner-section-header">Loading spinner with larger spinner</span>
+          <hz-loading-spinner text="Loading test payload..." [size]="64"></hz-loading-spinner>
+        </div>
+      </div>
+    </mat-tab>
   </mat-tab-group>
 </div>
