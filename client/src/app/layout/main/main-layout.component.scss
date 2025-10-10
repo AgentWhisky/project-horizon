@@ -116,8 +116,6 @@
 .main-layout-left-nav-footer-pill-link {
   font-family: monospace;
   font-size: 0.8rem;
-
-  background-color: var(--mat-sys-surface-container-highest);
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
   text-decoration: none;
@@ -126,7 +124,8 @@
 }
 
 .main-layout-left-nav-footer-pill-link:hover {
-  background-color: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-primary);
+  text-decoration: underline;
 }
 
 /** APP CONTENT */

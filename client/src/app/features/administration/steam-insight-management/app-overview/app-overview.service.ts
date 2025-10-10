@@ -17,6 +17,10 @@ export class AppOverviewService {
   readonly loadingState = new HzLoadingState('Steam Insight App');
 
   loadApp(appid: number) {
+    if (this.loadingState.isLoading()) {
+      return;
+    }
+
     this.loadingState.setInProgress();
 
     this.tokenService
@@ -56,5 +60,10 @@ export class AppOverviewService {
         })
       )
       .subscribe();
+  }
+
+  clearApp() {
+    this.app.set(null);
+    this.loadingState.reset();
   }
 }

@@ -5,25 +5,52 @@
 
   <!-- LOAD SUCCESS -->
   @if(app && loadingState.isSuccess()) {
-  <hz-card>
-    <hz-card-header>{{ app.name }}</hz-card-header>
-    <hz-card-chip>
-      <hz-chip>{{ app.type | titlecase }}</hz-chip>
-    </hz-card-chip>
-    <hz-card-body>
-      <div class="flex w-full flex-col gap-3"></div>
-    </hz-card-body>
-  </hz-card>
+  <!-- APP INFO -->
+  <mat-tab-group dynamicHeight>
+    <mat-tab label="App Info">
+      <div class="flex flex-col gap-3 py-3">
+        <hz-card>
+          <hz-card-header>{{ app.appid }} - {{ app.name }}</hz-card-header>
+          <hz-card-chip>
+            <hz-chip [type]="app.active ? 'success' : 'error'">{{ app.active ? 'Active' : 'Inactive' }}</hz-chip>
+            <hz-chip [type]="app.validationFailed ? 'error' : 'success'">{{ app.validationFailed ? 'Invalid' : 'Valid' }}</hz-chip>
+            <hz-chip>{{ app.type | titlecase }}</hz-chip>
+          </hz-card-chip>
+          <hz-card-body>
+            <div class="flex w-full flex-col gap-3"></div>
+          </hz-card-body>
+        </hz-card>
 
-  <!-- VERSION HISTORY -->
-  <mat-accordion>
-    @for(audit of app.audits; track audit.id; let i = $index) {
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>v{{ app.audits.length - i }} - {{ audit.createdDate | date : 'short' }}</mat-expansion-panel-header>
-      <pre>{{ audit.changes | json }}</pre>
-    </mat-expansion-panel>
-    }
-  </mat-accordion>
+        <hz-card>
+          <hz-card-header>App Info Raw</hz-card-header>
+          <hz-card-body>
+            <pre class="app-info-json">{{ app | json }}</pre>
+          </hz-card-body>
+        </hz-card>
+      </div>
+    </mat-tab>
+
+    <!-- VERSION HISTORY -->
+    <mat-tab label="Version History">
+      <div class="flex flex-col gap-3 py-3">
+        <mat-accordion>
+          @for(audit of app.audits; track audit.id; let i = $index) {
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Version #{{ app.audits.length - i }}</mat-panel-title>
+              <mat-panel-description>
+                {{ audit.changeType === 'I' ? 'Inserted' : 'Updated' }} at {{ audit.createdDate | date : 'short' }}
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <pre class="app-info-json">{{ audit.changes | json }}</pre>
+          </mat-expansion-panel>
+          }
+        </mat-accordion>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
   }
 
   <!-- LOAD IN-PROGRESS -->

@@ -11,13 +11,13 @@
       <mat-form-field class="w-full">
         <mat-label>Url</mat-label>
         <input matInput formControlName="url" />
-        <mat-error>{{ linkForm.get('url')?.errors | validatorMessage : { pattern: 'Invalid URL format' } }}</mat-error>
+        <mat-error>{{ linkForm.get('url')?.errors | validatorMessage : { overrides: { pattern: 'Invalid URL format' } } }}</mat-error>
       </mat-form-field>
 
       <mat-form-field class="w-full" [subscriptSizing]="showIconDisplay() ? 'dynamic' : 'fixed'">
         <mat-label>Icon</mat-label>
         <input matInput formControlName="icon" #iconInput />
-        <mat-error>{{ linkForm.get('icon')?.errors | validatorMessage : { pattern: 'Invalid URL format' } }}</mat-error>
+        <mat-error>{{ linkForm.get('icon')?.errors | validatorMessage : { overrides: { pattern: 'Invalid URL format' } } }}</mat-error>
         <button
           class="mr-3"
           matSuffix
@@ -26,7 +26,7 @@
           aria-label="Search for icon"
           (click)="onSearchIcon()"
           [disabled]="!linkForm.get('url')?.valid">
-           <mat-icon>image_search</mat-icon>
+          <mat-icon>image_search</mat-icon>
         </button>
       </mat-form-field>
 

@@ -5,7 +5,7 @@
       <mat-form-field class="w-full" cdkFocusInitial>
         <mat-label>Tag Name</mat-label>
         <input matInput formControlName="name" (keydown.enter)="onConfirm()" />
-        <mat-error>{{ tagForm.get('name')?.errors | validatorMessage : { unique: 'This tag already exists' } }}</mat-error>
+        <mat-error>{{ tagForm.get('name')?.errors | validatorMessage : { overrides: { unique: 'This tag already exists' } } }}</mat-error>
       </mat-form-field>
     </form>
   </div>

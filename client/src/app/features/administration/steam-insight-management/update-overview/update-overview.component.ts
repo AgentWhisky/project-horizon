@@ -1,7 +1,5 @@
-import { Component, inject, input, OnInit } from '@angular/core';
+import { Component, inject, input, OnDestroy, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { DurationPipe, FormatDatePipe } from '@hz/core/pipes';
 import {
@@ -19,7 +17,6 @@ import { UpdateStatusPipe, UpdateStatusTypePipe, UpdateTypePipe } from '../resou
 @Component({
   selector: 'hz-update-overview',
   imports: [
-    MatProgressSpinnerModule,
     HzBreadcrumbModule,
     HzCardModule,
     HzTimelineModule,
@@ -35,7 +32,7 @@ import { UpdateStatusPipe, UpdateStatusTypePipe, UpdateTypePipe } from '../resou
   templateUrl: './update-overview.component.html',
   styleUrl: './update-overview.component.scss',
 })
-export class UpdateOverviewComponent implements OnInit {
+export class UpdateOverviewComponent implements OnInit, OnDestroy {
   readonly id = input.required<number>();
 
   private readonly updateOverviewService = inject(UpdateOverviewService);
@@ -51,5 +48,9 @@ export class UpdateOverviewComponent implements OnInit {
 
   ngOnInit() {
     this.updateOverviewService.loadUpdate(this.id());
+  }
+
+  ngOnDestroy() {
+    this.updateOverviewService.clearUpdate();
   }
 }

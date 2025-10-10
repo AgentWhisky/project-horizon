@@ -1,15 +1,18 @@
 import { Component, inject, input, OnInit } from '@angular/core';
-import { HzBannerModule, HzBreadcrumbItem, HzBreadcrumbModule, HzCardModule, HzLoadingSpinnerModule } from '@hz/shared/components';
-import { AppOverviewService } from './app-overview.service';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DatePipe, JsonPipe, TitleCasePipe } from '@angular/common';
+
 import { MatExpansionModule } from '@angular/material/expansion';
+
+import { HzBannerModule, HzBreadcrumbItem, HzBreadcrumbModule, HzCardModule, HzLoadingSpinnerModule } from '@hz/shared/components';
+
+import { AppOverviewService } from './app-overview.service';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   selector: 'hz-app-overview',
   imports: [
+    MatTabsModule,
     MatExpansionModule,
-    MatProgressSpinnerModule,
     HzBreadcrumbModule,
     HzBannerModule,
     HzCardModule,
@@ -37,6 +40,10 @@ export class AppOverviewComponent implements OnInit {
 
   ngOnInit() {
     this.appOverviewService.loadApp(this.appid());
+  }
+
+  ngOnDestroy() {
+    this.appOverviewService.clearApp();
   }
 
   onAppActiveUpdate() {

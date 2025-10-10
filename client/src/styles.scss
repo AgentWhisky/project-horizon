@@ -55,14 +55,6 @@ body {
       container-background-color: transparent,
     )
   );
-
-  // Mat Expansion Panel
-  @include mat.expansion-overrides(
-    (
-      container-background-color: transparent,
-      container-shape: var(--mat-sys-corner-small),
-    )
-  );
 }
 
 // *** MATERIAL OVERRIDES ***

@@ -17,6 +17,10 @@ export class UpdateOverviewService {
   readonly loadingState = new HzLoadingState('Steam Insight Update');
 
   loadUpdate(id: number) {
+    if (this.loadingState.isLoading()) {
+      return;
+    }
+
     this.loadingState.setInProgress();
 
     this.tokenService
@@ -33,5 +37,10 @@ export class UpdateOverviewService {
         })
       )
       .subscribe();
+  }
+
+  clearUpdate() {
+    this.update.set(null);
+    this.loadingState.reset();
   }
 }

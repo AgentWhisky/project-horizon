@@ -1,15 +1,25 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 
-const DEFAULT_ERROR_MESSAGES: Record<string, (value?: any) => string> = {
-  required: () => 'This field is required',
-  pattern: () => 'This field violates the set pattern',
-  unique: () => 'This field is not unique',
-  minlength: (value) => `Minimum length required [${value.actualLength}/${value.requiredLength}]`,
-  maxlength: (value) => `Maximum length exceeded [${value.actualLength}/${value.requiredLength}]`,
-  min: (value) => `Minimum value required: ${value.min}`,
-  max: (value) => `Maximum value exceeded: ${value.max}`,
-  unknown: () => 'This field is invalid',
+export interface ValidatorOptions {
+  fieldName?: string;
+  overrides?: Record<string, string>;
+  default?: string;
+}
+
+export const validatorOpts = (options: ValidatorOptions) => options;
+
+const DEFAULT_FIELD_NAME = 'This field';
+const DEFAULT_ERROR_MESSAGES: Record<string, (value: any, fieldName: string) => string> = {
+  pattern: (_value, fieldName) => `${fieldName} violates the set pattern`,
+  unique: (_value, fieldName) => `${fieldName} is not unique`,
+  minlength: (value, fieldName) => `${fieldName} minimum length required [${value.actualLength}/${value.requiredLength}]`,
+  maxlength: (value, fieldName) => `${fieldName} maximum length exceeded [${value.actualLength}/${value.requiredLength}]`,
+  min: (value, fieldName) => `${fieldName} minimum value required: ${value.min}`,
+  max: (value, fieldName) => `${fieldName} maximum value exceeded: ${value.max}`,
+  email: (_value, fieldName) => `${fieldName} is not a valid email address`,
+  required: (_value, fieldName) => `${fieldName} is required`,
+  unknown: (_value, fieldName) => `${fieldName} is invalid`,
 };
 
 /**
@@ -25,10 +35,14 @@ const DEFAULT_ERROR_MESSAGES: Record<string, (value?: any) => string> = {
   name: 'validatorMessage',
 })
 export class ValidatorMessagePipe implements PipeTransform {
-  transform(errors: ValidationErrors | null | undefined, overrides: Record<string, string> = {}): string {
+  transform(errors: ValidationErrors | null | undefined, options: ValidatorOptions = {}): string {
+    const fieldName = options.fieldName || DEFAULT_FIELD_NAME;
+
     if (!errors) {
-      return overrides['default'] || '';
+      return options.default || '';
     }
+
+    const overrides = options.overrides || {};
 
     for (const [key, value] of Object.entries(errors)) {
       if (overrides[key]) {
@@ -37,11 +51,11 @@ export class ValidatorMessagePipe implements PipeTransform {
 
       const messageFn = DEFAULT_ERROR_MESSAGES[key];
       if (messageFn) {
-        return messageFn(value);
+        return messageFn(value, fieldName);
       }
 
       console.warn('Unhandled validation error:', key, value);
     }
-    return DEFAULT_ERROR_MESSAGES['unknown']();
+    return DEFAULT_ERROR_MESSAGES['unknown'](null, fieldName);
   }
 }
