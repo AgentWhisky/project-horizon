@@ -1,4 +1,4 @@
-<div cdkScrollable class="left-nav-container">
+<nav cdkScrollable class="left-nav-container">
   @for(navSection of navSections; track navSection.title; let index = $index) { @if(showSection(navSection)) {
   <!-- DIVIDER -->
   @if(index > 0) {
@@ -20,4 +20,4 @@
     {{ navItem.name }}
   </a>
   } } } }
-</div>
+</nav>
