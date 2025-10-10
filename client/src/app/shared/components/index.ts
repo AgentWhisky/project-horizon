@@ -9,5 +9,6 @@ export * from './hz-banner';
 export * from './hz-breadcrumb';
 export * from './hz-card';
 export * from './hz-chip';
+export * from './hz-loading';
 export * from './hz-stat-card';
 export * from './hz-timeline';

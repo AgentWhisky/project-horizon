@@ -68,11 +68,6 @@ export const routes: Routes = [
                 path: '',
                 loadComponent: () => import('./features/testing/dev-portal/dev-portal.component').then((c) => c.DevPortalComponent),
               },
-              {
-                path: 'hz-stat-card',
-                loadComponent: () =>
-                  import('./features/testing/test-stat-card/test-stat-card.component').then((c) => c.TestStatCardComponent),
-              },
             ],
           },
           {

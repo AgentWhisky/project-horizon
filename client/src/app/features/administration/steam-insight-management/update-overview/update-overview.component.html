@@ -122,10 +122,7 @@
 
   <!-- LOAD IN-PROGRESS -->
   @else if (loadingState.isLoading()) {
-  <div class="progress-spinner-container">
-    <div class="progress-spinner-text">Loading Steam Insight Update Overview...</div>
-    <mat-spinner diameter="32"></mat-spinner>
-  </div>
+  <hz-loading-spinner text="Loading Steam Insight Update Overview..."></hz-loading-spinner>
   }
 
   <!-- LOAD FAILURE -->
