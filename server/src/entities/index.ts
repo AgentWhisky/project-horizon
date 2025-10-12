@@ -8,6 +8,5 @@ export * from './settings.entity';
 export * from './steam-app-audit.entity';
 export * from './steam-app.entity';
 export * from './steam-update-history.entity';
-export * from './steam-update-log.entity';
 export * from './user-log.entity';
 export * from './users.entity';
