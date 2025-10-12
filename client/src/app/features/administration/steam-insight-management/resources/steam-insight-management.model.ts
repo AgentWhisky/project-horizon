@@ -46,7 +46,7 @@ export interface SteamInsightAppsQuery {
   active?: boolean;
 }
 
-export interface SteamInsightAppResponse {
+export interface SteamInsightApp {
   appid: number;
   name: string;
   type: string;
@@ -59,7 +59,7 @@ export interface SteamInsightAppResponse {
 
 export interface SteamInsightAppSearchResponse {
   pageLength: number;
-  apps: SteamInsightAppResponse[];
+  apps: SteamInsightApp[];
 }
 
 export interface AppActiveStatus {
@@ -90,9 +90,7 @@ export interface SteamInsightUpdate {
   updateStatus: SteamInsightUpdateStatus;
   startTime: Date;
   endTime?: Date;
-  stats?: SteamInsightUpdateStats;
   notes: string;
-  events: HzEvent[];
 }
 
 export interface SteamInsightUpdateSearchResponse {
@@ -125,7 +123,7 @@ export interface AppActiveStatus {
 }
 
 // *** UPDATE OVERVIEW ***
-export interface SteamInsightUpdateRow {
+export interface SteamInsightUpdateOverview {
   id: number;
   startTime: Date | null;
   endTime: Date | null;

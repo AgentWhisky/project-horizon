@@ -1,6 +1,17 @@
 import { HzErrorMessage } from '../models';
 
 /**
+ * Get the generic bad request (400) error message for a resource
+ * @param context The context for the given error message
+ */
+export function getBadRequestMessage(context: string): HzErrorMessage {
+  return {
+    header: `${context} request invalid`,
+    body: `The request sent by the client was invalid or improperly formatted. This may occur if one or more required fields are missing, contain invalid values, or fail validation. Please review your inputs and try again.`,
+  };
+}
+
+/**
  * Get the generic error message for a resource
  * @param context The context for the given error message
  */

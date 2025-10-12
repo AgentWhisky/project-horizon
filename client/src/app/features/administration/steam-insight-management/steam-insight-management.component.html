@@ -1,16 +1,13 @@
 <div class="flex flex-col gap-3">
   <hz-breadcrumb [items]="breadcrumbItems"></hz-breadcrumb>
 
-  <mat-tab-group
-    mat-stretch-tabs="false"
-    mat-align-tabs="start"
-    (selectedTabChange)="onTabChange($event)"
-    dynamicHeight
-    [selectedIndex]="tabIndex()">
+  <mat-tab-group [selectedIndex]="currentTabIndex()" (selectedTabChange)="onTabChange($event)" dynamicHeight>
+    <!-- DASHBOARD -->
     <mat-tab label="Dashboard">
+      @let dashboard = steamInsightDashboard();
       <div class="flex flex-col gap-3 py-3">
-        @if(steamInsightDashboard() && dashboardLoadingStatus() === LOADING_STATUS.SUCCESS) {
-
+        <!-- LOAD SUCCESS -->
+        @if(dashboard && dashboardLoadingState.isSuccess()) {
         <!-- App Stats -->
         <hz-stat-card-group showPrimaryHeader>
           @for(stat of steamInsightDashboard()?.appStats; track stat.displayName) {
@@ -21,8 +18,9 @@
           }
         </hz-stat-card-group>
 
+        <!-- STEAM INSIGHT UPDATE DISPLAY -->
         <div class="grid gap-3" [class.grid-cols-1]="isMobileScreen()" [class.grid-cols-2]="!isMobileScreen()">
-          <!-- IN PROGRESS UPDATE-->
+          <!-- IN PROGRESS STEAM INSIGHT UPDATE-->
           @if(runningUpdate()) {
           <hz-card primary>
             <hz-card-header>In-Progress Update</hz-card-header>
@@ -51,6 +49,7 @@
             </hz-card-body>
           </hz-card>
           } @else {
+          <!-- NO RUNNING STEAM INSIGHT UPDATE-->
           <hz-card primary>
             <hz-card-header>No update in progress</hz-card-header>
             <hz-card-body class="flex flex-row flex-wrap gap-3">
@@ -69,9 +68,9 @@
           <div class="grid gap-3">
             @for (update of steamInsightDashboard()?.recentUpdates; track update.id) {
             <hz-card primary>
-              <hz-card-header>{{ getUpdateType(update.updateType) }} Update</hz-card-header>
+              <hz-card-header>{{ update.updateType | updateType }} Update</hz-card-header>
               <hz-card-chip>
-                <hz-chip [type]="getUpdateStatusType(update.updateStatus)">{{ getUpdateStatus(update.updateStatus) }}</hz-chip>
+                <hz-chip [type]="update.updateStatus | updateStatusType">{{ update.updateStatus | updateStatus }}</hz-chip>
               </hz-card-chip>
 
               <hz-card-body>
@@ -91,39 +90,36 @@
             }
           </div>
         </div>
+        }
+        <!-- LOAD IN-PROGRESS -->
+        @else if (dashboardLoadingState.isLoading()) {
+        <hz-loading-spinner text="Loading Steam Insight Dashboard..."></hz-loading-spinner>
+        }
 
-        <!-- Handle Loading and Errors-->
-        } @else if(dashboardLoadingStatus() === LOADING_STATUS.IN_PROGRESS) {
-        <div class="w-full flex justify-center">
-          <mat-spinner></mat-spinner>
-        </div>
-        } @else if(dashboardLoadingStatus() === LOADING_STATUS.FAILED) {
+        <!-- LOAD FAILURE -->
+        @else if(dashboardLoadingState.isFailed()) {
         <hz-banner type="error">
-          <hz-banner-header>Steam Insight Dashboard failed to load</hz-banner-header>
-          <hz-banner-body>
-            The system was unable to retrieve data required to render the Steam Insight Dashboard. This issue may be caused by a
-            connectivity failure between the application and the backend service, a timeout during data retrieval, or a misconfigured server
-            endpoint. Please verify that the server is online and accessible, and confirm that the API service responsible for dashboard
-            data is running correctly.
-          </hz-banner-body>
+          <hz-banner-header>{{ dashboardLoadingState.errorMessage()?.header }}</hz-banner-header>
+          <hz-banner-body>{{ dashboardLoadingState.errorMessage()?.body }}</hz-banner-body>
         </hz-banner>
         }
       </div>
     </mat-tab>
 
+    <!-- APP SEARCH -->
     <mat-tab label="Steam App Search">
-      <div class="flex flex-col gap-3 py-3">
-        @if(steamInsightAppsLoadingStatus() === LOADING_STATUS.SUCCESS || steamInsightAppsLoadingStatus() === LOADING_STATUS.IN_PROGRESS) {
-        <hz-card class="flex self-start">
+      @let apps = steamInsightApps();
+      <div class="flex flex-row flex-wrap gap-3 py-3 justify-center">
+        <hz-card primary>
           <hz-card-header>
             <mat-icon>filter_alt</mat-icon>
             Filter
           </hz-card-header>
           <hz-card-body>
-            <form [formGroup]="steamInsightAppsSearchForm" class="flex flex-row flex-wrap gap-3 items-center">
+            <form [formGroup]="appsSearchForm" class="flex flex-col gap-3">
               <mat-form-field subscriptSizing="dynamic">
                 <mat-label>Appid</mat-label>
-                <input matInput formControlName="appid" />
+                <input matInput formControlName="appid" type="number" inputmode="numeric" pattern="[0-9]*" />
               </mat-form-field>
 
               <mat-form-field subscriptSizing="dynamic">
@@ -134,7 +130,7 @@
               <mat-form-field subscriptSizing="dynamic">
                 <mat-label>App Type</mat-label>
                 <mat-select formControlName="type">
-                  @for (type of steamInsightAppsTypeOptions(); track type.value) {
+                  @for (type of appsTypeOptions(); track type.value) {
                   <mat-option [value]="type.value">{{ type.label }}</mat-option>
                   }
                 </mat-select>
@@ -175,14 +171,16 @@
           </hz-card-body>
         </hz-card>
 
-        <hz-card>
+        <!-- LOAD SUCCESS -->
+        @if(appsLoadingState.isSuccess()) {
+        <hz-card class="flex flex-grow">
           <hz-card-body>
             <div class="w-full flex flex-col">
               <table
                 mat-table
-                [dataSource]="steamInsightAppsDataSource"
+                [dataSource]="appsDataSource"
                 matSort
-                (matSortChange)="onSteamInsightAppSort($event)"
+                (matSortChange)="onAppSort($event)"
                 #steamInsightAppsSort="matSort"
                 class="mat-elevation-z8">
                 <ng-container matColumnDef="appid">
@@ -198,7 +196,7 @@
                 <ng-container matColumnDef="type">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by type">Type</th>
                   <td mat-cell *matCellDef="let element">
-                    <hz-chip>{{ element.type }}</hz-chip>
+                    <hz-chip>{{ element.type | uppercase }}</hz-chip>
                   </td>
                 </ng-container>
 
@@ -225,20 +223,16 @@
                   </td>
                 </ng-container>
 
-                <tr mat-header-row *matHeaderRowDef="steamInsightAppsDisplayedColumns()"></tr>
-                <tr
-                  mat-row
-                  class="table-row-clickable"
-                  (click)="onViewApp(row)"
-                  *matRowDef="let row; columns: steamInsightAppsDisplayedColumns()"></tr>
+                <tr mat-header-row *matHeaderRowDef="appsDisplayedColumns()"></tr>
+                <tr mat-row class="table-row-clickable" (click)="onViewApp(row)" *matRowDef="let row; columns: appsDisplayedColumns()"></tr>
               </table>
-              @if (steamInsightAppRows() && steamInsightAppRows().length > 0) {
+              @if (apps && apps.length > 0) {
               <mat-paginator
-                [length]="steamInsightAppsPageLength()"
-                [pageIndex]="steamInsightAppsPage()"
-                [pageSize]="steamInsightAppsPageSize()"
+                [length]="appsPageLength()"
+                [pageIndex]="appsPage()"
+                [pageSize]="appsPageSize()"
                 [pageSizeOptions]="PAGE_SIZE_OPTIONS"
-                (page)="onSteamInsightAppPageChange($event)"
+                (page)="onAppPageChange($event)"
                 showFirstLastButtons
                 aria-label="Steam Insight App Search Paginator"
                 #steamInsightAppsPaginator></mat-paginator>
@@ -254,34 +248,40 @@
             </div>
           </hz-card-body>
         </hz-card>
-        } @else if(steamInsightAppsLoadingStatus() === LOADING_STATUS.FAILED) {
+        }
+
+        <!-- LOAD IN-PROGRESS -->
+        @else if (appsLoadingState.isLoading()) {
+        <hz-loading-spinner text="Loading Steam Insight Apps..."></hz-loading-spinner>
+        }
+
+        <!-- LOAD FAILURE -->
+        @else if(appsLoadingState.isFailed()) {
         <hz-banner type="error">
-          <hz-banner-header>Steam Insight Apps failed to load</hz-banner-header>
-          <hz-banner-body>
-            The system was unable to retrieve apps data for this table. This may be due to a connectivity issue with the backend service, a
-            timeout while fetching records, or a misconfigured API endpoint. Please verify that the server is online and reachable, and
-            confirm that the app API service is running correctly.
-          </hz-banner-body>
+          <hz-banner-header>{{ appsLoadingState.errorMessage()?.header }}</hz-banner-header>
+          <hz-banner-body>{{ appsLoadingState.errorMessage()?.body }}</hz-banner-body>
         </hz-banner>
         }
       </div>
     </mat-tab>
 
+    <!-- UPDATE SEARCH -->
     <mat-tab label="Steam Update History">
-      <div class="flex flex-col gap-3 py-3">
-        @if(steamInsightUpdatesLoadingStatus() === LOADING_STATUS.SUCCESS || steamInsightUpdatesLoadingStatus() ===
-        LOADING_STATUS.IN_PROGRESS) {
-        <hz-card class="flex self-start">
+      @let updates = steamInsightUpdates();
+      <div class="flex flex-row flex-wrap gap-3 py-3 justify-center">
+        <!-- LOAD SUCCESS -->
+        @if(updatesLoadingState.isSuccess()) {
+        <hz-card>
           <hz-card-header>
             <mat-icon>filter_alt</mat-icon>
             Filter
           </hz-card-header>
           <hz-card-body>
-            <form [formGroup]="steamInsightUpdatesSearchForm" class="flex flex-row flex-wrap gap-3 items-center">
+            <form [formGroup]="updatesSearchForm" class="flex flex-col gap-3">
               <mat-form-field subscriptSizing="dynamic">
                 <mat-label>Update Status</mat-label>
                 <mat-select formControlName="statuses" multiple>
-                  @for (status of steamInsightUpdatesStatusOptions(); track status.value) {
+                  @for (status of updatesStatusOptions(); track status.value) {
                   <mat-option [value]="status.value">{{ status.label }}</mat-option>
                   }
                 </mat-select>
@@ -291,7 +291,7 @@
                 <mat-label>Update Type</mat-label>
                 <mat-select formControlName="type">
                   <mat-option [value]="null">None</mat-option>
-                  @for (type of steamInsightUpdatesTypeOptions(); track type.value) {
+                  @for (type of updatesTypeOptions(); track type.value) {
                   <mat-option [value]="type.value">{{ type.label }}</mat-option>
                   }
                 </mat-select>
@@ -305,14 +305,14 @@
           </hz-card-body>
         </hz-card>
 
-        <hz-card>
+        <hz-card class="flex flex-grow">
           <hz-card-body>
             <div class="w-full flex flex-col">
               <table
                 mat-table
-                [dataSource]="steamInsightUpdatesDataSource"
+                [dataSource]="updatesDataSource"
                 matSort
-                (matSortChange)="onSteamInsightUpdatesSort($event)"
+                (matSortChange)="onUpdateSort($event)"
                 #steamInsightUpdateSort="matSort"
                 class="mat-elevation-z8">
                 <ng-container matColumnDef="startTime">
@@ -328,21 +328,21 @@
                 <ng-container matColumnDef="totalRuntime">
                   <th mat-header-cell *matHeaderCellDef>Total Runtime</th>
                   <td mat-cell *matCellDef="let element">
-                    {{ element.endTime ? (element.startTime | duration : element.endTime ?? null) : '—' }}
+                    {{ element.endTime ? (element.startTime | duration : element.endTime) : '—' }}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="updateStatus">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by update status">Update Status</th>
                   <td mat-cell *matCellDef="let element">
-                    <hz-chip [type]="element.updateStatusType">{{ element.updateStatus }}</hz-chip>
+                    <hz-chip [type]="element.updateStatus | updateStatusType">{{ element.updateStatus | updateStatus }}</hz-chip>
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="updateType">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by update type">Update Type</th>
                   <td mat-cell *matCellDef="let element">
-                    <hz-chip>{{ element.updateType }}</hz-chip>
+                    <hz-chip>{{ element.updateType | updateType }}</hz-chip>
                   </td>
                 </ng-container>
 
@@ -356,15 +356,15 @@
                   mat-row
                   class="table-row-clickable"
                   *matRowDef="let row; columns: steamInsightUpdatesDisplayedColumns()"
-                  (click)="onSteamInsightUpdatesRowClick(row)"></tr>
+                  (click)="onViewUpdate(row)"></tr>
               </table>
-              @if (steamInsightUpdateRows() && steamInsightUpdateRows().length > 0) {
+              @if (updates && updates.length > 0) {
               <mat-paginator
-                [length]="steamInsightUpdatesPageLength()"
-                [pageIndex]="steamInsightUpdatesPage()"
-                [pageSize]="steamInsightUpdatesPageSize()"
+                [length]="updatesPageLength()"
+                [pageIndex]="updatesPage()"
+                [pageSize]="updatesPageSize()"
                 [pageSizeOptions]="PAGE_SIZE_OPTIONS"
-                (page)="onSteamInsightUpdatesPageChange($event)"
+                (page)="onUpdatePageChange($event)"
                 showFirstLastButtons
                 aria-label="Steam Insight Updates Paginator"
                 #steamInsightUpdatesPaginator></mat-paginator>
@@ -380,14 +380,18 @@
             </div>
           </hz-card-body>
         </hz-card>
-        } @else if(steamInsightUpdatesLoadingStatus() === LOADING_STATUS.FAILED) {
+        }
+
+        <!-- LOAD IN-PROGRESS -->
+        @else if (updatesLoadingState.isLoading()) {
+        <hz-loading-spinner text="Loading Steam Insight Updates..."></hz-loading-spinner>
+        }
+
+        <!-- LOAD FAILURE -->
+        @else if(updatesLoadingState.isFailed()) {
         <hz-banner type="error">
-          <hz-banner-header>Steam Insight Update History failed to load</hz-banner-header>
-          <hz-banner-body>
-            The system was unable to retrieve update history data for this table. This may be due to a connectivity issue with the backend
-            service, a timeout while fetching records, or a misconfigured API endpoint. Please verify that the server is online and
-            reachable, and confirm that the update history API service is running correctly.
-          </hz-banner-body>
+          <hz-banner-header>{{ updatesLoadingState.errorMessage()?.header }}</hz-banner-header>
+          <hz-banner-body>{{ updatesLoadingState.errorMessage()?.body }}</hz-banner-body>
         </hz-banner>
         }
       </div>

@@ -1,5 +1,5 @@
 import { Component, inject, input, OnInit } from '@angular/core';
-import { DatePipe, JsonPipe, TitleCasePipe } from '@angular/common';
+import { DatePipe, JsonPipe, TitleCasePipe, UpperCasePipe } from '@angular/common';
 
 import { MatExpansionModule } from '@angular/material/expansion';
 
@@ -17,7 +17,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     HzBannerModule,
     HzCardModule,
     HzLoadingSpinnerModule,
-    TitleCasePipe,
+    UpperCasePipe,
     DatePipe,
     JsonPipe,
   ],

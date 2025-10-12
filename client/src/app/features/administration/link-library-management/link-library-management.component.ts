@@ -27,7 +27,9 @@ import { REBASE_REQUIRED, USER_RIGHTS } from '@hz/core/constants';
 import { ImageFallbackDirective } from '@hz/core/directives';
 import { UserService, ThemeService } from '@hz/core/services';
 import { generateSortKey } from '@hz/core/utilities';
+
 import { ConfirmDialogComponent } from '@hz/shared/dialogs';
+import { HzBreadcrumbItem, HzBreadcrumbModule } from '@hz/shared/components';
 
 import { LinkLibraryManagementService } from './link-library-management.service';
 
@@ -44,6 +46,7 @@ import { LinkLibraryManagementService } from './link-library-management.service'
     MatTabsModule,
     MatChipsModule,
     MatDividerModule,
+    HzBreadcrumbModule,
     CdkDropList,
     CdkDrag,
     CdkDropListGroup,
@@ -59,6 +62,11 @@ export class LinkLibraryManagementComponent implements OnInit {
   private themeService = inject(ThemeService);
   private dialog = inject(MatDialog);
   private linkLibraryManagementService = inject(LinkLibraryManagementService);
+
+  readonly breadcrumbItems: HzBreadcrumbItem[] = [
+    { label: 'Administration', route: '/administration', icon: 'admin_panel_settings' },
+    { label: 'Link Library Management' },
+  ];
 
   readonly hasImportLibraryRight = signal<boolean>(this.userService.hasRights([USER_RIGHTS.IMPORT_LINK_LIBRARY]));
 

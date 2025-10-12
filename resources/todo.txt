@@ -33,3 +33,11 @@ Documentation
 - Update Readme to current Functionality
 - Create system architecture diagram
 
+
+
+Notes for updating
+-----------------------
+- All router navigations should be in the format
+  - this.router.navigate(['administrationsteam', 'steam-insight-management', 'update', row.id]);
+
+- All endpoint calls should use new RXJS format

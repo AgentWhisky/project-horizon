@@ -134,6 +134,17 @@ body {
   @apply flex w-full max-w-96 sm:max-w-lg md:max-w-xl lg:max-w-3xl xl:max-w-4xl;
 }
 
+// *** NUMBER INPUTS ***
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
 // *** TABLE ***
 .table-row:hover {
   background: var(--mat-sys-surface-container-high);

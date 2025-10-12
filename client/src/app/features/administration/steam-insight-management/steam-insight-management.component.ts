@@ -1,45 +1,49 @@
-import { Component, computed, effect, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
-
-import { LOADING_STATUS, REFRESH_INTERVAL } from '@hz/core/constants';
-
-import { SteamInsightManagementService } from './steam-insight-management.service';
-import { HzBannerModule, HzBreadcrumbItem, HzBreadcrumbModule, HzChipModule, HzStatCardModule } from '@hz/shared/components';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
-import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
-import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { HzOption, HzStatusType } from '@hz/core/models';
-import { HzCardModule } from '@hz/shared/components/hz-card';
-import { CommonModule, DatePipe } from '@angular/common';
-import { DurationPipe, FormatDatePipe } from '@hz/core/pipes';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { SteamInsightAppResponse, SteamInsightUpdate, SteamInsightUpdateRow } from './resources/steam-insight-management.model';
-import { ScreenService } from '@hz/core/services';
-import { SteamInsightAppType, SteamInsightUpdateStatus, SteamInsightUpdateType } from './resources/steam-insight-management.enum';
-import { MatIconModule } from '@angular/material/icon';
-import { getAppType, getUpdateStatus, getUpdateStatusType, getUpdateType } from './resources/steam-insight-management.utils';
-import { MatSelectModule } from '@angular/material/select';
-import { APP_TYPE_OPTIONS, UPDATE_STATUS_OPTIONS, UPDATE_TYPE_OPTIONS } from './resources/steam-insight-management.const';
+import { Component, computed, effect, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { CommonModule, DatePipe, UpperCasePipe } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { filter, tap } from 'rxjs';
+
+import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
+import { MatSortModule, Sort } from '@angular/material/sort';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { PAGE_SIZE_OPTIONS } from '@hz/core/constants/pagination.constants';
-import { ConfirmDialogComponent } from '@hz/shared/dialogs';
-import { filter, tap } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Router, RouterModule } from '@angular/router';
+
+import { PAGE_SIZE_OPTIONS, REFRESH_INTERVAL } from '@hz/core/constants';
+import { HzOption } from '@hz/core/models';
+import { DurationPipe, FormatDatePipe } from '@hz/core/pipes';
+import { ScreenService } from '@hz/core/services';
+
+import {
+  HzBannerModule,
+  HzBreadcrumbItem,
+  HzBreadcrumbModule,
+  HzCardModule,
+  HzLoadingSpinnerModule,
+  HzStatCardModule,
+} from '@hz/shared/components';
+import { ConfirmDialogComponent } from '@hz/shared/dialogs';
+
+import { SteamInsightAppType, SteamInsightUpdateStatus, SteamInsightUpdateType } from './resources/steam-insight-management.enum';
+import { SteamInsightApp, SteamInsightUpdate } from './resources/steam-insight-management.model';
+import { APP_TYPE_OPTIONS, UPDATE_STATUS_OPTIONS, UPDATE_TYPE_OPTIONS } from './resources/steam-insight-management.const';
+
+import { SteamInsightManagementService } from './steam-insight-management.service';
+import { UpdateStatusPipe, UpdateStatusTypePipe, UpdateTypePipe } from './resources/steam-insight-management.pipe';
 
 @Component({
   selector: 'hz-steam-insight-management',
   imports: [
-    MatDividerModule,
     MatIconModule,
     MatTabsModule,
     MatInputModule,
     MatSelectModule,
-    MatProgressSpinnerModule,
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
@@ -47,15 +51,18 @@ import { Router, RouterModule } from '@angular/router';
     MatTooltipModule,
     ReactiveFormsModule,
     CommonModule,
-    RouterModule,
     HzStatCardModule,
     HzBannerModule,
     HzCardModule,
-    HzChipModule,
     HzBreadcrumbModule,
+    HzLoadingSpinnerModule,
+    UpperCasePipe,
     DatePipe,
     DurationPipe,
     FormatDatePipe,
+    UpdateTypePipe,
+    UpdateStatusPipe,
+    UpdateStatusTypePipe,
   ],
   templateUrl: './steam-insight-management.component.html',
   styleUrl: './steam-insight-management.component.scss',
@@ -66,124 +73,91 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private steamInsightMangementService = inject(SteamInsightManagementService);
 
-  private intervalId?: ReturnType<typeof setInterval>;
+  private refreshIntervalId?: ReturnType<typeof setInterval>;
 
   readonly breadcrumbItems: HzBreadcrumbItem[] = [
     { label: 'Administration', route: '/administration', icon: 'admin_panel_settings' },
-    { label: 'Steam Insight Management', route: '/administration/steam-insight-management', svgIcon: 'steam' },
+    { label: 'Steam Insight Management', svgIcon: 'steam' },
   ];
 
-  readonly LOADING_STATUS = LOADING_STATUS;
   readonly isSmallScreen = this.screenService.isSmallScreen;
   readonly isMobileScreen = this.screenService.isMobileScreen;
 
-  readonly tabIndex = this.steamInsightMangementService.tabIndex;
+  readonly currentTabIndex = this.steamInsightMangementService.currentTabIndex;
 
   /** DASHBOARD */
   readonly steamInsightDashboard = this.steamInsightMangementService.dashboard;
-  readonly dashboardLoadingStatus = this.steamInsightMangementService.dashboardLoadingStatus;
+  readonly dashboardLoadingState = this.steamInsightMangementService.dashboardLoadingState;
   readonly runningUpdate = computed(() => this.steamInsightDashboard()?.runningUpdate);
 
   /** APP SEARCH */
-  readonly steamInsightAppsDisplayedColumns = computed<string[]>(() =>
+  readonly steamInsightApps = this.steamInsightMangementService.apps;
+  readonly appsPageLength = this.steamInsightMangementService.appsPageLength;
+  readonly appsPage = this.steamInsightMangementService.appsPage;
+  readonly appsPageSize = this.steamInsightMangementService.appsPageSize;
+  readonly appsSearchForm = this.steamInsightMangementService.appsSearchForm;
+  readonly appsTypeOptions = signal<HzOption<SteamInsightAppType>[]>(APP_TYPE_OPTIONS);
+  readonly appsLoadingState = this.steamInsightMangementService.appsLoadingState;
+  readonly appsDataSource = new MatTableDataSource<SteamInsightApp>();
+  readonly appsDisplayedColumns = computed<string[]>(() =>
     this.isSmallScreen() ? ['appid', 'name', 'type'] : ['appid', 'name', 'type', 'isAdult', 'validationFailed', 'active']
   );
 
-  readonly steamInsightAppsDataSource = new MatTableDataSource<SteamInsightAppResponse>();
-  readonly steamInsightAppsPageLength = this.steamInsightMangementService.steamInsightAppsPageLength;
-  readonly steamInsightAppsPage = this.steamInsightMangementService.steamInsightAppsPage;
-  readonly steamInsightAppsPageSize = this.steamInsightMangementService.steamInsightAppsPageSize;
-  readonly steamInsightAppsSearchForm = this.steamInsightMangementService.steamInsightAppsSearchForm;
-
-  readonly steamInsightAppsTypeOptions = signal<HzOption<SteamInsightAppType>[]>(APP_TYPE_OPTIONS);
-
-  readonly steamInsightAppsLoadingStatus = this.steamInsightMangementService.steamInsightAppsLoadingStatus;
-
-  readonly steamInsightAppRows = computed<SteamInsightAppResponse[]>(() =>
-    this.steamInsightMangementService.steamInsightApps().map((app) => ({
-      ...app,
-      type: getAppType(app.type),
-    }))
-  );
-
-  /** 1 SEARCH */
+  /** UPDATE SEARCH */
+  readonly steamInsightUpdates = this.steamInsightMangementService.updates;
+  readonly updatesPageLength = this.steamInsightMangementService.updatesPageLength;
+  readonly updatesPage = this.steamInsightMangementService.updatesPage;
+  readonly updatesPageSize = this.steamInsightMangementService.updatesPageSize;
+  readonly updatesSearchForm = this.steamInsightMangementService.updatesSearchForm;
+  readonly updatesStatusOptions = signal<HzOption<SteamInsightUpdateStatus>[]>(UPDATE_STATUS_OPTIONS);
+  readonly updatesTypeOptions = signal<HzOption<SteamInsightUpdateType>[]>(UPDATE_TYPE_OPTIONS);
+  readonly updatesDataSource = new MatTableDataSource<SteamInsightUpdate>();
+  readonly updatesLoadingState = this.steamInsightMangementService.updatesLoadingState;
   readonly steamInsightUpdatesDisplayedColumns = computed<string[]>(() =>
     this.isSmallScreen()
       ? ['startTime', 'endTime', 'updateStatus']
       : ['startTime', 'endTime', 'totalRuntime', 'updateStatus', 'updateType', 'notes']
   );
-  readonly steamInsightUpdatesDataSource = new MatTableDataSource<SteamInsightUpdateRow>();
-  readonly steamInsightUpdatesPageLength = this.steamInsightMangementService.steamInsightUpdatesPageLength;
-  readonly steamInsightUpdatesPage = this.steamInsightMangementService.steamInsightUpdatesPage;
-  readonly steamInsightUpdatesPageSize = this.steamInsightMangementService.steamInsightUpdatesPageSize;
-  readonly steamInsightUpdatesSearchForm = this.steamInsightMangementService.steamInsightUpdatesSearchForm;
-
-  readonly steamInsightUpdatesStatusOptions = signal<HzOption<SteamInsightUpdateStatus>[]>(UPDATE_STATUS_OPTIONS);
-  readonly steamInsightUpdatesTypeOptions = signal<HzOption<SteamInsightUpdateType>[]>(UPDATE_TYPE_OPTIONS);
-
-  readonly steamInsightUpdatesLoadingStatus = this.steamInsightMangementService.steamInsightUpdatesLoadingStatus;
-
-  // MOVE TO FUNCTION
-  readonly steamInsightUpdateRows = computed<SteamInsightUpdateRow[]>(() =>
-    this.steamInsightMangementService.steamInsightUpdates().map((update) => {
-      const startTime = update.startTime ? new Date(update.startTime) : null;
-      const endTime = update.endTime ? new Date(update.endTime) : null;
-
-      const totalRuntime = startTime && endTime ? Math.floor((endTime.getTime() - startTime.getTime()) / 1000) : 0;
-
-      const row = {
-        id: update.id,
-        startTime,
-        endTime,
-        totalRuntime,
-        updateStatus: getUpdateStatus(update.updateStatus),
-        updateStatusType: getUpdateStatusType(update.updateStatus),
-        updateType: getUpdateType(update.updateType),
-        notes: update.notes,
-        stats: update.stats,
-        events: update.events,
-      };
-
-      return row;
-    })
-  );
 
   readonly PAGE_SIZE_OPTIONS = PAGE_SIZE_OPTIONS;
 
-  readonly getUpdateType = getUpdateType;
-  readonly getUpdateStatus = getUpdateStatus;
-  readonly getUpdateStatusType = getUpdateStatusType;
-
   constructor() {
     effect(() => {
-      this.steamInsightAppsDataSource.data = this.steamInsightAppRows();
+      this.appsDataSource.data = this.steamInsightMangementService.apps();
     });
 
     effect(() => {
-      this.steamInsightUpdatesDataSource.data = this.steamInsightUpdateRows();
+      this.updatesDataSource.data = this.steamInsightMangementService.updates();
     });
   }
 
   ngOnInit() {
-    this.steamInsightMangementService.loadDashboard();
-    this.steamInsightMangementService.loadUpdateHistory();
+    this.loadTab();
 
-    this.intervalId = setInterval(() => {
-      this.steamInsightMangementService.loadDashboard();
-    }, REFRESH_INTERVAL.NORMAL);
+    this.refreshIntervalId = setInterval(() => this.loadTab(), REFRESH_INTERVAL.NORMAL);
   }
 
   ngOnDestroy(): void {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
+    clearInterval(this.refreshIntervalId);
+  }
+
+  /** TAB FUNCTIONS */
+  loadTab() {
+    const currentTabIndex = this.currentTabIndex();
+
+    if (currentTabIndex === 0) {
+      this.steamInsightMangementService.loadDashboard();
+    } else if (currentTabIndex === 1) {
+      this.steamInsightMangementService.loadApps();
+    } else if (currentTabIndex === 2) {
+      this.steamInsightMangementService.loadUpdates();
     }
   }
 
-  /** TABS */
   onTabChange(event: MatTabChangeEvent) {
     const index = event.index;
 
-    this.steamInsightMangementService.updateTabIndex(index);
+    this.steamInsightMangementService.setCurrentTabIndex(index);
 
     // Steam Insight Dashboard
     if (index === 0) {
@@ -192,20 +166,20 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
 
     // Steam Insight App Search
     if (index === 1) {
-      this.steamInsightMangementService.loadAppSearch();
+      this.steamInsightMangementService.loadApps();
     }
 
     // Steam Insight Update Search
     if (index === 2) {
-      this.steamInsightMangementService.loadUpdateHistory();
+      this.steamInsightMangementService.loadUpdates();
     }
   }
 
-  /** STEAM INSIGHT DASHBAORD */
+  /** DASHBAORD */
   onStartUpdate(isFullUpdate?: boolean) {
     const updateType = isFullUpdate ? 'Full' : 'Incremental';
 
-    const title = `Start Update - ${updateType}`;
+    const title = `Start Update - ${updateType}?`;
     const message = 'Are you sure you want to start a Steam Insight Update';
 
     this.dialog
@@ -219,58 +193,60 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
   }
 
   onStopUpdate() {
-    this.steamInsightMangementService.stopUpdate();
+    const title = `Stop In-Progress Update?`;
+    const message = 'Are you sure you want to stop the in-progress Steam Insight Update';
+
+    this.dialog
+      .open(ConfirmDialogComponent, { data: { title, message }, panelClass: 'hz-dialog-container' })
+      .afterClosed()
+      .pipe(
+        filter((result) => result),
+        tap(() => this.steamInsightMangementService.stopUpdate())
+      )
+      .subscribe();
   }
 
-  /** STEAM INSIGHT APP SEARCH */
-  onSteamInsightAppSort(event: Sort) {
+  /** APP SEARCH */
+  onAppSort(event: Sort) {
     const field = event.active;
     const direction = event.direction.toUpperCase();
 
-    this.steamInsightMangementService.updateSteamAppSearchSort(field, direction);
+    this.steamInsightMangementService.setAppSearchSort(field, direction);
   }
 
-  onSteamInsightAppPageChange(event: PageEvent) {
+  onAppPageChange(event: PageEvent) {
     const newPage = event.pageIndex;
     const newPageSize = event.pageSize;
-    this.steamInsightMangementService.updateSteamAppSearchPage(newPage, newPageSize);
+    this.steamInsightMangementService.setAppSearchPage(newPage, newPageSize);
   }
 
   onResetAppSearchFilters() {
     this.steamInsightMangementService.resetAppSearchFilters();
   }
 
-  onViewApp(row: SteamInsightAppResponse) {
-    const appid = row.appid;
-
-    this.router.navigate(['administration', 'steam-insight-management', 'app', appid]);
+  onViewApp(row: SteamInsightApp) {
+    this.router.navigate(['administration', 'steam-insight-management', 'app', row.appid]);
   }
 
-  /** STEAM INSIGHT UPDATE HISTORY SEARCH */
-  onSteamInsightUpdatesSort(event: Sort) {
+  /** UPDATE SEARCH */
+  onUpdateSort(event: Sort) {
     const field = event.active;
     const direction = event.direction.toUpperCase();
 
-    this.steamInsightMangementService.updateSteamUpdateHistorySort(field, direction);
+    this.steamInsightMangementService.setUpdateSearchSort(field, direction);
   }
 
-  onSteamInsightUpdatesPageChange(event: PageEvent) {
+  onUpdatePageChange(event: PageEvent) {
     const newPage = event.pageIndex;
     const newPageSize = event.pageSize;
-    this.steamInsightMangementService.updateSteamUpdateHistoryPage(newPage, newPageSize);
+    this.steamInsightMangementService.setUpdateSearchPage(newPage, newPageSize);
   }
 
   onResetUpdateSearchFilters() {
     this.steamInsightMangementService.resetUpdateSearchFilters();
   }
 
-  onSteamInsightUpdatesRowClick(row: SteamInsightUpdateRow) {
-    /*this.dialog.open(SteamInsightUpdateHistoryDialogComponent, {
-      data: { row },
-      width: '560px',
-      panelClass: 'hz-dialog-container',
-    });*/
-
-    this.router.navigate([`/administration/steam-insight-management/update/${row.id}`]);
+  onViewUpdate(row: SteamInsightUpdate) {
+    this.router.navigate(['administration', 'steam-insight-management', 'update', row.id]);
   }
 }

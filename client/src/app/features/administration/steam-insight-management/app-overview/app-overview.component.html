@@ -9,19 +9,19 @@
   <mat-tab-group dynamicHeight>
     <mat-tab label="App Info">
       <div class="flex flex-col gap-3 py-3">
-        <hz-card>
+        <hz-card primary>
           <hz-card-header>{{ app.appid }} - {{ app.name }}</hz-card-header>
           <hz-card-chip>
             <hz-chip [type]="app.active ? 'success' : 'error'">{{ app.active ? 'Active' : 'Inactive' }}</hz-chip>
             <hz-chip [type]="app.validationFailed ? 'error' : 'success'">{{ app.validationFailed ? 'Invalid' : 'Valid' }}</hz-chip>
-            <hz-chip>{{ app.type | titlecase }}</hz-chip>
+            <hz-chip>{{ app.type | uppercase }}</hz-chip>
           </hz-card-chip>
           <hz-card-body>
             <div class="flex w-full flex-col gap-3"></div>
           </hz-card-body>
         </hz-card>
 
-        <hz-card>
+        <hz-card primary>
           <hz-card-header>App Info Raw</hz-card-header>
           <hz-card-body>
             <pre class="app-info-json">{{ app | json }}</pre>
@@ -39,7 +39,7 @@
             <mat-expansion-panel-header>
               <mat-panel-title>Version #{{ app.audits.length - i }}</mat-panel-title>
               <mat-panel-description>
-                {{ audit.changeType === 'I' ? 'Inserted' : 'Updated' }} at {{ audit.createdDate | date : 'short' }}
+                {{ audit.changeType === 'I' ? 'Inserted' : 'Updated' }} - {{ audit.createdDate | date : 'short' }}
               </mat-panel-description>
             </mat-expansion-panel-header>
 

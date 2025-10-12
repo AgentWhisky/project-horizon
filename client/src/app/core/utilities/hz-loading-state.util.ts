@@ -1,7 +1,13 @@
 import { computed, signal } from '@angular/core';
 import { LoadingStatus } from '../enums';
 import { HzErrorMessage } from '../models';
-import { getGenericLoadFailureMessage, getNotFoundMessage, getServerErrorMessage, getUnauthorizedMessage } from './error-messages.util';
+import {
+  getBadRequestMessage,
+  getGenericLoadFailureMessage,
+  getNotFoundMessage,
+  getServerErrorMessage,
+  getUnauthorizedMessage,
+} from './error-messages.util';
 
 export interface HzLoadingOptions {
   persistSuccess?: boolean;
@@ -60,11 +66,13 @@ export class HzLoadingState {
 
   private getErrorMessage(code: number | null): HzErrorMessage {
     switch (code) {
-      case 404:
-        return getNotFoundMessage(this.context);
+      case 400:
+        return getBadRequestMessage(this.context);
       case 401:
       case 403:
         return getUnauthorizedMessage(this.context);
+      case 404:
+        return getNotFoundMessage(this.context);
       case 500:
         return getServerErrorMessage(this.context);
       default:

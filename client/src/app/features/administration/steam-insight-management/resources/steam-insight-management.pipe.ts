@@ -2,25 +2,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { HzStatusType } from '@hz/core/models';
 
 /**
- * Transforms app type codes ('game', 'dlc') into display text
- */
-@Pipe({
-  name: 'appType',
-})
-export class AppTypePipe implements PipeTransform {
-  transform(code: string | null | undefined): string {
-    switch (code) {
-      case 'game':
-        return 'Game';
-      case 'dlc':
-        return 'Dlc';
-      default:
-        return code ?? '';
-    }
-  }
-}
-
-/**
  * Transforms update type codes ('I', 'F') into display text
  */
 @Pipe({

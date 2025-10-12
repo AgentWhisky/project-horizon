@@ -1,9 +1,10 @@
-import { IsBoolean, IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
-import { KeywordMode, SortOrder, SteamInsightAppField, SteamInsightAppType } from '@hz/common/enums';
+import { SortOrder, SteamInsightAppField, SteamInsightAppType } from '@hz/common/enums';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { ToBoolean } from '@hz/common/transformers';
 import { IsBooleanQuery } from '@hz/common/validators';
+import { INT32_MAX } from '@hz/common/constants';
 
 export class SteamInsightAppsQueryDto {
   @ApiPropertyOptional({ description: 'Page number (0-Starting)', type: Number, example: 0, default: 0 })
@@ -27,6 +28,7 @@ export class SteamInsightAppsQueryDto {
   @Type(() => Number)
   @IsInt()
   @Min(1)
+  @Max(INT32_MAX)
   appid?: number;
 
   @ApiPropertyOptional({ description: 'Filter by app type', enum: SteamInsightAppType })
