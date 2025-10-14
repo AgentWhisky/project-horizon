@@ -19,8 +19,8 @@ import { ValidatorMessagePipe } from '@hz/core/pipes';
 import { ThemeService } from '@hz/core/services';
 import { checkFaviconExists } from '@hz/core/utilities';
 
-import { LinkLibraryManagementService } from '../link-library-management.service';
-import { Link, LinkPayload } from '../link-library-management';
+import { LinkLibraryManagementService } from '../../link-library-management.service';
+import { Link, LinkPayload } from '../../resources/link-library-management.model';
 
 interface DialogData {
   type: 'create' | 'update';

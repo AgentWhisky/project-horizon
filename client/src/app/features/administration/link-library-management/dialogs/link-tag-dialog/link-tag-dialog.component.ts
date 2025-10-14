@@ -9,8 +9,8 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { ValidatorMessagePipe } from '@hz/core/pipes';
 import { uniqueText } from '@hz/core/validators';
 
-import { LinkLibraryManagementService } from '../link-library-management.service';
-import { Tag, TagPayload } from '../link-library-management';
+import { LinkLibraryManagementService } from '../../link-library-management.service';
+import { Tag, TagPayload } from '../../resources/link-library-management.model';
 
 interface DialogData {
   type: 'create' | 'update';

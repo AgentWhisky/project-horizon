@@ -73,8 +73,6 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private steamInsightMangementService = inject(SteamInsightManagementService);
 
-  private refreshIntervalId?: ReturnType<typeof setInterval>;
-
   readonly breadcrumbItems: HzBreadcrumbItem[] = [
     { label: 'Administration', route: '/administration', icon: 'admin_panel_settings' },
     { label: 'Steam Insight Management', svgIcon: 'steam' },
@@ -83,6 +81,7 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
   readonly isSmallScreen = this.screenService.isSmallScreen;
   readonly isMobileScreen = this.screenService.isMobileScreen;
 
+  private refreshIntervalId?: ReturnType<typeof setInterval>;
   readonly currentTabIndex = this.steamInsightMangementService.currentTabIndex;
 
   /** DASHBOARD */
@@ -139,6 +138,8 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     clearInterval(this.refreshIntervalId);
+
+    this.steamInsightMangementService.reset();
   }
 
   /** TAB FUNCTIONS */

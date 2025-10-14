@@ -5,7 +5,7 @@ import { catchError, of, tap } from 'rxjs';
 import { TokenService } from '@hz/core/services';
 import { HzLoadingState } from '@hz/core/utilities';
 
-import { SteamInsightUpdateOverview } from '../resources/steam-insight-management.model';
+import { SteamInsightUpdateOverview } from '../../resources/steam-insight-management.model';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +13,8 @@ import { SteamInsightUpdateOverview } from '../resources/steam-insight-managemen
 export class UpdateOverviewService {
   private tokenService = inject(TokenService);
 
-  readonly update = signal<SteamInsightUpdateOverview | null>(null);
+  private readonly _update = signal<SteamInsightUpdateOverview | null>(null);
+  readonly update = this._update.asReadonly();
   readonly loadingState = new HzLoadingState('Steam Insight Update');
 
   loadUpdate(id: number) {
@@ -26,8 +27,8 @@ export class UpdateOverviewService {
     this.tokenService
       .getWithTokenRefresh<SteamInsightUpdateOverview>(`/steam-insight-management/update/${id}`)
       .pipe(
-        tap((response) => {
-          this.update.set(response);
+        tap((update: SteamInsightUpdateOverview) => {
+          this._update.set(update);
           this.loadingState.setSuccess();
         }),
         catchError((err: HttpErrorResponse) => {
@@ -39,8 +40,8 @@ export class UpdateOverviewService {
       .subscribe();
   }
 
-  clearUpdate() {
-    this.update.set(null);
+  reset() {
+    this._update.set(null);
     this.loadingState.reset();
   }
 }

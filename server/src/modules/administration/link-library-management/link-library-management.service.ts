@@ -133,6 +133,44 @@ export class LinkLibraryManagementService implements OnModuleInit {
     });
   }
 
+  async updateLinkSortKey(id: number, categoryId: number | null, sortKey: string): Promise<Link> {
+    const existingLink = await this.libraryLinkRepository.findOne({ where: { id } });
+
+    if (!existingLink) {
+      throw new NotFoundException(`Link with ID: ${id} not found`);
+    }
+
+    // Verify Category exists
+    if (categoryId !== null) {
+      const categoryExists = await this.linkCategoryRepository.exists({ where: { id: categoryId } });
+      if (!categoryExists) {
+        throw new BadRequestException(`Category with ID ${categoryId} does not exist`);
+      }
+    }
+
+    await this.libraryLinkRepository.save({
+      id,
+      sortKey,
+      category: { id: categoryId },
+    });
+
+    return await this.libraryLinkRepository.findOne({
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        url: true,
+        icon: true,
+        category: { id: true, name: true, description: true },
+        tags: { id: true, name: true },
+        sortKey: true,
+        contrastBackground: true,
+      },
+      where: { id },
+      relations: { category: true, tags: true },
+    });
+  }
+
   async deleteLink(id: number): Promise<DeleteResponse> {
     const deleteResult = await this.libraryLinkRepository.delete(id);
 
@@ -408,12 +446,15 @@ export class LinkLibraryManagementService implements OnModuleInit {
     const links: Link[] = await this.libraryLinkRepository.find({
       select: {
         id: true,
-        url: true,
         name: true,
         description: true,
+        url: true,
+        icon: true,
+        status: true,
         category: { id: true, name: true },
         tags: { id: true, name: true },
         sortKey: true,
+        contrastBackground: true,
       },
       relations: { category: true, tags: true },
       order: { id: 'ASC' },

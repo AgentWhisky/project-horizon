@@ -25,6 +25,7 @@ import { DeleteResponse } from 'src/common/model/delete-response.model';
 import { LinkDto } from './dto/link.dto';
 import { CategoryDto } from './dto/category.dto';
 import { TagDto } from './dto/tag.dto';
+import { UpdateLinkSortKeyDto } from './dto/update-link-sort-key.dto';
 
 @Controller('link-library-management')
 export class LinkLibraryManagementController {
@@ -49,6 +50,16 @@ export class LinkLibraryManagementController {
   async updateLink(@Param('id', ParseIntPipe) id: number, @Body() linkDto: LinkDto): Promise<Link> {
     const link = await this.linkLibraryManagementService.updateLink(id, linkDto);
     return link;
+  }
+
+  @Put('links/:id/sortKey')
+  @RequireRight(USER_RIGHTS.MANAGE_LINKS)
+  async updateLinkSortKey(@Param('id', ParseIntPipe) id: number, @Body() updateLinkSortKeyDto: UpdateLinkSortKeyDto): Promise<Link> {
+    return await this.linkLibraryManagementService.updateLinkSortKey(
+      id,
+      updateLinkSortKeyDto.category ?? null,
+      updateLinkSortKeyDto.sortKey
+    );
   }
 
   @Delete('links/:id')

@@ -5,7 +5,7 @@ import { catchError, of, tap } from 'rxjs';
 import { TokenService } from '@hz/core/services';
 import { HzLoadingState } from '@hz/core/utilities';
 
-import { AppActiveStatus, SteamInsightAppRaw } from '../resources/steam-insight-management.model';
+import { AppActiveStatus, SteamInsightAppRaw } from '../../resources/steam-insight-management.model';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +13,8 @@ import { AppActiveStatus, SteamInsightAppRaw } from '../resources/steam-insight-
 export class AppOverviewService {
   private tokenService = inject(TokenService);
 
-  readonly app = signal<SteamInsightAppRaw | null>(null);
+  private readonly _app = signal<SteamInsightAppRaw | null>(null);
+  readonly app = this._app.asReadonly();
   readonly loadingState = new HzLoadingState('Steam Insight App');
 
   loadApp(appid: number) {
@@ -26,8 +27,8 @@ export class AppOverviewService {
     this.tokenService
       .getWithTokenRefresh<SteamInsightAppRaw>(`/steam-insight-management/app/${appid}`)
       .pipe(
-        tap((response) => {
-          this.app.set(response);
+        tap((appRaw: SteamInsightAppRaw) => {
+          this._app.set(appRaw);
           this.loadingState.setSuccess();
         }),
         catchError((err: HttpErrorResponse) => {
@@ -40,7 +41,7 @@ export class AppOverviewService {
   }
 
   toggleAppActive() {
-    const app = this.app();
+    const app = this._app();
 
     if (!app) {
       console.error('No Steam Insight App loaded to toggle active status');
@@ -50,9 +51,9 @@ export class AppOverviewService {
     this.tokenService
       .putWithTokenRefresh<AppActiveStatus>(`/steam-insight-management/app/${app.appid}/active`, { active: !app.active })
       .pipe(
-        tap((response) => {
-          const newApp = { ...this.app()!, active: response.active };
-          this.app.set(newApp);
+        tap((activeStatus: AppActiveStatus) => {
+          const newApp = { ...this._app()!, active: activeStatus.active };
+          this._app.set(newApp);
         }),
         catchError((err: HttpErrorResponse) => {
           console.error(`Failed to update Steam Insight App active status`, { appid: app.appid, error: err });
@@ -62,8 +63,8 @@ export class AppOverviewService {
       .subscribe();
   }
 
-  clearApp() {
-    this.app.set(null);
+  reset() {
+    this._app.set(null);
     this.loadingState.reset();
   }
 }

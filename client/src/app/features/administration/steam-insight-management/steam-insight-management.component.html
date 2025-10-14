@@ -130,6 +130,7 @@
               <mat-form-field subscriptSizing="dynamic">
                 <mat-label>App Type</mat-label>
                 <mat-select formControlName="type">
+                  <mat-option [value]="null">None</mat-option>
                   @for (type of appsTypeOptions(); track type.value) {
                   <mat-option [value]="type.value">{{ type.label }}</mat-option>
                   }

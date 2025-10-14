@@ -20,7 +20,7 @@ import { RoleDialogComponent } from './role-dialog/role-dialog.component';
 import { USER_RIGHTS } from '@hz/core/constants';
 import { UserService } from '@hz/core/services';
 import { ConfirmDialogComponent } from '@hz/shared/dialogs';
-import { HzBannerModule } from '@hz/shared/components';
+import { HzBannerModule, HzBreadcrumbItem, HzBreadcrumbModule } from '@hz/shared/components';
 
 @Component({
   selector: 'hz-account-management',
@@ -33,6 +33,7 @@ import { HzBannerModule } from '@hz/shared/components';
     MatTooltipModule,
     MatTabsModule,
     MatChipsModule,
+    HzBreadcrumbModule,
     DatePipe,
     HzBannerModule,
   ],
@@ -43,6 +44,11 @@ export class AccountManagementComponent implements OnInit {
   private accountManagementService = inject(AccountManagementService);
   private userService = inject(UserService);
   private dialog = inject(MatDialog);
+
+  readonly breadcrumbItems: HzBreadcrumbItem[] = [
+    { label: 'Administration', route: '/administration', icon: 'admin_panel_settings' },
+    { label: 'Account Management', icon: 'manage_accounts' },
+  ];
 
   readonly currentUser = this.userService.userInfo();
 

@@ -52,8 +52,14 @@
   display: flex;
   flex-direction: column;
 
-  //border: 1px solid var(--mat-sys-outline-variant);
+  border: 1px solid transparent;
   border-radius: var(--mat-sys-corner-extra-small);
+
+  transition: border-color 0.15s ease-in-out;
+}
+
+.link-drag-container.dragging {
+  border-color: var(--mat-sys-outline-variant);
 }
 
 .link-container {

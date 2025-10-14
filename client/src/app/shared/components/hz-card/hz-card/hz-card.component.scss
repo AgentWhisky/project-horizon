@@ -12,6 +12,10 @@
   //border: 1px solid var(--hz-sys-base-border);
 }
 
+.hz-card.hide-background {
+  background-color: transparent;
+}
+
 .hz-card-primary {
   color: var(--mat-sys-primary);
 }

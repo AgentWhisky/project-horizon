@@ -1,266 +1,344 @@
 <div class="flex flex-col gap-3">
   <hz-breadcrumb [items]="breadcrumbItems"></hz-breadcrumb>
 
-  <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
+  <mat-tab-group dynamicHeight>
     <!-- LINKS -->
-    <mat-tab label="Links" class="flex flex-col">
-      <!-- LINK FILTER -->
-      <div class="filter-container">
-        <mat-form-field class="search-form-field" subscriptSizing="dynamic">
-          <mat-label>Filter Links</mat-label>
-          <input
-            matInput
-            #linkFilterInput
-            [(ngModel)]="linkFilter"
-            maxlength="1024"
-            aria-label="Link Filter"
-            (keydown.enter)="linkFilterInput.blur()" />
-          @if(linkFilterInput.value && linkFilterInput.value !== '') {
-          <button class="clear-icon-button" matSuffix matIconButton type="button" aria-label="Clear" (click)="onResetLinkFilter()">
-            <mat-icon>close</mat-icon>
+    <mat-tab label="Links">
+      <div class="flex flex-col gap-3 py-3">
+        <!-- LOAD SUCCESS -->
+        @if(linksLoadingState.isSuccess()) {
+        <!-- LINK FILTER -->
+        <div class="filter-container">
+          <mat-form-field class="search-form-field" subscriptSizing="dynamic">
+            <mat-label>Filter Links</mat-label>
+            <input
+              matInput
+              #linkFilterInput
+              [(ngModel)]="linkFilter"
+              maxlength="1024"
+              aria-label="Link Filter"
+              (keydown.enter)="linkFilterInput.blur()" />
+            @if(linkFilterInput.value && linkFilterInput.value !== '') {
+            <button class="clear-icon-button" matSuffix matIconButton type="button" aria-label="Clear" (click)="onResetLinkFilter()">
+              <mat-icon>close</mat-icon>
+            </button>
+            } @if(linkFilterInput.value && linkFilterInput.value !== '') {
+            <mat-hint>
+              {{
+                linkFilteredIds().size === 0
+                  ? 'No links found'
+                  : 'Found ' + linkFilteredIds().size + ' link' + (linkFilteredIds().size > 1 ? 's' : '')
+              }}
+            </mat-hint>
+            }
+          </mat-form-field>
+
+          <button mat-button type="button" aria-label="Add Link" (click)="onCreateLink()">
+            <mat-icon>add</mat-icon>
+            Add New Link
           </button>
-          } @if(linkFilterInput.value && linkFilterInput.value !== '') {
-          <mat-hint>
-            {{
-              linkFilteredIds().size === 0
-                ? 'No links found'
-                : 'Found ' + linkFilteredIds().size + ' link' + (linkFilteredIds().size > 1 ? 's' : '')
-            }}
-          </mat-hint>
+        </div>
+
+        <!-- LINK DRAG CONTAINER -->
+        <div cdkDropListGroup class="link-category-drag-container">
+          <!-- UNASSINED LINK CONTAINER -->
+          <div
+            class="drag-list link-drag-container"
+            cdkDropList
+            [id]="'category-drop-0'"
+            [cdkDropListData]="unassignedLinks()"
+            (cdkDropListDropped)="onDrop($event)"
+            [class.dragging]="isDragging()">
+            <div class="flex flex-row gap-1 items-center">
+              <mat-icon class="link-category-icon">block</mat-icon>
+              <span class="link-category-title">Unassigned Links</span>
+            </div>
+
+            <div class="link-container">
+              @for (link of unassignedLinks(); track link.id) {
+              <div
+                cdkDrag
+                class="drag-box link-tile"
+                [class.link-tile-filtered]="linkFilteredIds().has(link.id)"
+                (cdkDragStarted)="onDrag()">
+                <div class="flex items-center gap-3">
+                  @if (link.icon) {
+                  <img
+                    [src]="link.icon"
+                    fallbackSrc="assets/icons/default-favicon.ico"
+                    alt="favicon"
+                    class="w-5 h-5 p-[2px] rounded-full"
+                    [ngClass]="{
+                      'icon-bg-contrast':
+                        (link.contrastBackground === 1 && isDarkTheme()) || (link.contrastBackground === 2 && !isDarkTheme())
+                    }" />
+                  }
+                  <span>{{ link.name }}</span>
+                </div>
+
+                <div class="link-actions">
+                  <button matIconButton type="button" [attr.aria-label]="'Edit ' + link.name + ' Link'" (click)="onEditLink(link)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+
+                  <button matIconButton type="button" [attr.aria-label]="'Remove ' + link.name + ' Link'" (click)="onDeleteLink(link)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+
+          <!-- LINK CATEGORY CONTAINERS-->
+          @for(category of linkCategories(); track category.id) {
+          <div
+            class="drag-list link-drag-container"
+            cdkDropList
+            [id]="'category-drop-' + category.id"
+            [cdkDropListData]="linkCategoryMap()[category.id]"
+            (cdkDropListDropped)="onDrop($event)"
+            [class.dragging]="isDragging()">
+            <div class="flex flex-row gap-1 items-center">
+              <mat-icon class="link-category-icon">category</mat-icon>
+              <span class="link-category-title">{{ category.name }}</span>
+            </div>
+
+            <div class="link-container">
+              @for (link of linkCategoryMap()[category.id]; track link.id) {
+              <div
+                cdkDrag
+                class="drag-box link-tile"
+                [class.link-tile-filtered]="linkFilteredIds().has(link.id)"
+                (cdkDragStarted)="onDrag()">
+                <div class="flex items-center gap-3">
+                  @if (link.icon) {
+                  <img
+                    [src]="link.icon"
+                    fallbackSrc="assets/icons/default-favicon.ico"
+                    alt="favicon"
+                    class="w-5 h-5 p-[2px] rounded-full"
+                    [ngClass]="{
+                      'icon-bg-contrast':
+                        (link.contrastBackground === 1 && isDarkTheme()) || (link.contrastBackground === 2 && !isDarkTheme())
+                    }" />
+                  }
+                  <span>{{ link.name }}</span>
+                </div>
+
+                <div class="link-actions">
+                  <button matIconButton type="button" [attr.aria-label]="'Edit ' + link.name + ' Link'" (click)="onEditLink(link)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+
+                  <button matIconButton type="button" [attr.aria-label]="'Remove ' + link.name + ' Link'" (click)="onDeleteLink(link)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+              }
+            </div>
+          </div>
           }
-        </mat-form-field>
-
-        <button mat-button type="button" aria-label="Add Link" (click)="onCreateLink()">
-          <mat-icon>add</mat-icon>
-          Add New Link
-        </button>
-      </div>
-
-      <!-- LINK DRAG CONTAINER -->
-      <div cdkDropListGroup class="link-category-drag-container">
-        <!-- UNASSINED LINK CONTAINER -->
-        <div
-          class="drag-list link-drag-container"
-          cdkDropList
-          [id]="'category-drop-0'"
-          [cdkDropListData]="unassignedLinks()"
-          (cdkDropListDropped)="onDrop($event)">
-          <div class="flex flex-row gap-1 items-center">
-            <mat-icon class="link-category-icon">block</mat-icon>
-            <span class="link-category-title">Unassigned Links</span>
-          </div>
-
-          <div class="link-container">
-            @for (link of unassignedLinks(); track link.id) {
-            <div cdkDrag class="drag-box link-tile" [class.link-tile-filtered]="linkFilteredIds().has(link.id)">
-              <div class="flex items-center gap-3">
-                @if (link.icon) {
-                <img
-                  [src]="link.icon"
-                  fallbackSrc="assets/icons/default-favicon.ico"
-                  alt="favicon"
-                  class="w-5 h-5 p-[2px] rounded-full"
-                  [ngClass]="{
-                    'icon-bg-contrast':
-                      (link.contrastBackground === 1 && isDarkTheme()) || (link.contrastBackground === 2 && !isDarkTheme())
-                  }" />
-                }
-                <span>{{ link.name }}</span>
-              </div>
-
-              <div class="link-actions">
-                <button matIconButton type="button" [attr.aria-label]="'Edit ' + link.name + ' Link'" (click)="onEditLink(link)">
-                  <mat-icon>edit</mat-icon>
-                </button>
-
-                <button matIconButton type="button" [attr.aria-label]="'Remove ' + link.name + ' Link'" (click)="onDeleteLink(link)">
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </div>
-            </div>
-            }
-          </div>
         </div>
+        }
+        <!-- LOAD IN-PROGRESS -->
+        @else if (linksLoadingState.isLoading()) {
+        <hz-loading-spinner text="Loading Link Library Links..."></hz-loading-spinner>
+        }
 
-        <!-- LINK CATEGORY CONTAINERS-->
-        @for(category of linkCategories(); track category.id) {
-        <div
-          class="drag-list link-drag-container"
-          cdkDropList
-          [id]="'category-drop-' + category.id"
-          [cdkDropListData]="linkCategoryMap()[category.id]"
-          (cdkDropListDropped)="onDrop($event)">
-          <div class="flex flex-row gap-1 items-center">
-            <mat-icon class="link-category-icon">category</mat-icon>
-            <span class="link-category-title">{{ category.name }}</span>
-          </div>
-
-          <div class="link-container">
-            @for (link of linkCategoryMap()[category.id]; track link.id) {
-            <div cdkDrag class="drag-box link-tile" [class.link-tile-filtered]="linkFilteredIds().has(link.id)">
-              <div class="flex items-center gap-3">
-                @if (link.icon) {
-                <img
-                  [src]="link.icon"
-                  fallbackSrc="assets/icons/default-favicon.ico"
-                  alt="favicon"
-                  class="w-5 h-5 p-[2px] rounded-full"
-                  [ngClass]="{
-                    'icon-bg-contrast':
-                      (link.contrastBackground === 1 && isDarkTheme()) || (link.contrastBackground === 2 && !isDarkTheme())
-                  }" />
-                }
-                <span>{{ link.name }}</span>
-              </div>
-
-              <div class="link-actions">
-                <button matIconButton type="button" [attr.aria-label]="'Edit ' + link.name + ' Link'" (click)="onEditLink(link)">
-                  <mat-icon>edit</mat-icon>
-                </button>
-
-                <button matIconButton type="button" [attr.aria-label]="'Remove ' + link.name + ' Link'" (click)="onDeleteLink(link)">
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </div>
-            </div>
-            }
-          </div>
-        </div>
+        <!-- LOAD FAILURE -->
+        @else if(linksLoadingState.isFailed()) {
+        <hz-banner type="error">
+          <hz-banner-header>{{ linksLoadingState.errorMessage()?.header }}</hz-banner-header>
+          <hz-banner-body>{{ linksLoadingState.errorMessage()?.body }}</hz-banner-body>
+        </hz-banner>
         }
       </div>
     </mat-tab>
 
     <!-- CATEGORIES -->
-    <mat-tab label="Categories" class="flex flex-col">
-      <!-- CATEGORY FILTER -->
-      <div class="link-category-filter-container">
-        <mat-form-field class="search-form-field" subscriptSizing="dynamic">
-          <mat-label>Filter Categories</mat-label>
-          <input
-            matInput
-            #categoryFilterInput
-            [(ngModel)]="categoryFilter"
-            maxlength="1024"
-            aria-label="Link Category Filter"
-            (keydown.enter)="categoryFilterInput.blur()" />
-          @if(categoryFilterInput.value && categoryFilterInput.value !== '') {
-          <button class="clear-icon-button" matSuffix matIconButton type="button" aria-label="Clear" (click)="onResetCategoryFilter()">
-            <mat-icon>close</mat-icon>
-          </button>
-          } @if(categoryFilterInput.value && categoryFilterInput.value !== '') {
-          <mat-hint>
-            {{
-              filteredLinkCategories().length === 0
-                ? 'No categories found'
-                : 'Found ' + filteredLinkCategories().length + ' categor' + (filteredLinkCategories().length === 1 ? 'y' : 'ies')
-            }}
-          </mat-hint>
-          }
-        </mat-form-field>
-
-        <button mat-button type="button" aria-label="Add Category" (click)="onCreateCategory()">
-          <mat-icon>add</mat-icon>
-          Add New Category
-        </button>
-      </div>
-
-      <!-- CATEGORY DISPLAY -->
-      <div class="link-category-container">
-        @for(category of filteredLinkCategories(); track category.id) {
-        <div class="link-category">
-          <div class="flex flex-col gap-1">
-            <span>{{ category.name }}</span>
-            <span class="text-xs line-clamp-3">{{ category.description }}</span>
-          </div>
-
-          <div class="link-category-actions">
-            <button
-              matIconButton
-              type="button"
-              [attr.aria-label]="'Edit ' + category.name + ' Category'"
-              (click)="onEditCategory(category)">
-              <mat-icon>edit</mat-icon>
+    <mat-tab label="Categories">
+      <div class="flex flex-col gap-3 py-3">
+        <!-- LOAD SUCCESS -->
+        @if(linkCategoriesLoadingState.isSuccess()) {
+        <!-- CATEGORY FILTER -->
+        <div class="link-category-filter-container">
+          <mat-form-field class="search-form-field" subscriptSizing="dynamic">
+            <mat-label>Filter Categories</mat-label>
+            <input
+              matInput
+              #categoryFilterInput
+              [(ngModel)]="categoryFilter"
+              maxlength="1024"
+              aria-label="Link Category Filter"
+              (keydown.enter)="categoryFilterInput.blur()" />
+            @if(categoryFilterInput.value && categoryFilterInput.value !== '') {
+            <button class="clear-icon-button" matSuffix matIconButton type="button" aria-label="Clear" (click)="onResetCategoryFilter()">
+              <mat-icon>close</mat-icon>
             </button>
-            @if(!category.inUse) {
-            <button
-              matIconButton
-              type="button"
-              [attr.aria-label]="'Remove ' + category.name + ' Category'"
-              (click)="onDeleteCategory(category)">
-              <mat-icon>delete</mat-icon>
-            </button>
+            } @if(categoryFilterInput.value && categoryFilterInput.value !== '') {
+            <mat-hint>
+              {{
+                filteredLinkCategories().length === 0
+                  ? 'No categories found'
+                  : 'Found ' + filteredLinkCategories().length + ' categor' + (filteredLinkCategories().length === 1 ? 'y' : 'ies')
+              }}
+            </mat-hint>
             }
-          </div>
+          </mat-form-field>
+
+          <button mat-button type="button" aria-label="Add Category" (click)="onCreateCategory()">
+            <mat-icon>add</mat-icon>
+            Add New Category
+          </button>
         </div>
+
+        <!-- CATEGORY DISPLAY -->
+        <div class="link-category-container">
+          @for(category of filteredLinkCategories(); track category.id) {
+          <div class="link-category">
+            <div class="flex flex-col gap-1">
+              <span>{{ category.name }}</span>
+              <span class="text-xs line-clamp-3">{{ category.description }}</span>
+            </div>
+
+            <div class="link-category-actions">
+              <button
+                matIconButton
+                type="button"
+                [attr.aria-label]="'Edit ' + category.name + ' Category'"
+                (click)="onEditCategory(category)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              @if(!category.inUse) {
+              <button
+                matIconButton
+                type="button"
+                [attr.aria-label]="'Remove ' + category.name + ' Category'"
+                (click)="onDeleteCategory(category)">
+                <mat-icon>delete</mat-icon>
+              </button>
+              }
+            </div>
+          </div>
+          }
+        </div>
+        }
+
+        <!-- LOAD IN-PROGRESS -->
+        @else if (linkCategoriesLoadingState.isLoading()) {
+        <hz-loading-spinner text="Loading Link Library Categories..."></hz-loading-spinner>
+        }
+
+        <!-- LOAD FAILURE -->
+        @else if(linkCategoriesLoadingState.isFailed()) {
+        <hz-banner type="error">
+          <hz-banner-header>{{ linkCategoriesLoadingState.errorMessage()?.header }}</hz-banner-header>
+          <hz-banner-body>{{ linkCategoriesLoadingState.errorMessage()?.body }}</hz-banner-body>
+        </hz-banner>
         }
       </div>
     </mat-tab>
 
     <!-- TAGS -->
-    <mat-tab label="Tags" class="flex flex-col">
-      <!-- TAG FILTER -->
-      <div class="link-tag-filter-container">
-        <mat-form-field class="search-form-field" subscriptSizing="dynamic">
-          <mat-label>Filter Tags</mat-label>
-          <input
-            matInput
-            #tagFilterInput
-            [(ngModel)]="tagFilter"
-            maxlength="1024"
-            aria-label="Link Tag Filter"
-            (keydown.enter)="tagFilterInput.blur()" />
-          @if(tagFilterInput.value && tagFilterInput.value !== '') {
-          <button class="clear-icon-button" matSuffix matIconButton type="button" aria-label="Clear" (click)="onResetTagFilter()">
-            <mat-icon>close</mat-icon>
-          </button>
-          } @if(tagFilterInput.value && tagFilterInput.value !== '') {
-          <mat-hint>
-            {{
-              filteredLinkTags().length === 0
-                ? 'No tags found'
-                : 'Found ' + filteredLinkTags().length + ' tag' + (filteredLinkTags().length === 1 ? '' : 's')
-            }}
-          </mat-hint>
-          }
-        </mat-form-field>
-
-        <button mat-button type="button" aria-label="Add Tag" (click)="onCreateTag()">
-          <mat-icon>add</mat-icon>
-          Add New Tag
-        </button>
-      </div>
-
-      <!-- TAG DISPLAY -->
-      <div class="link-tag-container">
-        @for(tag of filteredLinkTags(); track tag.id) {
-        <div class="link-tag">
-          <span>{{ tag.name }}</span>
-          <div class="link-tag-actions">
-            <button matIconButton type="button" [attr.aria-label]="'Edit ' + tag.name + ' Tag'" (click)="onEditTag(tag)">
-              <mat-icon>edit</mat-icon>
+    <mat-tab label="Tags">
+      <div class="flex flex-col gap-3 py-3">
+        <!-- LOAD SUCCESS -->
+        @if(linkTagsLoadingState.isSuccess()) {
+        <!-- TAG FILTER -->
+        <div class="link-tag-filter-container">
+          <mat-form-field class="search-form-field" subscriptSizing="dynamic">
+            <mat-label>Filter Tags</mat-label>
+            <input
+              matInput
+              #tagFilterInput
+              [(ngModel)]="tagFilter"
+              maxlength="1024"
+              aria-label="Link Tag Filter"
+              (keydown.enter)="tagFilterInput.blur()" />
+            @if(tagFilterInput.value && tagFilterInput.value !== '') {
+            <button class="clear-icon-button" matSuffix matIconButton type="button" aria-label="Clear" (click)="onResetTagFilter()">
+              <mat-icon>close</mat-icon>
             </button>
-            @if(!tag.inUse) {
-            <button matIconButton type="button" [attr.aria-label]="'Remove ' + tag.name + ' Tag'" (click)="onDeleteTag(tag)">
-              <mat-icon>delete</mat-icon>
-            </button>
+            } @if(tagFilterInput.value && tagFilterInput.value !== '') {
+            <mat-hint>
+              {{
+                filteredLinkTags().length === 0
+                  ? 'No tags found'
+                  : 'Found ' + filteredLinkTags().length + ' tag' + (filteredLinkTags().length === 1 ? '' : 's')
+              }}
+            </mat-hint>
             }
-          </div>
+          </mat-form-field>
+
+          <button mat-button type="button" aria-label="Add Tag" (click)="onCreateTag()">
+            <mat-icon>add</mat-icon>
+            Add New Tag
+          </button>
         </div>
+
+        <!-- TAG DISPLAY -->
+        <div class="link-tag-container">
+          @for(tag of filteredLinkTags(); track tag.id) {
+          <div class="link-tag">
+            <span>{{ tag.name }}</span>
+            <div class="link-tag-actions">
+              <button matIconButton type="button" [attr.aria-label]="'Edit ' + tag.name + ' Tag'" (click)="onEditTag(tag)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              @if(!tag.inUse) {
+              <button matIconButton type="button" [attr.aria-label]="'Remove ' + tag.name + ' Tag'" (click)="onDeleteTag(tag)">
+                <mat-icon>delete</mat-icon>
+              </button>
+              }
+            </div>
+          </div>
+          }
+        </div>
+        }
+
+        <!-- LOAD IN-PROGRESS -->
+        @else if (linkTagsLoadingState.isLoading()) {
+        <hz-loading-spinner text="Loading Link Library Tags..."></hz-loading-spinner>
+        }
+
+        <!-- LOAD FAILURE -->
+        @else if(linkTagsLoadingState.isFailed()) {
+        <hz-banner type="error">
+          <hz-banner-header>{{ linkTagsLoadingState.errorMessage()?.header }}</hz-banner-header>
+          <hz-banner-body>{{ linkTagsLoadingState.errorMessage()?.body }}</hz-banner-body>
+        </hz-banner>
         }
       </div>
     </mat-tab>
 
-    <mat-tab label="Import & Export" class="flex flex-col">
-      <div class="import-export-container">
-        <button matButton="filled" (click)="onExportLinkLibrary()">
-          <mat-icon>download</mat-icon>
-          Export Library
-        </button>
-        @if(hasImportLibraryRight()) {
-        <button matButton="filled" (click)="onImportLinkLibrary()">
-          <mat-icon>upload</mat-icon>
-          Import Library
-        </button>
+    <mat-tab label="Import & Export">
+      <div class="flex flex-row flex-wrap gap-3 py-3 justify-center">
+        <hz-card primary class="flex flex-grow max-w-96">
+          <hz-card-header>
+            <mat-icon>download</mat-icon>
+            Export Library
+          </hz-card-header>
+
+          <hz-card-body class="flex flex-col gap-3">
+            <span>Export the Link Library in JSON format</span>
+            <button class="w-full" matButton="filled" (click)="onExportLinkLibrary()">Export</button>
+          </hz-card-body>
+        </hz-card>
+
+        @if (hasImportLibraryRight()) {
+        <hz-card primary class="flex flex-grow max-w-96">
+          <hz-card-header>
+            <mat-icon>upload</mat-icon>
+            Import Library
+          </hz-card-header>
+
+          <hz-card-body class="flex flex-col gap-3">
+            <span>Import a Link Library JSON file and rebuild the dataset</span>
+            <button class="w-full" matButton="filled" (click)="onImportLinkLibrary()">Import</button>
+          </hz-card-body>
+        </hz-card>
         }
       </div>
     </mat-tab>

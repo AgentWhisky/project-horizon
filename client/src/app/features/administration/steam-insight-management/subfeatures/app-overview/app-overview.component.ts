@@ -43,7 +43,7 @@ export class AppOverviewComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.appOverviewService.clearApp();
+    this.appOverviewService.reset();
   }
 
   onAppActiveUpdate() {
