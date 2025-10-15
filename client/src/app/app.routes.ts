@@ -131,7 +131,7 @@ export const routes: Routes = [
           {
             path: 'steam-insight-management/app/:appid',
             loadComponent: () =>
-              import('./features/administration/steam-insight-management/app-overview/app-overview.component').then(
+              import('./features/administration/steam-insight-management/subfeatures/app-overview/app-overview.component').then(
                 (c) => c.AppOverviewComponent
               ),
             data: { requiredRights: [USER_RIGHTS.MANAGE_STEAM_INSIGHT] },
@@ -144,7 +144,7 @@ export const routes: Routes = [
           {
             path: 'steam-insight-management/update/:id',
             loadComponent: () =>
-              import('./features/administration/steam-insight-management/update-overview/update-overview.component').then(
+              import('./features/administration/steam-insight-management/subfeatures/update-overview/update-overview.component').then(
                 (c) => c.UpdateOverviewComponent
               ),
             data: { requiredRights: [USER_RIGHTS.MANAGE_STEAM_INSIGHT] },

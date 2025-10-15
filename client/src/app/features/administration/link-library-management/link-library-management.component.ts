@@ -1,4 +1,4 @@
-import { Component, computed, inject, model, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, model, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { filter, tap } from 'rxjs';
@@ -17,11 +17,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup } from '@angular/cdk/drag-drop';
 
-import { LinkCategoryDialogComponent } from './link-category-dialog/link-category-dialog.component';
-import { LinkLibraryManagementDialogComponent } from './link-library-management-dialog/link-library-management-dialog.component';
-import { LinkLibraryImportDialogComponent } from './link-library-import-dialog/link-library-import-dialog.component';
-import { LinkTagDialogComponent } from './link-tag-dialog/link-tag-dialog.component';
-import { Category, Link, Tag } from './link-library-management';
+import { LinkCategoryDialogComponent } from './dialogs/link-category-dialog/link-category-dialog.component';
+import { LinkLibraryManagementDialogComponent } from './dialogs/link-library-management-dialog/link-library-management-dialog.component';
+import { LinkLibraryImportDialogComponent } from './dialogs/link-library-import-dialog/link-library-import-dialog.component';
+import { LinkTagDialogComponent } from './dialogs/link-tag-dialog/link-tag-dialog.component';
+import { Category, Link, Tag } from './resources/link-library-management.model';
 
 import { REBASE_REQUIRED, USER_RIGHTS } from '@hz/core/constants';
 import { ImageFallbackDirective } from '@hz/core/directives';
@@ -29,7 +29,7 @@ import { UserService, ThemeService } from '@hz/core/services';
 import { generateSortKey } from '@hz/core/utilities';
 
 import { ConfirmDialogComponent } from '@hz/shared/dialogs';
-import { HzBreadcrumbItem, HzBreadcrumbModule } from '@hz/shared/components';
+import { HzBannerModule, HzBreadcrumbItem, HzBreadcrumbModule, HzCardModule, HzLoadingSpinnerModule } from '@hz/shared/components';
 
 import { LinkLibraryManagementService } from './link-library-management.service';
 
@@ -47,6 +47,9 @@ import { LinkLibraryManagementService } from './link-library-management.service'
     MatChipsModule,
     MatDividerModule,
     HzBreadcrumbModule,
+    HzLoadingSpinnerModule,
+    HzBannerModule,
+    HzCardModule,
     CdkDropList,
     CdkDrag,
     CdkDropListGroup,
@@ -57,7 +60,7 @@ import { LinkLibraryManagementService } from './link-library-management.service'
   templateUrl: './link-library-management.component.html',
   styleUrl: './link-library-management.component.scss',
 })
-export class LinkLibraryManagementComponent implements OnInit {
+export class LinkLibraryManagementComponent implements OnInit, OnDestroy {
   private userService = inject(UserService);
   private themeService = inject(ThemeService);
   private dialog = inject(MatDialog);
@@ -69,6 +72,8 @@ export class LinkLibraryManagementComponent implements OnInit {
   ];
 
   readonly hasImportLibraryRight = signal<boolean>(this.userService.hasRights([USER_RIGHTS.IMPORT_LINK_LIBRARY]));
+
+  readonly isDarkTheme = this.themeService.isDarkTheme;
 
   // Link Information
   readonly links = this.linkLibraryManagementService.links;
@@ -87,12 +92,20 @@ export class LinkLibraryManagementComponent implements OnInit {
   readonly tagFilter = model<string>('');
   readonly filteredLinkTags = computed(() => this.filterLinkTags(this.linkTags()));
 
-  readonly isDarkTheme = this.themeService.isDarkTheme;
+  readonly linksLoadingState = this.linkLibraryManagementService.linksLoadingState;
+  readonly linkCategoriesLoadingState = this.linkLibraryManagementService.linkCategoriesLoadingState;
+  readonly linkTagsLoadingState = this.linkLibraryManagementService.linkTagsLoadingState;
+
+  readonly isDragging = signal<boolean>(false);
 
   ngOnInit() {
     this.linkLibraryManagementService.loadLinks();
     this.linkLibraryManagementService.loadCategories();
     this.linkLibraryManagementService.loadTags();
+  }
+
+  ngOnDestroy() {
+    this.linkLibraryManagementService.reset();
   }
 
   // *** Links ***
@@ -318,15 +331,31 @@ export class LinkLibraryManagementComponent implements OnInit {
   }
 
   onExportLinkLibrary() {
-    this.linkLibraryManagementService.exportLinkLibrary();
+    const title = 'Export Link Library';
+    const message = 'Are you sure you want to export the Link Library?';
+
+    this.dialog
+      .open(ConfirmDialogComponent, { data: { title, message }, panelClass: 'hz-dialog-container' })
+      .afterClosed()
+      .pipe(
+        filter((result) => result),
+        tap(() => this.linkLibraryManagementService.exportLinkLibrary())
+      )
+      .subscribe();
   }
 
   // *** CDK DRAG & DROP ***
+  onDrag() {
+    this.isDragging.set(true);
+  }
+
   onDrop(event: CdkDragDrop<Link[]>) {
     const prevContainer = event.previousContainer;
     const prevIndex = event.previousIndex;
     const curContainer = event.container;
     const curIndex = event.currentIndex;
+
+    this.isDragging.set(false);
 
     // Ignore drag to same position
     if (prevContainer.id === curContainer.id && prevIndex === curIndex) {

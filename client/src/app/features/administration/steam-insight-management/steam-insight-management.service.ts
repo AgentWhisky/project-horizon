@@ -33,37 +33,78 @@ export class SteamInsightManagementService {
   private tokenService = inject(TokenService);
   private fb = inject(FormBuilder);
 
-  readonly dashboard = signal<SteamInsightDashboard | null>(null);
-  readonly dashboardLoadingState = new HzLoadingState('Steam Insight Dashboard', { persistSuccess: true });
-
   readonly currentTabIndex = signal<number>(0);
 
+  /** Dashboard */
+  private readonly _dashboard = signal<SteamInsightDashboard | null>(null);
+  readonly dashboard = this._dashboard.asReadonly();
+
+  readonly dashboardLoadingState = new HzLoadingState('Steam Insight Management Dashboard', {
+    persistSuccess: true,
+  });
+
   /** App Search */
-  readonly apps = signal<SteamInsightApp[]>([]);
-  readonly appsLoadingState = new HzLoadingState('Steam Insight Apps', { persistSuccess: true });
-  readonly appsPageLength = signal<number>(0);
-  readonly appsSortBy = signal<SteamInsightAppField | null>(null);
-  readonly appsSortOrder = signal<SortOrder | null>(null);
-  readonly appsPage = signal<number>(0);
-  readonly appsPageSize = signal<number>(this.loadAppSearchPageSize());
+  private readonly _apps = signal<SteamInsightApp[]>([]);
+  readonly apps = this._apps.asReadonly();
+
+  readonly appsLoadingState = new HzLoadingState('Steam Insight Management Apps', {
+    persistSuccess: true,
+  });
+
+  private readonly _appsPageLength = signal<number>(0);
+  readonly appsPageLength = this._appsPageLength.asReadonly();
+
+  private readonly _appsSortBy = signal<SteamInsightAppField | null>(null);
+  readonly appsSortBy = this._appsSortBy.asReadonly();
+
+  private readonly _appsSortOrder = signal<SortOrder | null>(null);
+  readonly appsSortOrder = this._appsSortOrder.asReadonly();
+
+  private readonly _appsPage = signal<number>(0);
+  readonly appsPage = this._appsPage.asReadonly();
+
+  private readonly _appsPageSize = signal<number>(this.loadAppSearchPageSize());
+  readonly appsPageSize = this._appsPageSize.asReadonly();
+
   readonly appsSearchForm = this.getAppSearchForm();
 
   /** Update Search */
-  readonly updates = signal<SteamInsightUpdate[]>([]);
-  readonly updatesLoadingState = new HzLoadingState('Steam Insight Updates', { persistSuccess: true });
-  readonly updatesPageLength = signal<number>(0);
-  readonly updatesSortBy = signal<SteamInsightUpdateField | null>(null);
-  readonly updatesSortOrder = signal<SortOrder | null>(null);
-  readonly updatesPage = signal<number>(0);
-  readonly updatesPageSize = signal<number>(this.loadUpdateSearchPageSize());
+  private readonly _updates = signal<SteamInsightUpdate[]>([]);
+  readonly updates = this._updates.asReadonly();
+
+  readonly updatesLoadingState = new HzLoadingState('Steam Insight Management Updates', {
+    persistSuccess: true,
+  });
+
+  private readonly _updatesPageLength = signal<number>(0);
+  readonly updatesPageLength = this._updatesPageLength.asReadonly();
+
+  private readonly _updatesSortBy = signal<SteamInsightUpdateField | null>(null);
+  readonly updatesSortBy = this._updatesSortBy.asReadonly();
+
+  private readonly _updatesSortOrder = signal<SortOrder | null>(null);
+  readonly updatesSortOrder = this._updatesSortOrder.asReadonly();
+
+  private readonly _updatesPage = signal<number>(0);
+  readonly updatesPage = this._updatesPage.asReadonly();
+
+  private readonly _updatesPageSize = signal<number>(this.loadUpdateSearchPageSize());
+  readonly updatesPageSize = this._updatesPageSize.asReadonly();
+
   readonly updatesSearchForm = this.getUpdateSearchForm();
 
-  /** GENERAL */
+  /** GENERAL FUNCTIONS */
   setCurrentTabIndex(index: number = 0) {
     this.currentTabIndex.set(index);
   }
 
-  /** DASHBOARD */
+  reset() {
+    this.resetDashboard();
+    this.resetApps();
+    this.resetUpdates();
+  }
+
+  /** DASHBOARD FUNCTIONS */
   loadDashboard() {
     if (this.dashboardLoadingState.isLoading()) {
       return;
@@ -74,21 +115,21 @@ export class SteamInsightManagementService {
     this.tokenService
       .getWithTokenRefresh<SteamInsightDashboard>(`/steam-insight-management/dashboard`)
       .pipe(
-        tap((response) => {
-          this.dashboard.set(response);
+        tap((dashboard: SteamInsightDashboard) => {
+          this._dashboard.set(dashboard);
           this.dashboardLoadingState.setSuccess();
         }),
         catchError((err: HttpErrorResponse) => {
           this.dashboardLoadingState.setFailed(err.status);
-          console.error(`Failed to fetch Steam Insight Dashboard`, { error: err });
+          console.error(`Failed to fetch Steam Insight Management Dashboard`, { error: err });
           return of(null);
         })
       )
       .subscribe();
   }
 
-  clearDashboard() {
-    this.dashboard.set(null);
+  resetDashboard() {
+    this._dashboard.set(null);
     this.dashboardLoadingState.reset();
   }
 
@@ -100,7 +141,7 @@ export class SteamInsightManagementService {
       .pipe(
         tap(() => this.loadDashboard()),
         catchError((err: HttpErrorResponse) => {
-          console.error(`Failed to start Steam Insight Update`, { error: err });
+          console.error(`Failed to start Steam Insight Management Update`, { error: err });
           return of(null);
         })
       )
@@ -113,14 +154,14 @@ export class SteamInsightManagementService {
       .pipe(
         tap(() => this.loadDashboard()),
         catchError((err: HttpErrorResponse) => {
-          console.error(`Failed to stop Steam Insight Update`, { error: err });
+          console.error(`Failed to stop Steam Insight Management Update`, { error: err });
           return of(null);
         })
       )
       .subscribe();
   }
 
-  /** APP SEARCH */
+  /** APP SEARCH FUNCTIONS */
   loadApps(query: SteamInsightAppsQuery = {}) {
     if (this.appsLoadingState.isLoading()) {
       return;
@@ -149,33 +190,38 @@ export class SteamInsightManagementService {
         params,
       })
       .pipe(
-        tap((response) => {
-          this.apps.set(response.apps);
-          this.appsPageLength.set(response.pageLength);
+        tap((search: SteamInsightAppSearchResponse) => {
+          this._apps.set(search.apps);
+          this._appsPageLength.set(search.pageLength);
           this.appsLoadingState.setSuccess();
         }),
         catchError((err: HttpErrorResponse) => {
           this.appsLoadingState.setFailed(err.status);
-          console.error(`Failed to fetch Steam Insight Apps`, { error: err });
+          console.error(`Failed to fetch Steam Insight Management Apps`, { error: err });
           return of(null);
         })
       )
       .subscribe();
   }
 
+  resetApps() {
+    this._apps.set([]);
+    this.appsLoadingState.reset();
+  }
+
   setAppSearchSort(sortBy: string, sortOrder: string) {
     const isValidOrder = sortOrder === 'ASC' || sortOrder === 'DESC';
 
-    this.appsSortBy.set(isValidOrder ? (sortBy as SteamInsightAppField) : null);
-    this.appsSortOrder.set(isValidOrder ? (sortOrder as SortOrder) : null);
-    this.appsPage.set(0);
+    this._appsSortBy.set(isValidOrder ? (sortBy as SteamInsightAppField) : null);
+    this._appsSortOrder.set(isValidOrder ? (sortOrder as SortOrder) : null);
+    this._appsPage.set(0);
 
     this.loadApps();
   }
 
   setAppSearchPage(page: number, pageSize: number) {
-    this.appsPage.set(page);
-    this.appsPageSize.set(pageSize);
+    this._appsPage.set(page);
+    this._appsPageSize.set(pageSize);
 
     this.saveAppSearchPageSize(pageSize);
     this.loadApps();
@@ -226,7 +272,7 @@ export class SteamInsightManagementService {
     return appSearchForm;
   }
 
-  /** UPDATE SEARCH */
+  /** UPDATE SEARCH FUNCTIONS */
   loadUpdates(query: SteamInsightUpdatesQuery = {}) {
     if (this.updatesLoadingState.isLoading()) {
       return;
@@ -251,33 +297,38 @@ export class SteamInsightManagementService {
         params,
       })
       .pipe(
-        tap((response) => {
-          this.updates.set(response.updates);
-          this.updatesPageLength.set(response.pageLength);
+        tap((search: SteamInsightUpdateSearchResponse) => {
+          this._updates.set(search.updates);
+          this._updatesPageLength.set(search.pageLength);
           this.updatesLoadingState.setSuccess();
         }),
         catchError((err: HttpErrorResponse) => {
           this.updatesLoadingState.setFailed(err.status);
-          console.error(`Failed to fetch Steam Insight Updates`, { error: err });
+          console.error(`Failed to fetch Steam Insight Management Updates`, { error: err });
           return of(null);
         })
       )
       .subscribe();
   }
 
+  resetUpdates() {
+    this._updates.set([]);
+    this.updatesLoadingState.reset();
+  }
+
   setUpdateSearchSort(sortBy: string, sortOrder: string) {
     const isValidOrder = sortOrder === 'ASC' || sortOrder === 'DESC';
 
-    this.updatesSortBy.set(isValidOrder ? (sortBy as SteamInsightUpdateField) : null);
-    this.updatesSortOrder.set(isValidOrder ? (sortOrder as SortOrder) : null);
-    this.updatesPage.set(0);
+    this._updatesSortBy.set(isValidOrder ? (sortBy as SteamInsightUpdateField) : null);
+    this._updatesSortOrder.set(isValidOrder ? (sortOrder as SortOrder) : null);
+    this._updatesPage.set(0);
 
     this.loadUpdates();
   }
 
   setUpdateSearchPage(page: number, pageSize: number) {
-    this.updatesPage.set(page);
-    this.updatesPageSize.set(pageSize);
+    this._updatesPage.set(page);
+    this._updatesPageSize.set(pageSize);
 
     this.saveUpdateSearchPageSize(pageSize);
     this.loadUpdates();

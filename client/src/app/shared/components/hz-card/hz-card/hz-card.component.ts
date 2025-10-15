@@ -9,4 +9,5 @@ import { CommonModule } from '@angular/common';
 })
 export class HzCardComponent {
   readonly primary = input(false, { transform: booleanAttribute });
+  readonly hideBackground = input(false, { transform: booleanAttribute });
 }

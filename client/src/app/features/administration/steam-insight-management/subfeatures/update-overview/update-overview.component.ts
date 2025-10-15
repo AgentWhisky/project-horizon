@@ -12,7 +12,7 @@ import {
 } from '@hz/shared/components';
 
 import { UpdateOverviewService } from './update-overview.service';
-import { UpdateStatusPipe, UpdateStatusTypePipe, UpdateTypePipe } from '../resources/steam-insight-management.pipe';
+import { UpdateStatusPipe, UpdateStatusTypePipe, UpdateTypePipe } from '../../resources/steam-insight-management.pipe';
 
 @Component({
   selector: 'hz-update-overview',
@@ -51,6 +51,6 @@ export class UpdateOverviewComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.updateOverviewService.clearUpdate();
+    this.updateOverviewService.reset();
   }
 }

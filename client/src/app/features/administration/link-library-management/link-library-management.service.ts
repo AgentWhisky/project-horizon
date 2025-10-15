@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { catchError, filter, firstValueFrom, of, tap } from 'rxjs';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -7,7 +7,9 @@ import { DeleteResponse, OperationResult } from '@hz/core/models';
 import { TokenService, DownloadService } from '@hz/core/services';
 import { SNACKBAR_INTERVAL } from '@hz/core/constants';
 
-import { Category, CategoryPayload, Link, LinkPayload, Tag, TagPayload } from './link-library-management';
+import { Category, CategoryPayload, Link, LinkPayload, Tag, TagPayload } from './resources/link-library-management.model';
+import { HzLoadingState } from '@hz/core/utilities';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -17,245 +19,380 @@ export class LinkLibraryManagementService {
   private downloadService = inject(DownloadService);
   private snackbar = inject(MatSnackBar);
 
-  private _links = signal<Link[]>([]);
+  private readonly _links = signal<Link[]>([]);
   readonly links = this._links.asReadonly();
+  readonly linksLoadingState = new HzLoadingState('Link Library Management Links');
 
-  private _linkCategories = signal<Category[]>([]);
+  private readonly _linkCategories = signal<Category[]>([]);
   readonly linkCategories = this._linkCategories.asReadonly();
+  readonly linkCategoriesLoadingState = new HzLoadingState('Link Library Management Categories');
   readonly linkCategoryList = computed(() => this._linkCategories().map((item) => item.name));
 
-  private _linkTags = signal<Tag[]>([]);
+  private readonly _linkTags = signal<Tag[]>([]);
   readonly linkTags = this._linkTags.asReadonly();
+  readonly linkTagsLoadingState = new HzLoadingState('Link Library Management Tags');
   readonly linkTagList = computed(() => this._linkTags().map((item) => item.name));
 
   readonly linkCategoryMap = computed(() => this.getLinkCategoryMap(this._links(), this._linkCategories()));
   readonly unassignedLinks = computed(() => this.getUnassignedLinks(this._links()));
 
-  // *** LINK FUNCTIONS ***
-  async loadLinks() {
-    try {
-      const libraryLinks = await this.getLinks();
-      this._links.set(libraryLinks);
-    } catch (error) {
-      console.error(`Error fetching links: ${error}`);
-    }
+  reset() {
+    this.resetLinks();
+    this.resetCategories();
+    this.resetTags();
   }
 
-  async addLink(linkPayload: LinkPayload) {
-    try {
-      const newLink = await this.postLink(linkPayload);
-      this._links.set([...this._links(), newLink]);
-      this.snackbar.open('Successfully added link', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-    } catch (error) {
-      this.snackbar.open('Failed to add link', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-      console.error(`Error adding link: ${error}`);
+  /** LINK FUNCTIONS */
+  loadLinks() {
+    if (this.linksLoadingState.isLoading()) {
+      return;
     }
+
+    this.linksLoadingState.setInProgress();
+
+    this.tokenService
+      .getWithTokenRefresh<Link[]>('/link-library-management/links')
+      .pipe(
+        tap((links: Link[]) => {
+          this._links.set(links);
+          this.linksLoadingState.setSuccess();
+        }),
+        catchError((err: HttpErrorResponse) => {
+          this.linksLoadingState.setFailed(err.status);
+          console.error(`Failed to fetch Link Library Mangement links`, { error: err });
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
-  async updateLink(id: number, linkPayload: LinkPayload) {
-    try {
-      const updatedLink = await this.putLink(id, linkPayload);
-
-      const updatedIndex = this._links().findIndex((item) => item.id === id);
-
-      const updatedLinks: Link[] = [...this._links().filter((item) => item.id !== id)];
-      updatedLinks.splice(updatedIndex, 0, updatedLink);
-
-      this._links.set(updatedLinks);
-      this.snackbar.open('Successfully updated link', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-    } catch (error) {
-      this.snackbar.open('Failed to update link', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-      console.error(`Error updating link: ${error}`);
-    }
+  resetLinks() {
+    this._links.set([]);
+    this.linksLoadingState.reset();
   }
 
-  async removeLink(id: number) {
-    try {
-      const deleteResponse = await this.deleteLink(id);
-
-      if (deleteResponse.success) {
-        this._links.set([...this._links().filter((item) => item.id !== deleteResponse.id)]);
-        this.snackbar.open('Successfully deleted link', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-      }
-    } catch (error) {
-      this.snackbar.open('Failed to delete link', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-      console.error(`Error removing link: ${error}`);
-    }
+  addLink(linkPayload: LinkPayload) {
+    this.tokenService
+      .postWithTokenRefresh<Link>('/link-library-management/links', linkPayload)
+      .pipe(
+        tap((link: Link) => {
+          this._links.set([...this._links(), link]);
+          this.snackbar.open('Successfully added link', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+        }),
+        catchError((err: HttpErrorResponse) => {
+          this.snackbar.open('Failed to add link', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+          console.error(`Failed to add Link Library link`, { error: err });
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
-  async updateLinkSort(id: number, categoryId: number, sortKey: string) {
+  updateLink(id: number, linkPayload: LinkPayload) {
+    this.tokenService
+      .putWithTokenRefresh<Link>(`/link-library-management/links/${id}`, linkPayload)
+      .pipe(
+        tap((updatedLink: Link) => {
+          const updatedIndex = this._links().findIndex((item) => item.id === id);
+
+          const updatedLinks: Link[] = [...this._links().filter((item) => item.id !== id)];
+          updatedLinks.splice(updatedIndex, 0, updatedLink);
+
+          this._links.set(updatedLinks);
+          this.snackbar.open('Successfully updated link', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+        }),
+        catchError((err: HttpErrorResponse) => {
+          this.snackbar.open('Failed to update link', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+          console.error(`Failed to update Link Library link`, { id, error: err });
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
+  removeLink(id: number) {
+    this.tokenService
+      .deleteWithTokenRefresh<DeleteResponse>(`/link-library-management/links/${id}`)
+      .pipe(
+        filter((deleteResponse: DeleteResponse) => deleteResponse.success),
+        tap((deleteResponse: DeleteResponse) => {
+          this._links.set([...this._links().filter((item) => item.id !== deleteResponse.id)]);
+          this.snackbar.open('Successfully removed link', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+        }),
+        catchError((err: HttpErrorResponse) => {
+          this.snackbar.open('Failed to remove link', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+          console.error(`Failed to remove Link Library link`, { id, error: err });
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
+  updateLinkSort(id: number, categoryId: number, sortKey: string) {
+    // Clone existing links
     const oldLinks = structuredClone(this._links());
 
-    try {
-      const updatedIndex = this._links().findIndex((item) => item.id === id);
-      const updatedLink = this._links()[updatedIndex];
+    // Update locally before sending to server, preventing drag delay
+    const updatedIndex = this._links().findIndex((item) => item.id === id);
+    const updatedLink = structuredClone(this._links()[updatedIndex]);
 
-      const category = this._linkCategories().find((category) => category.id === categoryId);
+    updatedLink.sortKey = sortKey;
 
-      updatedLink.sortKey = sortKey;
-      updatedLink.category = category ? { id: category.id, name: category.name, description: category.description } : null;
+    const normalizedCategoryId = categoryId === 0 ? null : categoryId;
+    const newCategory = this._linkCategories().find((cat) => cat.id === normalizedCategoryId);
+    updatedLink.category = newCategory ? { id: newCategory.id, name: newCategory.name, description: newCategory.description } : null;
 
-      const updatedLinks: Link[] = [...this._links().filter((item) => item.id !== id)];
-      updatedLinks.splice(updatedIndex, 0, updatedLink);
+    const updatedLinks = [...this._links()];
+    updatedLinks[updatedIndex] = updatedLink;
+    this._links.set(updatedLinks);
 
-      this._links.set(updatedLinks);
+    const linkPayload = {
+      sortKey: updatedLink.sortKey,
+      category: normalizedCategoryId,
+    };
 
-      const linkPayload = {
-        ...updatedLink,
-        tags: updatedLink.tags.map((tag) => tag.id),
-        category: updatedLink.category?.id ?? null,
-      };
+    this.tokenService
+      .putWithTokenRefresh<Link>(`/link-library-management/links/${id}/sortKey`, linkPayload)
+      .pipe(
+        catchError((err: HttpErrorResponse) => {
+          this.snackbar.open('Failed to update link sort key', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+          console.error(`Failed to update Link Library link sort key`, { id, error: err });
 
-      await this.putLink(id, linkPayload);
-    } catch (error) {
-      this.snackbar.open('Failed to update link', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-      console.error(`Error updating link: ${error}`);
-
-      this._links.set(oldLinks);
-    }
+          this._links.set(oldLinks); // Revert to pre-sortkey change
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
-  async rebaseLinks() {
-    try {
-      await this.postRebaseLinks();
-      this.snackbar.open('Successfully rebased links', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-    } catch (error) {
-      this.snackbar.open('Failed to rebase links', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-      console.error(`Error rebasing links: ${error}`);
-    }
+  rebaseLinks() {
+    this.tokenService
+      .postWithTokenRefresh<OperationResult>(`/link-library-management/links/rebase`, {})
+      .pipe(
+        tap(() => {
+          this.snackbar.open('Successfully rebased links', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+        }),
+        catchError((err: HttpErrorResponse) => {
+          this.snackbar.open('Failed to rebase links', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+          console.error(`Failed to rebase Link Library links`, { error: err });
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
-  // *** CATEGORY FUNCTIONS ***
-  async loadCategories() {
-    try {
-      const linkCategories = await this.getCategories();
-      this._linkCategories.set(linkCategories);
-    } catch (error) {
-      console.error(`Error fetching categories: ${error}`);
+  /** CATEGORY FUNCTIONS */
+  loadCategories() {
+    if (this.linkCategoriesLoadingState.isLoading()) {
+      return;
     }
+
+    this.linkCategoriesLoadingState.setInProgress();
+
+    this.tokenService
+      .getWithTokenRefresh<Category[]>('/link-library-management/categories')
+      .pipe(
+        tap((categories: Category[]) => {
+          this._linkCategories.set(categories);
+          this.linkCategoriesLoadingState.setSuccess();
+        }),
+        catchError((err: HttpErrorResponse) => {
+          this.linkCategoriesLoadingState.setFailed(err.status);
+          console.error(`Failed to fetch Link Library categories`, { error: err });
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
-  async addCategory(categoryPayload: CategoryPayload) {
-    try {
-      const linkCategory = await this.postCategory(categoryPayload);
-      this._linkCategories.set([...this._linkCategories(), linkCategory]);
-      this.snackbar.open('Successfully added category', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-    } catch (error) {
-      this.snackbar.open('Failed to add category', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-      console.error(`Error Creating Category: ${error}`);
-    }
+  resetCategories() {
+    this._linkCategories.set([]);
+    this.linkCategoriesLoadingState.reset();
   }
 
-  async updateCategory(id: number, categoryPayload: CategoryPayload) {
-    try {
-      const updatedCategory = await this.putCategory(id, categoryPayload);
-
-      const updatedIndex = this._linkCategories().findIndex((item) => item.id === id);
-
-      const updatedCategories: Category[] = [...this._linkCategories().filter((item) => item.id !== id)];
-      updatedCategories.splice(updatedIndex, 0, updatedCategory);
-
-      this._linkCategories.set(updatedCategories);
-      this.snackbar.open('Successfully updated category', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-    } catch (error) {
-      this.snackbar.open('Failed to update category', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-      console.error(`Error Updating Category: ${error}`);
-    }
+  addCategory(categoryPayload: CategoryPayload) {
+    this.tokenService
+      .postWithTokenRefresh<Category>('/link-library-management/categories', categoryPayload)
+      .pipe(
+        tap((category: Category) => {
+          this._linkCategories.set([...this._linkCategories(), category]);
+          this.snackbar.open('Successfully added category', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+        }),
+        catchError((err: HttpErrorResponse) => {
+          this.snackbar.open('Failed to add category', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+          console.error(`Failed to add Link Library category`, { error: err });
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
-  async removeCategory(id: number) {
-    try {
-      const deleteResponse = await this.deleteCategory(id);
+  updateCategory(id: number, categoryPayload: CategoryPayload) {
+    this.tokenService
+      .putWithTokenRefresh<Category>(`/link-library-management/categories/${id}`, categoryPayload)
+      .pipe(
+        tap((updatedCategory: Category) => {
+          const updatedIndex = this._linkCategories().findIndex((item) => item.id === id);
 
-      if (deleteResponse.success) {
-        this._linkCategories.set([...this.linkCategories().filter((item) => item.id !== deleteResponse.id)]);
-        this.snackbar.open('Successfully deleted category', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-      }
-    } catch (error) {
-      this.snackbar.open('Failed to delete category', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-      console.error(`Error Removing Category: ${error}`);
-    }
+          const updatedCategories: Category[] = [...this._linkCategories().filter((item) => item.id !== id)];
+          updatedCategories.splice(updatedIndex, 0, updatedCategory);
+
+          this._linkCategories.set(updatedCategories);
+          this.snackbar.open('Successfully updated category', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+        }),
+        catchError((err: HttpErrorResponse) => {
+          this.snackbar.open('Failed to update category', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+          console.error(`Failed to update Link Library category`, { error: err });
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
+  removeCategory(id: number) {
+    this.tokenService
+      .deleteWithTokenRefresh<DeleteResponse>(`/link-library-management/categories/${id}`)
+      .pipe(
+        filter((deleteResponse: DeleteResponse) => deleteResponse.success),
+        tap((deleteResponse: DeleteResponse) => {
+          this._linkCategories.set([...this.linkCategories().filter((item) => item.id !== deleteResponse.id)]);
+          this.snackbar.open('Successfully removed category', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+        }),
+        catchError((err: HttpErrorResponse) => {
+          this.snackbar.open('Failed to remove category', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+          console.error(`Failed to remove Link Library category`, { id, error: err });
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
   // *** TAG FUNCTIONS ***
-  async loadTags() {
-    try {
-      const linkTags = await this.getTags();
-      this._linkTags.set(linkTags);
-    } catch (error) {
-      this.snackbar.open('Failed to fetch tags', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-      console.error(`Error fetching tags: ${error}`);
+  loadTags() {
+    if (this.linkTagsLoadingState.isLoading()) {
+      return;
     }
+
+    this.linkTagsLoadingState.setInProgress();
+
+    this.tokenService
+      .getWithTokenRefresh<Tag[]>('/link-library-management/tags')
+      .pipe(
+        tap((tags: Tag[]) => {
+          this._linkTags.set(tags);
+          this.linkTagsLoadingState.setSuccess();
+        }),
+        catchError((err: HttpErrorResponse) => {
+          this.linkTagsLoadingState.setFailed(err.status);
+          console.error(`Failed to fetch Link Library Mangement tags`, { error: err });
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
-  async addTag(tagPayload: TagPayload) {
-    try {
-      const linkTag = await this.postTag(tagPayload);
-      this._linkTags.set([...this._linkTags(), linkTag]);
-      this.snackbar.open('Successfully added new tag', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-    } catch (error) {
-      this.snackbar.open('Failed to add tag', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-      console.error(`Error adding tag: ${error}`);
-    }
+  resetTags() {
+    this._linkTags.set([]);
+    this.linkTagsLoadingState.reset();
   }
 
-  async updateTag(id: number, tagPayload: TagPayload) {
-    try {
-      const updatedTag = await this.putTag(id, tagPayload);
-
-      const updatedIndex = this._linkTags().findIndex((item) => item.id === id);
-
-      const updatedTags: Tag[] = [...this._linkTags().filter((item) => item.id !== id)];
-      updatedTags.splice(updatedIndex, 0, updatedTag);
-
-      this._linkTags.set(updatedTags);
-      this.snackbar.open('Successfully update tag', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-    } catch (error) {
-      this.snackbar.open('Failed to update tag', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-      console.error(`Error updating tag: ${error}`);
-    }
+  addTag(tagPayload: TagPayload) {
+    this.tokenService
+      .postWithTokenRefresh<Tag>('/link-library-management/tags', tagPayload)
+      .pipe(
+        tap((tag: Tag) => {
+          this._linkTags.set([...this._linkTags(), tag]);
+          this.snackbar.open('Successfully added tag', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+        }),
+        catchError((err: HttpErrorResponse) => {
+          this.snackbar.open('Failed to add link tag', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+          console.error(`Failed to add Link Library link tag`, { error: err });
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
-  async removeTag(id: number) {
-    try {
-      const deleteResponse = await this.deleteTag(id);
+  updateTag(id: number, tagPayload: TagPayload) {
+    this.tokenService
+      .putWithTokenRefresh<Tag>(`/link-library-management/tags/${id}`, tagPayload)
+      .pipe(
+        tap((updatedTag: Tag) => {
+          const updatedIndex = this._linkTags().findIndex((item) => item.id === id);
 
-      if (deleteResponse.success) {
-        this._linkTags.set([...this.linkTags().filter((item) => item.id !== deleteResponse.id)]);
-        this.snackbar.open('Successfully deleted tag', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-      }
-    } catch (error) {
-      this.snackbar.open('Failed to delete tag', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-      console.error(`Error removing tag: ${error}`);
-    }
+          const updatedTags: Tag[] = [...this._linkTags().filter((item) => item.id !== id)];
+          updatedTags.splice(updatedIndex, 0, updatedTag);
+
+          this._linkTags.set(updatedTags);
+          this.snackbar.open('Successfully updated tag', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+        }),
+        catchError((err: HttpErrorResponse) => {
+          this.snackbar.open('Failed to update tag', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+          console.error(`Failed to update Link Library link tag`, { id, error: err });
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
-  // *** Import/Export Functions
-  async importLinkLibrary(file: File) {
-    try {
-      await this.postLinkLibraryImport(file);
-      this.snackbar.open('Successfully imported Link Library', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-    } catch (error) {
-      this.snackbar.open('Failed to import Link Library', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-      console.error(`Failed to import Link Library: ${error}`);
-    }
+  removeTag(id: number) {
+    this.tokenService
+      .deleteWithTokenRefresh<DeleteResponse>(`/link-library-management/tags/${id}`)
+      .pipe(
+        filter((deleteResponse: DeleteResponse) => deleteResponse.success),
+        tap((deleteResponse: DeleteResponse) => {
+          this._linkTags.set([...this.linkTags().filter((item) => item.id !== deleteResponse.id)]);
+          this.snackbar.open('Successfully removed tag', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+        }),
+        catchError((err: HttpErrorResponse) => {
+          this.snackbar.open('Failed to remove tag', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+          console.error(`Failed to remove Link Library link tag`, { id, error: err });
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
-  async exportLinkLibrary() {
-    try {
-      const exportFile = await this.getLinkLibraryExport();
+  /** LINK LIBRARY IMPORT/EXPORT FUNCTIONS */
+  importLinkLibrary(file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
 
-      this.downloadService.downloadFile(exportFile, 'linkLibraryExport.json');
-
-      this.snackbar.open('Successfully exported Link Library', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-    } catch (error) {
-      this.snackbar.open('Failed to export Link Library', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-      console.error(`Failed to export Link Library: ${error}`);
-    }
+    this.tokenService
+      .postWithTokenRefresh('/link-library-management/import', formData)
+      .pipe(
+        tap(() => {
+          this.snackbar.open('Successfully imported Link Library', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+        }),
+        catchError((err: HttpErrorResponse) => {
+          this.snackbar.open('Failed to import Link Library', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+          console.error(`Failed to import Link Library`, { error: err });
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
-  // *** PRIVATE FUNCTIONS ***
-  // *** LINK ***
+  exportLinkLibrary() {
+    this.tokenService
+      .getWithTokenRefresh<Blob>(`/link-library-management/export`, {
+        responseType: 'blob' as 'json',
+      })
+      .pipe(
+        tap((exportFile: Blob) => {
+          this.downloadService.downloadFile(exportFile, 'linkLibraryExport.json');
+          this.snackbar.open('Successfully exported Link Library', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+        }),
+        catchError((err: HttpErrorResponse) => {
+          this.snackbar.open('Failed to export Link Library', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+          console.error(`Failed to export Link Library`, { error: err });
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
+  /** PRIVATE LINK FUNCTIONS */
   private getLinkCategoryMap(links: Link[], categories: Category[]) {
     const categoryMap: { [categoryId: number]: Link[] } = {};
 
@@ -270,88 +407,5 @@ export class LinkLibraryManagementService {
 
   private getUnassignedLinks(links: Link[]) {
     return links.filter((link) => link.category === null).sort((a, b) => a.sortKey.localeCompare(b.sortKey));
-  }
-
-  private async getLinks() {
-    const links$ = this.tokenService.getWithTokenRefresh<Link[]>('/link-library-management/links');
-    return firstValueFrom(links$);
-  }
-
-  private async postLink(linkPayload: LinkPayload) {
-    const link$ = this.tokenService.postWithTokenRefresh<Link>('/link-library-management/links', linkPayload);
-    return firstValueFrom(link$);
-  }
-
-  private async putLink(id: number, linkPayload: LinkPayload) {
-    const link$ = this.tokenService.putWithTokenRefresh<Link>(`/link-library-management/links/${id}`, linkPayload);
-    return firstValueFrom(link$);
-  }
-
-  private async deleteLink(id: number) {
-    const deleteResponse$ = this.tokenService.deleteWithTokenRefresh<DeleteResponse>(`/link-library-management/links/${id}`);
-    return firstValueFrom(deleteResponse$);
-  }
-
-  private async postRebaseLinks() {
-    const operationResult$ = this.tokenService.postWithTokenRefresh<OperationResult>(`/link-library-management/links/rebase`, {});
-    return firstValueFrom(operationResult$);
-  }
-
-  // *** CATEGORY ***
-  private async getCategories() {
-    const linkCategories$ = this.tokenService.getWithTokenRefresh<Category[]>('/link-library-management/categories');
-    return firstValueFrom(linkCategories$);
-  }
-
-  private async postCategory(categoryPayload: CategoryPayload) {
-    const link$ = this.tokenService.postWithTokenRefresh<Category>('/link-library-management/categories', categoryPayload);
-    return firstValueFrom(link$);
-  }
-
-  private async putCategory(id: number, categoryPayload: CategoryPayload) {
-    const link$ = this.tokenService.putWithTokenRefresh<Category>(`/link-library-management/categories/${id}`, categoryPayload);
-    return firstValueFrom(link$);
-  }
-
-  private async deleteCategory(id: number) {
-    const deleteResponse$ = this.tokenService.deleteWithTokenRefresh<DeleteResponse>(`/link-library-management/categories/${id}`);
-    return firstValueFrom(deleteResponse$);
-  }
-
-  // *** LINK TAG ***
-  private async getTags(): Promise<Tag[]> {
-    const linkTags$ = this.tokenService.getWithTokenRefresh<Tag[]>('/link-library-management/tags');
-    return firstValueFrom(linkTags$);
-  }
-
-  private async postTag(tagPayload: TagPayload): Promise<Tag> {
-    const link$ = this.tokenService.postWithTokenRefresh<Tag>('/link-library-management/tags', tagPayload);
-    return firstValueFrom(link$);
-  }
-
-  private async putTag(id: number, tagPayload: TagPayload): Promise<Tag> {
-    const link$ = this.tokenService.putWithTokenRefresh<Tag>(`/link-library-management/tags/${id}`, tagPayload);
-    return firstValueFrom(link$);
-  }
-
-  private async deleteTag(id: number): Promise<DeleteResponse> {
-    const deleteResponse$ = this.tokenService.deleteWithTokenRefresh<DeleteResponse>(`/link-library-management/tags/${id}`);
-    return firstValueFrom(deleteResponse$);
-  }
-
-  // *** LIBRARY IMPORT/EXPORT ***
-  private async postLinkLibraryImport(file: File) {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    const result$ = this.tokenService.postWithTokenRefresh('/link-library-management/import', formData);
-    return firstValueFrom(result$);
-  }
-
-  private async getLinkLibraryExport() {
-    const exportFile$ = this.tokenService.getWithTokenRefresh<Blob>(`/link-library-management/export`, {
-      responseType: 'blob' as 'json',
-    });
-    return firstValueFrom(exportFile$);
   }
 }
