@@ -44,6 +44,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
 
   private isUpdateEnabled = false;
   private isUpdateCronEnabled = false;
+  private isCancelOnStartupEnabled = false;
 
   private updatePromise: Promise<void> | null = null;
   private updateHistoryId: number | null = null;
@@ -65,10 +66,13 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    this.cleanupHistory();
+    this.isUpdateEnabled = process.env.STEAM_INSIGHT_UPDATE_ENABLE === 'true';
+    this.isUpdateCronEnabled = process.env.STEAM_INSIGHT_CRON_ENABLE === 'true';
+    this.isCancelOnStartupEnabled = process.env.STEAM_INSIGHT_CANCEL_ON_STARTUP === 'true';
 
-    this.isUpdateEnabled = process.env.STEAM_UPDATE_ENABLE === 'true';
-    this.isUpdateCronEnabled = process.env.STEAM_UPDATE_CRON_ENABLE === 'true';
+    if (this.isCancelOnStartupEnabled) {
+      this.cleanupHistory();
+    }
 
     // If updates and update CRON are enabled
     if (this.isUpdateEnabled && this.isUpdateCronEnabled) {
