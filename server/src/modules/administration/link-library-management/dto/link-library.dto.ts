@@ -13,6 +13,7 @@ import {
   IsEnum,
   ValidateNested,
   IsBoolean,
+  ValidateIf,
 } from 'class-validator';
 
 import { ImageContrastBackground } from 'src/common/enums';
@@ -70,6 +71,8 @@ export class LinkImportDto {
   url: string;
 
   @ApiProperty({ example: 'https://example.com/icon.png' })
+  @ValidateIf((o) => o.icon !== null)
+  @IsOptional()
   @IsUrl()
   icon: string;
 

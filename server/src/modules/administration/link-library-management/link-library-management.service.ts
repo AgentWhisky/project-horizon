@@ -403,7 +403,7 @@ export class LinkLibraryManagementService implements OnModuleInit {
   }
 
   // *** Import/Export Library ***
-  async importLinkLibrary(file: Express.Multer.File) {
+  async importLinkLibrary(file: Express.Multer.File): Promise<OperationResult> {
     if (!file || file.mimetype !== 'application/json') {
       throw new BadRequestException('Invalid file or filetype. Expected a JSON file.');
     }
@@ -461,12 +461,17 @@ export class LinkLibraryManagementService implements OnModuleInit {
         LinkEntity,
         linkLibrary.links.map((link) => ({
           ...link,
+          icon: link.icon ?? '',
           category: { id: categoryMap.get(link.category) },
           tags: link.tags.map((tagId) => ({ id: tagMap.get(tagId) })),
         }))
       );
 
       await queryRunner.commitTransaction();
+      return {
+        success: true,
+        message: 'Successfully imported link library',
+      };
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw error;
