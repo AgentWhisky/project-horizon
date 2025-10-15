@@ -19,3 +19,18 @@ export function formatET(date: Date): string {
 export function formatETFromNow(msFromNow: number): string {
   return formatET(new Date(Date.now() + msFromNow));
 }
+
+export function getFilenameTimestamp(date: Date = new Date()) {
+  const year = date.getFullYear();
+  const month = leftPad(date.getMonth() + 1);
+  const day = leftPad(date.getDate());
+  const hours = leftPad(date.getHours());
+  const minutes = leftPad(date.getMinutes());
+  const seconds = leftPad(date.getSeconds());
+
+  return `${year}-${month}-${day}_${hours}-${minutes}-${seconds}`;
+}
+
+function leftPad(n: number) {
+  return n.toString().padStart(2, '0');
+}

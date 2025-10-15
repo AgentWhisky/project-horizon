@@ -5,5 +5,6 @@ export * from './error-messages.util';
 export * from './favicon.util';
 export * from './hz-loading-state.util';
 export * from './lexo-rank.util';
+export * from './response-header.util';
 export * from './sleep.utils';
 export * from './text.util';

@@ -20,11 +20,12 @@ async function bootstrap() {
 
   app.enableCors(corsOptions);
 
+  /** Setup Swagger in non-production environments */
   if (process.env.NODE_ENV !== 'production') {
     const config = new DocumentBuilder()
       .setTitle('Horizon API')
       .setDescription('API Documentation')
-      .setVersion('1.1')
+      .setVersion('1.2.0')
       .addBasicAuth()
       .addBearerAuth()
       .build();

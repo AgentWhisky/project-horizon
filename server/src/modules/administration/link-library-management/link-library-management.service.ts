@@ -1,9 +1,18 @@
 import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { InjectDataSource, InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { LinkCategoryEntity } from 'src/entities/link-categories.entity';
-import { LinkTagEntity } from 'src/entities/link-tags.entity';
-import { LinkEntity } from 'src/entities/link.entity';
+import { plainToInstance } from 'class-transformer';
+import { validate } from 'class-validator';
 import { DataSource, EntityManager, Not, Repository } from 'typeorm';
+
+import { flattenValidationErrors } from '@hz/common/utils';
+import { DeleteResponse, OperationResult } from '@hz/common/model';
+import { MINOR_BASE, MINOR_LENGTH, MINOR_STEP } from '@hz/common/constants';
+
+import { LinkCategoryEntity } from 'src/entities/link-categories.entity';
+import { LinkEntity } from 'src/entities/link.entity';
+import { LinkTagEntity } from 'src/entities/link-tags.entity';
+
+import { LinkLibraryDto } from './dto/link-library.dto';
 import {
   Category,
   CategoryPayload,
@@ -15,9 +24,6 @@ import {
   Tag,
   TagPayload,
 } from './link-library-management.model';
-import { DeleteResponse } from 'src/common/model/delete-response.model';
-import { OperationResult } from 'src/common/model/operation-result.model';
-import { MINOR_BASE, MINOR_LENGTH, MINOR_STEP } from 'src/common/constants/lexo-rank.constants';
 
 @Injectable()
 export class LinkLibraryManagementService implements OnModuleInit {
@@ -397,7 +403,35 @@ export class LinkLibraryManagementService implements OnModuleInit {
   }
 
   // *** Import/Export Library ***
-  async importLinkLibrary(linkLibrary: LinkLibrary) {
+  async importLinkLibrary(file: Express.Multer.File) {
+    if (!file || file.mimetype !== 'application/json') {
+      throw new BadRequestException('Invalid file or filetype. Expected a JSON file.');
+    }
+
+    // Parse JSON File
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(file.buffer.toString('utf-8'));
+    } catch {
+      throw new BadRequestException('Malformed JSON file.');
+    }
+
+    // Validate JSON file for link library structure
+    const linkLibrary = plainToInstance(LinkLibraryDto, parsed);
+    const errors = await validate(linkLibrary, {
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      skipMissingProperties: false,
+    });
+
+    if (errors.length > 0) {
+      throw new BadRequestException({
+        message: 'Validation failed for link library file',
+        errors: flattenValidationErrors(errors),
+      });
+    }
+
+    // Import Data
     const tags = linkLibrary.tags.map((tag) => ({ ...tag }));
     const categories = linkLibrary.categories.map((category) => ({ ...category }));
 

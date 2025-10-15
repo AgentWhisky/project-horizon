@@ -1,4 +1,4 @@
-import { HttpModuleAsyncOptions, HttpService } from '@nestjs/axios';
+import { HttpService } from '@nestjs/axios';
 import { ConflictException, ForbiddenException, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,8 +7,10 @@ import { Repository } from 'typeorm';
 import { CronJob } from 'cron';
 import { firstValueFrom } from 'rxjs';
 
+import { POSTGRES_ERRORS } from '@hz/common/constants';
 import { SteamInsightUpdateStatus, SteamInsightUpdateType } from '@hz/common/enums';
-import { ChangeDiff } from '@hz/common/model';
+import { RetryExhaustedError } from '@hz/common/errors';
+import { ChangeDiff, OperationResult } from '@hz/common/model';
 import { sleep, getErrorNameAndMessage, generateChangeDiff, formatETFromNow } from '@hz/common/utils';
 
 import { SteamAppEntity } from '@hz/entities/steam-app.entity';
@@ -35,8 +37,6 @@ import {
   STEAM_UPDATE_ERRORS,
   STEAM_UPDATE_MESSAGES,
 } from '../resources/steam-insight-management.constants';
-import { POSTGRES_ERRORS } from '@hz/common/constants';
-import { RetryExhaustedError } from '@hz/common/errors';
 
 @Injectable()
 export class SteamInsightManagementUpdateService implements OnModuleInit {
@@ -96,7 +96,7 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
    * @param isCron Whether the update trigger is a CRON job or manual
    * @param updateType If the update is FULL 'F' or INCREMENTAL 'I'
    */
-  async startUpdate(isCron?: boolean, updateType?: SteamInsightUpdateType) {
+  async startUpdate(isCron?: boolean, updateType?: SteamInsightUpdateType): Promise<OperationResult> {
     if (!this.isUpdateEnabled) {
       if (isCron) {
         this.logger.warn(`[Cron] ${STEAM_UPDATE_ERRORS.updatesDisabledError}`);
@@ -121,17 +121,23 @@ export class SteamInsightManagementUpdateService implements OnModuleInit {
       this.updateHistoryId = null;
     });
 
-    return { message: STEAM_UPDATE_MESSAGES.updateQueued };
+    return {
+      success: true,
+      message: STEAM_UPDATE_MESSAGES.updateQueued,
+    };
   }
 
-  async stopUpdate() {
+  async stopUpdate(): Promise<OperationResult> {
     if (this.abortController) {
       this.abortController.abort();
     }
 
     // Only cleanup history if the server is not tracking an in-progress update
     if (this.updatePromise) {
-      return { message: 'Cancel request received for update in progress' };
+      return {
+        success: true,
+        message: 'The cancel request received for the update in progress',
+      };
     }
 
     await this.cleanupHistory();

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsOptional, IsString, Min, ValidateIf } from 'class-validator';
+import { IsInt, IsOptional, IsString, Max, MaxLength, Min, ValidateIf } from 'class-validator';
 
 export class UpdateLinkSortKeyDto {
   @ApiProperty({
@@ -7,6 +7,7 @@ export class UpdateLinkSortKeyDto {
     example: '000000:100000',
   })
   @IsString()
+  @MaxLength(100)
   sortKey: string;
 
   @ApiProperty({
@@ -18,6 +19,7 @@ export class UpdateLinkSortKeyDto {
   @ValidateIf((o) => o.category !== null)
   @IsInt()
   @Min(1)
+  @Max(99999)
   @IsOptional()
   category: number | null;
 }

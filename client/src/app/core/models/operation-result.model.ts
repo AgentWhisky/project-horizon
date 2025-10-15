@@ -1,4 +1,5 @@
 export interface OperationResult {
   success: boolean;
-  affectedRows: number;
+  message?: string;
+  affectedRows?: number;
 }

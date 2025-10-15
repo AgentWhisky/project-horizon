@@ -1,0 +1,16 @@
+meta {
+  name: POST Login
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/api/login
+  body: none
+  auth: basic
+}
+
+auth:basic {
+  username: admin
+  password: password
+}

@@ -8,8 +8,8 @@ import { TokenService, DownloadService } from '@hz/core/services';
 import { SNACKBAR_INTERVAL } from '@hz/core/constants';
 
 import { Category, CategoryPayload, Link, LinkPayload, Tag, TagPayload } from './resources/link-library-management.model';
-import { HzLoadingState } from '@hz/core/utilities';
-import { HttpErrorResponse } from '@angular/common/http';
+import { extractFilenameFromContentDisposition, HzLoadingState } from '@hz/core/utilities';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -375,12 +375,23 @@ export class LinkLibraryManagementService {
 
   exportLinkLibrary() {
     this.tokenService
-      .getWithTokenRefresh<Blob>(`/link-library-management/export`, {
-        responseType: 'blob' as 'json',
+      .getWithTokenRefresh<HttpResponse<Blob>>(`/link-library-management/export`, {
+        responseType: 'blob',
+        observe: 'response',
       })
       .pipe(
-        tap((exportFile: Blob) => {
-          this.downloadService.downloadFile(exportFile, 'linkLibraryExport.json');
+        tap((response: HttpResponse<Blob>) => {
+          const blob = response.body;
+          const contentDisposition = response.headers.get('Content-Disposition');
+
+          const filename = extractFilenameFromContentDisposition(contentDisposition, 'LinkLibraryExport.json');
+
+          if (!blob) {
+            this.snackbar.open('No data returned in exported file', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
+            return;
+          }
+
+          this.downloadService.downloadFile(blob, filename);
           this.snackbar.open('Successfully exported Link Library', 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
         }),
         catchError((err: HttpErrorResponse) => {
