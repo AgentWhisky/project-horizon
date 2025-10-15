@@ -513,7 +513,8 @@ export class LinkLibraryManagementService implements OnModuleInit {
     const exportLibrary: LinkLibrary = {
       links: links.map((item) => ({
         ...item,
-        category: item.category.id,
+        icon: item.icon?.trim() || null, // Default empty icons to null
+        category: item.category?.id ?? null, // Allow null category
         tags: item.tags.map((tag) => tag.id),
       })),
       categories,

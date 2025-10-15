@@ -1,6 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, IsArray, Max, Min, IsUrl, IsEnum, ValidateNested } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+  IsArray,
+  Max,
+  Min,
+  IsUrl,
+  IsEnum,
+  ValidateNested,
+  IsBoolean,
+} from 'class-validator';
 
 import { ImageContrastBackground } from 'src/common/enums';
 import { LINK_CONFIG, LINK_CATEGORY_CONFIG, LINK_TAG_CONFIG } from 'src/common/constants';
@@ -78,6 +91,11 @@ export class LinkImportDto {
   @IsInt({ each: true })
   @Max(99999, { each: true })
   tags: number[];
+
+  @ApiProperty({ example: true, description: 'Indicates if the link is active', required: false })
+  @IsOptional()
+  @IsBoolean()
+  status?: boolean;
 
   @ApiProperty({ example: '000000:100000', maxLength: 100 })
   @IsString()
