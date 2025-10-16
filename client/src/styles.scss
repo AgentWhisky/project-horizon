@@ -106,6 +106,8 @@ body {
   border: 1px solid var(--mat-sys-outline-variant);
   border-radius: var(--mat-sys-corner-small);
 
+  
+
   @include mat.dialog-overrides(
     (
       container-color: none,

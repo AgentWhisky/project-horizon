@@ -21,16 +21,16 @@ export class LinkLibraryManagementService {
 
   private readonly _links = signal<Link[]>([]);
   readonly links = this._links.asReadonly();
-  readonly linksLoadingState = new HzLoadingState('Link Library Management Links');
+  readonly linksLoadingState = new HzLoadingState('Link Library Management Links', { adminMessage: true });
 
   private readonly _linkCategories = signal<Category[]>([]);
   readonly linkCategories = this._linkCategories.asReadonly();
-  readonly linkCategoriesLoadingState = new HzLoadingState('Link Library Management Categories');
+  readonly linkCategoriesLoadingState = new HzLoadingState('Link Library Management Categories', { adminMessage: true });
   readonly linkCategoryList = computed(() => this._linkCategories().map((item) => item.name));
 
   private readonly _linkTags = signal<Tag[]>([]);
   readonly linkTags = this._linkTags.asReadonly();
-  readonly linkTagsLoadingState = new HzLoadingState('Link Library Management Tags');
+  readonly linkTagsLoadingState = new HzLoadingState('Link Library Management Tags', { adminMessage: true });
   readonly linkTagList = computed(() => this._linkTags().map((item) => item.name));
 
   readonly linkCategoryMap = computed(() => this.getLinkCategoryMap(this._links(), this._linkCategories()));

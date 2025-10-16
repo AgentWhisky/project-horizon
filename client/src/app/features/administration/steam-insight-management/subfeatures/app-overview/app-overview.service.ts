@@ -15,7 +15,7 @@ export class AppOverviewService {
 
   private readonly _app = signal<SteamInsightAppRaw | null>(null);
   readonly app = this._app.asReadonly();
-  readonly loadingState = new HzLoadingState('Steam Insight App');
+  readonly loadingState = new HzLoadingState('Steam Insight App', { adminMessage: true });
 
   loadApp(appid: number) {
     if (this.loadingState.isLoading()) {

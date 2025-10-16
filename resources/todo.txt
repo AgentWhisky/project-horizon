@@ -2,16 +2,14 @@
 - Generate custom themes for App instead of prebuilt
 - Refactor content-tile to be advanced formatting like hz-timeline
 
-
-- Refactor Steam Insight server job and db tracking
-- Refactor Steam Insight client page (separate from dashboard)
-
 - Refactor Admin Dashboard to show more information
 
 - Refactor Account Management to move away from tables
 - Refactor Account Management dialogs to use new format
 
 - Update Link Library to complete refactor of auto height animation issue
+
+- Fix mobile dialog overflow bug
 
 
 

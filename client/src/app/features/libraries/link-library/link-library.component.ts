@@ -7,10 +7,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
-import { LOADING_STATUS } from '@hz/core/constants';
-import { HzBannerModule } from '@hz/shared/components';
+import { HzBannerModule, HzLoadingSpinnerModule } from '@hz/shared/components';
 
-import { LinkTileComponent } from './link-tile/link-tile.component';
+import { LinkTileComponent } from './components/link-tile/link-tile.component';
 import { LinkLibraryService } from './link-library.service';
 
 @Component({
@@ -21,6 +20,7 @@ import { LinkLibraryService } from './link-library.service';
     MatIconModule,
     MatCardModule,
     MatAutocompleteModule,
+    HzLoadingSpinnerModule,
     FormsModule,
     LinkTileComponent,
     HzBannerModule,
@@ -31,13 +31,12 @@ import { LinkLibraryService } from './link-library.service';
 export class LinkLibraryComponent implements OnInit {
   private linkLibraryService = inject(LinkLibraryService);
 
-  readonly links = this.linkLibraryService.links;
+  readonly libraryLinks = this.linkLibraryService.links;
   readonly linkFilter = model<string>('');
   readonly filteredLinks = computed(() => this.onFilterLinks());
   readonly linksByCategory = computed(() => this.linkLibraryService.getLinksByCategory(this.filteredLinks()));
 
-  readonly loadingStatus = this.linkLibraryService.loadingStatus;
-  readonly LOADING_STATUS = LOADING_STATUS;
+  readonly loadingState = this.linkLibraryService.loadingState;
 
   private linkTiles = viewChildren(LinkTileComponent);
 
@@ -60,10 +59,10 @@ export class LinkLibraryComponent implements OnInit {
   onFilterLinks() {
     const filter = this.linkFilter()?.trim()?.toLowerCase();
     if (!filter) {
-      return this.links();
+      return this.libraryLinks();
     }
 
-    return this.links().filter(
+    return this.libraryLinks().filter(
       (link) =>
         link.name?.toLowerCase().includes(filter) ||
         link.category.name?.toLowerCase().includes(filter) ||

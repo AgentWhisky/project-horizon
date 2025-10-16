@@ -32,14 +32,14 @@
                 <div class="flex flex-col gap-3">
                   <div>
                     <span class="font-semibold">Start Time</span>
-                    <div>{{ runningUpdate()!.startTime | date : 'short' }}</div>
+                    <div>{{ runningUpdate()!.startTime | date : 'M/d/yyyy, h:mm a' }}</div>
                   </div>
                 </div>
                 <div>
                   <span class="font-semibold">Events</span>
                   <ul class="list-disc list-inside">
                     @for (event of runningUpdate()!.events; track event.message) {
-                    <li>{{ event.timestamp | date : 'short' }} - {{ event.message | formatDate }}</li>
+                    <li>{{ event.timestamp | date : 'M/d/yyyy, h:mm a' }} - {{ event.message | formatDate }}</li>
                     }
                   </ul>
                 </div>
@@ -77,11 +77,11 @@
                 <div class="grid grid-cols-2 gap-3 w-full">
                   <div>
                     <span class="font-semibold">Start Time</span>
-                    <div>{{ update.startTime | date : 'short' }}</div>
+                    <div>{{ update.startTime | date : 'M/d/yyyy, h:mm a' }}</div>
                   </div>
                   <div>
                     <span class="font-semibold">End Time</span>
-                    <div>{{ update.endTime ? (update.endTime | date : 'short') : '—' }}</div>
+                    <div>{{ update.endTime ? (update.endTime | date : 'M/d/yyyy, h:mm a') : '—' }}</div>
                   </div>
                 </div>
               </hz-card-body>
@@ -110,6 +110,8 @@
     <mat-tab label="Steam App Search">
       @let apps = steamInsightApps();
       <div class="flex flex-row flex-wrap gap-3 py-3 justify-center">
+        <!-- LOAD SUCCESS -->
+        @if(appsLoadingState.isSuccess()) {
         <hz-card primary>
           <hz-card-header>
             <mat-icon>filter_alt</mat-icon>
@@ -172,8 +174,6 @@
           </hz-card-body>
         </hz-card>
 
-        <!-- LOAD SUCCESS -->
-        @if(appsLoadingState.isSuccess()) {
         <hz-card class="flex flex-grow">
           <hz-card-body>
             <div class="w-full flex flex-col">
@@ -318,12 +318,12 @@
                 class="mat-elevation-z8">
                 <ng-container matColumnDef="startTime">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by start time">Start Time</th>
-                  <td mat-cell *matCellDef="let element">{{ element.startTime | date : 'short' }}</td>
+                  <td mat-cell *matCellDef="let element">{{ element.startTime | date : 'M/d/yyyy, h:mm a' }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="endTime">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by end time">End Time</th>
-                  <td mat-cell *matCellDef="let element">{{ element.endTime ? (element.endTime | date : 'short') : '—' }}</td>
+                  <td mat-cell *matCellDef="let element">{{ element.endTime ? (element.endTime | date : 'M/d/yyyy, h:mm a') : '—' }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="totalRuntime">

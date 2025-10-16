@@ -15,7 +15,7 @@ export class UpdateOverviewService {
 
   private readonly _update = signal<SteamInsightUpdateOverview | null>(null);
   readonly update = this._update.asReadonly();
-  readonly loadingState = new HzLoadingState('Steam Insight Update');
+  readonly loadingState = new HzLoadingState('Steam Insight Update', { adminMessage: true });
 
   loadUpdate(id: number) {
     if (this.loadingState.isLoading()) {

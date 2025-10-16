@@ -41,6 +41,7 @@ export class SteamInsightManagementService {
 
   readonly dashboardLoadingState = new HzLoadingState('Steam Insight Management Dashboard', {
     persistSuccess: true,
+    adminMessage: true,
   });
 
   /** App Search */
@@ -49,6 +50,7 @@ export class SteamInsightManagementService {
 
   readonly appsLoadingState = new HzLoadingState('Steam Insight Management Apps', {
     persistSuccess: true,
+    adminMessage: true,
   });
 
   private readonly _appsPageLength = signal<number>(0);
@@ -74,6 +76,7 @@ export class SteamInsightManagementService {
 
   readonly updatesLoadingState = new HzLoadingState('Steam Insight Management Updates', {
     persistSuccess: true,
+    adminMessage: true,
   });
 
   private readonly _updatesPageLength = signal<number>(0);

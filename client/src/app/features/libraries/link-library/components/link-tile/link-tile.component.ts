@@ -11,7 +11,7 @@ import { ImageFallbackDirective } from '@hz/core/directives';
 import { ThemeService } from '@hz/core/services';
 import { HzExpandDirective } from '@hz/shared/animations';
 
-import { Link } from '../link-library';
+import { Link } from '../../resources/link-library.model';
 
 @Component({
   selector: 'hz-link-tile',

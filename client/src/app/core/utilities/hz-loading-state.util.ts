@@ -11,11 +11,13 @@ import {
 
 export interface HzLoadingOptions {
   persistSuccess?: boolean;
+  adminMessage?: boolean;
 }
 
 export class HzLoadingState {
   private readonly context: string;
   private readonly persistSuccess: boolean;
+  private readonly adminMessage: boolean;
 
   private readonly _status = signal<LoadingStatus>(LoadingStatus.NOT_LOADED);
   private readonly _errorCode = signal<number | null>(null);
@@ -33,6 +35,7 @@ export class HzLoadingState {
   constructor(context: string, options?: HzLoadingOptions) {
     this.context = context;
     this.persistSuccess = options?.persistSuccess ?? false;
+    this.adminMessage = options?.adminMessage ?? false;
   }
 
   setInProgress() {
@@ -67,16 +70,16 @@ export class HzLoadingState {
   private getErrorMessage(code: number | null): HzErrorMessage {
     switch (code) {
       case 400:
-        return getBadRequestMessage(this.context);
+        return getBadRequestMessage(this.context, this.adminMessage);
       case 401:
       case 403:
-        return getUnauthorizedMessage(this.context);
+        return getUnauthorizedMessage(this.context, this.adminMessage);
       case 404:
-        return getNotFoundMessage(this.context);
+        return getNotFoundMessage(this.context, this.adminMessage);
       case 500:
-        return getServerErrorMessage(this.context);
+        return getServerErrorMessage(this.context, this.adminMessage);
       default:
-        return getGenericLoadFailureMessage(this.context);
+        return getGenericLoadFailureMessage(this.context, this.adminMessage);
     }
   }
 }

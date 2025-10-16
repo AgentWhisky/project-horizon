@@ -12,7 +12,7 @@ import { REGEX } from '../constants';
 export class FormatDatePipe implements PipeTransform {
   private locale = inject(LOCALE_ID);
 
-  transform(text: string, format: string = 'short'): string {
+  transform(text: string, format: string = 'M/d/yyyy, h:mm a'): string {
     if (!text || typeof text !== 'string') {
       return text;
     }

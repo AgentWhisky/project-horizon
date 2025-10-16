@@ -39,7 +39,7 @@
             <mat-expansion-panel-header>
               <mat-panel-title>Version #{{ app.audits.length - i }}</mat-panel-title>
               <mat-panel-description>
-                {{ audit.changeType === 'I' ? 'Inserted' : 'Updated' }} - {{ audit.createdDate | date : 'short' }}
+                {{ audit.changeType === 'I' ? 'Inserted' : 'Updated' }} - {{ audit.createdDate | date : 'M/d/yyyy, h:mm a' }}
               </mat-panel-description>
             </mat-expansion-panel-header>
 

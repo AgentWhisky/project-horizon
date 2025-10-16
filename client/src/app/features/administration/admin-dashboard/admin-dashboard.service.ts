@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TokenService } from '@hz/core/services';
 import { SNACKBAR_INTERVAL } from '@hz/core/constants';
 
-import { AdminDashboardInfo, CreationCodeRefresh } from './admin-dashboard';
+import { AdminDashboardInfo, CreationCodeRefresh } from './resources/admin-dashboard.model';
 
 @Injectable({
   providedIn: 'root',

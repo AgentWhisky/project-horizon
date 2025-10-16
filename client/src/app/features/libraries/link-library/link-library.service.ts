@@ -1,10 +1,11 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { catchError, of, tap } from 'rxjs';
 
 import { TokenService } from '@hz/core/services';
-import { LOADING_STATUS } from '@hz/core/constants';
+import { HzLoadingState } from '@hz/core/utilities';
 
-import { Link, LinksByCategory } from './link-library';
+import { Link, LinksByCategory } from './resources/link-library.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,31 +13,36 @@ import { Link, LinksByCategory } from './link-library';
 export class LinkLibraryService {
   private tokenService = inject(TokenService);
 
-  private _links = signal<Link[]>([]);
+  private readonly _links = signal<Link[]>([]);
   readonly links = this._links.asReadonly();
 
-  private _loadingStatus = signal<number>(LOADING_STATUS.NOT_LOADED);
-  readonly loadingStatus = this._loadingStatus.asReadonly();
+  readonly loadingState = new HzLoadingState('Link Library');
 
   // *** Links ***
   async loadLibraryLinks() {
-    try {
-      this._loadingStatus.set(LOADING_STATUS.IN_PROGRESS);
-      const links = await this.getLibraryLinks();
-      this._links.set(links);
-      this._loadingStatus.set(LOADING_STATUS.SUCCESS);
-    } catch (error) {
-      this._loadingStatus.set(LOADING_STATUS.FAILED);
-      console.error(`Error Fetching Links: ${error}`);
+    if (this.loadingState.isLoading()) {
+      return;
     }
+
+    this.loadingState.setInProgress();
+
+    this.tokenService
+      .getWithTokenRefresh<Link[]>('/link-library/links')
+      .pipe(
+        tap((links: Link[]) => {
+          this._links.set(links);
+          this.loadingState.setSuccess();
+        }),
+        catchError((err: HttpErrorResponse) => {
+          this.loadingState.setFailed(err.status);
+          console.error(`Failed to fetch Link Library`, { error: err });
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
-  // *** Private Link Functions ***
-  private async getLibraryLinks() {
-    const links$ = this.tokenService.getWithTokenRefresh<Link[]>('/link-library/links');
-    return firstValueFrom(links$);
-  }
-
+  /** Private Functions */
   getLinksByCategory(links: Link[]) {
     const linksByCategoryObj: { [key: number]: LinksByCategory } = {};
 

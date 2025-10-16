@@ -24,11 +24,11 @@
           </div>
           <div>
             <span class="font-semibold">Start Time</span>
-            <div>{{ update.startTime | date : 'short' }}</div>
+            <div>{{ update.startTime | date : 'M/d/yyyy, h:mm a' }}</div>
           </div>
           <div>
             <span class="font-semibold">End Time</span>
-            <div>{{ update.endTime ? (update.endTime | date : 'short') : '—' }}</div>
+            <div>{{ update.endTime ? (update.endTime | date : 'M/d/yyyy, h:mm a') : '—' }}</div>
           </div>
           <div>
             <span class="font-semibold">Total Runtime</span>
@@ -108,7 +108,7 @@
         <hz-timeline>
           @for (event of update.events; track event.message; let first = $first) {
           <hz-timeline-item [latest]="first">
-            <hz-timeline-header>{{ event.timestamp | date : 'short' }}</hz-timeline-header>
+            <hz-timeline-header>{{ event.timestamp | date : 'M/d/yyyy, h:mm a' }}</hz-timeline-header>
             <hz-timeline-body>{{ event.message | formatDate }}</hz-timeline-body>
           </hz-timeline-item>
           }
