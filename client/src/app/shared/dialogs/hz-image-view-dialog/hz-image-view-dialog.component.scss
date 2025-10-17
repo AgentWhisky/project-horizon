@@ -1,0 +1,61 @@
+.hz-image-view-dialog {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.92);
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+
+  img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 8px;
+    object-fit: contain;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: white;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+    z-index: 10;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    opacity: 0.7;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 10;
+
+    &:hover {
+      opacity: 1;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    &.left {
+      left: 1.25rem;
+    }
+
+    &.right {
+      right: 1.25rem;
+    }
+  }
+}
+
+::ng-deep .mat-mdc-dialog-container {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}

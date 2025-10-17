@@ -1,11 +1,13 @@
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { effect, inject, Injectable, signal } from '@angular/core';
+import { catchError, of, tap } from 'rxjs';
 
-import { LOADING_STATUS, STORAGE_KEYS } from '@hz/core/constants';
+import { STORAGE_KEYS } from '@hz/core/constants';
 import { TokenService } from '@hz/core/services';
 
-import { SteamAppDetails, EMPTY_STEAM_APP_DETAILS } from './steam-insight-detail';
+import { SteamAppDetails } from './steam-insight-detail.model';
 import { SteamInsightHistoryService } from '../steam-insight-history.service';
+import { HzLoadingState } from '@hz/core/utilities';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -15,57 +17,58 @@ export class SteamInsightDetailService {
 
   readonly steamInsightHistoryService = inject(SteamInsightHistoryService);
 
-  private _appDetails = signal<SteamAppDetails>(EMPTY_STEAM_APP_DETAILS);
+  private readonly _appDetails = signal<SteamAppDetails | null>(null);
   readonly appDetails = this._appDetails.asReadonly();
 
-  private _loadingStatus = signal<number>(LOADING_STATUS.NOT_LOADED);
-  readonly loadingInProgress = computed(() => this._loadingStatus() === LOADING_STATUS.IN_PROGRESS);
-  readonly loadingSuccess = computed(() => this._loadingStatus() === LOADING_STATUS.SUCCESS);
-  readonly loadingFailure = computed(() => this._loadingStatus() === LOADING_STATUS.FAILED);
+  private readonly _showHiddenAchievements = signal<boolean>(this.loadShowHiddenAchievements());
+  readonly showHiddenAchievements = this._showHiddenAchievements.asReadonly();
 
-  readonly showHiddenAchievements = signal<boolean>(this.loadShowHiddenAchievements());
+  readonly loadingState = new HzLoadingState('Steam Insight App Details');
 
-  constructor() {
-    effect(() => this.saveShowHiddenAchievements());
-  }
-
-  async loadSteamAppDetails(appid: number) {
-    this._loadingStatus.set(LOADING_STATUS.IN_PROGRESS);
-    try {
-      const appDetails = await this.getSteamAppDetails(appid);
-      this._appDetails.set(appDetails);
-
-      this._loadingStatus.set(LOADING_STATUS.SUCCESS);
-      // Only add games to history
-      if (appDetails.type === 'game') {
-        this.steamInsightHistoryService.addApp({ appid: appDetails.appid, name: appDetails.name });
-      }
-    } catch {
-      this._loadingStatus.set(LOADING_STATUS.FAILED);
+  loadAppDetails(appid: number) {
+    if (this.loadingState.isLoading()) {
+      return;
     }
+
+    this.loadingState.setInProgress();
+
+    this.tokenService
+      .getWithTokenRefresh<SteamAppDetails>(`/steam-insight/${appid}`)
+      .pipe(
+        tap((appDetails: SteamAppDetails) => {
+          this._appDetails.set(appDetails);
+
+          // Add page load to app view history
+          if (appDetails.type === 'game') {
+            this.steamInsightHistoryService.addApp({ appid: appDetails.appid, name: appDetails.name });
+          }
+
+          this.loadingState.setSuccess();
+        }),
+        catchError((err: HttpErrorResponse) => {
+          this.loadingState.setFailed(err.status);
+          console.error(`Failed to fetch Steam Insight app details`, { appid, error: err });
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
-  isLoadSuccessful() {
-    return this._loadingStatus() === LOADING_STATUS.SUCCESS;
+  reset() {
+    this._appDetails.set(null);
+    this.loadingState.reset();
   }
 
-  isLoadFailure() {
-    return this._loadingStatus() === LOADING_STATUS.FAILED;
-  }
+  toggleHiddenAchievements() {
+    const showHiddenAchievements = !this._showHiddenAchievements();
 
-  resetAppDetails() {
-    this._appDetails.set(EMPTY_STEAM_APP_DETAILS);
-    this._loadingStatus.set(LOADING_STATUS.NOT_LOADED);
+    this._showHiddenAchievements.set(showHiddenAchievements);
+    this.saveShowHiddenAchievements(showHiddenAchievements);
   }
 
   // *** PRIVATE FUNCTIONS ***
-  private async getSteamAppDetails(appid: number) {
-    const appDetails$ = this.tokenService.getWithTokenRefresh<SteamAppDetails>(`/steam-insight/${appid}`);
-    return firstValueFrom(appDetails$);
-  }
-
-  private saveShowHiddenAchievements() {
-    localStorage.setItem(STORAGE_KEYS.STEAM_INSIGHT.SHOW_ACHIEVEMENTS, JSON.stringify(this.showHiddenAchievements()));
+  private saveShowHiddenAchievements(showHiddenAchievements: boolean) {
+    localStorage.setItem(STORAGE_KEYS.STEAM_INSIGHT.SHOW_ACHIEVEMENTS, JSON.stringify(showHiddenAchievements));
   }
 
   private loadShowHiddenAchievements(): boolean {

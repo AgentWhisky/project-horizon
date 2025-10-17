@@ -105,68 +105,6 @@ export interface RatingDetails {
   interactive_elements?: string;
 }
 
-// EMPTY APP DETAILS
-export const EMPTY_STEAM_APP_DETAILS: SteamAppDetails = {
-  appid: 0,
-  name: '',
-  lastModified: new Date(0),
-  type: '',
-
-  // APP INFO
-
-  releaseDate: '',
-  supportUrl: '',
-  supportEmail: '',
-
-  // ARRAYS
-  dlc: [],
-  developers: [],
-  publishers: [],
-  categories: [],
-  genres: [],
-
-  // TEXT
-  aboutTheGame: '',
-  shortDescription: '',
-  supportedLanguages: '',
-  legalNotice: '',
-
-  // JSON OBJECTS
-  screenshots: [],
-  movies: [],
-  achievements: {
-    total: 0,
-    data: [],
-  },
-
-  fullgame: {
-    appid: 0,
-    name: '',
-  },
-
-  // URLS & MEDIA
-  headerImage: '',
-  website: '',
-  backgroundUrl: '',
-
-  // REQUIREMENTS
-  pcMinimum: '',
-  pcRecommended: '',
-  macMinimum: '',
-  macRecommended: '',
-  linuxMinimum: '',
-  linuxRecommended: '',
-
-  // PLATFORMS
-  supportsWindows: false,
-  supportsMac: false,
-  supportsLinux: false,
-
-  // REVIEWS
-  metacriticScore: 0,
-  metacriticUrl: '',
-};
-
 export interface DlcDetails {
   appid: number;
   name: string;

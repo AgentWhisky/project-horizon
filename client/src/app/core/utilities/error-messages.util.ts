@@ -46,13 +46,13 @@ export function getNotFoundMessage(context: string, isAdmin = false): HzErrorMes
         body: `The requested ${context.toLowerCase()} was not located in the database or API. It may have been deleted, renamed, or filtered out by access restrictions.`,
       }
     : {
-        header: `Not found`,
+        header: `${context} not found`,
         body: `We couldn't find the ${context.toLowerCase()} you're looking for. It might have been moved or removed.`,
       };
 }
 
 /**
- * Get the error message for unauthorized access (403/401)
+ * Get the error message for unauthorized access (401/403)
  * @param context The context for the given error message
  * @param isAdmin Whether to return the admin-friendly message
  */

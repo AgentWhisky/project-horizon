@@ -1,6 +1,11 @@
 // *** TILE ***
 .steam-game-tile {
-  @apply flex flex-col w-full h-full max-w-96 overflow-hidden shadow-md;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  max-width: 24rem;
+  overflow: hidden;
 
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   cursor: pointer;

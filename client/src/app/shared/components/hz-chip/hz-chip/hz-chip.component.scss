@@ -11,7 +11,7 @@
   padding: 0 0.75rem;
 
   font-size: 0.75rem;
-  font-weight: 800;
+  font-weight: 500;
   letter-spacing: var(--hz-sys-letter-spacing-large);
 
   border-radius: 50rem; /* pill shape */
@@ -20,6 +20,10 @@
 
   cursor: default;
   user-select: none;
+}
+
+.hz-chip:hover {
+  box-shadow: 0 0 0 2px color-mix(in srgb, currentColor 25%, transparent);
 }
 
 .hz-chip.hz-chip-clickable {
@@ -35,11 +39,12 @@
   cursor: pointer;
 
   opacity: 0.7;
-  transition: opacity 0.2s ease;
 
-  &:hover {
-    opacity: 1;
-  }
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 
   mat-icon {
     font-size: inherit;
@@ -47,6 +52,11 @@
     height: inherit;
     line-height: inherit;
   }
+}
+
+.hz-chip-close:hover {
+  opacity: 1;
+  box-shadow: 0 0 0 1px var(--hz-sys-on-base);
 }
 
 /** BANNER COLORS */
@@ -113,20 +123,4 @@
       state-layer-color: var(--hz-sys-on-error),
     )
   );
-}
-
-.hz-chip:hover {
-  background-color: color-mix(in srgb, var(--hz-sys-base-container) 90%, var(--hz-sys-on-base) 10%);
-}
-
-.hz-chip.success:hover {
-  background-color: color-mix(in srgb, var(--hz-sys-success-container) 90%, var(--hz-sys-success) 10%);
-}
-
-.hz-chip.warning:hover {
-  background-color: color-mix(in srgb, var(--hz-sys-warning-container) 90%, var(--hz-sys-warning) 10%);
-}
-
-.hz-chip.error:hover {
-  background-color: color-mix(in srgb, var(--hz-sys-error-container) 90%, var(--hz-sys-error) 10%);
 }

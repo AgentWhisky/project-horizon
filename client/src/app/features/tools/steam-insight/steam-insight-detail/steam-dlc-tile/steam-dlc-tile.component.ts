@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 
 import { ASSET_URLS } from '@hz/core/constants';
 
-import { DlcDetails } from '../steam-insight-detail';
+import { DlcDetails } from '../steam-insight-detail.model';
 
 @Component({
   selector: 'hz-steam-dlc-tile',

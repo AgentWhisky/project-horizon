@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { MatInputModule } from '@angular/material/input';
@@ -14,8 +14,9 @@ import { KeywordPipe } from '@hz/core/pipes';
 
 import { SteamInsightSearchService } from './steam-insight-search.service';
 import { SteamGameTileComponent } from './steam-game-tile/steam-game-tile.component';
-import { SteamGameHistoryEntry } from '../steam-insight';
+import { SteamGameHistoryEntry } from '../steam-insight.model';
 import { SteamInsightHistoryService } from '../steam-insight-history.service';
+import { HzBannerModule, HzChipModule, HzLoadingSpinnerModule } from '@hz/shared/components';
 
 @Component({
   selector: 'hz-steam-insight-search',
@@ -27,43 +28,31 @@ import { SteamInsightHistoryService } from '../steam-insight-history.service';
     MatChipsModule,
     MatTooltipModule,
     MatProgressSpinnerModule,
+    HzLoadingSpinnerModule,
+    HzBannerModule,
+    HzChipModule,
     RouterModule,
-    FormsModule,
+    ReactiveFormsModule,
     SteamGameTileComponent,
-    KeywordPipe,
   ],
   templateUrl: './steam-insight-search.component.html',
   styleUrl: './steam-insight-search.component.scss',
 })
-export class SteamInsightSearchComponent implements OnInit {
+export class SteamInsightSearchComponent {
   private steamInsightService = inject(SteamInsightSearchService);
   private steamInsightHistoryService = inject(SteamInsightHistoryService);
 
-  readonly gameSearchInput = this.steamInsightService.gameSearchInput;
-  readonly activeSearchQuery = this.steamInsightService.activeSearchQuery;
+  readonly searchForm = this.steamInsightService.searchForm;
 
   readonly steamGames = this.steamInsightService.steamGames;
   readonly pageLength = this.steamInsightService.pageLength;
   readonly pageIndex = this.steamInsightService.pageIndex;
 
-  readonly loadingNotLoaded = this.steamInsightService.loadingNotLoaded;
-  readonly loadingInProgress = this.steamInsightService.loadingInProgress;
-  readonly loadingSuccess = this.steamInsightService.loadingSuccess;
-  readonly loadingFailure = this.steamInsightService.loadingFailure;
+  readonly loadingState = this.steamInsightService.loadingState;
 
   readonly steamGameHistory = this.steamInsightHistoryService.steamGameHistory;
 
   @ViewChild('steamGamePaginator') steamGamePaginator!: MatPaginator;
-
-  ngOnInit() {
-    if (this.loadingNotLoaded()) {
-      this.steamInsightService.search();
-    }
-  }
-
-  onSearch() {
-    this.steamInsightService.search();
-  }
 
   onSetPage() {
     this.steamInsightService.setPage(this.steamGamePaginator.pageIndex);

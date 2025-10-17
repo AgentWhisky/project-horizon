@@ -1,3 +1,51 @@
+@let routerLinkVar = routerLink(); @let hrefVar = href();
+
+<!-- CAPTURE NG CONTENT -->
+<ng-template #projected>
+  <ng-content></ng-content>
+</ng-template>
+
+<!-- DISPLAY WITH ROUTERLINK -->
+@if(routerLinkVar) {
+<a
+  class="hz-chip hz-chip-clickable"
+  [routerLink]="routerLinkVar"
+  [ngClass]="type()"
+  matRipple
+  [matRippleColor]="rippleColor"
+  [attr.role]="clickable() ? 'button' : null"
+  [attr.tabindex]="clickable() ? 0 : null">
+  <ng-container [ngTemplateOutlet]="projected"></ng-container>
+  @if (closeable()) {
+  <button type="button" class="hz-chip-close" aria-label="Remove chip" (click)="onClose($event)">
+    <mat-icon>close</mat-icon>
+  </button>
+  }
+</a>
+}
+<!-- DISPLAY WIT HREF -->
+@else if(hrefVar) {
+<a
+  class="hz-chip"
+  [href]="hrefVar"
+  [class.hz-chip-clickable]="clickable()"
+  [ngClass]="type()"
+  matRipple
+  [matRippleColor]="rippleColor"
+  (click)="onClick()"
+  [attr.role]="clickable() ? 'button' : null"
+  [attr.tabindex]="clickable() ? 0 : null">
+  <ng-container [ngTemplateOutlet]="projected"></ng-container>
+  @if (closeable()) {
+  <button type="button" class="hz-chip-close" aria-label="Remove chip" (click)="onClose($event)">
+    <mat-icon>close</mat-icon>
+  </button>
+  }
+</a>
+}
+
+<!-- DISPLAY AS BUTTON -->
+@else {
 <div
   class="hz-chip"
   [class.hz-chip-clickable]="clickable()"
@@ -7,10 +55,11 @@
   (click)="onClick()"
   [attr.role]="clickable() ? 'button' : null"
   [attr.tabindex]="clickable() ? 0 : null">
-  <ng-content></ng-content>
+  <ng-container [ngTemplateOutlet]="projected"></ng-container>
   @if (closeable()) {
   <button type="button" class="hz-chip-close" aria-label="Remove chip" (click)="onClose($event)">
     <mat-icon>close</mat-icon>
   </button>
   }
 </div>
+}

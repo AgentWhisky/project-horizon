@@ -1,59 +1,51 @@
 <div class="search-container">
   <div class="search-input-container">
     <!-- SEARCH INPUT -->
-    <mat-form-field class="page-search" subscriptSizing="dynamic">
-      <mat-label>Search Steam Games</mat-label>
-      <input
-        matInput
-        #steamGameSearchInput
-        [(ngModel)]="gameSearchInput"
-        maxlength="1024"
-        aria-label="Link library search"
-        (keydown.enter)="steamGameSearchInput.blur(); onSearch()" />
-      <button matSuffix matIconButton aria-label="Search" (click)="steamGameSearchInput.blur(); onSearch()">
-         <mat-icon>search</mat-icon>
-      </button>
-      @if(steamGameSearchInput.value && steamGameSearchInput.value !== '') {
-      <button matSuffix class="mr-3" matIconButton aria-label="Clear" (click)="onResetFilter()">
-         <mat-icon>close</mat-icon>
-      </button>
-      }
-      <mat-error>Invalid Search Filter</mat-error>
-    </mat-form-field>
+    <form class="w-full flex justify-center" [formGroup]="searchForm">
+      <mat-form-field class="page-search" subscriptSizing="dynamic">
+        <mat-label>Search Steam Games</mat-label>
+        <input
+          matInput
+          #steamGameSearchInput
+          formControlName="query"
+          maxlength="1024"
+          aria-label="Steam game search"
+          (keydown.enter)="$event.preventDefault()" />
 
-    <!-- SEARCH KEYWORD DISPLAY -->
-    @if(activeSearchQuery()) {
-    <div class="search-keyword-container">
-      <span>Showing results for:</span>
-      <span class="search-keywords">{{ activeSearchQuery() | keyword }}</span>
-    </div>
-    }
+        <!-- CLEAR ICON -->
+        @if(searchForm.get('query')!.value) {
+        <button matSuffix class="mr-3" matIconButton aria-label="Clear search" type="button" (click)="onResetFilter()">
+          <mat-icon>close</mat-icon>
+        </button>
+        }
+
+        <mat-error>Invalid Search Filter</mat-error>
+      </mat-form-field>
+    </form>
 
     <!-- SEARCH HISTORY CHIPS -->
-    <mat-chip-set aria-label="Search History">
-      <div class="search-chip-container">
-        @for (app of steamGameHistory(); track app.appid) {
-        <ng-container>
-          <mat-chip [routerLink]="['/steam-insight', app.appid]" class="!cursor-pointer overflow-hidden">
-            <span class="search-history-chip">{{ app.name }}</span>
-            <button matChipRemove (click)="onRemoveAppFromHistory(app); $event.stopPropagation()" [attr.aria-label]="'Remove ' + app.name">
-               <mat-icon>cancel</mat-icon>
-            </button>
-          </mat-chip>
-        </ng-container>
-        }
-      </div>
-    </mat-chip-set>
+    <hz-chip-set>
+      @for(app of steamGameHistory(); track app.appid) {
+      <hz-chip clickable closeable [routerLink]="['/steam-insight', app.appid]" (closed)="onRemoveAppFromHistory(app)">
+        {{ app.name }}
+      </hz-chip>
+      }
+    </hz-chip-set>
   </div>
-  <!-- GAMES LOADED SUCCESSFULLY -->
-  @if(loadingSuccess() && steamGames().length > 0) {
-  <!-- STEAM GAME TILES -->
+
+  @let games = steamGames();
+  <!-- LOAD SUCCESS -->
+  @if(games && loadingState.isSuccess()) {
+
+  <!-- STEAM APPS TO DISPLAY -->
+  @if(games.length > 0) {
   <div class="game-container">
     <div class="game-tile-container">
-      @for(steamGame of steamGames(); track steamGame.appid) {
+      @for(steamGame of games; track steamGame.appid) {
       <hz-steam-game-tile [steamGame]="steamGame"></hz-steam-game-tile>
       }
     </div>
+
     <mat-paginator
       #steamGamePaginator
       hidePageSize
@@ -61,32 +53,29 @@
       [pageSize]="20"
       showFirstLastButtons
       (page)="onSetPage()"
-      [pageIndex]="pageIndex()"></mat-paginator>
+      [pageIndex]="pageIndex()">
+    </mat-paginator>
   </div>
+  }
 
+  <!-- NO RESULTS -->
+  @else {
+  <hz-banner type="warning">
+    <hz-banner-header>No games found</hz-banner-header>
+    <hz-banner-body> No games matched your search. Try different keywords or check back later. </hz-banner-body>
+  </hz-banner>
+  } }
+
+  <!-- LOAD IN-PROGRESS -->
+  @else if (loadingState.isLoading()) {
+  <hz-loading-spinner text="Loading Steam Insight Games..."></hz-loading-spinner>
   }
-  <!-- NO GAMES FOUND -->
-  @else if (loadingSuccess()) {
-  <div class="empty-results-container">
-    <div class="hz-card-legacy empty-results-card">
-      <span>No games matched your search.</span>
-      <span>Please try different search keywords.</span>
-    </div>
-  </div>
-  }
-  <!-- FAILED TO LOAD -->
-  @else if(loadingFailure()) {
-  <div class="empty-results-container">
-    <div class="hz-card-legacy empty-results-card">
-      <span>Unable to load games.</span>
-      <span>Please try again later.</span>
-    </div>
-  </div>
-  }
-  <!-- LOADING IN PROGRESS -->
-  @else if(loadingInProgress()) {
-  <div class="spinner-container">
-    <mat-spinner></mat-spinner>
-  </div>
+
+  <!-- LOAD FAILURE -->
+  @else if (loadingState.isFailed()) {
+  <hz-banner type="error">
+    <hz-banner-header>{{ loadingState.errorMessage()?.header }}</hz-banner-header>
+    <hz-banner-body>{{ loadingState.errorMessage()?.body }}</hz-banner-body>
+  </hz-banner>
   }
 </div>

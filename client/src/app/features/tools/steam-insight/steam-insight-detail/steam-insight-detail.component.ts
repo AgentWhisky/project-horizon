@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, OnDestroy, signal, ViewChild, viewChild } from '@angular/core';
+import { Component, computed, effect, inject, input, OnDestroy, OnInit, signal, untracked, ViewChild, viewChild } from '@angular/core';
 import { CommonModule, TitleCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -22,7 +22,10 @@ import { ScreenService, TitleService } from '@hz/core/services';
 
 import { SteamInsightDetailService } from './steam-insight-detail.service';
 import { SteamDlcTileComponent } from './steam-dlc-tile/steam-dlc-tile.component';
-import { Achievement, DlcDetails } from './steam-insight-detail';
+import { Achievement, DlcDetails, Screenshot } from './steam-insight-detail.model';
+import { HzBannerModule, HzBreadcrumbItem, HzChipModule, HzLoadingSpinnerModule } from '@hz/shared/components';
+import { MatDialog } from '@angular/material/dialog';
+import { HzImageViewDialogComponent } from '@hz/shared/dialogs';
 
 @Component({
   selector: 'hz-steam-insight-detail',
@@ -31,14 +34,14 @@ import { Achievement, DlcDetails } from './steam-insight-detail';
     MatIconModule,
     MatInputModule,
     MatTabsModule,
-    MatChipsModule,
-    MatCardModule,
     MatTableModule,
     MatSlideToggleModule,
     MatPaginatorModule,
     MatDividerModule,
     MatTooltipModule,
-    MatProgressSpinnerModule,
+    HzLoadingSpinnerModule,
+    HzChipModule,
+    HzBannerModule,
     RouterModule,
     FormsModule,
     CommonModule,
@@ -51,16 +54,16 @@ import { Achievement, DlcDetails } from './steam-insight-detail';
   styleUrl: './steam-insight-detail.component.scss',
 })
 export class SteamInsightDetailComponent implements OnDestroy {
-  private steamInsightDetailService = inject(SteamInsightDetailService);
   private screenService = inject(ScreenService);
   private titleService = inject(TitleService);
+  private dialog = inject(MatDialog);
+  private steamInsightDetailService = inject(SteamInsightDetailService);
 
   readonly appid = input.required<number>();
 
-  readonly appDetails = this.steamInsightDetailService.appDetails;
-  readonly loadingInProgress = this.steamInsightDetailService.loadingInProgress;
-  readonly loadingSuccess = this.steamInsightDetailService.loadingSuccess;
-  readonly loadingFailure = this.steamInsightDetailService.loadingFailure;
+  readonly steamAppDetails = this.steamInsightDetailService.appDetails;
+  readonly loadingState = this.steamInsightDetailService.loadingState;
+
   readonly showHiddenAchievements = this.steamInsightDetailService.showHiddenAchievements;
 
   readonly isMobileScreen = this.screenService.isMobileScreen;
@@ -77,20 +80,33 @@ export class SteamInsightDetailComponent implements OnDestroy {
   readonly dlcPageIndex = signal<number>(0);
   readonly dlcPageSize = computed(() => (this.isMobileScreen() ? STEAM_INSIGHT_DLC.PAGE_SIZE_MOBILE : STEAM_INSIGHT_DLC.PAGE_SIZE));
   readonly dlcPage = computed(() => this.getDlcPage(this.dlcPageIndex()));
-  readonly showDlcPaginator = computed(() => this.appDetails().dlc.length > this.dlcPageSize());
+  readonly showDlcPaginator = computed(() => {
+    const dlc = this.steamAppDetails()?.dlc;
+    return !!dlc && dlc.length > this.dlcPageSize();
+  });
 
   constructor() {
     // Load app details on appid change
-    effect(() => this.steamInsightDetailService.loadSteamAppDetails(this.appid()));
+    effect(() => {
+      const appid = this.appid();
+
+      untracked(() => {
+        this.steamInsightDetailService.loadAppDetails(this.appid());
+      });
+    });
 
     // Update page on loading app details
     effect(() => {
-      if (this.loadingSuccess()) {
-        this.titleService.setTitle(this.appDetails().name);
-        this.achievementDataSource.data = this.appDetails().achievements?.data ?? [];
-      } else if (this.loadingFailure()) {
-        this.titleService.setTitle('Not Found');
-      }
+      const appDetails = this.steamAppDetails();
+
+      untracked(() => {
+        if (appDetails && this.loadingState.isSuccess()) {
+          this.titleService.setTitle(appDetails.name);
+          this.achievementDataSource.data = appDetails.achievements?.data ?? [];
+        } else if (this.loadingState.isFailed()) {
+          this.titleService.setTitle('Not Found');
+        }
+      });
     });
 
     effect(() => {
@@ -100,20 +116,35 @@ export class SteamInsightDetailComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.titleService.resetTitle();
-    this.steamInsightDetailService.resetAppDetails();
+    this.steamInsightDetailService.reset();
+  }
+
+  onToggleHiddenAchievements() {
+    this.steamInsightDetailService.toggleHiddenAchievements();
   }
 
   onDlcPageChange(event: PageEvent) {
-    const newPage = event.pageIndex;
-    this.dlcPageIndex.set(newPage);
+    this.dlcPageIndex.set(event.pageIndex);
+  }
+
+  onOpenScreenshot(screenshots: Screenshot[], startIndex = 0) {
+    const screenshotPaths = screenshots.map((s) => s.path_full);
+
+    this.dialog.open(HzImageViewDialogComponent, {
+      data: { screenshotPaths, startIndex },
+      panelClass: 'fullscreen-dialog',
+    });
   }
 
   // *** PRIVATE FUNCTIONS ***
   private getDlcPage(pageIndex: number): DlcDetails[] {
-    const pageSize = this.dlcPageSize();
-    const start = pageIndex * pageSize;
-    const end = start + pageSize;
+    const details = this.steamAppDetails();
 
-    return this.appDetails().dlc.slice(start, end);
+    const dlc = details?.dlc ?? [];
+
+    const size = this.dlcPageSize();
+    const start = pageIndex * size;
+
+    return dlc.slice(start, start + size);
   }
 }
