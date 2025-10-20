@@ -40,6 +40,9 @@ export class VersionHistoryService {
           }));
 
           this._versionHistory.set(versionEntries);
+          if (versionEntries.length > 0) {
+            this._currentVersionInfo.set(versionEntries[0]);
+          }
 
           this.loadingState.setSuccess();
         }),

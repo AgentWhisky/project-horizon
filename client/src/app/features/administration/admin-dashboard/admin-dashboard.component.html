@@ -5,25 +5,55 @@
 
   <!-- LOAD SUCCESS -->
   @if(dashboard && loadingState.isSuccess()) {
-  <div class="w-full flex flex-col gap-3">
-    <hz-card class="max-w-96">
+  <div class="w-full flex flex-row flex-wrap justify-center gap-3">
+    <hz-card class="w-full max-w-96">
       <hz-card-header>App Settings</hz-card-header>
-      <hz-card-body>
-        <div class="display-text w-full">
-          <span>Account Creation Code:</span>
-          <span class="text-right">
-            {{ dashboard.creationCode }}
-          </span>
-          <div class="flex flex-row">
-            <button matIconButton (click)="onCopyToClipboard(dashboard.creationCode)" aria-label="Copy clipboard">
+      <hz-card-body class="flex flex-col gap-3">
+        <hz-info-row>
+          <hz-info-label>Account Creation Code</hz-info-label>
+          <hz-info-value>{{ dashboard.creationCode }}</hz-info-value>
+          <hz-info-actions>
+            <button hzInfoAction aria-label="Copy clipboard" (click)="onCopyToClipboard(dashboard.creationCode)">
               <mat-icon>content_copy</mat-icon>
             </button>
 
-            <button matIconButton (click)="onRefreshCreationCode()" aria-label="Refresh creation code">
+            <button hzInfoAction aria-label="Copy clipboard" (click)="onRefreshCreationCode()">
               <mat-icon>refresh</mat-icon>
             </button>
-          </div>
-        </div>
+          </hz-info-actions>
+        </hz-info-row>
+      </hz-card-body>
+    </hz-card>
+
+    <hz-card class="w-full max-w-96">
+      <hz-card-header>Steam Insight Settings</hz-card-header>
+      <hz-card-body class="flex flex-col gap-3">
+        <hz-info-row>
+          <hz-info-label>Updates Enabled</hz-info-label>
+          <hz-info-value>
+            <hz-chip [type]="dashboard.steamInsight.updatesEnabled ? 'success' : 'error'">
+              {{ dashboard.steamInsight.updatesEnabled ? 'Yes' : 'No' }}
+            </hz-chip>
+          </hz-info-value>
+        </hz-info-row>
+
+        <hz-info-row>
+          <hz-info-label>Update CRON Enabled</hz-info-label>
+          <hz-info-value>
+            <hz-chip [type]="dashboard.steamInsight.updateCronEnabled ? 'success' : 'error'">
+              {{ dashboard.steamInsight.updateCronEnabled ? 'Yes' : 'No' }}
+            </hz-chip>
+          </hz-info-value>
+        </hz-info-row>
+
+        <hz-info-row>
+          <hz-info-label>Updates Canceled on Startup</hz-info-label>
+          <hz-info-value>
+            <hz-chip [type]="dashboard.steamInsight.updateCancelOnStartup ? 'success' : 'error'">
+              {{ dashboard.steamInsight.updateCancelOnStartup ? 'Yes' : 'No' }}
+            </hz-chip>
+          </hz-info-value>
+        </hz-info-row>
       </hz-card-body>
     </hz-card>
   </div>

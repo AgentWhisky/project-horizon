@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TokenService } from '@hz/core/services';
 import { SNACKBAR_INTERVAL } from '@hz/core/constants';
 
-import { AdminDashboardInfo, CreationCodeRefresh } from './resources/admin-dashboard.model';
+import { AdminDashboardInfo, CreationCodeRefresh } from './admin-dashboard.model';
 import { HzLoadingState } from '@hz/core/utilities';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -20,7 +20,7 @@ export class AdminDashboardService {
   private _dashboardInfo = signal<AdminDashboardInfo | null>(null);
   readonly dashboardInfo = this._dashboardInfo.asReadonly();
 
-  readonly loadingState = new HzLoadingState('Horizon Admin Dashbboard', { adminMessage: true });
+  readonly loadingState = new HzLoadingState('Horizon Admin Dashbboard', { persistSuccess: true, adminMessage: true });
 
   loadDashboard() {
     if (this.loadingState.isLoading()) {

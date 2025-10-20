@@ -8,7 +8,15 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { ScreenService } from '@hz/core/services';
 import { REFRESH_INTERVAL, SNACKBAR_INTERVAL } from '@hz/core/constants';
-import { HzBannerModule, HzBreadcrumbItem, HzBreadcrumbModule, HzLoadingSpinnerModule, HzCardModule } from '@hz/shared/components';
+import {
+  HzBannerModule,
+  HzBreadcrumbItem,
+  HzBreadcrumbModule,
+  HzLoadingSpinnerModule,
+  HzCardModule,
+  HzInfoRowModule,
+  HzChipModule,
+} from '@hz/shared/components';
 
 import { AdminDashboardService } from './admin-dashboard.service';
 
@@ -23,6 +31,8 @@ import { AdminDashboardService } from './admin-dashboard.service';
     HzBreadcrumbModule,
     HzLoadingSpinnerModule,
     HzCardModule,
+    HzInfoRowModule,
+    HzChipModule,
   ],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss',
