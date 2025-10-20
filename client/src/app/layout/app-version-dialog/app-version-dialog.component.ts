@@ -24,6 +24,7 @@ export class AppVersionDialogComponent {
   private versionHistoryService = inject(VersionHistoryService);
 
   readonly versionHistory = this.versionHistoryService.versionHistory;
+  readonly versionHistoryLoadingState = this.versionHistoryService.loadingState;
 
   onClose() {
     this.dialogRef.close();

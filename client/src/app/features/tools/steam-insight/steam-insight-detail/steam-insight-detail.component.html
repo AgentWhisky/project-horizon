@@ -306,12 +306,12 @@
         <img
           [src]="screenshot.path_thumbnail | secureUrl"
           [alt]="'Screenshot ' + (i + 1) + ' for ' + appDetails.name"
-          (click)="onOpenScreenshot(appDetails.screenshots, i)" />
+          (click)="onOpenScreenshot(i)" />
         }
       </div>
       } @else {
       <div class="display-text-warning-container">
-        <span class="display-text-warning"> This {{ appDetails.type }} has no screenshots to display. </span>
+        <span class="display-text-warning">This {{ appDetails.type }} has no screenshots to display.</span>
       </div>
       }
     </mat-tab>

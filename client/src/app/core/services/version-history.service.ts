@@ -1,8 +1,12 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
+
+import { catchError, of, tap } from 'rxjs';
+
+import { ASSET_URLS } from '../constants';
+import { HzLoadingState } from '../utilities';
+
 import { VersionEntry, VersionEntryRaw } from '../models/version-history.model';
-import { firstValueFrom } from 'rxjs';
-import { ASSET_URLS } from '@hz/core/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -10,32 +14,41 @@ import { ASSET_URLS } from '@hz/core/constants';
 export class VersionHistoryService {
   private http = inject(HttpClient);
 
-  readonly versionHistory = signal<VersionEntry[]>([]);
-  readonly currentVersionInfo = signal<VersionEntry | null>(null);
+  private readonly _versionHistory = signal<VersionEntry[]>([]);
+  readonly versionHistory = this._versionHistory.asReadonly();
 
-  async loadVersionHistory() {
-    try {
-      const versionHistoryRaw = await this.getVersionHistory();
+  private readonly _currentVersionInfo = signal<VersionEntry | null>(null);
+  readonly currentVersionInfo = this._currentVersionInfo.asReadonly();
 
-      const versionEntries: VersionEntry[] = versionHistoryRaw.map((entry) => ({
-        version: entry.version,
-        date: new Date(entry.date),
-        description: entry.description,
-      }));
+  readonly loadingState = new HzLoadingState('Version History');
 
-      this.versionHistory.set(versionEntries);
-
-      if (versionEntries.length > 0) {
-        this.currentVersionInfo.set(versionEntries[0]);
-      }
-    } catch (error) {
-      console.error('Failed to load version history: ', error);
+  loadVersionHistory() {
+    if (this.loadingState.isLoading()) {
+      return;
     }
-  }
 
-  private async getVersionHistory() {
-    const versionHistoryRaw$ = this.http.get<VersionEntryRaw[]>(ASSET_URLS.VERSION_HISTORY);
+    this.loadingState.setInProgress();
 
-    return firstValueFrom(versionHistoryRaw$);
+    this.http
+      .get<VersionEntryRaw[]>(ASSET_URLS.VERSION_HISTORY)
+      .pipe(
+        tap((versionHistory: VersionEntryRaw[]) => {
+          const versionEntries: VersionEntry[] = versionHistory.map((entry) => ({
+            version: entry.version,
+            date: new Date(entry.date),
+            description: entry.description,
+          }));
+
+          this._versionHistory.set(versionEntries);
+
+          this.loadingState.setSuccess();
+        }),
+        catchError((err: HttpErrorResponse) => {
+          this.loadingState.setFailed(err.status);
+          console.error(`Failed to fetch Horizon version history`);
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 }

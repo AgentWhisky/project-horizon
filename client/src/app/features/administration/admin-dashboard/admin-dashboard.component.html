@@ -1,27 +1,44 @@
-<div class="w-full flex flex-col gap-3">
-  <div class="flex justify-end">
-    <button matButton="filled" (click)="onRefreshDashboard()">
-      <mat-icon>refresh</mat-icon>
-      Refresh Dashboard
-    </button>
-  </div>
-  <mat-card class="hz-card-legacy flex-1 min-w-64" appearance="outlined">
-    <mat-card-header>
-      <mat-card-title>App Settings</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="flex flex-col space-y-1 text-sm pt-3">
-        <div class="display-text">
+@let dashboard = dashboardInfo();
+
+<div class="flex flex-col gap-3">
+  <hz-breadcrumb [items]="breadcrumbItems"></hz-breadcrumb>
+
+  <!-- LOAD SUCCESS -->
+  @if(dashboard && loadingState.isSuccess()) {
+  <div class="w-full flex flex-col gap-3">
+    <hz-card class="max-w-96">
+      <hz-card-header>App Settings</hz-card-header>
+      <hz-card-body>
+        <div class="display-text w-full">
           <span>Account Creation Code:</span>
           <span class="text-right">
-            {{ dashboardInfo().creationCode }}
+            {{ dashboard.creationCode }}
           </span>
+          <div class="flex flex-row">
+            <button matIconButton (click)="onCopyToClipboard(dashboard.creationCode)" aria-label="Copy clipboard">
+              <mat-icon>content_copy</mat-icon>
+            </button>
+
+            <button matIconButton (click)="onRefreshCreationCode()" aria-label="Refresh creation code">
+              <mat-icon>refresh</mat-icon>
+            </button>
+          </div>
         </div>
-      </div>
-      <div class="flex flex-wrap gap-3 pt-3">
-        <button matButton="filled" (click)="onCopyToClipboard(dashboardInfo().creationCode)">Copy Creation Code</button>
-        <button matButton="filled" (click)="onRefreshCreationCode()">Refresh Creation Code</button>
-      </div>
-    </mat-card-content>
-  </mat-card>
+      </hz-card-body>
+    </hz-card>
+  </div>
+  }
+
+  <!-- LOAD IN-PROGRESS -->
+  @else if (loadingState.isLoading()) {
+  <hz-loading-spinner text="Loading Horizon Dashboard..."></hz-loading-spinner>
+  }
+
+  <!-- LOAD FAILURE -->
+  @else if(loadingState.isFailed()) {
+  <hz-banner type="error">
+    <hz-banner-header>{{ loadingState.errorMessage()?.header }}</hz-banner-header>
+    <hz-banner-body>{{ loadingState.errorMessage()?.body }}</hz-banner-body>
+  </hz-banner>
+  }
 </div>

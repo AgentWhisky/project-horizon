@@ -1,76 +1,62 @@
 <div class="flex flex-col gap-3">
-  <hz-banner>
-    <hz-banner-header>Developer Portal Navigation</hz-banner-header>
-    <hz-banner-body>
-      Use the Developer Portal to explore different sections of Hz custom components. Each section highlights how they look and behave in
-      various configurations. This portal serves as a central place to browse and understand the components available across the
-      application.
-    </hz-banner-body>
-  </hz-banner>
-
   <mat-tab-group dynamicHeight>
     <mat-tab label="Hz Banner">
-      <div class="flex flex-col gap-3 p-3">
+      <section class="flex flex-col gap-3 py-3">
         @for(type of types(); track type) {
         <!-- Banner with header and body -->
         <div class="flex flex-col gap-1">
-          <span class="test-banner-section-header">Banner with header and body</span>
+          <h2 class="text-lg font-semibold">Basic Banner</h2>
           <hz-banner [type]="type">
-            <hz-banner-header>Lorem ipsum dolor sit amet</hz-banner-header>
+            <hz-banner-header>{{ LOREM_IPSUM.TITLE }}</hz-banner-header>
             <hz-banner-body>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod lectus vel purus posuere, vitae tincidunt mi volutpat.
-              Praesent in magna leo.
+              {{ LOREM_IPSUM.MEDIUM }}
             </hz-banner-body>
           </hz-banner>
         </div>
 
         <!-- Banner with only header -->
         <div class="flex flex-col gap-1">
-          <span class="test-banner-section-header">Banner with only header</span>
+          <h2 class="text-lg font-semibold">Banner with only header</h2>
           <hz-banner [type]="type">
             <hz-banner-header>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod lectus vel purus posuere, vitae tincidunt mi volutpat.
-              Praesent in magna leo.
+              {{ LOREM_IPSUM.MEDIUM }}
             </hz-banner-header>
           </hz-banner>
         </div>
 
         <!-- Banner with only body -->
         <div class="flex flex-col gap-1">
-          <span class="test-banner-section-header">Banner with only body</span>
+          <h2 class="text-lg font-semibold">Banner with only body</h2>
           <hz-banner [type]="type">
             <hz-banner-body>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod lectus vel purus posuere, vitae tincidunt mi volutpat.
-              Praesent in magna leo.
+              {{ LOREM_IPSUM.MEDIUM }}
             </hz-banner-body>
           </hz-banner>
         </div>
 
         <!-- Banner that is closeable -->
         <div class="flex flex-col gap-1">
-          <span class="test-banner-section-header">Banner that is closeable</span>
+          <h2 class="text-lg font-semibold">Banner that is closeable</h2>
           <hz-banner [type]="type" closeable>
-            <hz-banner-header>Lorem ipsum dolor sit amet</hz-banner-header>
+            <hz-banner-header>{{ LOREM_IPSUM.TITLE }}</hz-banner-header>
             <hz-banner-body>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod lectus vel purus posuere, vitae tincidunt mi volutpat.
-              Praesent in magna leo.
+              {{ LOREM_IPSUM.MEDIUM }}
             </hz-banner-body>
           </hz-banner>
         </div>
 
         <!-- Banner with custom icon -->
         <div class="flex flex-col gap-1">
-          <span class="test-banner-section-header">Banner with custom icon</span>
+          <h2 class="text-lg font-semibold">Banner with custom icon</h2>
           <hz-banner [type]="type" displayIcon="auto_awesome">
-            <hz-banner-header>Lorem ipsum dolor sit amet</hz-banner-header>
+            <hz-banner-header>{{ LOREM_IPSUM.TITLE }}</hz-banner-header>
             <hz-banner-body>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod lectus vel purus posuere, vitae tincidunt mi volutpat.
-              Praesent in magna leo.
+              {{ LOREM_IPSUM.MEDIUM }}
             </hz-banner-body>
           </hz-banner>
         </div>
         }
-      </div>
+      </section>
     </mat-tab>
 
     <mat-tab label="Hz Chip">
@@ -78,8 +64,8 @@
         @for(type of types(); track type) {
         <!-- Chip Set options -->
 
-        <div class="flex flex-col gap-1">
-          <span class="test-banner-section-header">Chip Set Display</span>
+        <section class="flex flex-col gap-3">
+          <h2 class="text-lg font-semibold">Chip Set</h2>
           <hz-chip-set>
             <hz-chip [type]="type">Running</hz-chip>
             <hz-chip [type]="type">Complete</hz-chip>
@@ -89,7 +75,7 @@
             <hz-chip [type]="type">Pending</hz-chip>
           </hz-chip-set>
 
-          <span class="test-banner-section-header">Chip Set Clickable</span>
+          <h2 class="text-lg font-semibold">Chip Set Clickable</h2>
           <hz-chip-set>
             <hz-chip [type]="type" clickable (clicked)="onClickChip(`Running - ${type}`)">Running</hz-chip>
             <hz-chip [type]="type" clickable (clicked)="onClickChip(`Complete - ${type}`)">Complete</hz-chip>
@@ -99,7 +85,7 @@
             <hz-chip [type]="type" clickable (clicked)="onClickChip(`Pending - ${type}`)">Pending</hz-chip>
           </hz-chip-set>
 
-          <span class="test-banner-section-header">Chip Set Clickable and Closeable</span>
+          <h2 class="text-lg font-semibold">Chip Set Clickable and Closeable</h2>
           <hz-chip-set>
             <hz-chip
               [type]="type"
@@ -150,204 +136,104 @@
               Pending
             </hz-chip>
           </hz-chip-set>
-        </div>
+        </section>
         }
       </div>
     </mat-tab>
 
     <mat-tab label="Hz Card">
       <div class="flex flex-col gap-3 p-3">
-        <div class="flex flex-col gap-1">
-          <span class="test-banner-section-header">Cards</span>
-          <div class="flex flex-row flex-wrap justify-center gap-3">
+        <section class="flex flex-col gap-3">
+          <h2 class="text-lg font-semibold">Basic Card</h2>
+          <div class="flex flex-wrap justify-center gap-3">
+            @for(type of types(); track type) {
             <hz-card class="w-full max-w-96">
-              <hz-card-header>In-Progress Update</hz-card-header>
-
+              <hz-card-header>{{ type | titlecase }} Card</hz-card-header>
               <hz-card-body>
-                <div>Content</div>
+                <p>{{ LOREM_IPSUM.MEDIUM }}</p>
               </hz-card-body>
             </hz-card>
-
-            <hz-card class="w-full max-w-96">
-              <hz-card-header>In-Progress Update</hz-card-header>
-
-              <hz-card-body>
-                <div>Content</div>
-              </hz-card-body>
-            </hz-card>
-
-            <hz-card class="w-full max-w-96">
-              <hz-card-header>Successful Update</hz-card-header>
-
-              <hz-card-body>
-                <div>Content</div>
-              </hz-card-body>
-            </hz-card>
-
-            <hz-card class="w-full max-w-96">
-              <hz-card-header>Failed Update</hz-card-header>
-
-              <hz-card-body>
-                <div>Content</div>
-              </hz-card-body>
-            </hz-card>
-
-            <hz-card class="w-full max-w-96">
-              <hz-card-header>Warning Update</hz-card-header>
-
-              <hz-card-body>
-                <div>Content</div>
-              </hz-card-body>
-            </hz-card>
+            }
           </div>
-        </div>
+        </section>
 
-        <div class="flex flex-col gap-1">
-          <span class="test-banner-section-header">Cards with Chips</span>
-          <div class="flex flex-row flex-wrap justify-center gap-3">
+        <section class="flex flex-col gap-3">
+          <h2 class="text-lg font-semibold">Card with Chip</h2>
+          <div class="flex flex-wrap justify-center gap-3">
+            @for(type of types(); track type) {
             <hz-card class="w-full max-w-96">
-              <hz-card-header>In-Progress Update</hz-card-header>
+              <hz-card-header>{{ type }} Card</hz-card-header>
               <hz-card-chip>
-                <hz-chip>Running</hz-chip>
+                <hz-chip [type]="type">{{ type | titlecase }}</hz-chip>
               </hz-card-chip>
-
               <hz-card-body>
-                <div>Content</div>
+                <p>{{ LOREM_IPSUM.MEDIUM }}</p>
               </hz-card-body>
             </hz-card>
-
-            <hz-card class="w-full max-w-96">
-              <hz-card-header>In-Progress Update</hz-card-header>
-              <hz-card-chip>
-                <hz-chip type="primary">Running</hz-chip>
-              </hz-card-chip>
-
-              <hz-card-body>
-                <div>Content</div>
-              </hz-card-body>
-            </hz-card>
-
-            <hz-card class="w-full max-w-96">
-              <hz-card-header>Successful Update</hz-card-header>
-              <hz-card-chip>
-                <hz-chip type="success">Success</hz-chip>
-              </hz-card-chip>
-
-              <hz-card-body>
-                <div>Content</div>
-              </hz-card-body>
-            </hz-card>
-
-            <hz-card class="w-full max-w-96">
-              <hz-card-header>Failed Update</hz-card-header>
-              <hz-card-chip>
-                <hz-chip type="error">Failed</hz-chip>
-              </hz-card-chip>
-
-              <hz-card-body>
-                <div>Content</div>
-              </hz-card-body>
-            </hz-card>
-
-            <hz-card class="w-full max-w-96">
-              <hz-card-header>Warning Update</hz-card-header>
-              <hz-card-chip>
-                <hz-chip type="warning">Warning</hz-chip>
-              </hz-card-chip>
-
-              <hz-card-body>
-                <div>Content</div>
-              </hz-card-body>
-            </hz-card>
+            }
           </div>
-        </div>
+        </section>
 
-        <div class="flex flex-col gap-1">
-          <span class="test-banner-section-header">Cards with Chips and Primary Title</span>
-          <div class="flex flex-row flex-wrap justify-center gap-3">
-            <hz-card class="w-full max-w-96" primary>
-              <hz-card-header>In-Progress Update</hz-card-header>
+        <section class="flex flex-col gap-3">
+          <h2 class="text-lg font-semibold">Card with Primary Header and Chip</h2>
+          <div class="flex flex-wrap justify-center gap-3">
+            @for(type of types(); track type) {
+            <hz-card primary class="w-full max-w-96">
+              <hz-card-header>{{ type }} Card</hz-card-header>
               <hz-card-chip>
-                <hz-chip>Running</hz-chip>
+                <hz-chip [type]="type">{{ type | titlecase }}</hz-chip>
               </hz-card-chip>
-
               <hz-card-body>
-                <div>Content</div>
+                <p>{{ LOREM_IPSUM.MEDIUM }}</p>
               </hz-card-body>
             </hz-card>
-
-            <hz-card class="w-full max-w-96" primary>
-              <hz-card-header>In-Progress Update</hz-card-header>
-              <hz-card-chip>
-                <hz-chip type="primary">Running</hz-chip>
-              </hz-card-chip>
-
-              <hz-card-body>
-                <div>Content</div>
-              </hz-card-body>
-            </hz-card>
-
-            <hz-card class="w-full max-w-96" primary>
-              <hz-card-header>Successful Update</hz-card-header>
-              <hz-card-chip>
-                <hz-chip type="success">Success</hz-chip>
-              </hz-card-chip>
-
-              <hz-card-body>
-                <div>Content</div>
-              </hz-card-body>
-            </hz-card>
-
-            <hz-card class="w-full max-w-96" primary>
-              <hz-card-header>Failed Update</hz-card-header>
-              <hz-card-chip>
-                <hz-chip type="error">Failed</hz-chip>
-              </hz-card-chip>
-
-              <hz-card-body>
-                <div>Content</div>
-              </hz-card-body>
-            </hz-card>
-
-            <hz-card class="w-full max-w-96" primary>
-              <hz-card-header>Warning Update</hz-card-header>
-              <hz-card-chip>
-                <hz-chip type="warning">Warning</hz-chip>
-              </hz-card-chip>
-
-              <hz-card-body>
-                <div>Content</div>
-              </hz-card-body>
-            </hz-card>
+            }
           </div>
-        </div>
+        </section>
+
+        <section class="flex flex-col gap-3">
+          <h2 class="text-lg font-semibold">Card with Primary Header, Chip, and No Background</h2>
+          <div class="flex flex-wrap justify-center gap-3">
+            @for(type of types(); track type) {
+            <hz-card primary hideBackground class="w-full max-w-96">
+              <hz-card-header>{{ type }} Card</hz-card-header>
+              <hz-card-chip>
+                <hz-chip [type]="type">{{ type | titlecase }}</hz-chip>
+              </hz-card-chip>
+              <hz-card-body>
+                <p>{{ LOREM_IPSUM.MEDIUM }}</p>
+              </hz-card-body>
+            </hz-card>
+            }
+          </div>
+        </section>
       </div>
     </mat-tab>
 
     <mat-tab label="Hz Breadcrumb">
       <div class="flex flex-col gap-3 p-3">
         <div class="flex flex-col gap-1">
-          <span class="test-banner-section-header">Breadcrumbs</span>
+          <h2 class="text-lg font-semibold">Breadcrumbs</h2>
           <hz-breadcrumb [items]="breadcrumbSet1"></hz-breadcrumb>
         </div>
 
         <div class="flex flex-col gap-1">
-          <span class="test-banner-section-header">Breadcrumbs with icons</span>
+          <h2 class="text-lg font-semibold">Breadcrumbs with icons</h2>
           <hz-breadcrumb [items]="breadcrumbSet2"></hz-breadcrumb>
         </div>
 
         <div class="flex flex-col gap-1">
-          <span class="test-banner-section-header">Breadcrumbs with disabled routes</span>
+          <h2 class="text-lg font-semibold">Breadcrumbs with disabled routes</h2>
           <hz-breadcrumb [items]="breadcrumbSet3"></hz-breadcrumb>
         </div>
 
         <div class="flex flex-col gap-1">
-          <span class="test-banner-section-header">Breadcrumbs with tooltips</span>
+          <h2 class="text-lg font-semibold">Breadcrumbs with tooltips</h2>
           <hz-breadcrumb [items]="breadcrumbSet4"></hz-breadcrumb>
         </div>
 
         <div class="flex flex-col gap-1">
-          <span class="test-banner-section-header">Breadcrumbs with all options</span>
+          <h2 class="text-lg font-semibold">Breadcrumbs with all options</h2>
           <hz-breadcrumb [items]="breadcrumbSet5"></hz-breadcrumb>
         </div>
       </div>
@@ -356,22 +242,22 @@
     <mat-tab label="Hz Loading">
       <div class="flex flex-col gap-3 p-3">
         <div class="flex flex-col gap-1">
-          <span class="test-banner-section-header">Loading spinner</span>
+          <h2 class="text-lg font-semibold">Loading spinner</h2>
           <hz-loading-spinner></hz-loading-spinner>
         </div>
 
         <div class="flex flex-col gap-1">
-          <span class="test-banner-section-header">Loading spinner with background</span>
+          <h2 class="text-lg font-semibold">Loading spinner with background</h2>
           <hz-loading-spinner showBackground></hz-loading-spinner>
         </div>
 
         <div class="flex flex-col gap-1">
-          <span class="test-banner-section-header">Loading spinner with custom text</span>
+          <h2 class="text-lg font-semibold">Loading spinner with custom text</h2>
           <hz-loading-spinner text="Loading test payload..."></hz-loading-spinner>
         </div>
 
         <div class="flex flex-col gap-1">
-          <span class="test-banner-section-header">Loading spinner with larger spinner</span>
+          <h2 class="text-lg font-semibold">Loading spinner with larger spinner</h2>
           <hz-loading-spinner text="Loading test payload..." [size]="64"></hz-loading-spinner>
         </div>
       </div>

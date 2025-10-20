@@ -1,17 +1,15 @@
 <div class="hz-image-view-dialog">
-  <button mat-icon-button class="close-btn" aria-label="Close" (click)="onClose()">
+  <button mat-icon-button class="image-view-close-btn" aria-label="Close" (click)="onClose()">
     <mat-icon>close</mat-icon>
   </button>
 
-  @if (hasMultiple()) {
-  <button mat-icon-button class="nav-btn left" aria-label="Previous" (click)="onPrev()">
-    <mat-icon>chevron_left</mat-icon>
-  </button>
-
-  <button mat-icon-button class="nav-btn right" aria-label="Next" (click)="onNext()">
-    <mat-icon>chevron_right</mat-icon>
-  </button>
-  }
-
-  <img [src]="currentImage() | secureUrl" [alt]="data.label ?? 'Image viewer content'" draggable="false" />
+  <img class="image-view-dialog-img" [src]="currentImage() | secureUrl" [alt]="context() + ' - image ' + (pageIndex()+1)" draggable="false" />
+  <mat-paginator
+    [pageIndex]="pageIndex()"
+    [length]="pageLength()"
+    [pageSize]="1"
+    (page)="onPageChange($event)"
+    showFirstLastButtons
+    hidePageSize
+    aria-label="Steam Insight App Search Paginator"></mat-paginator>
 </div>

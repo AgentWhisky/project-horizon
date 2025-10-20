@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { HzStatusType } from '@hz/core/models';
-import { SNACKBAR_INTERVAL } from '@hz/core/constants';
+import { LOREM_IPSUM, SNACKBAR_INTERVAL } from '@hz/core/constants';
 import {
   HzBannerModule,
   HzBreadcrumbItem,
@@ -16,6 +16,7 @@ import {
   HzChipModule,
   HzLoadingSpinnerModule,
 } from '@hz/shared/components';
+import { TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'hz-dev-portal',
@@ -29,6 +30,7 @@ import {
     HzCardModule,
     HzBreadcrumbModule,
     HzLoadingSpinnerModule,
+    TitleCasePipe,
   ],
   templateUrl: './dev-portal.component.html',
   styleUrl: './dev-portal.component.scss',
@@ -37,6 +39,8 @@ export class DevPortalComponent {
   private snackbar = inject(MatSnackBar);
 
   readonly types = signal<HzStatusType[]>(['success', 'warning', 'error', 'primary', 'base']);
+
+  readonly LOREM_IPSUM = LOREM_IPSUM;
 
   // Hz Breadcrumb
   readonly breadcrumbSet1: HzBreadcrumbItem[] = [

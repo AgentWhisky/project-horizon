@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, OnDestroy, OnInit, signal, untracked, ViewChild, viewChild } from '@angular/core';
+import { Component, computed, effect, inject, input, OnDestroy, signal, untracked, ViewChild, viewChild } from '@angular/core';
 import { CommonModule, TitleCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -7,25 +7,22 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatCardModule } from '@angular/material/card';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
 
 import { STEAM_INSIGHT_DLC } from '@hz/core/constants';
 import { DecodeHtmlPipe, SecureUrlPipe } from '@hz/core/pipes';
 import { ScreenService, TitleService } from '@hz/core/services';
+import { HzBannerModule, HzChipModule, HzLoadingSpinnerModule } from '@hz/shared/components';
+import { HzImageViewDialogComponent, HzImageViewDialogData } from '@hz/shared/dialogs';
 
 import { SteamInsightDetailService } from './steam-insight-detail.service';
 import { SteamDlcTileComponent } from './steam-dlc-tile/steam-dlc-tile.component';
-import { Achievement, DlcDetails, Screenshot } from './steam-insight-detail.model';
-import { HzBannerModule, HzBreadcrumbItem, HzChipModule, HzLoadingSpinnerModule } from '@hz/shared/components';
-import { MatDialog } from '@angular/material/dialog';
-import { HzImageViewDialogComponent } from '@hz/shared/dialogs';
+import { Achievement, DlcDetails } from './steam-insight-detail.model';
 
 @Component({
   selector: 'hz-steam-insight-detail',
@@ -127,12 +124,21 @@ export class SteamInsightDetailComponent implements OnDestroy {
     this.dlcPageIndex.set(event.pageIndex);
   }
 
-  onOpenScreenshot(screenshots: Screenshot[], startIndex = 0) {
-    const screenshotPaths = screenshots.map((s) => s.path_full);
+  onOpenScreenshot(startIndex = 0) {
+    const screenshots = this.steamAppDetails()?.screenshots;
+    const screenshotPaths = screenshots ? screenshots.map((s) => s.path_full) : [];
+
+    const data: HzImageViewDialogData = {
+      images: screenshotPaths,
+      startIndex,
+      context: 'Steam Insight screenshot viewer',
+    };
 
     this.dialog.open(HzImageViewDialogComponent, {
-      data: { screenshotPaths, startIndex },
-      panelClass: 'fullscreen-dialog',
+      data,
+      maxWidth: '100vw',
+      maxHeight: '100vh',
+      panelClass: 'hz-dialog-container',
     });
   }
 

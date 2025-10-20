@@ -136,9 +136,8 @@ export class SteamInsightManagementComponent implements OnInit, OnDestroy {
     this.refreshIntervalId = setInterval(() => this.loadTab(), REFRESH_INTERVAL.NORMAL);
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     clearInterval(this.refreshIntervalId);
-
     this.steamInsightMangementService.reset();
   }
 
