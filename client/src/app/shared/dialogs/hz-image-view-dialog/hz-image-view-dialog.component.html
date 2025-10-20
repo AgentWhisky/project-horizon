@@ -1,15 +1,22 @@
 <div class="hz-image-view-dialog">
-  <button mat-icon-button class="image-view-close-btn" aria-label="Close" (click)="onClose()">
-    <mat-icon>close</mat-icon>
-  </button>
+  <img
+    class="image-view-dialog-img"
+    [src]="currentImage() | secureUrl"
+    [alt]="context() + ' - image ' + (pageIndex() + 1)"
+    draggable="false" />
 
-  <img class="image-view-dialog-img" [src]="currentImage() | secureUrl" [alt]="context() + ' - image ' + (pageIndex()+1)" draggable="false" />
-  <mat-paginator
-    [pageIndex]="pageIndex()"
-    [length]="pageLength()"
-    [pageSize]="1"
-    (page)="onPageChange($event)"
-    showFirstLastButtons
-    hidePageSize
-    aria-label="Steam Insight App Search Paginator"></mat-paginator>
+  <div class="flex flex-row items-center">
+    <mat-paginator
+      [pageIndex]="pageIndex()"
+      [length]="pageLength()"
+      [pageSize]="1"
+      (page)="onPageChange($event)"
+      showFirstLastButtons
+      hidePageSize
+      aria-label="Steam Insight App Search Paginator">
+    </mat-paginator>
+    <button matIconButton aria-label="Close" matTooltip="Close" matTooltipPosition="above" (click)="onClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
 </div>

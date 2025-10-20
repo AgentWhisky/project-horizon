@@ -1,4 +1,4 @@
-@let app = steamInsightApp();
+@let app = steamInsightApp(); @let appAudits = steamInsightAppAudits();
 
 <div class="flex flex-col gap-3">
   <hz-breadcrumb [items]="breadcrumbItems"></hz-breadcrumb>
@@ -31,13 +31,14 @@
     </mat-tab>
 
     <!-- VERSION HISTORY -->
+    @if(appAudits) {
     <mat-tab label="Version History">
       <div class="flex flex-col gap-3 py-3">
         <mat-accordion>
-          @for(audit of app.audits; track audit.id; let i = $index) {
+          @for(audit of appAudits; track audit.id; let i = $index) {
           <mat-expansion-panel>
             <mat-expansion-panel-header>
-              <mat-panel-title>Version #{{ app.audits.length - i }}</mat-panel-title>
+              <mat-panel-title>Version #{{ appAudits.length - i }}</mat-panel-title>
               <mat-panel-description>
                 {{ audit.changeType === 'I' ? 'Inserted' : 'Updated' }} - {{ audit.createdDate | date : 'M/d/yyyy, h:mm a' }}
               </mat-panel-description>
@@ -49,6 +50,7 @@
         </mat-accordion>
       </div>
     </mat-tab>
+    }
   </mat-tab-group>
 
   }

@@ -136,8 +136,8 @@ export class SteamInsightDetailComponent implements OnDestroy {
 
     this.dialog.open(HzImageViewDialogComponent, {
       data,
-      maxWidth: '100vw',
-      maxHeight: '100vh',
+      maxWidth: '90vw',
+      maxHeight: '90vh',
       panelClass: 'hz-dialog-container',
     });
   }

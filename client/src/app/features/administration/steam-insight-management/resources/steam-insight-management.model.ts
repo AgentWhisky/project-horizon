@@ -105,7 +105,7 @@ export interface SteamInsightAppRaw {
   type: string;
   active: boolean;
   validationFailed: boolean;
-  audits: SteamInsightAppAudit[];
+  audits?: SteamInsightAppAudit[];
   [key: string]: unknown;
 }
 

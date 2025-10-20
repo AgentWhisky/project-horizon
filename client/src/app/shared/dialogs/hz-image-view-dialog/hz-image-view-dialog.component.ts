@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, Injectable, OnInit, signal, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { SecureUrlPipe } from '@hz/core/pipes';
+import { Subject } from 'rxjs';
 
 export interface HzImageViewDialogData {
   images: string[] | string;
@@ -12,11 +14,31 @@ export interface HzImageViewDialogData {
   context?: string;
 }
 
+@Injectable()
+export class MyCustomPaginatorIntl implements MatPaginatorIntl {
+  changes = new Subject<void>();
+
+  firstPageLabel = 'First image';
+  lastPageLabel = 'Last image';
+  nextPageLabel = 'Next image';
+  previousPageLabel = 'Previous image';
+  itemsPerPageLabel = 'Items per page:';
+
+  getRangeLabel(page: number, pageSize: number, length: number): string {
+    if (length === 0) {
+      return 'Image 1 of 1';
+    }
+    const amountPages = Math.ceil(length / pageSize);
+    return `Image ${page + 1} of ${amountPages}`;
+  }
+}
+
 @Component({
   selector: 'hz-image-view-dialog',
-  imports: [CommonModule, MatDialogModule, MatButtonModule, MatIconModule, MatPaginatorModule, SecureUrlPipe],
+  imports: [CommonModule, MatDialogModule, MatButtonModule, MatIconModule, MatPaginatorModule, MatTooltipModule, SecureUrlPipe],
   templateUrl: './hz-image-view-dialog.component.html',
   styleUrl: './hz-image-view-dialog.component.scss',
+  providers: [{ provide: MatPaginatorIntl, useClass: MyCustomPaginatorIntl }],
 })
 export class HzImageViewDialogComponent {
   readonly dialogRef = inject(MatDialogRef<HzImageViewDialogComponent>);
