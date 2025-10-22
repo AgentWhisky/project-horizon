@@ -60,7 +60,7 @@
     </mat-tab>
 
     <mat-tab label="Hz Chip">
-      <div class="flex flex-col gap-3 p-3">
+      <div class="flex flex-col gap-3 py-3">
         @for(type of types(); track type) {
         <!-- Chip Set options -->
 
@@ -142,7 +142,7 @@
     </mat-tab>
 
     <mat-tab label="Hz Card">
-      <div class="flex flex-col gap-3 p-3">
+      <div class="flex flex-col gap-3 py-3">
         <section class="flex flex-col gap-3">
           <h2 class="text-lg font-semibold">Basic Card</h2>
           <div class="flex flex-wrap justify-center gap-3">
@@ -211,36 +211,61 @@
     </mat-tab>
 
     <mat-tab label="Hz Breadcrumb">
-      <div class="flex flex-col gap-3 p-3">
+      <div class="flex flex-col gap-3 py-3">
         <div class="flex flex-col gap-1">
           <h2 class="text-lg font-semibold">Breadcrumbs</h2>
-          <hz-breadcrumb [items]="breadcrumbSet1"></hz-breadcrumb>
+          <hz-breadcrumb [items]="HZ_BREAKCRUMB_SETS.set1"></hz-breadcrumb>
         </div>
 
         <div class="flex flex-col gap-1">
           <h2 class="text-lg font-semibold">Breadcrumbs with icons</h2>
-          <hz-breadcrumb [items]="breadcrumbSet2"></hz-breadcrumb>
+          <hz-breadcrumb [items]="HZ_BREAKCRUMB_SETS.set2"></hz-breadcrumb>
         </div>
 
         <div class="flex flex-col gap-1">
           <h2 class="text-lg font-semibold">Breadcrumbs with disabled routes</h2>
-          <hz-breadcrumb [items]="breadcrumbSet3"></hz-breadcrumb>
+          <hz-breadcrumb [items]="HZ_BREAKCRUMB_SETS.set3"></hz-breadcrumb>
         </div>
 
         <div class="flex flex-col gap-1">
           <h2 class="text-lg font-semibold">Breadcrumbs with tooltips</h2>
-          <hz-breadcrumb [items]="breadcrumbSet4"></hz-breadcrumb>
+          <hz-breadcrumb [items]="HZ_BREAKCRUMB_SETS.set4"></hz-breadcrumb>
         </div>
 
         <div class="flex flex-col gap-1">
           <h2 class="text-lg font-semibold">Breadcrumbs with all options</h2>
-          <hz-breadcrumb [items]="breadcrumbSet5"></hz-breadcrumb>
+          <hz-breadcrumb [items]="HZ_BREAKCRUMB_SETS.set5"></hz-breadcrumb>
+        </div>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Hz Command Palette">
+      <div class="flex flex-col gap-3 py-3">
+        <div class="flex flex-row flex-wrap gap-3 justify-center">
+          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_LATEX" label="LaTeX Commands"></hz-command-palette>
+          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_DEV" placeholder="Search Dev Actions..."></hz-command-palette>
+          <hz-command-palette
+            class="w-full max-w-96"
+            [commands]="COMMANDS_GIT"
+            label="Git Commands"
+            placeholder="Find a git action"></hz-command-palette>
+          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_AI"></hz-command-palette>
+          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_BROWSER" label="Browser Tools"></hz-command-palette>
+          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_THEME" placeholder="Find theme options..."></hz-command-palette>
+          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_NAV" label="Navigation"></hz-command-palette>
+          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_UTIL"></hz-command-palette>
+          <hz-command-palette
+            class="w-full max-w-96"
+            [commands]="COMMANDS_COMPONENTS"
+            label="Component Library"
+            placeholder="Search components"></hz-command-palette>
+          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_MATH" placeholder="Search math symbols"></hz-command-palette>
         </div>
       </div>
     </mat-tab>
 
     <mat-tab label="Hz Loading">
-      <div class="flex flex-col gap-3 p-3">
+      <div class="flex flex-col gap-3 py-3">
         <div class="flex flex-col gap-1">
           <h2 class="text-lg font-semibold">Loading spinner</h2>
           <hz-loading-spinner></hz-loading-spinner>

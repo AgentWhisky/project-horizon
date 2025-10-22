@@ -18,7 +18,7 @@
 
 /** BANNER COLORS */
 .hz-banner.base {
-  background-color: var(--hz-sys-base-container);
+  background-color: var(--mat-sys-surface);
   color: var(--hz-sys-on-base);
   border: 1px solid var(--hz-sys-base-border);
   border-left: 4px solid var(--hz-sys-base);
@@ -32,7 +32,7 @@
 }
 
 .hz-banner.primary {
-  background-color: var(--hz-sys-base-container);
+  background-color: var(--mat-sys-surface);
   color: var(--mat-sys-primary);
   border: 1px solid var(--mat-sys-outline-variant);
   border-left: 4px solid var(--mat-sys-primary);

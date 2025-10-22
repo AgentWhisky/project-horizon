@@ -6,9 +6,9 @@
         <textarea matInput [(ngModel)]="textInput" #textAnalyzeInput rows="10"></textarea>
       </mat-form-field>
       <div class="flex flex-col">
-        <button matIconButton matTooltip="Clear" (click)="onResetTextInput()"> <mat-icon>clear</mat-icon></button>
+        <button matIconButton matTooltip="Clear" (click)="onResetTextInput()"><mat-icon>clear</mat-icon></button>
         <button matIconButton matTooltip="Copy" (click)="onCopyTextInput()">
-           <mat-icon>content_copy</mat-icon>
+          <mat-icon>content_copy</mat-icon>
         </button>
       </div>
     </div>
@@ -27,4 +27,6 @@
     </mat-card-content>
   </mat-card>
   }
+
+  <button matButton="filled" (click)="onInsertAtCursor(textAnalyzeInput, 'AddedText')">Add Text</button>
 </div>

@@ -31,6 +31,18 @@ export class LatexEditorService {
     }
   }
 
+  insertAtCursor(textArea: HTMLTextAreaElement, text: string) {
+    if (!textArea) {
+      return;
+    }
+
+    const start = textArea.selectionStart ?? 0;
+    const end = textArea.selectionEnd ?? 0;
+
+    textArea.setRangeText(text, start, end, 'end');
+    textArea.focus();
+  }
+
   copyTextInput() {
     navigator.clipboard
       .writeText(this.textInput())

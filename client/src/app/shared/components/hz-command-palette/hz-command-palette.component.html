@@ -1,0 +1,29 @@
+<div class="command-palette">
+  <mat-form-field subscriptSizing="dynamic">
+    <mat-label>{{ label() }}</mat-label>
+    <input
+      matInput
+      type="text"
+      [placeholder]="placeholder()"
+      #commandPaletteSearch
+      [(ngModel)]="commandQuery"
+      (focus)="onFocus(commandPaletteSearch)"
+      (blur)="onBlur()" />
+  </mat-form-field>
+
+  @if(isActive() && queryResults().length > 0) {
+  <ul class="command-results" [ngStyle]="dropdownStyles()">
+    @for(command of queryResults(); track command.value) {
+    <li class="command-item" (click)="selectCommand(command)">
+      <div class="command-label">{{ command.label }}</div>
+      <div class="command-meta">
+        <span class="command-value">{{ command.value }}</span>
+        @if(command.example) {
+        <span class="command-example">{{ command.example }}</span>
+        }
+      </div>
+    </li>
+    }
+  </ul>
+  }
+</div>

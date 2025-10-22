@@ -6,12 +6,24 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatListModule } from '@angular/material/list';
 
 import { LatexEditorService } from './latex-editor.service';
+import { HzCardModule } from '@hz/shared/components';
 
 @Component({
   selector: 'hz-latex-editor',
-  imports: [MatInputModule, MatCardModule, MatButtonModule, MatIconModule, MatSliderModule, ReactiveFormsModule, FormsModule],
+  imports: [
+    MatInputModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSliderModule,
+    MatListModule,
+    HzCardModule,
+    ReactiveFormsModule,
+    FormsModule,
+  ],
   templateUrl: './latex-editor.component.html',
   styleUrl: './latex-editor.component.scss',
 })
@@ -24,6 +36,10 @@ export class LatexEditorComponent {
 
   onResetTextInput() {
     this.latexEditorService.resetTextInput();
+  }
+
+  onInsertAtCursor(textArea: HTMLTextAreaElement, text: string) {
+    this.latexEditorService.insertAtCursor(textArea, text);
   }
 
   onCopyTextInput() {

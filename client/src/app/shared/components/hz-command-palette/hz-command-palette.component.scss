@@ -1,0 +1,99 @@
+.command-palette {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  width: 100%;
+  max-width: 24rem;
+
+  background-color: var(--mat-sys-surface);
+
+  overflow: visible;
+  transition: box-shadow 150ms ease, background-color 150ms ease;
+}
+
+.command-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+
+  background-color: transparent;
+
+  border: none;
+  border-bottom: 1px solid var(--mat-sys-outline-variant, #444);
+
+  outline: none;
+}
+
+.command-input::placeholder {
+  color: var(--mat-sys-on-surface-variant, #aaa);
+}
+
+.command-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+  color: var(--mat-sys-on-surface, #fff);
+}
+
+.command-item:hover {
+  background-color: var(--mat-sys-surface-container-highest, #383838);
+}
+
+.command-item.active {
+  background-color: var(--mat-sys-primary-container, #4a4a9f);
+  color: var(--mat-sys-on-primary-container, #fff);
+}
+
+.command-label {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.command-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--mat-sys-on-surface-variant, #bbb);
+}
+
+.command-example {
+  opacity: 0.8;
+}
+
+.command-value {
+  font-family: monospace;
+  opacity: 0.6;
+}
+
+.command-results {
+  position: fixed;
+
+  border-bottom-left-radius: var(--mat-sys-corner-small);
+  border-bottom-right-radius: var(--mat-sys-corner-small);
+  background-color: var(--mat-sys-surface);
+
+  border: 1px solid var(--mat-sys-outline-variant, #444);
+
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0;
+  max-height: 300px;
+  overflow-y: auto;
+  animation: fade-in 120ms ease;
+  z-index: 2000; /* ensure it's on top */
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
