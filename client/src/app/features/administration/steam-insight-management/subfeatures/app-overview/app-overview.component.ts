@@ -30,6 +30,8 @@ export class AppOverviewComponent implements OnInit {
   private readonly appOverviewService = inject(AppOverviewService);
 
   readonly steamInsightApp = this.appOverviewService.app;
+  readonly steamInsightAppAudits = this.appOverviewService.appAudits;
+
   readonly loadingState = this.appOverviewService.loadingState;
 
   readonly breadcrumbItems: HzBreadcrumbItem[] = [

@@ -10,10 +10,18 @@ import { SettingEntity } from '@hz/entities/settings.entity';
 
 @Injectable()
 export class AdminDashboardService {
+  private isSteamInsightUpdateEnabled = false;
+  private isSteamInsightUpdateCronEnabled = false;
+  private isSteamInsightCancelOnStartupEnabled = false;
+
   constructor(
     @InjectRepository(SettingEntity)
     private readonly settingRepository: Repository<SettingEntity>
-  ) {}
+  ) {
+    this.isSteamInsightUpdateEnabled = process.env.STEAM_INSIGHT_UPDATE_ENABLE === 'true';
+    this.isSteamInsightUpdateCronEnabled = process.env.STEAM_INSIGHT_CRON_ENABLE === 'true';
+    this.isSteamInsightCancelOnStartupEnabled = process.env.STEAM_INSIGHT_CANCEL_ON_STARTUP === 'true';
+  }
 
   async getDashboard(): Promise<AdminDashboardInfo> {
     // Get Settings
@@ -28,6 +36,11 @@ export class AdminDashboardService {
 
     return {
       creationCode,
+      steamInsight: {
+        updatesEnabled: this.isSteamInsightUpdateEnabled,
+        updateCronEnabled: this.isSteamInsightUpdateCronEnabled,
+        updateCancelOnStartup: this.isSteamInsightCancelOnStartupEnabled,
+      },
     };
   }
 

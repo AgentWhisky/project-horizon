@@ -175,7 +175,13 @@
 
     <!-- ABOUT THE GAME -->
     <mat-tab [label]="'About the ' + appDetails.type">
+      @if(appDetails.aboutTheGame) {
       <div class="steam-html-content" [innerHTML]="appDetails.aboutTheGame"></div>
+      } @else {
+      <div class="display-text-warning-container">
+        <span class="display-text-warning">This {{ appDetails.type }} has no about the game information to display.</span>
+      </div>
+      }
     </mat-tab>
 
     <!-- SYSTEM REQUIREMENTS -->

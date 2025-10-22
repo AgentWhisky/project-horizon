@@ -93,6 +93,34 @@ body {
   background-color: var(--mat-sys-on-surface);
 }
 
+.icon-small {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+
+  line-height: 20px;
+  cursor: pointer;
+
+  opacity: 0.7;
+
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+
+  mat-icon {
+    font-size: inherit;
+    width: inherit;
+    height: inherit;
+    line-height: inherit;
+  }
+}
+
+.icon-small:hover {
+  opacity: 1;
+}
+
 // *** CARDS ***
 .hz-card-legacy {
   background-color: var(--mat-sys-surface-container-low) !important;

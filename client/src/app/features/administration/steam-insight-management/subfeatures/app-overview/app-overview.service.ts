@@ -5,7 +5,7 @@ import { catchError, of, tap } from 'rxjs';
 import { TokenService } from '@hz/core/services';
 import { HzLoadingState } from '@hz/core/utilities';
 
-import { AppActiveStatus, SteamInsightAppRaw } from '../../resources/steam-insight-management.model';
+import { AppActiveStatus, SteamInsightAppAudit, SteamInsightAppRaw } from '../../resources/steam-insight-management.model';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +15,10 @@ export class AppOverviewService {
 
   private readonly _app = signal<SteamInsightAppRaw | null>(null);
   readonly app = this._app.asReadonly();
+
+  private readonly _appAudits = signal<SteamInsightAppAudit[] | null>(null);
+  readonly appAudits = this._appAudits.asReadonly();
+
   readonly loadingState = new HzLoadingState('Steam Insight App', { adminMessage: true });
 
   loadApp(appid: number) {
@@ -28,7 +32,10 @@ export class AppOverviewService {
       .getWithTokenRefresh<SteamInsightAppRaw>(`/steam-insight-management/app/${appid}`)
       .pipe(
         tap((appRaw: SteamInsightAppRaw) => {
-          this._app.set(appRaw);
+          const { audits, ...appInfo } = appRaw;
+
+          this._app.set(appInfo);
+          this._appAudits.set(audits ?? null);
           this.loadingState.setSuccess();
         }),
         catchError((err: HttpErrorResponse) => {
