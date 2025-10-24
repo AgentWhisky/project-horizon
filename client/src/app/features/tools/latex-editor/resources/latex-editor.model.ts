@@ -12,6 +12,7 @@ export interface LatexSection {
 }
 
 export interface LatexCommand {
+  id: number;
   label: string;
   value: string;
 }

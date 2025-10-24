@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -15,6 +15,7 @@ import { LATEX_MENU } from './resources/latex-editor.constants';
 import { KatexPipe } from '@hz/core/pipes/katex.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TitleCasePipe } from '@angular/common';
+import { LatexCommand } from './resources/latex-editor.model';
 
 @Component({
   selector: 'hz-latex-editor',
@@ -41,27 +42,35 @@ export class LatexEditorComponent {
   private latexEditorService = inject(LatexEditorService);
 
   readonly textInput = this.latexEditorService.textInput;
-  readonly renderedLatex = this.latexEditorService.renderedLatex;
+  readonly commandHistory = this.latexEditorService.sortedCommandHistory;
+
   readonly renderSize = this.latexEditorService.renderSize;
 
-  readonly commandPaletteCMDs: HzCommand[] = LATEX_MENU.flatMap((section) =>
-    section.commands.map((command) => ({
-      label: command.label,
-      value: command.value,
-      latex: command.value,
-    }))
-  );
+  readonly commandPaletteCMDs = this.latexEditorService.commandPaletteCMDs;
+  readonly commandLookup = this.latexEditorService.commandLookup;
+
   readonly latexMenu = LATEX_MENU;
+
+  @ViewChild('latexEditorInput') latexEditorInput!: ElementRef<HTMLTextAreaElement>;
+
+  onInsertAtCursor(command: LatexCommand) {
+    this.latexEditorService.insertAtCursor(this.latexEditorInput.nativeElement, command);
+  }
+
+  onSelectPaletteCommand(cmd: HzCommand) {
+    const latexCommand = this.commandLookup.get(cmd.id);
+    if (latexCommand) {
+      this.latexEditorService.insertAtCursor(this.latexEditorInput.nativeElement, latexCommand);
+    }
+  }
 
   onResetTextInput() {
     this.latexEditorService.resetTextInput();
   }
 
-  onInsertAtCursor(textArea: HTMLTextAreaElement, text: string) {
-    this.latexEditorService.insertAtCursor(textArea, text);
+  onCopyExpression() {
+    this.latexEditorService.copyExpression();
   }
 
-  onCopyTextInput() {
-    this.latexEditorService.copyTextInput();
-  }
+  onSaveExpression() {}
 }

@@ -1,4 +1,4 @@
-import { Component, computed, effect, input, model, signal } from '@angular/core';
+import { Component, computed, effect, input, model, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -40,14 +40,16 @@ export class HzCommandPaletteComponent {
   readonly isActive = signal(false);
   readonly dropdownStyles = signal<Partial<CSSStyleDeclaration>>({});
 
+  readonly outputCommand = output<HzCommand>();
+
   onResetFilter() {
     this.commandQuery.set('');
   }
 
   selectCommand(cmd: HzCommand) {
-    console.log('Selected Command:', cmd.value);
     this.commandQuery.set('');
     this.isActive.set(false);
+    this.outputCommand.emit(cmd);
   }
 
   onFocus(input: HTMLInputElement) {

@@ -1,37 +1,48 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-
-import katex from 'katex';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { SNACKBAR_INTERVAL } from '@hz/core/constants';
+import { LatexCommand } from './resources/latex-editor.model';
+import { LATEX_MENU, MAX_COMMAND_HISTORY } from './resources/latex-editor.constants';
+import { HzCommand } from '@hz/shared/components';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LatexEditorService {
-  private sanitizer = inject(DomSanitizer);
   private snackbar = inject(MatSnackBar);
 
   readonly textInput = signal<string>('');
+
+  private readonly _commandHistory = signal<LatexCommand[]>([]);
+  readonly sortedCommandHistory = computed(() => [...this._commandHistory()].sort((a, b) => a.id - b.id));
+
   readonly renderSize = signal<number>(20);
 
-  readonly renderedLatex = computed(() =>
-    // Register rendered LaTex HTML as safe
-    this.sanitizer.bypassSecurityTrustHtml(katex.renderToString(this.textInput(), { throwOnError: false }))
-  );
+  readonly commandPaletteCMDs: HzCommand[];
+  readonly commandLookup = new Map<number, LatexCommand>();
 
-  resetTextInput() {
-    try {
-      this.textInput.set('');
-      this.snackbar.open(`Successfully cleared text input`, 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-    } catch (error) {
-      this.snackbar.open(`Failed to clear text input`, 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
-    }
+  constructor() {
+    this.commandPaletteCMDs = LATEX_MENU.flatMap((section) =>
+      section.commands.map((command) => {
+        this.commandLookup.set(command.id, command);
+
+        return {
+          id: command.id,
+          label: command.label,
+          value: command.value,
+          latex: command.value,
+        };
+      })
+    );
   }
 
-  insertAtCursor(textArea: HTMLTextAreaElement, text: string) {
+  resetTextInput() {
+    this.textInput.set('');
+  }
+
+  insertAtCursor(textArea: HTMLTextAreaElement, command: LatexCommand) {
     if (!textArea) {
       return;
     }
@@ -39,11 +50,18 @@ export class LatexEditorService {
     const start = textArea.selectionStart ?? 0;
     const end = textArea.selectionEnd ?? 0;
 
-    textArea.setRangeText(text, start, end, 'end');
+    const startText = textArea.value.slice(0, start);
+    const endText = textArea.value.slice(end);
+
+    const newText = startText + command.value + endText;
+
+    this.textInput.set(newText);
     textArea.focus();
+
+    this.updateCommandHistory(command);
   }
 
-  copyTextInput() {
+  copyExpression() {
     navigator.clipboard
       .writeText(this.textInput())
       .then(() => {
@@ -52,5 +70,18 @@ export class LatexEditorService {
       .catch(() => {
         this.snackbar.open(`Failed to copy to clipboard`, 'Close', { duration: SNACKBAR_INTERVAL.NORMAL });
       });
+  }
+
+  private updateCommandHistory(command: LatexCommand) {
+    const currentCommandHistory = this._commandHistory();
+
+    const filteredHistory = currentCommandHistory.filter((c) => c.id !== command.id);
+    filteredHistory.push(command);
+
+    if (filteredHistory.length > MAX_COMMAND_HISTORY) {
+      filteredHistory.shift();
+    }
+
+    this._commandHistory.set(filteredHistory);
   }
 }

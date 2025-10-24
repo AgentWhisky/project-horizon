@@ -2,7 +2,10 @@
   <!-- LEFT CONTROLS -->
   <hz-card hideBackground class="w-full max-w-96">
     <hz-card-body class="flex flex-col gap-3">
-      <hz-command-palette [commands]="commandPaletteCMDs" label="LaTeX Commands"></hz-command-palette>
+      <hz-command-palette
+        [commands]="commandPaletteCMDs"
+        label="LaTeX Commands"
+        (outputCommand)="onSelectPaletteCommand($event)"></hz-command-palette>
 
       <mat-accordion>
         @for (section of latexMenu; track section.label) {
@@ -11,17 +14,42 @@
             <mat-panel-title>{{ section.label }}</mat-panel-title>
           </mat-expansion-panel-header>
 
-          <!-- your scrollable content -->
           <div class="scrollable-panel-content">
             <div class="flex flex-row flex-wrap gap-3">
-              @for (command of section.commands; track command.label) {
-              <button matButton="outlined" [matTooltip]="command.label" [innerHTML]="command.value | katex"></button>
+              @for (command of section.commands; track command.id) {
+              <button
+                matButton="outlined"
+                [matTooltip]="command.label"
+                [innerHTML]="command.value | katex"
+                (click)="onInsertAtCursor(command)"></button>
               }
             </div>
           </div>
         </mat-expansion-panel>
         }
       </mat-accordion>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Command History</mat-panel-title>
+        </mat-expansion-panel-header>
+
+        @if(commandHistory().length > 0) {
+        <div class="scrollable-panel-content">
+          <div class="flex flex-row flex-wrap gap-3">
+            @for (command of commandHistory(); track command.id) {
+            <button
+              matButton="outlined"
+              [matTooltip]="command.label"
+              [innerHTML]="command.value | katex"
+              (click)="onInsertAtCursor(command)"></button>
+            }
+          </div>
+        </div>
+        } @else {
+        <span>No history to display</span>
+        }
+      </mat-expansion-panel>
     </hz-card-body>
   </hz-card>
 
@@ -31,13 +59,20 @@
     <div class="flex flex-row gap-3">
       <mat-form-field class="w-full" subscriptSizing="dynamic">
         <mat-label>LaTeX Input</mat-label>
-        <textarea matInput [(ngModel)]="textInput" #textAnalyzeInput rows="10"></textarea>
+        <textarea matInput [(ngModel)]="textInput" #latexEditorInput rows="10"></textarea>
       </mat-form-field>
       <div class="flex flex-col">
-        <button matIconButton matTooltip="Clear" (click)="onResetTextInput()"><mat-icon>clear</mat-icon></button>
-        <button matIconButton matTooltip="Copy" (click)="onCopyTextInput()">
+        <button matIconButton matTooltip="Clear Expression" (click)="onResetTextInput()"><mat-icon>clear</mat-icon></button>
+        @if(textInput()) {
+        <button matIconButton matTooltip="Copy Expression" (click)="onCopyExpression()">
           <mat-icon>content_copy</mat-icon>
         </button>
+
+        <button matIconButton matTooltip="Save Expression" (click)="onSaveExpression()">
+          <mat-icon>save</mat-icon>
+        </button>
+
+        }
       </div>
     </div>
 
@@ -45,7 +80,7 @@
     <mat-card class="hz-card-legacy" appearance="outlined">
       <mat-card-content>
         <div class="latex-editor-display">
-          <div [innerHTML]="renderedLatex()" [style.fontSize.px]="renderSize()"></div>
+          <div [innerHTML]="textInput() | katex" [style.fontSize.px]="renderSize()"></div>
 
           <mat-slider class="w-full max-w-96" [min]="12" [max]="48" [step]="1" thumbLabel discrete showTickMarks>
             <input matSliderThumb [(ngModel)]="renderSize" #slider />
