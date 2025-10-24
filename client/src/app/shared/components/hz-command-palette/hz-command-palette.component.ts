@@ -1,15 +1,18 @@
-import { Component, computed, effect, ElementRef, HostListener, input, model, signal, ViewChild } from '@angular/core';
-
-import { HzCommand } from './hz-command-palette.model';
+import { Component, computed, effect, input, model, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { CommonModule } from '@angular/common';
+
+import { KatexPipe } from '@hz/core/pipes/katex.pipe';
+
+import { HzCommand } from './hz-command-palette.model';
 
 @Component({
   selector: 'hz-command-palette',
-  imports: [MatInputModule, MatButtonModule, MatIconModule, CommonModule, FormsModule],
+  imports: [MatInputModule, MatButtonModule, MatIconModule, CommonModule, FormsModule, KatexPipe],
   templateUrl: './hz-command-palette.component.html',
   styleUrl: './hz-command-palette.component.scss',
 })
@@ -22,7 +25,7 @@ export class HzCommandPaletteComponent {
   readonly commandQuery = model('');
   readonly queryResults = computed(() => {
     const commands = this.commands();
-    const commandQuery = this.commandQuery();
+    const commandQuery = this.commandQuery().toLowerCase();
 
     return commands
       .filter(
@@ -34,13 +37,8 @@ export class HzCommandPaletteComponent {
       .slice(0, 30);
   });
 
-  readonly results = signal<HzCommand[]>([]);
   readonly isActive = signal(false);
-
-  constructor() {
-    effect(() => console.log(this.commandQuery()));
-    effect(() => console.log(this.queryResults()));
-  }
+  readonly dropdownStyles = signal<Partial<CSSStyleDeclaration>>({});
 
   onResetFilter() {
     this.commandQuery.set('');
@@ -52,10 +50,6 @@ export class HzCommandPaletteComponent {
     this.isActive.set(false);
   }
 
-  // TEST
-  @ViewChild('commandInput', { read: ElementRef }) inputRef!: ElementRef<HTMLInputElement>;
-  dropdownStyles = signal<Partial<CSSStyleDeclaration>>({});
-
   onFocus(input: HTMLInputElement) {
     this.isActive.set(true);
     this.updateDropdownPosition(input);
@@ -66,7 +60,6 @@ export class HzCommandPaletteComponent {
   }
 
   updateDropdownPosition(input: HTMLInputElement) {
-    // find the nearest mat-form-field wrapper (the real visual container)
     const formField = input.closest('.mat-mdc-form-field') as HTMLElement;
     const rect = formField?.getBoundingClientRect() ?? input.getBoundingClientRect();
 

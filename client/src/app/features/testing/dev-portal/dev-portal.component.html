@@ -241,25 +241,60 @@
 
     <mat-tab label="Hz Command Palette">
       <div class="flex flex-col gap-3 py-3">
-        <div class="flex flex-row flex-wrap gap-3 justify-center">
-          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_LATEX" label="LaTeX Commands"></hz-command-palette>
-          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_DEV" placeholder="Search Dev Actions..."></hz-command-palette>
-          <hz-command-palette
-            class="w-full max-w-96"
-            [commands]="COMMANDS_GIT"
-            label="Git Commands"
-            placeholder="Find a git action"></hz-command-palette>
-          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_AI"></hz-command-palette>
-          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_BROWSER" label="Browser Tools"></hz-command-palette>
-          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_THEME" placeholder="Find theme options..."></hz-command-palette>
-          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_NAV" label="Navigation"></hz-command-palette>
-          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_UTIL"></hz-command-palette>
+        <div class="flex flex-col gap-1">
+          <h2 class="text-lg font-semibold">LaTeX Commands</h2>
+          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_LATEX" label="LaTeX Commands"> </hz-command-palette>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <h2 class="text-lg font-semibold">Developer Actions</h2>
+          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_DEV" placeholder="Search Dev Actions..."> </hz-command-palette>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <h2 class="text-lg font-semibold">Git Commands</h2>
+          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_GIT" label="Git Commands" placeholder="Find a git action">
+          </hz-command-palette>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <h2 class="text-lg font-semibold">AI Assistant</h2>
+          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_AI"> </hz-command-palette>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <h2 class="text-lg font-semibold">Browser Tools</h2>
+          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_BROWSER" label="Browser Tools"> </hz-command-palette>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <h2 class="text-lg font-semibold">Theme Options</h2>
+          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_THEME" placeholder="Find theme options..."> </hz-command-palette>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <h2 class="text-lg font-semibold">Navigation</h2>
+          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_NAV" label="Navigation"> </hz-command-palette>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <h2 class="text-lg font-semibold">Utility Commands</h2>
+          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_UTIL"> </hz-command-palette>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <h2 class="text-lg font-semibold">Component Library</h2>
           <hz-command-palette
             class="w-full max-w-96"
             [commands]="COMMANDS_COMPONENTS"
             label="Component Library"
-            placeholder="Search components"></hz-command-palette>
-          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_MATH" placeholder="Search math symbols"></hz-command-palette>
+            placeholder="Search components">
+          </hz-command-palette>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <h2 class="text-lg font-semibold">Math Symbols</h2>
+          <hz-command-palette class="w-full max-w-96" [commands]="COMMANDS_MATH" placeholder="Search math symbols"> </hz-command-palette>
         </div>
       </div>
     </mat-tab>

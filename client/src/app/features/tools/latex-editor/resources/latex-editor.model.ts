@@ -7,13 +7,11 @@ export interface LatexMenuItem {
 }
 
 export interface LatexSection {
-  lable: string;
+  label: string;
   commands: LatexCommand[];
 }
 
 export interface LatexCommand {
   label: string;
-  latex: string;
-  example: string;
-  category: string;
+  value: string;
 }

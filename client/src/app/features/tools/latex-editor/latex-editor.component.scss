@@ -41,3 +41,12 @@
 
   gap: 0.75rem;
 }
+
+/** TESTING */
+.scrollable-panel-content {
+  max-height: 16rem;
+  overflow-y: auto;
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--mat-sys-outline-variant) var(--mat-sys-surface-container);
+}

@@ -20,6 +20,8 @@
         <span class="command-value">{{ command.value }}</span>
         @if(command.example) {
         <span class="command-example">{{ command.example }}</span>
+        } @else if(command.latex) {
+        <span class="command-example" [innerHTML]="command.latex | katex"></span>
         }
       </div>
     </li>

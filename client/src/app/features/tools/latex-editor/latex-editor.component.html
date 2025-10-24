@@ -1,5 +1,33 @@
-<div class="latex-editor-container">
-  <div class="latex-editor-input-tile">
+<div class="w-full flex flex-row gap-3">
+  <!-- LEFT CONTROLS -->
+  <hz-card hideBackground class="w-full max-w-96">
+    <hz-card-body class="flex flex-col gap-3">
+      <hz-command-palette [commands]="commandPaletteCMDs" label="LaTeX Commands"></hz-command-palette>
+
+      <mat-accordion>
+        @for (section of latexMenu; track section.label) {
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{ section.label }}</mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <!-- your scrollable content -->
+          <div class="scrollable-panel-content">
+            <div class="flex flex-row flex-wrap gap-3">
+              @for (command of section.commands; track command.label) {
+              <button matButton="outlined" [matTooltip]="command.label" [innerHTML]="command.value | katex"></button>
+              }
+            </div>
+          </div>
+        </mat-expansion-panel>
+        }
+      </mat-accordion>
+    </hz-card-body>
+  </hz-card>
+
+  <!-- CENTER CONTENT -->
+  <div class="w-full flex flex-col gap-3">
+    <!-- LATEX INPUT -->
     <div class="flex flex-row gap-3">
       <mat-form-field class="w-full" subscriptSizing="dynamic">
         <mat-label>LaTeX Input</mat-label>
@@ -12,21 +40,27 @@
         </button>
       </div>
     </div>
+
+    @if(textInput()) {
+    <mat-card class="hz-card-legacy" appearance="outlined">
+      <mat-card-content>
+        <div class="latex-editor-display">
+          <div [innerHTML]="renderedLatex()" [style.fontSize.px]="renderSize()"></div>
+
+          <mat-slider class="w-full max-w-96" [min]="12" [max]="48" [step]="1" thumbLabel discrete showTickMarks>
+            <input matSliderThumb [(ngModel)]="renderSize" #slider />
+          </mat-slider>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    }
   </div>
 
-  @if(textInput()) {
-  <mat-card class="hz-card-legacy" appearance="outlined">
-    <mat-card-content>
-      <div class="latex-editor-display">
-        <div [innerHTML]="renderedLatex()" [style.fontSize.px]="renderSize()"></div>
-
-        <mat-slider class="w-full max-w-96" [min]="12" [max]="48" [step]="1" thumbLabel discrete showTickMarks>
-          <input matSliderThumb [(ngModel)]="renderSize" #slider />
-        </mat-slider>
-      </div>
-    </mat-card-content>
-  </mat-card>
-  }
-
-  <button matButton="filled" (click)="onInsertAtCursor(textAnalyzeInput, 'AddedText')">Add Text</button>
+  <!-- CENTER CONTENT -->
+  <hz-card class="w-full max-w-52">
+    <hz-card-header>Saved Expressions</hz-card-header>
+    <hz-card-body class="flex flex-col gap-3">
+      <span>No Saved Expressions</span>
+    </hz-card-body>
+  </hz-card>
 </div>
