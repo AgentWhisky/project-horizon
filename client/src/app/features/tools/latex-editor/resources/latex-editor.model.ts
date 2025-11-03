@@ -16,3 +16,15 @@ export interface LatexCommand {
   label: string;
   value: string;
 }
+
+export interface SavedCurrentExpression {
+  expression: string;
+  isTouched: boolean;
+  isDirty: boolean;
+}
+
+export interface SavedExpression {
+  id: number;
+  name: string;
+  expression: string;
+}

@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Save Expression</h2>
+<mat-dialog-content>
+  <form class="flex flex-col gap-3 py-1" [formGroup]="saveExpressionForm">
+    <mat-form-field>
+      <mat-label>Expression Name</mat-label>
+      <input matInput type="text" formControlName="expressionName" />
+      <mat-error>{{ saveExpressionForm.get('expressionName')?.errors | validatorMessage : { fieldName: 'Expression Name' } }}</mat-error>
+      <mat-hint align="end">{{ saveExpressionForm.get('expressionName')?.value?.length }}/32</mat-hint>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onClose()">Cancel</button>
+  <button matButton="filled" (click)="onSubmit()" [disabled]="!saveExpressionForm.valid">Save Expression</button>
+</mat-dialog-actions>

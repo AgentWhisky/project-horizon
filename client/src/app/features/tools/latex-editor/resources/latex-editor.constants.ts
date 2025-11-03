@@ -2,7 +2,7 @@ import { LatexSection } from './latex-editor.model';
 
 export const MAX_COMMAND_HISTORY = 20;
 
-export const LATEX_MENU: LatexSection[] = [
+export const LATEX_COMMANDS: LatexSection[] = [
   {
     label: 'Greek Characters',
     commands: [
@@ -20,7 +20,7 @@ export const LATEX_MENU: LatexSection[] = [
       { id: 12, label: 'Mu', value: '\\mu' },
       { id: 13, label: 'Nu', value: '\\nu' },
       { id: 14, label: 'Xi', value: '\\xi' },
-      { id: 15, label: 'Omicron', value: 'o' },
+      { id: 15, label: 'Omicron', value: '\\omicron' },
       { id: 16, label: 'Pi', value: '\\pi' },
       { id: 17, label: 'Rho', value: '\\rho' },
       { id: 18, label: 'Sigma', value: '\\sigma' },
@@ -107,6 +107,31 @@ export const LATEX_MENU: LatexSection[] = [
       { id: 309, label: 'Variant Phi (uppercase)', value: '\\varPhi' },
       { id: 3010, label: 'Variant Psi (uppercase)', value: '\\varPsi' },
       { id: 3011, label: 'Variant Omega (uppercase)', value: '\\varOmega' },
+    ],
+  },
+  {
+    label: 'Fractions and binomials',
+    commands: [
+      { id: 4001, label: 'Fraction', value: '\\frac{a}{b}' },
+      { id: 4002, label: 'tFraction', value: '\\tfrac{a}{b}' },
+      { id: 4003, label: 'dFraction', value: '\\dfrac{a}{b}' },
+      { id: 4004, label: 'Multi fraction', value: '{a \\above{2pt} b+1}' },
+      { id: 4005, label: 'Binomial', value: '\\dbinom{n}{k}' },
+      { id: 4016, label: 'Variant Omega (uppercase)', value: '\\varOmega' },
+    ],
+  },
+  {
+    label: 'Annotations',
+    commands: [
+      { id: 5001, label: 'Cancel', value: '\\cancel{5}' },
+      { id: 5002, label: 'Back Cancel', value: '\\bcancel{5}' },
+      { id: 5003, label: 'Crossout', value: '\\xcancel{ABC}' },
+      { id: 5004, label: 'Strikeout', value: '\\sout{abc}' },
+      { id: 5006, label: 'Phase Angle', value: '\\phase{-78^\\circ}' },
+      { id: 5008, label: 'Over Brace', value: '\\overbrace{a+b+c}^{\\text{note}}' },
+      { id: 5009, label: 'Under Brace', value: '\\underbrace{a+b+c}_{\\text{note}}' },
+      { id: 5010, label: 'Not', value: '\\not =' },
+      { id: 5011, label: 'Boxed', value: '\\boxed{pi=\\frac c d}' },
     ],
   },
 ];

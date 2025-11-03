@@ -1,69 +1,70 @@
-<div class="w-full flex flex-row gap-3">
-  <!-- LEFT CONTROLS -->
-  <hz-card hideBackground class="w-full max-w-96">
-    <hz-card-body class="flex flex-col gap-3">
-      <hz-command-palette
-        [commands]="commandPaletteCMDs"
-        label="LaTeX Commands"
-        (outputCommand)="onSelectPaletteCommand($event)"></hz-command-palette>
+<div class="w-full flex flex-row flex-wrap gap-3">
+  <!-- LATEX COMMAND MENU -->
+  <div class="flex flex-col gap-3 max-w-96">
+    <mat-form-field class="w-full" subscriptSizing="dynamic">
+      <mat-label>Filter Commands</mat-label>
+      <input matInput [(ngModel)]="commandFilter" #commandFilterInput />
+    </mat-form-field>
 
-      <mat-accordion>
-        @for (section of latexMenu; track section.label) {
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{ section.label }}</mat-panel-title>
-          </mat-expansion-panel-header>
-
-          <div class="scrollable-panel-content">
-            <div class="flex flex-row flex-wrap gap-3">
-              @for (command of section.commands; track command.id) {
-              <button
-                matButton="outlined"
-                [matTooltip]="command.label"
-                [innerHTML]="command.value | katex"
-                (click)="onInsertAtCursor(command)"></button>
-              }
-            </div>
-          </div>
-        </mat-expansion-panel>
-        }
-      </mat-accordion>
-
+    <mat-accordion>
+      @for (section of filteredLatexCommands(); track section.label) {
       <mat-expansion-panel>
         <mat-expansion-panel-header>
-          <mat-panel-title>Command History</mat-panel-title>
+          <mat-panel-title>{{ section.label }}</mat-panel-title>
         </mat-expansion-panel-header>
 
-        @if(commandHistory().length > 0) {
         <div class="scrollable-panel-content">
           <div class="flex flex-row flex-wrap gap-3">
-            @for (command of commandHistory(); track command.id) {
+            @for (command of section.commands; track command.id) {
             <button
-              matButton="outlined"
+              class="command-button"
               [matTooltip]="command.label"
               [innerHTML]="command.value | katex"
               (click)="onInsertAtCursor(command)"></button>
             }
           </div>
         </div>
-        } @else {
-        <span>No history to display</span>
-        }
       </mat-expansion-panel>
-    </hz-card-body>
-  </hz-card>
+      }
+    </mat-accordion>
 
-  <!-- CENTER CONTENT -->
-  <div class="w-full flex flex-col gap-3">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Previously Used</mat-panel-title>
+      </mat-expansion-panel-header>
+
+      @if(commandHistory().length > 0) {
+      <div class="scrollable-panel-content">
+        <div class="flex flex-row flex-wrap gap-3">
+          @for (command of commandHistory(); track command.id) {
+          <button
+            class="command-button"
+            [matTooltip]="command.label"
+            [innerHTML]="command.value | katex"
+            (click)="onInsertAtCursor(command)"></button>
+          }
+        </div>
+      </div>
+      } @else {
+      <span>No history to display</span>
+      }
+    </mat-expansion-panel>
+  </div>
+
+  <!-- LATEX DISPLAY -->
+  <div class="flex flex-col gap-3 flex-grow">
     <!-- LATEX INPUT -->
     <div class="flex flex-row gap-3">
-      <mat-form-field class="w-full" subscriptSizing="dynamic">
-        <mat-label>LaTeX Input</mat-label>
-        <textarea matInput [(ngModel)]="textInput" #latexEditorInput rows="10"></textarea>
-      </mat-form-field>
+      <form class="w-full" [formGroup]="latexEditorForm">
+        <mat-form-field class="w-full" subscriptSizing="dynamic">
+          <mat-label>LaTeX Editor</mat-label>
+          <textarea matInput formControlName="latex" #latexEditorInput rows="10"></textarea>
+        </mat-form-field>
+      </form>
       <div class="flex flex-col">
+        @if(latexEditorForm.get('latex')?.value) {
         <button matIconButton matTooltip="Clear Expression" (click)="onResetTextInput()"><mat-icon>clear</mat-icon></button>
-        @if(textInput()) {
+
         <button matIconButton matTooltip="Copy Expression" (click)="onCopyExpression()">
           <mat-icon>content_copy</mat-icon>
         </button>
@@ -71,31 +72,51 @@
         <button matIconButton matTooltip="Save Expression" (click)="onSaveExpression()">
           <mat-icon>save</mat-icon>
         </button>
-
         }
       </div>
     </div>
 
-    @if(textInput()) {
-    <mat-card class="hz-card-legacy" appearance="outlined">
-      <mat-card-content>
-        <div class="latex-editor-display">
-          <div [innerHTML]="textInput() | katex" [style.fontSize.px]="renderSize()"></div>
+    <mat-slider [min]="12" [max]="48" [step]="1" thumbLabel discrete showTickMarks>
+      <input matSliderThumb [(ngModel)]="renderSize" #slider />
+    </mat-slider>
 
-          <mat-slider class="w-full max-w-96" [min]="12" [max]="48" [step]="1" thumbLabel discrete showTickMarks>
-            <input matSliderThumb [(ngModel)]="renderSize" #slider />
-          </mat-slider>
-        </div>
-      </mat-card-content>
-    </mat-card>
+    @if(latexEditorForm.get('latex')?.value) {
+    <div class="katex-view w-full centered">
+      <div class="katex-content" [innerHTML]="latexEditorForm.get('latex')?.value ?? '' | katex" [style.fontSize.px]="renderSize()"></div>
+      <div class="katex-hidden" [innerHTML]="latexEditorForm.get('latex')?.value ?? '' | katex" [style.fontSize.px]="renderSize()"></div>
+    </div>
     }
   </div>
 
-  <!-- CENTER CONTENT -->
-  <hz-card class="w-full max-w-52">
+  <!-- SAVED EXPRESSIONS -->
+  @if(savedExpressions().length > 0) {
+  <hz-card class="flex flex-grow max-w-96">
     <hz-card-header>Saved Expressions</hz-card-header>
-    <hz-card-body class="flex flex-col gap-3">
-      <span>No Saved Expressions</span>
+    <hz-card-body class="flex flex-col gap-3 p-1 scrollable-panel-content-large">
+      <!-- DISPLAY SAVED EXPRESSIONS -->
+      @for(expression of savedExpressions(); track expression.id) {
+      <div class="w-full flex flex-row gap-3 items-center">
+        <button class="saved-expression-card" (click)="onLoadExpression(expression.id)">
+          <span class="w-full font-medium">{{ expression.name }}</span>
+
+          <div class="katex-view">
+            <div class="katex-content" [innerHTML]="expression.expression | katex"></div>
+            <div class="katex-hidden" [innerHTML]="expression.expression | katex"></div>
+          </div>
+        </button>
+
+        <div class="flex flex-col">
+          <button matIconButton aria-label="Copy Expression" matTooltip="Copy Expression" (click)="onCopyExpression(expression.expression)">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+
+          <button mat-icon-button aria-label="Remove Expression" matTooltip="Remove Expression" (click)="onRemoveExpression(expression.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+      }
     </hz-card-body>
   </hz-card>
+  }
 </div>

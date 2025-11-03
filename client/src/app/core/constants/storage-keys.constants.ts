@@ -12,6 +12,10 @@ export const STORAGE_KEYS = {
   BASE_CONVERTER: {
     CONVERSIONS: 'horizon.baseConverter.conversions',
   },
+  LATEX_EDITOR: {
+    CURRENT_EXPRESSION: 'horizon.latexEditor.currentExpression',
+    SAVED_EXPRESSIONS: 'horizon.latexEditor.savedExpressions',
+  },
   STEAM_INSIGHT: {
     HISTORY: 'horizon.steamInsight.history',
     SHOW_ACHIEVEMENTS: 'horizon.steamInsight.showAchievements',

@@ -9,20 +9,6 @@
   gap: 0.75rem;
 }
 
-/** COMMAND PALETTE SEARCH */
-.bg-surface-container {
-  background-color: var(--mat-sys-surface-container);
-}
-.text-on-surface {
-  color: var(--mat-sys-on-surface);
-}
-.text-on-surface-variant {
-  color: var(--mat-sys-on-surface-variant);
-}
-.border-outline-variant {
-  border-color: var(--mat-sys-outline-variant);
-}
-
 /** INPUT */
 .latex-editor-input-tile {
   display: flex;
@@ -42,6 +28,22 @@
   gap: 0.75rem;
 }
 
+.command-button {
+  padding: 0.75rem;
+
+  border-radius: var(--mat-sys-corner-small);
+  border: 2px solid var(--mat-sys-outline-variant);
+  border-color: var(--mat-sys-outline-variant);
+}
+
+.command-button:hover {
+  border-color: var(--mat-sys-on-surface);
+}
+
+.command-button:active {
+  border-color: var(--mat-sys-primary);
+}
+
 /** TESTING */
 .scrollable-panel-content {
   max-height: 16rem;
@@ -49,4 +51,79 @@
 
   scrollbar-width: thin;
   scrollbar-color: var(--mat-sys-outline-variant) var(--mat-sys-surface-container);
+}
+
+.scrollable-panel-content-large {
+  max-height: 80vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  box-sizing: border-box;
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--mat-sys-outline-variant) var(--mat-sys-surface-container);
+}
+
+/** SAVED EXPRESSIONS */
+.saved-expression-card {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+
+  min-width: 0;
+
+  text-align: left;
+
+  overflow: hidden;
+
+  gap: 0.25rem;
+  padding: 0.75rem;
+
+  border-radius: var(--mat-sys-corner-small);
+  border: 2px solid var(--mat-sys-outline-variant);
+  border-color: var(--mat-sys-outline-variant);
+}
+
+.saved-expression-card:hover {
+  border-color: var(--mat-sys-on-surface);
+}
+
+.saved-expression-card:active {
+  border-color: var(--mat-sys-primary);
+}
+
+.katex-view {
+  position: relative;
+  white-space: nowrap;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  min-width: 0;
+
+  padding: 0.25rem 0;
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--mat-sys-outline-variant) var(--mat-sys-surface-container);
+}
+
+.katex-content {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+}
+
+.katex-hidden {
+  position: relative;
+  display: block;
+  visibility: hidden;
+  pointer-events: none;
+  width: 0;
+  overflow: visible;
+}
+
+.katex-view.centered {
+  text-align: center;
 }

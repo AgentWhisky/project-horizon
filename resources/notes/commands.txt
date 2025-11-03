@@ -19,3 +19,12 @@ node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 Generate file structure tree
 --------------------
 PS: tree /F > client-project-structure.txt
+
+
+GIT Commands
+--------------------
+List changes in last month
+  > git log --since="1 month ago" --name-only --pretty=format: | sort -u >> changes.txt
+
+List changes since date
+  > git log --since="2025-10-01" --name-only --pretty=format: | sort -u >> changes.txt

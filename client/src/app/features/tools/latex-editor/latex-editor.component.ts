@@ -10,12 +10,14 @@ import { MatListModule } from '@angular/material/list';
 import { MatExpansionModule } from '@angular/material/expansion';
 
 import { LatexEditorService } from './latex-editor.service';
-import { HzCardModule, HzCommand, HzCommandPaletteModule } from '@hz/shared/components';
-import { LATEX_MENU } from './resources/latex-editor.constants';
+import { HzCardModule, HzCommandPaletteModule } from '@hz/shared/components';
 import { KatexPipe } from '@hz/core/pipes/katex.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { TitleCasePipe } from '@angular/common';
 import { LatexCommand } from './resources/latex-editor.model';
+import { MatDialog } from '@angular/material/dialog';
+import { SaveExpressionDialogComponent } from './save-expression-dialog/save-expression-dialog.component';
+import { filter, tap } from 'rxjs';
+import { ConfirmDialogComponent } from '@hz/shared/dialogs';
 
 @Component({
   selector: 'hz-latex-editor',
@@ -40,16 +42,16 @@ import { LatexCommand } from './resources/latex-editor.model';
 })
 export class LatexEditorComponent {
   private latexEditorService = inject(LatexEditorService);
+  private dialog = inject(MatDialog);
 
-  readonly textInput = this.latexEditorService.textInput;
+  readonly latexEditorForm = this.latexEditorService.latexEditorForm;
   readonly commandHistory = this.latexEditorService.sortedCommandHistory;
+  readonly savedExpressions = this.latexEditorService.savedExpressions;
 
   readonly renderSize = this.latexEditorService.renderSize;
 
-  readonly commandPaletteCMDs = this.latexEditorService.commandPaletteCMDs;
-  readonly commandLookup = this.latexEditorService.commandLookup;
-
-  readonly latexMenu = LATEX_MENU;
+  readonly commandFilter = this.latexEditorService.commandFilter;
+  readonly filteredLatexCommands = this.latexEditorService.filteredLatexCommands;
 
   @ViewChild('latexEditorInput') latexEditorInput!: ElementRef<HTMLTextAreaElement>;
 
@@ -57,20 +59,68 @@ export class LatexEditorComponent {
     this.latexEditorService.insertAtCursor(this.latexEditorInput.nativeElement, command);
   }
 
-  onSelectPaletteCommand(cmd: HzCommand) {
-    const latexCommand = this.commandLookup.get(cmd.id);
-    if (latexCommand) {
-      this.latexEditorService.insertAtCursor(this.latexEditorInput.nativeElement, latexCommand);
+  onResetTextInput() {
+    if (this.latexEditorForm.dirty) {
+      const title = 'Clear Expression';
+      const message = 'You have unsaved changes. Are you sure you want to clear this expression?';
+
+      this.dialog
+        .open(ConfirmDialogComponent, { data: { title, message }, panelClass: 'hz-dialog-container' })
+        .afterClosed()
+        .pipe(
+          filter((result) => result),
+          tap(() => this.latexEditorService.resetTextInput())
+        )
+        .subscribe();
+    } else {
+      this.latexEditorService.resetTextInput();
     }
   }
 
-  onResetTextInput() {
-    this.latexEditorService.resetTextInput();
+  onCopyExpression(expression?: string) {
+    this.latexEditorService.copyExpression(expression);
   }
 
-  onCopyExpression() {
-    this.latexEditorService.copyExpression();
+  onSaveExpression() {
+    this.dialog
+      .open(SaveExpressionDialogComponent, { panelClass: 'hz-dialog-container', width: '560px' })
+      .afterClosed()
+      .pipe(
+        filter((result) => result),
+        tap((result) => this.latexEditorService.saveExpression(result.name))
+      )
+      .subscribe();
   }
 
-  onSaveExpression() {}
+  onLoadExpression(id: number) {
+    if (this.latexEditorForm.dirty) {
+      const title = 'Load Expression';
+      const message = 'You have unsaved changes. Are you sure you want to load this expression?';
+
+      this.dialog
+        .open(ConfirmDialogComponent, { data: { title, message }, panelClass: 'hz-dialog-container' })
+        .afterClosed()
+        .pipe(
+          filter((result) => result),
+          tap(() => this.latexEditorService.loadExpression(id))
+        )
+        .subscribe();
+    } else {
+      this.latexEditorService.loadExpression(id);
+    }
+  }
+
+  onRemoveExpression(id: number) {
+    const title = 'Remove Expression';
+    const message = 'Are you sure you want to remove this expression?';
+
+    this.dialog
+      .open(ConfirmDialogComponent, { data: { title, message }, panelClass: 'hz-dialog-container' })
+      .afterClosed()
+      .pipe(
+        filter((result) => result),
+        tap(() => this.latexEditorService.removeExpression(id))
+      )
+      .subscribe();
+  }
 }
