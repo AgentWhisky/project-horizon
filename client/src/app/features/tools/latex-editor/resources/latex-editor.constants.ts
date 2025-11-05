@@ -2,6 +2,8 @@ import { LatexSection } from './latex-editor.model';
 
 export const MAX_COMMAND_HISTORY = 20;
 
+//https://katex.org/docs/supported
+
 export const LATEX_COMMANDS: LatexSection[] = [
   {
     label: 'Greek Characters',

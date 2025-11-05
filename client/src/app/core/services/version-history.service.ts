@@ -30,7 +30,7 @@ export class VersionHistoryService {
     this.loadingState.setInProgress();
 
     this.http
-      .get<VersionEntryRaw[]>(ASSET_URLS.VERSION_HISTORY)
+      .get<VersionEntryRaw[]>(ASSET_URLS.DATA.VERSION_HISTORY)
       .pipe(
         tap((versionHistory: VersionEntryRaw[]) => {
           const versionEntries: VersionEntry[] = versionHistory.map((entry) => ({

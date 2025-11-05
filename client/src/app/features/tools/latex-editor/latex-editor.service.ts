@@ -2,11 +2,13 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { DEBOUNCE_TIME, SNACKBAR_INTERVAL, STORAGE_KEYS } from '@hz/core/constants';
+import { ASSET_URLS, DEBOUNCE_TIME, SNACKBAR_INTERVAL, STORAGE_KEYS } from '@hz/core/constants';
 import { LatexCommand, LatexSection, SavedCurrentExpression, SavedExpression } from './resources/latex-editor.model';
-import { LATEX_COMMANDS, MAX_COMMAND_HISTORY } from './resources/latex-editor.constants';
+import { MAX_COMMAND_HISTORY } from './resources/latex-editor.constants';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { debounceTime, tap } from 'rxjs';
+import { HzLoadingState } from '@hz/core/utilities';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +16,12 @@ import { debounceTime, tap } from 'rxjs';
 export class LatexEditorService {
   private fb = inject(FormBuilder);
   private snackbar = inject(MatSnackBar);
+  private http = inject(HttpClient);
+
+  private readonly _latexCommandSections = signal<LatexSection[]>([]);
+  readonly loadingState = new HzLoadingState('LaTex Functions');
+
+  readonly filteredLatexCommands = computed(() => this.filterCommandSection(this.commandFilter()));
 
   private readonly _commandHistory = signal<LatexCommand[]>([]);
   readonly sortedCommandHistory = computed(() => [...this._commandHistory()].sort((a, b) => a.id - b.id));
@@ -23,8 +31,6 @@ export class LatexEditorService {
 
   readonly commandFilter = signal<string>('');
   readonly renderSize = signal<number>(20);
-  readonly latexCommandSections = signal<LatexSection[]>(LATEX_COMMANDS);
-  readonly filteredLatexCommands = computed(() => this.filterCommandSection(this.commandFilter()));
 
   readonly latexEditorForm;
 
@@ -49,6 +55,33 @@ export class LatexEditorService {
       .valueChanges.pipe(
         debounceTime(DEBOUNCE_TIME.NORMAL),
         tap((latex: string) => this.saveCurrentExpression(latex, true, true))
+      )
+      .subscribe();
+  }
+
+  loadLatexFunctions() {
+    if (this.loadingState.isLoading()) {
+      return;
+    }
+
+    this.loadingState.setInProgress();
+
+    this.http
+      .get<LatexSection[]>(ASSET_URLS.DATA.LATEX_COMMANDS)
+      .pipe(
+        tap((latexCommands: LatexSection[]) => {
+          this._latexCommandSections.set(latexCommands);
+          if (versionEntries.length > 0) {
+            this._currentVersionInfo.set(versionEntries[0]);
+          }
+
+          this.loadingState.setSuccess();
+        }),
+        catchError((err: HttpErrorResponse) => {
+          this.loadingState.setFailed(err.status);
+          console.error(`Failed to fetch Horizon version history`);
+          return of(null);
+        })
       )
       .subscribe();
   }

@@ -1,0 +1,56 @@
+[
+  {
+    "label": "Accents",
+    "commands": [
+      { "id": 1001, "label": "Grave", "value": "\\grave{a}" },
+      { "id": 1002, "label": "Acute", "value": "\\acute{a}" },
+      { "id": 1003, "label": "Hat", "value": "\\hat{a}" },
+      { "id": 1004, "label": "Tilde", "value": "\\tilde{a}" },
+      { "id": 1005, "label": "Bar", "value": "\\bar{a}" },
+      { "id": 1006, "label": "Breve", "value": "\\breve{a}" },
+      { "id": 1007, "label": "Check", "value": "\\check{a}" },
+      { "id": 1008, "label": "Ring", "value": "\\mathring{a}" },
+      { "id": 1009, "label": "Dot", "value": "\\dot{a}" },
+      { "id": 1010, "label": "Double Dot", "value": "\\ddot{a}" },
+      { "id": 1011, "label": "Triple Dot", "value": "\\dddot{a}" },
+      { "id": 1012, "label": "Quadruple Dot", "value": "\\ddddot{a}" },
+      { "id": 1013, "label": "Prime (Simple)", "value": "a'" },
+      { "id": 1014, "label": "Prime (Math)", "value": "a^{\\prime}" },
+
+      { "id": 1015, "label": "Wide Hat", "value": "\\widehat{ac}" },
+      { "id": 1016, "label": "Wide Check", "value": "\\widecheck{ac}" },
+      { "id": 1017, "label": "Wide Tilde", "value": "\\widetilde{ac}" },
+      { "id": 1018, "label": "Under Tilde", "value": "\\utilde{AB}" },
+
+      { "id": 1019, "label": "Overline", "value": "\\overline{AB}" },
+      { "id": 1020, "label": "Underline", "value": "\\underline{AB}" },
+      { "id": 1021, "label": "Under Bar", "value": "\\underbar{A}" },
+      { "id": 1022, "label": "Over Group", "value": "\\overgroup{AB}" },
+      { "id": 1023, "label": "Under Group", "value": "\\undergroup{AB}" },
+      { "id": 1024, "label": "Over Line Segment", "value": "\\overlinesegment{AB}" },
+      { "id": 1025, "label": "Under Line Segment", "value": "\\underlinesegment{AB}" },
+
+      { "id": 1026, "label": "Over Brace", "value": "\\overbrace{AB}" },
+      { "id": 1027, "label": "Under Brace", "value": "\\underbrace{AB}" },
+
+      { "id": 1028, "label": "Vector", "value": "\\vec{F}" },
+      { "id": 1029, "label": "Over Left Arrow", "value": "\\overleftarrow{AB}" },
+      { "id": 1030, "label": "Under Left Arrow", "value": "\\underleftarrow{AB}" },
+      { "id": 1031, "label": "Over Right Arrow", "value": "\\overrightarrow{AB}" },
+      { "id": 1032, "label": "Under Right Arrow", "value": "\\underrightarrow{AB}" },
+      { "id": 1033, "label": "Over Left Harpoon", "value": "\\overleftharpoon{ac}" },
+      { "id": 1034, "label": "Over Right Harpoon", "value": "\\overrightharpoon{ac}" },
+      { "id": 1035, "label": "Over Left-Right Arrow", "value": "\\overleftrightarrow{AB}" },
+      { "id": 1036, "label": "Under Left-Right Arrow", "value": "\\underleftrightarrow{AB}" }
+    ]
+  },
+  {
+    "label": "Hebrew Characters",
+    "commands": [
+      { "id": 101, "label": "Aleph", "value": "\\aleph" },
+      { "id": 102, "label": "Beth", "value": "\\beth" },
+      { "id": 103, "label": "Gimel", "value": "\\gimel" },
+      { "id": 104, "label": "Daleth", "value": "\\daleth" }
+    ]
+  }
+]

@@ -1,7 +1,10 @@
 export const ASSET_URLS = {
   DEFAULT_ICON: 'assets/icons/default-favicon.ico',
-  VERSION_HISTORY: 'assets/version-history.json',
 
+  DATA: {
+    VERSION_HISTORY: 'assets/data/version-history.json',
+    LATEX_COMMANDS: 'assets/data/latex-commands.json',
+  },
   ICONS: {
     GITHUB: 'assets/icons/github-brands.svg',
     LINKEDIN: 'assets/icons/linkedin-brands.svg',
