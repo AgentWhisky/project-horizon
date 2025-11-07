@@ -15,7 +15,7 @@
       { "id": 1011, "label": "Triple Dot", "value": "\\dddot{a}" },
       { "id": 1012, "label": "Quadruple Dot", "value": "\\ddddot{a}" },
       { "id": 1013, "label": "Prime (Simple)", "value": "a'" },
-      { "id": 1014, "label": "Prime (Math)", "value": "a^{\\prime}" },
+      { "id": 1014, "label": "Prime (Command)", "value": "a^{\\prime}" },
 
       { "id": 1015, "label": "Wide Hat", "value": "\\widehat{ac}" },
       { "id": 1016, "label": "Wide Check", "value": "\\widecheck{ac}" },
@@ -42,6 +42,57 @@
       { "id": 1034, "label": "Over Right Harpoon", "value": "\\overrightharpoon{ac}" },
       { "id": 1035, "label": "Over Left-Right Arrow", "value": "\\overleftrightarrow{AB}" },
       { "id": 1036, "label": "Under Left-Right Arrow", "value": "\\underleftrightarrow{AB}" }
+    ]
+  },
+  {
+    "label": "Delimiters",
+    "commands": [
+      { "id": 2001, "label": "Parentheses (Simple)", "value": "(a)" },
+      { "id": 2002, "label": "Parenthesis (Command)", "value": "\\lparen{a}\\rparen" },
+      { "id": 2002, "label": "Brackets (Simple)", "value": "[a]" },
+      { "id": 2003, "label": "Brackets (Command)", "value": "\\lbrack{a}\\rbrack" },
+      { "id": 2002, "label": "Braces (Simple)", "value": "\\{a\\}" },
+      { "id": 2002, "label": "Braces (Command)", "value": "\\lbrace{a}\\rbrace" },
+      { "id": 2002, "label": "Angle (Simple)", "value": "⟨a⟩" },
+      { "id": 2002, "label": "Angle (Command)", "value": "\\langle{a}\\rangle" },
+      { "id": 2002, "label": "Vert (Simple)", "value": "|" },
+      { "id": 2002, "label": "Vert (Command)", "value": "\\vert" },
+      { "id": 2002, "label": "Double Vert (Simple)", "value": "\\|" },
+      { "id": 2002, "label": "Double Vert (Command)", "value": "\\Vert" },
+      { "id": 2002, "label": "Vert (Command)", "value": "\\lvert{a}\\rvert" },
+      { "id": 2002, "label": "Double Vert (Command)", "value": "\\lVert{a}\\rVert" },
+      { "id": 2002, "label": "gt & lt", "value": "\\lt{a}\\gt" },
+      { "id": 2002, "label": "Braces", "value": "\\lBrace{a}\\rBrace" },
+
+      { "id": 2002, "label": "Ceiling", "value": "\\lceil{a}\\rceil" },
+      { "id": 2002, "label": "Floor", "value": "\\lfloor{a}\\rfloor" },
+      { "id": 2002, "label": "Mousetache", "value": "\\lmoustache{a}\\rmoustache" },
+      { "id": 2002, "label": "Group", "value": "\\lgroup{a}\\rgroup" },
+      { "id": 2002, "label": "Top Corner", "value": "\\ulcorner{a}\\urcorner" },
+      { "id": 2002, "label": "Bottom Corner", "value": "\\llcorner{a}\\lrcorner" },
+      { "id": 2002, "label": "Double Brackets", "value": "\\llbracket{a}\\rrbracket" },
+
+      { "id": 2002, "label": "Up Arrow", "value": "\\uparrow" },
+      { "id": 2002, "label": "Down Arrow", "value": "\\downarrow" },
+      { "id": 2002, "label": "Up-Down Arrow", "value": "\\updownarrow" },
+      { "id": 2002, "label": "Double Up Arrow", "value": "\\Uparrow" },
+      { "id": 2002, "label": "Double Down Arrow", "value": "\\Downarrow" },
+      { "id": 2002, "label": "Double Up-Down Arrow", "value": "\\Updownarrow" },
+      { "id": 2002, "label": "Backslash", "value": "\\backslash" },
+      { "id": 2002, "label": "Forwardslash", "value": "/" }
+    ]
+  },
+  {
+    "label": "Delimiter Sizes",
+    "commands": [
+      { "id": 2002, "label": "Left", "value": "(\\big" },
+      { "id": 2002, "label": "Left", "value": "(\\bigl" },
+      { "id": 2002, "label": "Left", "value": "(\\bigm" },
+      { "id": 2002, "label": "Left", "value": "\\bigr(" },
+      { "id": 2002, "label": "Left", "value": "\\big(" },
+      { "id": 2002, "label": "Left", "value": "\\big(" },
+      { "id": 2002, "label": "Left", "value": "\\big(" },
+      { "id": 2002, "label": "Forwardslash", "value": "/" }
     ]
   },
   {

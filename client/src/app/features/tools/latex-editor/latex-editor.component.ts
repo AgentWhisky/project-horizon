@@ -55,6 +55,10 @@ export class LatexEditorComponent {
 
   @ViewChild('latexEditorInput') latexEditorInput!: ElementRef<HTMLTextAreaElement>;
 
+  onResetCommandFilter() {
+    this.latexEditorService.resetCommandFilter();
+  }
+
   onInsertAtCursor(command: LatexCommand) {
     this.latexEditorService.insertAtCursor(this.latexEditorInput.nativeElement, command);
   }

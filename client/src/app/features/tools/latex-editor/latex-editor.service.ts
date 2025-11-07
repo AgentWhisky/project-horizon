@@ -6,9 +6,9 @@ import { ASSET_URLS, DEBOUNCE_TIME, SNACKBAR_INTERVAL, STORAGE_KEYS } from '@hz/
 import { LatexCommand, LatexSection, SavedCurrentExpression, SavedExpression } from './resources/latex-editor.model';
 import { MAX_COMMAND_HISTORY } from './resources/latex-editor.constants';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { debounceTime, tap } from 'rxjs';
+import { catchError, debounceTime, of, tap } from 'rxjs';
 import { HzLoadingState } from '@hz/core/utilities';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -71,19 +71,19 @@ export class LatexEditorService {
       .pipe(
         tap((latexCommands: LatexSection[]) => {
           this._latexCommandSections.set(latexCommands);
-          if (versionEntries.length > 0) {
-            this._currentVersionInfo.set(versionEntries[0]);
-          }
-
           this.loadingState.setSuccess();
         }),
         catchError((err: HttpErrorResponse) => {
           this.loadingState.setFailed(err.status);
-          console.error(`Failed to fetch Horizon version history`);
+          console.error(`Failed to fetch LaTex commands`);
           return of(null);
         })
       )
       .subscribe();
+  }
+
+  resetCommandFilter() {
+    this.commandFilter.set('');
   }
 
   resetTextInput() {
@@ -180,7 +180,7 @@ export class LatexEditorService {
 
   /** PRIVATE FUNCTIONS */
   private filterCommandSection(filter: string): LatexSection[] {
-    const commandSections = this.latexCommandSections();
+    const commandSections = this._latexCommandSections();
 
     filter = filter.trim().toLowerCase();
 

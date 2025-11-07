@@ -1,9 +1,14 @@
 <div class="w-full flex flex-row flex-wrap gap-3">
   <!-- LATEX COMMAND MENU -->
-  <div class="flex flex-col gap-3 max-w-96">
+  <div class="flex flex-col gap-3 flex-grow max-w-96">
     <mat-form-field class="w-full" subscriptSizing="dynamic">
       <mat-label>Filter Commands</mat-label>
       <input matInput [(ngModel)]="commandFilter" #commandFilterInput />
+      @if(commandFilterInput.value && commandFilterInput.value !== '') {
+      <button matSuffix class="mr-3" matIconButton aria-label="Clear" (click)="onResetCommandFilter()">
+        <mat-icon>close</mat-icon>
+      </button>
+      }
     </mat-form-field>
 
     <mat-accordion>

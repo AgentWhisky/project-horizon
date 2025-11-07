@@ -1,14 +1,15 @@
 import { ApplicationConfig, inject, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, withComponentInputBinding, withViewTransitions } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
+import { MAT_ICON_DEFAULT_OPTIONS } from '@angular/material/icon';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
 import { IconService, TitleService, TokenService, VersionHistoryService } from '@hz/core/services';
 import { tokenInterceptor } from '@hz/core/interceptors';
 import { routes } from './app.routes';
-import { MAT_ICON_DEFAULT_OPTIONS } from '@angular/material/icon';
+
+import { LatexEditorService } from './features/tools/latex-editor/latex-editor.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,10 +23,12 @@ export const appConfig: ApplicationConfig = {
       const tokenService = inject(TokenService);
       const iconService = inject(IconService);
       const versionHistoryService = inject(VersionHistoryService);
+      const latexEditorService = inject(LatexEditorService);
 
       iconService.registerIcons();
       titleService.resetTitle();
       versionHistoryService.loadVersionHistory();
+      latexEditorService.loadLatexFunctions();
 
       await tokenService.onInitUser();
     }),
