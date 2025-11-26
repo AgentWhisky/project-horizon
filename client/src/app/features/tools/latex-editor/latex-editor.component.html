@@ -13,12 +13,13 @@
 
     <mat-accordion>
       @for (section of filteredLatexCommands(); track section.label) {
-      <mat-expansion-panel>
+      <mat-expansion-panel #commandPanel>
         <mat-expansion-panel-header>
           <mat-panel-title>{{ section.label }}</mat-panel-title>
         </mat-expansion-panel-header>
 
-        <div class="scrollable-panel-content">
+        @if(commandPanel.expanded) {
+        <div class="scrollable-panel-content" animate.enter="delay-close-animation" animate.leave="delay-close-animation">
           <div class="flex flex-row flex-wrap gap-3">
             @for (command of section.commands; track command.id) {
             <button
@@ -29,6 +30,7 @@
             }
           </div>
         </div>
+        }
       </mat-expansion-panel>
       }
     </mat-accordion>
@@ -95,7 +97,7 @@
 
   <!-- SAVED EXPRESSIONS -->
   @if(savedExpressions().length > 0) {
-  <hz-card class="flex flex-grow max-w-96">
+  <hz-card class="saved-expression-container">
     <hz-card-header>Saved Expressions</hz-card-header>
     <hz-card-body class="flex flex-col gap-3 p-1 scrollable-panel-content-large">
       <!-- DISPLAY SAVED EXPRESSIONS -->

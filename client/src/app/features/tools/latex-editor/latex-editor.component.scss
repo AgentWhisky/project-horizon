@@ -65,6 +65,13 @@
 }
 
 /** SAVED EXPRESSIONS */
+.saved-expression-container {
+  display: flex;
+  flex-grow: 1;
+  align-self: flex-start;
+  max-width: 24rem;
+}
+
 .saved-expression-card {
   display: flex;
   flex-direction: column;
@@ -126,4 +133,15 @@
 
 .katex-view.centered {
   text-align: center;
+}
+
+.delay-close-animation {
+  animation: animate-hold 0.1s;
+}
+
+@keyframes animate-hold {
+  from {
+  }
+  to {
+  }
 }
