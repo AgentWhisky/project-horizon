@@ -1,5 +1,10 @@
 [
   {
+    "version": "1.2.1",
+    "date": "2025-11-25",
+    "description": "Added new features to LaTex Editor tool that allows for searching and insertion of LateX functions as well as saving expressions for later use"
+  },
+  {
     "version": "1.2.0",
     "date": "2025-08-18",
     "description": "Redesigned app layout including toolbar and left navigation look and feel and updated app content to scroll"
