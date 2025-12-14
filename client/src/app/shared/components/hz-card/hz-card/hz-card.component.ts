@@ -1,9 +1,9 @@
 import { booleanAttribute, Component, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'hz-card',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './hz-card.component.html',
   styleUrl: './hz-card.component.scss',
 })

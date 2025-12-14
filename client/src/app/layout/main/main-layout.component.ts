@@ -16,7 +16,7 @@ import { NavigationService, ScreenService, ThemeService, UserService, VersionHis
 import { environment } from '../../../environments/environment';
 import { LeftNavComponent } from '../left-nav/left-nav.component';
 import { AppVersionDialogComponent } from '../app-version-dialog/app-version-dialog.component';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'hz-main-layout',
@@ -30,10 +30,9 @@ import { CommonModule } from '@angular/common';
     MatSidenavModule,
     MatTooltipModule,
     MatMenuModule,
-    CommonModule,
     LeftNavComponent,
-    ScrollingModule,
-  ],
+    ScrollingModule
+],
 })
 export class MainComponent {
   private screenService = inject(ScreenService);
