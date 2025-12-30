@@ -22,7 +22,7 @@ import { HzImageViewDialogComponent, HzImageViewDialogData } from '@hz/shared/di
 
 import { SteamInsightDetailService } from './steam-insight-detail.service';
 import { SteamDlcTileComponent } from './steam-dlc-tile/steam-dlc-tile.component';
-import { Achievement, DlcDetails } from './steam-insight-detail.model';
+import { Achievement, DlcDetails, Movie } from './steam-insight-detail.model';
 
 @Component({
   selector: 'hz-steam-insight-detail',
@@ -140,6 +140,10 @@ export class SteamInsightDetailComponent implements OnDestroy {
       maxHeight: '90vh',
       panelClass: 'hz-dialog-container',
     });
+  }
+
+  hasPlayableMovies(movies: Movie[]): boolean {
+    return movies.some((movie) => movie.mp4 || movie.webm);
   }
 
   // *** PRIVATE FUNCTIONS ***

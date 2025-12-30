@@ -325,17 +325,15 @@
 
     <!-- MOVIES -->
     <mat-tab [label]="'Movies (' + appDetails.movies.length + ')'">
-      @if(appDetails.movies.length) {
+      @if(appDetails.movies.length && hasPlayableMovies(appDetails.movies)) {
       <div class="tab-container">
         <div class="steam-media-container">
           @for (movie of appDetails.movies; track movie.id) {
 
           <video class="steam-media-thumb" [poster]="movie.thumbnail | secureUrl" controls preload="metadata" [matTooltip]="movie.name">
-            @if(movie.webm.max || movie.webm['480']) {
             <source [src]="movie.webm.max || movie.webm['480'] | secureUrl" type="video/webm" />
-            } @if(movie.mp4.max || movie.mp4['480']) {
             <source [src]="movie.mp4.max || movie.mp4['480'] | secureUrl" type="video/mp4" />
-            } Your browser does not support video.
+            Your browser does not support video.
           </video>
           }
         </div>
