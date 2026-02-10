@@ -42,22 +42,19 @@
             "outputPath": "dist/client",
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/assets",
+              "src/_headers",
+              "src/_redirects",
               {
                 "glob": "**/*",
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss",
-              "node_modules/katex/dist/katex.min.css"
-            ],
+            "styles": ["src/styles.scss", "node_modules/katex/dist/katex.min.css"],
             "scripts": []
           },
           "configurations": {
@@ -132,23 +129,19 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
+            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/assets",
+              "src/_headers",
+              "src/_redirects",
               {
                 "glob": "**/*",
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss",
-              "node_modules/katex/dist/katex.min.css"
-            ],
+            "styles": ["src/styles.scss", "node_modules/katex/dist/katex.min.css"],
             "scripts": []
           }
         }
