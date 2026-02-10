@@ -33,7 +33,7 @@ An admin-only section is available for managing backend-connected content, enabl
 
 - **[Heroku](https://www.heroku.com/)** – App hosting and deployment (using Docker)
 - **[Cloudflare](https://www.cloudflare.com/)** – Handles DNS, HTTPS, and serves static assets via CDN
-- **[PostgreSQL](https://www.postgresql.org)** – Primary relational database
+- **[PostgreSQL](https://www.postgresql.org)** – Primary data source
 
 ## Project Structure
 
@@ -98,7 +98,7 @@ Each part of the stack is deployed independently using [akhileshns/heroku-deploy
   - DNS resolution
   - Full (Strict) SSL with TLS ≥1.3
   - CDN caching and performance optimization
-  - Serves as the **image CDN** for all uploaded/static media
+  - Serves as the **CDN** for all uploaded/static media
 
 ## Authentication
 

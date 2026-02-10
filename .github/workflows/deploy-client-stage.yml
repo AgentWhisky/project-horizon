@@ -1,4 +1,4 @@
-name: Deploy Horizon Client - STAGE
+name: Deploy Horizon Client - STAGE (Legacy)
 
 on:
   push:
