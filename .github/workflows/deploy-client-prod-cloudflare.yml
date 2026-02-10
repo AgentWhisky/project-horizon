@@ -1,11 +1,6 @@
-name: Deploy Horizon Client - STAGE
+name: Deploy Horizon Client - PROD
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - 'client/**'
   workflow_dispatch:
 
 jobs:
@@ -35,7 +30,7 @@ jobs:
 
       - name: Build Angular App
         env:
-          ENV_CONFIG: stage
+          ENV_CONFIG: production
         run: npm run build -- --configuration=${ENV_CONFIG}
 
       - name: Deploy to Cloudflare Pages
@@ -43,5 +38,5 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy "client/dist/client/browser" --project-name="horizon-client-stage" --branch="master"
+          command: pages deploy "client/dist/client/browser" --project-name="horizon-client-prod" --branch="master"
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}

@@ -1,4 +1,4 @@
-name: Deploy Horizon Client - PROD
+name: Deploy Horizon Client - PROD (Legacy)
 
 on:
   workflow_dispatch:
