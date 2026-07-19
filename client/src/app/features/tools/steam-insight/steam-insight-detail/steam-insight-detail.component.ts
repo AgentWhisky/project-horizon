@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, OnDestroy, signal, untracked, ViewChild, viewChild } from '@angular/core';
+import { Component, computed, effect, inject, input, OnDestroy, signal, untracked, ViewChild, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, TitleCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -48,6 +48,7 @@ import { Achievement, DlcDetails, Movie } from './steam-insight-detail.model';
     SteamDlcTileComponent,
   ],
   templateUrl: './steam-insight-detail.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './steam-insight-detail.component.scss',
 })
 export class SteamInsightDetailComponent implements OnDestroy {

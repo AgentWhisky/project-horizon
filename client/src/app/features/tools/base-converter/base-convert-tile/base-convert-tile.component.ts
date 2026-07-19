@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, model, output } from '@angular/core';
+import { Component, computed, inject, input, model, output, ChangeDetectionStrategy } from '@angular/core';
 import { CdkDragDrop, CdkDropList, CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -33,6 +33,7 @@ import { BASE_CHAR_PATTERNS, baseNames } from '../base-converter.config';
     CharacterRestrictDirective,
   ],
   templateUrl: './base-convert-tile.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './base-convert-tile.component.scss',
 })
 export class BaseConvertTileComponent {

@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,6 +19,7 @@ const maxTileSize = 32;
   selector: 'hz-pathfinder',
   imports: [MatButtonModule, MatIconModule, MatTooltipModule, PathfinderTileComponent, HzBannerModule],
   templateUrl: './pathfinder.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './pathfinder.component.scss',
   //changeDetection: ChangeDetectionStrategy.OnPush,
 })

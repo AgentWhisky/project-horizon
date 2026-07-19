@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -26,6 +26,7 @@ interface DialogResult {
   selector: 'hz-link-tag-dialog',
   imports: [MatButtonModule, MatInputModule, MatDialogModule, MatDividerModule, ReactiveFormsModule, ValidatorMessagePipe],
   templateUrl: './link-tag-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './link-tag-dialog.component.scss',
 })
 export class LinkTagDialogComponent implements OnInit {

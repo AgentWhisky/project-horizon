@@ -1,10 +1,11 @@
-import { Component, ContentChildren, ElementRef, QueryList, Renderer2 } from '@angular/core';
+import { Component, ContentChildren, ElementRef, QueryList, Renderer2, ChangeDetectionStrategy } from '@angular/core';
 import { HzInfoActionsDirective } from './hz-info-actions.directive';
 
 @Component({
   selector: 'hz-info-actions',
   imports: [],
   templateUrl: './hz-info-actions.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './hz-info-actions.component.scss',
 })
 export class HzInfoActionsComponent {

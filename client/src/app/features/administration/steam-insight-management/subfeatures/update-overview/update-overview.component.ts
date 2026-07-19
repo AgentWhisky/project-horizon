@@ -1,4 +1,4 @@
-import { Component, inject, input, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, input, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 import { DurationPipe, FormatDatePipe } from '@hz/core/pipes';
@@ -30,6 +30,7 @@ import { UpdateStatusPipe, UpdateStatusTypePipe, UpdateTypePipe } from '../../re
     UpdateStatusTypePipe,
   ],
   templateUrl: './update-overview.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './update-overview.component.scss',
 })
 export class UpdateOverviewComponent implements OnInit, OnDestroy {

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
@@ -36,6 +36,7 @@ import { HzBannerModule, HzChipModule, HzLoadingSpinnerModule } from '@hz/shared
     SteamGameTileComponent,
   ],
   templateUrl: './steam-insight-search.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './steam-insight-search.component.scss',
 })
 export class SteamInsightSearchComponent {

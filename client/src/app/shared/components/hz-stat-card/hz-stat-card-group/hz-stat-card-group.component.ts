@@ -1,9 +1,10 @@
-import { booleanAttribute, Component, HostBinding, input } from '@angular/core';
+import { booleanAttribute, Component, HostBinding, input, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'hz-stat-card-group',
   imports: [],
   templateUrl: './hz-stat-card-group.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './hz-stat-card-group.component.scss',
 })
 export class HzStatCardGroupComponent {

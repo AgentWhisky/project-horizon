@@ -1,4 +1,4 @@
-import { Component, effect, inject, viewChild } from '@angular/core';
+import { Component, effect, inject, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -36,6 +36,7 @@ import { TimespanPipe } from '@hz/core/pipes';
     CommonModule,
   ],
   templateUrl: './text-analyzer.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './text-analyzer.component.scss',
 })
 export class TextAnalyzerComponent {

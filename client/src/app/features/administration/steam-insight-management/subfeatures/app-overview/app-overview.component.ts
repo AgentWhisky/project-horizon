@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe, JsonPipe, TitleCasePipe, UpperCasePipe } from '@angular/common';
 
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -22,6 +22,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     JsonPipe,
   ],
   templateUrl: './app-overview.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './app-overview.component.scss',
 })
 export class AppOverviewComponent implements OnInit {

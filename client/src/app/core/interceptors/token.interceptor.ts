@@ -1,6 +1,6 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { STORAGE_KEYS, TOKEN_EXCLUDED_ENDPOINTS } from '@hz/core/constants';
-import { environment } from 'environments/environment';
+import { environment } from '../../../environments/environment';
 
 /**
  * An interceptor that appends an authorization header to all http requests

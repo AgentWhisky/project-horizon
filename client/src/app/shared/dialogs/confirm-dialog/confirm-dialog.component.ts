@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,6 +14,7 @@ interface DialogData {
   selector: 'hz-confirm-dialog',
   imports: [MatDialogModule, MatButtonModule, MatIconModule, MatDividerModule],
   templateUrl: './confirm-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './confirm-dialog.component.scss',
 })
 export class ConfirmDialogComponent {

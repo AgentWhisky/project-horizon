@@ -1,4 +1,4 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, inject, input, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -17,6 +17,7 @@ import { Link } from '../../resources/link-library.model';
   selector: 'hz-link-tile',
   imports: [MatButtonModule, MatIconModule, MatChipsModule, MatTooltipModule, CommonModule, ImageFallbackDirective, HzExpandDirective],
   templateUrl: './link-tile.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './link-tile.component.scss',
 })
 export class LinkTileComponent {

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BaseConvertConversionDialogComponent } from '../../base-converter/base-convert-conversion-dialog/base-convert-conversion-dialog.component';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -17,6 +17,7 @@ interface DialogResult {
   selector: 'hz-pathfinder-create-dialog',
   imports: [MatButtonModule, MatInputModule, MatDialogModule, ReactiveFormsModule, ValidatorMessagePipe],
   templateUrl: './pathfinder-create-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './pathfinder-create-dialog.component.scss',
 })
 export class PathfinderCreateDialogComponent {

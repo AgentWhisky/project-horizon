@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -23,6 +23,7 @@ interface DialogResult {
   selector: 'hz-role-dialog',
   imports: [MatButtonModule, MatInputModule, MatSelectModule, MatDialogModule, ReactiveFormsModule],
   templateUrl: './role-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './role-dialog.component.scss',
 })
 export class RoleDialogComponent {

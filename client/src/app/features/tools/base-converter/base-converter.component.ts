@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { filter, tap } from 'rxjs';
 
 import { MatTabsModule } from '@angular/material/tabs';
@@ -19,6 +19,7 @@ import { BaseConverterService } from './base-converter.service';
   selector: 'hz-base-converter',
   imports: [MatButtonModule, MatIconModule, MatTabsModule, MatTooltipModule, BaseConvertTileComponent, HzBannerModule],
   templateUrl: './base-converter.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './base-converter.component.scss',
 })
 export class BaseConverterComponent {

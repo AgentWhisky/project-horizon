@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -15,6 +15,7 @@ import { HzTimelineModule } from '@hz/shared/components';
   selector: 'hz-app-version-dialog',
   imports: [MatDialogModule, MatButtonModule, MatIconModule, CommonModule, RouterModule, DatePipe, HzTimelineModule],
   templateUrl: './app-version-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './app-version-dialog.component.scss',
 })
 export class AppVersionDialogComponent {

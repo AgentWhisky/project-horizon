@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, output, signal, ChangeDetectionStrategy } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,6 +10,7 @@ import { SNACKBAR_INTERVAL } from '@hz/core/constants';
   selector: 'hz-file-input',
   imports: [MatButtonModule, MatIconModule],
   templateUrl: './file-input.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './file-input.component.scss',
 })
 export class FileInputComponent {

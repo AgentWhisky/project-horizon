@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, signal } from '@angular/core';
+import { Component, effect, inject, input, signal, ChangeDetectionStrategy } from '@angular/core';
 import { HzBreadcrumbItem } from '../hz-breadcrumb.model';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,6 +10,7 @@ import { HzBreadcrumbItemComponent } from '../hz-breadcrumb-item/hz-breadcrumb-i
   selector: 'hz-breadcrumb',
   imports: [MatIconModule, MatTooltipModule, RouterModule, HzBreadcrumbItemComponent],
   templateUrl: './hz-breadcrumb.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './hz-breadcrumb.component.scss',
 })
 export class HzBreadcrumbComponent {

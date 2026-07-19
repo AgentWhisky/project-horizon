@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { ASSET_URLS } from '@hz/core/constants';
@@ -9,6 +9,7 @@ import { SteamGameSummary } from '../steam-insight-search.model';
   selector: 'hz-steam-game-tile',
   imports: [RouterModule],
   templateUrl: './steam-game-tile.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './steam-game-tile.component.scss',
 })
 export class SteamGameTileComponent {

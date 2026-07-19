@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
@@ -22,6 +22,7 @@ import { AppVersionDialogComponent } from '../app-version-dialog/app-version-dia
   selector: 'hz-main-layout',
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     RouterModule,
     MatToolbarModule,

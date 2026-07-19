@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { tap } from 'rxjs';
@@ -49,6 +49,7 @@ interface DialogResult {
     ImageFallbackDirective,
   ],
   templateUrl: './link-library-management-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './link-library-management-dialog.component.scss',
 })
 export class LinkLibraryManagementDialogComponent implements OnInit {

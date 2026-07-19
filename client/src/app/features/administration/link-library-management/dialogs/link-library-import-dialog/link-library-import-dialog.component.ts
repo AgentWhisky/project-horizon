@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -15,6 +15,7 @@ interface DialogResult {
   selector: 'hz-link-library-import-dialog',
   imports: [MatButtonModule, MatInputModule, MatDialogModule, FileInputComponent],
   templateUrl: './link-library-import-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './link-library-import-dialog.component.scss',
 })
 export class LinkLibraryImportDialogComponent {

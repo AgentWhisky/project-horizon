@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, inject, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { ContentTileConfig } from './content-tile';
 import { RouterModule } from '@angular/router';
 import { ThemeService } from '@hz/core/services';
@@ -8,6 +8,7 @@ import { ThemeService } from '@hz/core/services';
   selector: 'hz-content-tile',
   imports: [RouterModule],
   templateUrl: './content-tile.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './content-tile.component.scss',
 })
 export class ContentTileComponent {

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -30,6 +30,7 @@ import { PasswordMatchErrorStateMatcher } from './password-matcher';
     ValidatorMessagePipe,
   ],
   templateUrl: './login-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './login-dialog.component.scss',
 })
 export class LoginDialogComponent {

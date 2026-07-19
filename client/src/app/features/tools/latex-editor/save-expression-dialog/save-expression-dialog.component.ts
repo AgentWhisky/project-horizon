@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { LatexEditorService } from '../latex-editor.service';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
@@ -15,6 +15,7 @@ interface DialogResult {
   selector: 'hz-save-expression-dialog',
   imports: [MatDialogModule, MatInputModule, MatButtonModule, ReactiveFormsModule, ValidatorMessagePipe],
   templateUrl: './save-expression-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './save-expression-dialog.component.scss',
 })
 export class SaveExpressionDialogComponent {

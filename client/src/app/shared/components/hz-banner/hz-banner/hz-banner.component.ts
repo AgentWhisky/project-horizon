@@ -1,4 +1,4 @@
-import { booleanAttribute, Component, computed, input, output, signal } from '@angular/core';
+import { booleanAttribute, Component, computed, input, output, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -9,6 +9,7 @@ import { HzStatusType } from '@hz/core/models';
   selector: 'hz-banner',
   imports: [MatButtonModule, MatIconModule, CommonModule],
   templateUrl: './hz-banner.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './hz-banner.component.scss',
 })
 export class HzBannerComponent {

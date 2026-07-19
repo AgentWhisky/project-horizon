@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { ASSET_URLS } from '@hz/core/constants';
@@ -9,6 +9,7 @@ import { DlcDetails } from '../steam-insight-detail.model';
   selector: 'hz-steam-dlc-tile',
   imports: [RouterModule],
   templateUrl: './steam-dlc-tile.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './steam-dlc-tile.component.scss',
 })
 export class SteamDlcTileComponent {

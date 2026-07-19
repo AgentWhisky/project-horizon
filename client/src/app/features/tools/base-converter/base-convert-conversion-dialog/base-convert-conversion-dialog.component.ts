@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -22,6 +22,7 @@ interface DialogResult {
   selector: 'hz-base-convert-conversion-dialog',
   imports: [MatButtonModule, MatInputModule, MatDialogModule, MatSelectModule, ReactiveFormsModule],
   templateUrl: './base-convert-conversion-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './base-convert-conversion-dialog.component.scss',
 })
 export class BaseConvertConversionDialogComponent implements OnInit {

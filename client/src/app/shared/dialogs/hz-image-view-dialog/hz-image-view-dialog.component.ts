@@ -1,5 +1,5 @@
 
-import { Component, computed, inject, Injectable, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, computed, inject, Injectable, OnInit, signal, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -38,6 +38,7 @@ export class MyCustomPaginatorIntl implements MatPaginatorIntl {
   imports: [MatDialogModule, MatButtonModule, MatIconModule, MatPaginatorModule, MatTooltipModule, SecureUrlPipe],
   templateUrl: './hz-image-view-dialog.component.html',
   styleUrl: './hz-image-view-dialog.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [{ provide: MatPaginatorIntl, useClass: MyCustomPaginatorIntl }],
 })
 export class HzImageViewDialogComponent {

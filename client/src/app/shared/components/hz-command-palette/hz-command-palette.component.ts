@@ -1,4 +1,4 @@
-import { Component, computed, effect, input, model, output, signal } from '@angular/core';
+import { Component, computed, effect, input, model, output, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -14,6 +14,7 @@ import { HzCommand } from './hz-command-palette.model';
   selector: 'hz-command-palette',
   imports: [MatInputModule, MatButtonModule, MatIconModule, CommonModule, FormsModule, KatexPipe],
   templateUrl: './hz-command-palette.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './hz-command-palette.component.scss',
 })
 export class HzCommandPaletteComponent {

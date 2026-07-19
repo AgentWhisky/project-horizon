@@ -1,4 +1,4 @@
-import { Component, computed, inject, model, OnInit, viewChildren } from '@angular/core';
+import { Component, computed, inject, model, OnInit, viewChildren, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -26,6 +26,7 @@ import { LinkLibraryService } from './link-library.service';
     HzBannerModule,
   ],
   templateUrl: './link-library.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './link-library.component.scss',
 })
 export class LinkLibraryComponent implements OnInit {

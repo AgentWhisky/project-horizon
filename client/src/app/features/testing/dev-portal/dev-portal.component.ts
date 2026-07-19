@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -50,6 +50,7 @@ import {
     TitleCasePipe,
   ],
   templateUrl: './dev-portal.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './dev-portal.component.scss',
 })
 export class DevPortalComponent {

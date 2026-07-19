@@ -1,4 +1,4 @@
-import { Component, input, viewChild } from '@angular/core';
+import { Component, input, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Tile } from '../pathfinder';
 
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'hz-pathfinder-tile',
   imports: [MatIconModule, MatMenuModule],
   templateUrl: './pathfinder-tile.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './pathfinder-tile.component.scss',
 })
 export class PathfinderTileComponent {

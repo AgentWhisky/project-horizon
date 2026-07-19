@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, model, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, model, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { filter, tap } from 'rxjs';
@@ -58,6 +58,7 @@ import { LinkLibraryManagementService } from './link-library-management.service'
     ImageFallbackDirective,
   ],
   templateUrl: './link-library-management.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './link-library-management.component.scss',
 })
 export class LinkLibraryManagementComponent implements OnInit, OnDestroy {

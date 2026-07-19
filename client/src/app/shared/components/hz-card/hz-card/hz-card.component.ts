@@ -1,10 +1,11 @@
-import { booleanAttribute, Component, input } from '@angular/core';
+import { booleanAttribute, Component, input, ChangeDetectionStrategy } from '@angular/core';
 
 
 @Component({
   selector: 'hz-card',
   imports: [],
   templateUrl: './hz-card.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './hz-card.component.scss',
 })
 export class HzCardComponent {

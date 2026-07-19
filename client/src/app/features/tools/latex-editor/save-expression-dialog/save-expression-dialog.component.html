@@ -4,7 +4,7 @@
     <mat-form-field>
       <mat-label>Expression Name</mat-label>
       <input matInput type="text" formControlName="expressionName" />
-      <mat-error>{{ saveExpressionForm.get('expressionName')?.errors | validatorMessage : { fieldName: 'Expression Name' } }}</mat-error>
+      <mat-error>{{ $safeNavigationMigration(saveExpressionForm.get('expressionName')?.errors) | validatorMessage : { fieldName: 'Expression Name' } }}</mat-error>
       <mat-hint align="end">{{ saveExpressionForm.get('expressionName')?.value?.length }}/32</mat-hint>
     </mat-form-field>
   </form>

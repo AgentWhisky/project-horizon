@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, DatePipe, UpperCasePipe } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -65,6 +65,7 @@ import { UpdateStatusPipe, UpdateStatusTypePipe, UpdateTypePipe } from './resour
     UpdateStatusTypePipe,
   ],
   templateUrl: './steam-insight-management.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './steam-insight-management.component.scss',
 })
 export class SteamInsightManagementComponent implements OnInit, OnDestroy {

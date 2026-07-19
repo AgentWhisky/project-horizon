@@ -9,7 +9,7 @@
           <mat-option [value]="base">Base {{ base }}{{ baseNames[base] ? ' (' + baseNames[base] + ')' : '' }}</mat-option>
           }
         </mat-select>
-        <mat-error>{{ baseForm.get('base')?.errors | validatorMessage }}</mat-error>
+        <mat-error>{{ $safeNavigationMigration(baseForm.get('base')?.errors) | validatorMessage }}</mat-error>
       </mat-form-field>
 
       <mat-form-field subscriptSizing="dynamic">

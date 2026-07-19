@@ -5,19 +5,19 @@
       <mat-form-field class="w-full">
         <mat-label>Name</mat-label>
         <input matInput formControlName="name" />
-        <mat-error>{{ linkForm.get('name')?.errors | validatorMessage }}</mat-error>
+        <mat-error>{{ $safeNavigationMigration(linkForm.get('name')?.errors) | validatorMessage }}</mat-error>
       </mat-form-field>
 
       <mat-form-field class="w-full">
         <mat-label>Url</mat-label>
         <input matInput formControlName="url" />
-        <mat-error>{{ linkForm.get('url')?.errors | validatorMessage : { overrides: { pattern: 'Invalid URL format' } } }}</mat-error>
+        <mat-error>{{ $safeNavigationMigration(linkForm.get('url')?.errors) | validatorMessage : { overrides: { pattern: 'Invalid URL format' } } }}</mat-error>
       </mat-form-field>
 
       <mat-form-field class="w-full" [subscriptSizing]="showIconDisplay() ? 'dynamic' : 'fixed'">
         <mat-label>Icon</mat-label>
         <input matInput formControlName="icon" #iconInput />
-        <mat-error>{{ linkForm.get('icon')?.errors | validatorMessage : { overrides: { pattern: 'Invalid URL format' } } }}</mat-error>
+        <mat-error>{{ $safeNavigationMigration(linkForm.get('icon')?.errors) | validatorMessage : { overrides: { pattern: 'Invalid URL format' } } }}</mat-error>
         <button
           class="mr-3"
           matSuffix
@@ -56,14 +56,14 @@
           <mat-option [value]="tags.id">{{ tags.name }}</mat-option>
           }
         </mat-select>
-        <mat-error>{{ linkForm.get('tags')?.errors | validatorMessage }}</mat-error>
+        <mat-error>{{ $safeNavigationMigration(linkForm.get('tags')?.errors) | validatorMessage }}</mat-error>
       </mat-form-field>
 
       <mat-form-field class="w-full">
         <mat-label>Description</mat-label>
         <textarea matInput #linkDescription formControlName="description" rows="6"></textarea>
         <mat-hint align="end">{{ linkDescription.value.length }}/250</mat-hint>
-        <mat-error>{{ linkForm.get('description')?.errors | validatorMessage }}</mat-error>
+        <mat-error>{{ $safeNavigationMigration(linkForm.get('description')?.errors) | validatorMessage }}</mat-error>
       </mat-form-field>
     </form>
   </div>

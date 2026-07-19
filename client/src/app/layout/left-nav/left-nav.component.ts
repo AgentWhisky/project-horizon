@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
@@ -15,6 +15,7 @@ import { NavSection, navSections } from './left-nav.config';
   selector: 'hz-left-nav',
   imports: [RouterModule, MatButtonModule, MatIconModule, MatDividerModule, MatRippleModule, ScrollingModule],
   templateUrl: './left-nav.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './left-nav.component.scss',
 })
 export class LeftNavComponent {

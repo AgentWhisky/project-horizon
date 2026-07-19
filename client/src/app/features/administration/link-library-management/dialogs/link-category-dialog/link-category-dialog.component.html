@@ -6,7 +6,7 @@
         <mat-label>Name</mat-label>
         <input matInput formControlName="name" />
         <mat-error>{{
-          categoryForm.get('name')?.errors | validatorMessage : { overrides: { unique: 'A category with this name already exists' } }
+          $safeNavigationMigration(categoryForm.get('name')?.errors) | validatorMessage : { overrides: { unique: 'A category with this name already exists' } }
         }}</mat-error>
       </mat-form-field>
 
@@ -14,7 +14,7 @@
         <mat-label>Description</mat-label>
         <textarea matInput #categoryDescription formControlName="description" rows="6"></textarea>
         <mat-hint align="end">{{ categoryDescription.value.length }}/250</mat-hint>
-        <mat-error>{{ categoryForm.get('description')?.errors | validatorMessage }}</mat-error>
+        <mat-error>{{ $safeNavigationMigration(categoryForm.get('description')?.errors) | validatorMessage }}</mat-error>
       </mat-form-field>
     </form>
   </div>

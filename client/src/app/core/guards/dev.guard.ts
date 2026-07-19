@@ -1,8 +1,9 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 
-import { environment } from 'environments/environment';
+
 import { APP_ROUTES } from '../constants';
+import { environment } from '../../../environments/environment';
 
 export const devGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);

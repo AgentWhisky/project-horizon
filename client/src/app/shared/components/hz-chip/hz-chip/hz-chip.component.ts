@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, booleanAttribute, Component, ElementRef, inject, input, output } from '@angular/core';
+import { AfterViewInit, booleanAttribute, Component, ElementRef, inject, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -13,6 +13,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
   selector: 'hz-chip',
   imports: [RouterModule, CommonModule, MatButtonModule, MatIconModule, MatRippleModule, CommonModule],
   templateUrl: './hz-chip.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './hz-chip.component.scss',
 })
 export class HzChipComponent implements AfterViewInit {

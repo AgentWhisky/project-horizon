@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { tap } from 'rxjs';
 
@@ -24,6 +24,7 @@ interface DialogResult {
   selector: 'hz-base-convert-tile-dialog',
   imports: [MatButtonModule, MatInputModule, MatDialogModule, MatSelectModule, ReactiveFormsModule, ValidatorMessagePipe],
   templateUrl: './base-convert-tile-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './base-convert-tile-dialog.component.scss',
 })
 export class BaseConvertTileDialogComponent implements OnInit {

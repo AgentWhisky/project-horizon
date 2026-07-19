@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit, viewChild } from '@angular/core';
+import { Component, effect, inject, OnInit, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { filter, tap } from 'rxjs';
 import { DatePipe } from '@angular/common';
 
@@ -38,6 +38,7 @@ import { HzBannerModule, HzBreadcrumbItem, HzBreadcrumbModule } from '@hz/shared
     HzBannerModule,
   ],
   templateUrl: './account-management.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './account-management.component.scss',
 })
 export class AccountManagementComponent implements OnInit {

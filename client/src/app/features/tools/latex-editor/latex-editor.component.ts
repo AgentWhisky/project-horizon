@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -38,6 +38,7 @@ import { ConfirmDialogComponent } from '@hz/shared/dialogs';
     KatexPipe,
   ],
   templateUrl: './latex-editor.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './latex-editor.component.scss',
 })
 export class LatexEditorComponent {

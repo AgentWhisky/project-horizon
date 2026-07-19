@@ -18,10 +18,9 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
-    "baseUrl": "src",
     "paths": {
-      "@hz/core/*": ["app/core/*"],
-      "@hz/shared/*": ["app/shared/*"]
+      "@hz/core/*": ["./src/app/core/*"],
+      "@hz/shared/*": ["./src/app/shared/*"],
     }
   },
   "angularCompilerOptions": {
