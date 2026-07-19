@@ -41,7 +41,9 @@ export class LinkDto {
     description: 'Icon URL for the link image or icon',
     example: 'https://aw-horizon.com/assets/icons/hz-icon.png',
     maxLength: 2048,
+    required: false,
   })
+  @ValidateIf((object, value) => value !== '')
   @IsUrl({ require_protocol: true })
   @MaxLength(2048)
   icon: string;
