@@ -16,7 +16,7 @@ export const DataSourceConfig: DataSourceOptions = {
   logging: false, // Enable for Query Logging
   ssl: process.env.POSTGRES_SSL === 'true',
   extra: process.env.POSTGRES_SSL === 'true' ? { ssl: { rejectUnauthorized: false } } : {},
-  migrationsRun: true,
+  migrationsRun: false,
 };
 
 const dataSource = new DataSource(DataSourceConfig);
