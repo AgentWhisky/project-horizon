@@ -1,4 +1,4 @@
-name: Deploy Horizon Server - STAGE
+name: Deploy Horizon Server - STAGE (Legacy)
 
 on:
   workflow_dispatch:
